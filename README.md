@@ -10,7 +10,7 @@ A felhasználónak lehetősége van újabb megrendelések (csomagok) felvételé
 A szimulációt követően a feladatvégrehajtásból statisztika készül.
  
 ## Feladatleírás
-* [Feladatleírás pdf](feladatleiras.pdf)
+* [Feladatleírás pdf](./readme-src/feladatleiras.pdf)
 
 ## Készítette
 
