@@ -1,5 +1,5 @@
 # aWareHouse Projekt
-![QtLogo](./readme-src/qtlogo.png) ![CppLogo](./readme-src/cpplogo.png) ![JsLogo](./readme-src/javascriptlogo.png)
+![QtLogo](./readme-src/qtlogo.png) ![CppLogo](./readme-src/cpplogo.png) ![JsLogo](./readme-src/javascriptlogo.png) ![CMakeLogo](./readme-src/cmakelogo.png)
 
 ## Szoftver célja
 A szoftver keretében egy Amazon-stílusú automatizált raktár szimulációját valósítjuk meg, melyben a felhasználó megadhatja - akár külön szerkesztő segítségével - egy raktár elrendezését (a benne lévő állványok, célállomások, robotok, töltőállomások megadásával), majd a szimuláció elindításával, egy lehetséges végrehajtását láthatja a termékek kiszállításának, amit a robotok végeznek a polcok, illetve a célállomások közötti mozgással. 
@@ -39,5 +39,5 @@ A program megvalósításában több, manapság egyre népszerűbb és bonyolult
 * [Windows x64 binary]() _Hamarosan_
 * Konzolból: _Hamarosan_
 ```console
-usr@pc:~$ qmake ...
+usr@pc:~$ cmake ...
 ```
