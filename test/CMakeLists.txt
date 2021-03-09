@@ -8,7 +8,8 @@ include(Dart)
 set(T_SOURCES
 # Add files here
 test_main.cpp
-Example_test.cpp 
+Example_test.cpp
+Tile_test.cpp 
 )
 #############################################################################
 add_executable(awh-test ${T_SOURCES})
