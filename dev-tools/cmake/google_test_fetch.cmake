@@ -1,6 +1,6 @@
 # Fetches Google Test framework from github
 
-configure_file(CMakeLists.txt.in googletest-download/CMakeLists.txt)
+configure_file(${CMAKE_SOURCE_DIR}/CMakeLists.txt.in googletest-download/CMakeLists.txt)
 execute_process(COMMAND "${CMAKE_COMMAND}" -G "${CMAKE_GENERATOR}" .
     WORKING_DIRECTORY "${CMAKE_BINARY_DIR}/googletest-download"
 )

@@ -1,15 +1,20 @@
+#############################################################################
+# Author: Doki                                                              #
+########################### SETUP UNIT TESTING ##############################
 cmake_minimum_required(VERSION 3.16.0)
-
-# Author: Doki
-##################### SETUP UNIT TESTING #######################
 include(GoogleTest)
 include(Dart)
-######################### SOURCE FILES #########################
-set(T_SOURCES 
+############################# SOURCE FILES ##################################
+set(T_SOURCES
 # Add files here
+test_main.cpp
+Example_test.cpp 
 )
-################################################################
+#############################################################################
 add_executable(awh-test ${T_SOURCES})
-target_link_libraries(awh-test PUBLIC gtest gmock)
+###################### INCLUDE FILES ########################################
+target_include_directories(awh-test PUBLIC ${header_dir_list} )
+#############################################################################
+target_link_libraries(awh-test PUBLIC gtest gmock OBJ_AWSOURCE_FILES)
 gtest_discover_tests(awh-test)
-################################################################
+#############################################################################
