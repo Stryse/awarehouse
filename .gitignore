@@ -1,5 +1,6 @@
 # Custom
 build/*
+.vscode/*
 
 # C++ objects and libs
 *.slo
