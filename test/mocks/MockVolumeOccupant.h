@@ -4,11 +4,11 @@
 #include "IVolumeOccupant.h"
 #include "gmock/gmock.h"
 
-class MockVolumeOccupant : public IVolumeOccupant
+template <typename VolumeType>
+class MockVolumeOccupant : public IVolumeOccupant<VolumeType>
 {
-    MOCK_METHOD(void, occupyV, (const INavigationVolume<IVolumeOccupant> &), (const, override));
-    MOCK_METHOD(void, freeV, (), (const, override));
-    MOCK_METHOD(const std::vector<INavigationVolume<IVolumeOccupant> *> &, getOccupiedVolumes, (), (const, override));
+    MOCK_METHOD(void, occupyV, (VolumeType &), (override));
+    MOCK_METHOD(void, freeV, (), (override));
 };
 
 #endif /* MOCK_VOLUME_OCCUPANT__H */

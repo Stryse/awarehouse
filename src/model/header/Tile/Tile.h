@@ -3,38 +3,38 @@
 
 #include "INavigationVolume.h"
 #include "Point.h"
-#include <memory>
 
 // ############### FORWARD DECLARATIONS #################
+template <typename VolumeType>
 class IVolumeOccupant;
 // ######################################################
 
 /**
- * @brief 
- * A raktártér egy csempéjét leíró osztály.
+ * @brief
+ * Element of volume in the Warehouse space.
  */
-class Tile : public INavigationVolume<std::shared_ptr<IVolumeOccupant>>
+class Tile : public INavigationVolume<IVolumeOccupant<Tile> *>
 {
 public:
     using Point = Point<int>;
-    using OccupantType = std::shared_ptr<IVolumeOccupant>;
+    using OccupantType = IVolumeOccupant<Tile> *;
 
 private:
     Point position;
     OccupantType occupant;
 
 public:
-    //Constructors,destructor
+    // Constructors,destructor
     explicit Tile(const Point &pos);
     virtual ~Tile();
 
-    //INavigationVolumeInterface implementation
+    // INavigationVolumeInterface implementation
     virtual void occupyV(const OccupantType &occupant) override;
     virtual void freeV() override;
     virtual bool isVolumeFree() const override;
     virtual const OccupantType &getOccupant() const override;
 
-    //Getter
+    // Getter
     const Point &getPosition() const;
 };
 

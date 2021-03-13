@@ -1,97 +1,83 @@
-#ifndef OBSERVABLE_ENVIRONMENT__H
-#define OVSERVABLE_ENVIRONMENT__H
+#ifndef OBSERVABLE_NAV_ENVIRONMENT__H
+#define OVSERVABLE_NAV_ENVIRONMENT__H
 
+#include "IInfoProvider.h"
+#include "INavigationalEnvironment.h"
 #include "IObservableEnvironment.h"
 #include "Point.h"
 #include <memory>
 #include <vector>
 
 template <typename TileType>
-class ObservableEnvironment : public IObservableEnvironment
+class ObservableNavEnvironment : public INavigationalEnvironment<TileType>
 {
-public:
-    using TileSpace = std::vector<std::shared_ptr<TileType>>;
-
 private:
-    TileSpace tileSpace;
+    std::vector<std::unique_ptr<TileType>> tileSpace;
     size_t xLength;
     size_t yLength;
     size_t zLength;
 
 public:
-    //Constructors
+    //################################## Constructors, destructors ############################################
     /**
-     * @brief Létrehoz egy megfigyelhető környezet adatszerkezetet 
-     * a paraméterként kapott méretekkel
-     * 
-     * @param xLength X tengely mérete (szélesség)
-     * @param yLength Y tengely mérete (magasság)
-     * @param zLength Z tengely mérete (mélység)
+     * @brief Creates a observable,navigatable 3D environment of the sizes provided
+     * @param xLength X (width)  -- Navplane
+     * @param yLength Y (Height) -- Navplane
+     * @param zLength Z (Depth)  -- Air -- Default is 1 meaning it's a plane
      */
-    ObservableEnvironment(size_t xLength, size_t yLength, size_t zLength)
+    ObservableNavEnvironment(size_t xLength, size_t yLength, size_t zLength = 1)
         : tileSpace(xLength * yLength * zLength), xLength(xLength), yLength(yLength), zLength(zLength)
     {
     }
 
-    //IObservableEnvironment implementation
-    virtual Info *rayCast(const DirectionVector &direction, int depth) const override
+    ObservableNavEnvironment(const ObservableNavEnvironment &other)
+        : tileSpace(other.tileSpace), xLength(other.xLength), yLength(other.yLength), zLength(other.zLength)
     {
-        //TODO
-        return nullptr;
     }
 
-    virtual Info *scan(const Point &center, int range) const override
+    virtual ~ObservableNavEnvironment() = default;
+
+    //#############################  IObservableEnvironment implementation ######################################
+
+    //################################ INavigationalEnvironment implementation ##################################
+    virtual const TileType &getVolume(const Point<int> &point) const override
     {
-        //TODO
-        return nullptr;
+        return *tileSpace[point.getPosX() + yLength * (point.getPosY() + zLength * point.getPosZ())];
     }
 
-    virtual Info *getInfoAtPoint(const Point &targetPoint) const override
+    virtual TileType &getVolume(const Point<int> &point) override
     {
-        //TODO
-        return getTile(targetPoint)->getInfo();
+        return const_cast<TileType &>(static_cast<const ObservableNavEnvironment &>(*this).getVolume(point));
     }
 
-    //Getter
-    /**
-     * @brief Egy térfogatrészt visszaad a csempetérből
-     * 
-     * @param x X koordináta
-     * @param y Y koordináta
-     * @param z Z koordináta
-     * @return Csempe típus
-     */
-    const std::shared_ptr<const TileType> &getTile(int x, int y = 0, int z = 0) const
+    virtual bool isInBounds(const Point<int> &point) const override
     {
-        return tileSpace[x + yLength * (y + zLength * z)];
+        return point.getPosX() >= 0 && point.getPosX() < xLength &&
+               point.getPosY() >= 0 && point.getPosY() < yLength &&
+               point.getPosZ() >= 0 && point.getPosZ() < zLength;
     }
 
-    /**
-     * @brief Egy térfogatrészt visszaad a csempetérből
-     * 
-     * @param point Térpont
-     * @return Csempe típus
-     */
-    const std::shared_ptr<const TileType> &getTile(const Point &point) const
+    //############################################## Own Getter ####################################################
+    const std::vector<std::unique_ptr<TileType>> &getBuffer() const
     {
-        return getTile(point.getPosX(), point.getPosY(), point.getPosZ());
+        return tileSpace;
     }
 
-    /**
-     * @overload const std::shared_ptr<const TileType> &getTile(int x, int y = 0, int z = 0) const
-     */
-    const std::shared_ptr<TileType> &getTile(int x, int y, int z)
+    std::vector<std::unique_ptr<TileType>> &getBuffer()
     {
-        return tileSpace[x + yLength * (y + zLength * z)];
+        return tileSpace;
     }
 
-    /**
-     * @overload const std::shared_ptr<const TileType> &getTile(const Point &point) const
-     */
-    const std::shared_ptr<TileType> &getTile(const Point &point)
+    size_t getXLength() const { return xLength; }
+
+    size_t getYLength() const { return yLength; }
+
+    size_t getZLength() const { return zLength; }
+
+    size_t getCoordAsIndex(size_t x, size_t y, size_t z) const
     {
-        return getTile(point.getPosX(), point.getPosY(), point.getPosZ());
+        return x + yLength * (y + zLength * z);
     }
 };
 
-#endif
+#endif /* OBSERVABLE_NAV_ENVIRONMENT__H */
