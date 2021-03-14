@@ -69,6 +69,20 @@ public:
 
         return *this;
     }
+
+    friend inline bool operator==(const Point &lhs, const Point &rhs)
+    {
+        if (lhs.coordinates.size() != rhs.coordinates.size())
+            return false;
+
+        for (size_t i = 0; i < lhs.coordinates.size(); ++i)
+        {
+            if (lhs.coordinates[i] != rhs.coordinates[i])
+                return false;
+        }
+
+        return true;
+    }
 };
 
 #endif /* POINT__H */

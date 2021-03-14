@@ -8,7 +8,7 @@ class TileTest : public testing::Test
 protected:
     virtual void SetUp()
     {
-        tile = Tile(Point<>(0, 0, 0));
+        tile = Tile(Point<>(0, 1, 2));
         occupant = std::make_unique<MockVolumeOccupant<Tile>>();
         occupant_2 = std::make_unique<MockVolumeOccupant<Tile>>();
     }
@@ -68,4 +68,10 @@ TEST_F(TileTest, GetOccupantsOnFree) // Térfoglaló lekérésének tesztelése 
 {
     EXPECT_TRUE(tile.isVolumeFree()) << "[ERROR] Volume was not free in the beginning" << std::endl;
     EXPECT_EQ(tile.getOccupant(), nullptr);
+}
+
+TEST_F(TileTest, TilePositionEQ)
+{
+    bool equal = tile.getPosition() == Tile::Point(0, 1, 2);
+    EXPECT_TRUE(equal);
 }
