@@ -8,11 +8,17 @@
 #include <memory>
 #include <vector>
 
-template <typename TileType>
-class ObservableNavEnvironment : public INavigationalEnvironment<TileType>
+template <typename TVolumeType>
+class ObservableNavEnvironment : public INavigationalEnvironment<TVolumeType>
 {
+public:
+    /****************
+     * @brief Type of Volume that can be queried in the environment.
+     ****************/
+    using VolumeType = TVolumeType;
+
 private:
-    std::vector<std::unique_ptr<TileType>> tileSpace;
+    std::vector<std::unique_ptr<TVolumeType>> tileSpace;
     size_t xLength;
     size_t yLength;
     size_t zLength;
@@ -40,14 +46,15 @@ public:
     //#############################  IObservableEnvironment implementation ######################################
 
     //################################ INavigationalEnvironment implementation ##################################
-    virtual const TileType &getVolume(const Point<int> &point) const override
+
+    virtual const TVolumeType &getVolume(const Point<int> &point) const override
     {
         return *tileSpace[point.getPosX() + yLength * (point.getPosY() + zLength * point.getPosZ())];
     }
 
-    virtual TileType &getVolume(const Point<int> &point) override
+    virtual TVolumeType &getVolume(const Point<int> &point) override
     {
-        return const_cast<TileType &>(static_cast<const ObservableNavEnvironment &>(*this).getVolume(point));
+        return const_cast<TVolumeType &>(static_cast<const ObservableNavEnvironment &>(*this).getVolume(point));
     }
 
     virtual bool isInBounds(const Point<int> &point) const override
@@ -58,15 +65,10 @@ public:
     }
 
     //############################################## Own Getter ####################################################
-    const std::vector<std::unique_ptr<TileType>> &getBuffer() const
-    {
-        return tileSpace;
-    }
 
-    std::vector<std::unique_ptr<TileType>> &getBuffer()
-    {
-        return tileSpace;
-    }
+    const std::vector<std::unique_ptr<TVolumeType>> &getBuffer() const { return tileSpace; }
+
+    std::vector<std::unique_ptr<TVolumeType>> &getBuffer() { return tileSpace; }
 
     size_t getXLength() const { return xLength; }
 
@@ -74,10 +76,7 @@ public:
 
     size_t getZLength() const { return zLength; }
 
-    size_t getCoordAsIndex(size_t x, size_t y, size_t z) const
-    {
-        return x + yLength * (y + zLength * z);
-    }
+    size_t getCoordAsIndex(size_t x, size_t y, size_t z) const { return x + yLength * (y + zLength * z); }
 };
 
 #endif /* OBSERVABLE_NAV_ENVIRONMENT__H */

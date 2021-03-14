@@ -21,7 +21,7 @@ TEST_F(BodyTest, getVolumeAtPoint_x_y_z)
             for (int z = 0; z < 3; ++z)
                 env.getBuffer()[env.getCoordAsIndex(x, y, z)] = std::make_unique<Tile>(Tile::Point{x, y, z});
 
-    Body<ObservableNavEnvironment, Tile> body(Point<int>{0, 0, 0},
+    Body<ObservableNavEnvironment<Tile>> body(Point<int>{0, 0, 0},
                                               DirectionVector<int>{Directions::UP},
                                               env);
 

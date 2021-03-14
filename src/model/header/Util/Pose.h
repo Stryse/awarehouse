@@ -4,11 +4,24 @@
 #include "DirectionVector.h"
 #include "Point.h"
 
+/*****************************************************************
+ * @brief A type that aggregates a position and an orientation.
+ * 
+ * @tparam PointCoordT Type of position coordinates.
+ * @tparam VectorCoordT Type of orientation coordinates.
+ *****************************************************************/
 template <typename PointCoordT = int, typename VectorCoordT = int>
 class Pose
 {
 public:
+    /****************** TYPES **************
+     * @brief Type of position Point
+     */
     using Position = Point<PointCoordT>;
+
+    /******************
+     * @brief Type of orientation vector
+     */
     using Orientation = DirectionVector<VectorCoordT>;
 
 private:
@@ -16,7 +29,8 @@ private:
     Orientation orientation;
 
 public:
-    //Constructors,Destructor
+    //################### Constructors,Destructor #####################
+
     Pose(const Position &position, const Orientation &orientation)
         : position(position), orientation(orientation) {}
 
@@ -25,13 +39,15 @@ public:
 
     virtual ~Pose() = default;
 
-    //Getter
+    //############################ Getter #############################
+
     const Position &getPosition() const { return position; }
     const Orientation &getOrientation() const { return orientation; }
     Position &getPosition() { return position; }
     Orientation &getOrientation() { return orientation; }
 
-    //Setter
+    //############################ Setter #############################
+
     void setPosition(const Position &position) { this->position = position; }
     void setOrientation(const Orientation &orientation) { this->orientation = orientation; }
 };

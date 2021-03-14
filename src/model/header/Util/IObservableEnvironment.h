@@ -49,4 +49,4 @@ public:
     virtual Info *getInfoAtPoint(const Point &targetPoint) const = 0;
 };
 
-#endif
+#endif /* I_OBSERVABLE_ENVIRONMENT__H */
