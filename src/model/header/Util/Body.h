@@ -55,12 +55,13 @@ public:
      * @param position Position of the body's origin point
      * @param orientation Orientation of the body's origin point
      * @param environment The reference to the environment in which the body is placed
+     * @param bodyShape Holds the non-origin points of the body
      *********************************************************************************************************/
     Body(const Point &position,
          const DirectionVector &orientation,
          Environment &environment,
          std::vector<Point> &&bodyShape = {})
-        : pose(position, orientation), environment(environment), shape(bodyShape)
+        : pose(position, orientation), environment(environment), shape(std::move(bodyShape))
     {
         //Place body in environment on creation.
         occupyV(environment.getVolume(position));
