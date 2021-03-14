@@ -73,5 +73,7 @@ TEST_F(TileTest, GetOccupantsOnFree) // Térfoglaló lekérésének tesztelése 
 TEST_F(TileTest, TilePositionEQ)
 {
     bool equal = tile.getPosition() == Tile::Point(0, 1, 2);
-    EXPECT_TRUE(equal);
+    bool nequal = tile.getPosition() == Tile::Point(1, 1, 2);
+    EXPECT_TRUE(equal) << "[ERROR] two tile positions were NOT equal that should be equal" << std::endl;
+    EXPECT_FALSE(nequal) << "[ERROR] two tile positions were equal that should be not." << std::endl;
 }
