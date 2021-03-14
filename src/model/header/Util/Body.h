@@ -58,9 +58,12 @@ public:
      *********************************************************************************************************/
     Body(const Point &position,
          const DirectionVector &orientation,
-         Environment &environment)
-        : pose(position, orientation), environment(environment)
+         Environment &environment,
+         std::vector<Point> &&bodyShape = {})
+        : pose(position, orientation), environment(environment), shape(bodyShape)
     {
+        //Place body in environment on creation.
+        occupyV(environment.getVolume(position));
     }
 
     virtual ~Body() = default;
@@ -165,13 +168,13 @@ private:
 
     /*******************************************************************************
      * @brief Contains the shape of the body in object coordinate system
-     * Each body consists of an origin point at (0,0,0) in ocs
+     * Each body consists of an origin point at (0,0,0) in ocs.  
      * Each point that is not the origin must be registered in the shape set.
      * 
      * eg. A block of (1 length, 1 width, 3 height)
      * {Point<>{0,0,1},Point<>{0,0,2}}  (origin = {0,0,0} mustn't be included)
      *******************************************************************************/
-    std::set<Point> shape; // TODO bodypart tipus
+    std::vector<Point> shape;
 
     /**********************
      * @brief Associated other body instance that controls this body and its children.
