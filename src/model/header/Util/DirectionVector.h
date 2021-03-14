@@ -6,6 +6,9 @@
 #include <type_traits>
 #include <vector>
 
+template <typename CoordType>
+class Point;
+
 /*********************************************
  * @brief Directions in 2 dimensional space.
  * ↑y →x
@@ -79,6 +82,16 @@ public:
             throw std::invalid_argument("Unhandled value.");
         }
     }
+
+    /**************************************************
+     * @brief Creates a vector with the provided buffer
+     * DirectionVector takes hold of argument vector
+     **************************************************/
+    explicit DirectionVector(std::vector<CoordinateT> &&coordinateBuffer)
+        : coordinates(std::move(coordinateBuffer)) {}
+
+    explicit DirectionVector(const Point<CoordinateT> &sourcePoint)
+        : coordinates(sourcePoint.getCoordinates()) {}
 
     /***************************************************
      * @brief Dot product of two vectors
