@@ -67,7 +67,10 @@ public:
         occupyV(environment.getVolume(position));
     }
 
-    virtual ~Body() = default;
+    virtual ~Body()
+    {
+        freeV();
+    }
 
     //############################## IVolumeOccupant implementation ##########################################
     /*********************************************************************************************************
@@ -89,12 +92,19 @@ public:
         // Self bodyparts -- occupation
         for (auto bodypart : shape)
         {
+            Point newPos = originVolume.getPosition().moved(DirectionVector(bodypart));
+            environment.getVolume(newPos).occupyV(this);
+            containerVolume.push_back(&environment.getVolume(newPos));
         }
 
         // All children - occupation
         for (auto child : childBodies)
         {
+            DirectionVector this2child = child->getPose().getPosition() - pose.getPosition();
+            Point newChildPos = originVolume.getPosition().moved(this2child);
+            child->occupyV(environment.getVolume(newChildPos));
         }
+        pose.setPosition(originVolume.getPosition());
     }
 
     /*******************************************************************
@@ -110,6 +120,8 @@ public:
         // Free self
         for (auto occupied : containerVolume)
             occupied->freeV();
+
+        containerVolume.clear();
     }
 
     //##################################### Public own Methods #################################################
@@ -122,6 +134,7 @@ public:
      ******************************************************************************/
     void moveBody(const DirectionVector &direction)
     {
+        occupyV(environment.getVolume(pose.getPosition().moved(direction)));
     }
 
     /******************************************************************************
@@ -197,7 +210,8 @@ private:
      * @brief Parts of the body and it's children
      * which are collided with the last operation.
      ***********************/
-    //std::vector<> collidedBuffer;
+
+    // std::vector<VolumeType *> collidedBuffer; TODO IMPLEMENT
 
     /***********************
      * @brief Reference to the 3D environment in which the body resides.
