@@ -151,6 +151,7 @@ public:
             return;
 
         childBodies.insert(&body);
+        body.parentBody = this;
     }
 
     /******************************************************************************
@@ -162,16 +163,37 @@ public:
     void detachBody(Body<Environment> &body)
     {
         childBodies.erase(&body);
+        body.parentBody = nullptr;
     }
 
-    //Getter
+    //################################# Getter #####################################
     /*******************************************************************************
      * @brief Returns the position and orientation of the body's origin point
      *******************************************************************************/
-    const Pose &getPose() const
-    {
-        return pose;
-    }
+    const Pose &getPose() const { return pose; }
+
+    /*******************************************************************************
+     * @brief Returns the body's children.
+     *******************************************************************************/
+    const std::set<Body<Environment> *> &getChildren() const { return childBodies; }
+    std::set<Body<Environment> *> &getChildren() { return childBodies; }
+
+    /*******************************************************************************
+     * @brief Returns the body's parent body if exist. Nullptr if no parent.
+     *******************************************************************************/
+    const std::shared_ptr<Body<Environment>> &getParent() const { return parentBody; }
+    std::shared_ptr<Body<Environment>> &getParent() { return parentBody; }
+
+    /*******************************************************************************
+     * @brief Returns the Volumes that the body (except its children) occupies
+     *******************************************************************************/
+    const std::vector<VolumeType *> &getContainerVolume() const { return containerVolume; }
+
+    /*******************************************************************************
+     * @brief Returns the environment in which the body resides.
+     *******************************************************************************/
+    const Environment &getEnvironment() const { return environment; }
+    Environment &getEnvironment() { return environment; }
 
 private:
     //####################################### Private Members ###############################################
