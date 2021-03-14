@@ -17,6 +17,11 @@ public:
      ****************/
     using VolumeType = TVolumeType;
 
+    /****************
+     * @brief Type of Point in the environment.
+     ****************/
+    using Point = typename INavigationalEnvironment<VolumeType>::Point;
+
 private:
     std::vector<std::unique_ptr<TVolumeType>> tileSpace;
     size_t xLength;
@@ -47,17 +52,17 @@ public:
 
     //################################ INavigationalEnvironment implementation ##################################
 
-    virtual const TVolumeType &getVolume(const Point<int> &point) const override
+    virtual const TVolumeType &getVolume(const Point &point) const override
     {
         return *tileSpace[point.getPosX() + yLength * (point.getPosY() + zLength * point.getPosZ())];
     }
 
-    virtual TVolumeType &getVolume(const Point<int> &point) override
+    virtual TVolumeType &getVolume(const Point &point) override
     {
         return const_cast<TVolumeType &>(static_cast<const ObservableNavEnvironment &>(*this).getVolume(point));
     }
 
-    virtual bool isInBounds(const Point<int> &point) const override
+    virtual bool isInBounds(const Point &point) const override
     {
         return point.getPosX() >= 0 && point.getPosX() < xLength &&
                point.getPosY() >= 0 && point.getPosY() < yLength &&
