@@ -40,11 +40,14 @@ public:
      * of the provided vector
      **************************************************************/
     explicit Point(const std::vector<CoordT> &coordinates) : coordinates(coordinates) {}
+    explicit Point(const std::vector<CoordT> &&coordinates) : coordinates(std::move(coordinates)) {}
 
     Point(const Point &other) : coordinates(other.coordinates) {}
 
     //################## Getter ########################
 
+    std::vector<CoordT> getCoordinates() { return coordinates; }
+    const std::vector<CoordT> getCoordinates() const { return coordinates; }
     CoordT getPosX() const { return coordinates[0]; }
     CoordT getPosY() const { return coordinates[1]; }
     CoordT getPosZ() const { return coordinates[2]; }
@@ -61,6 +64,16 @@ public:
             coordinates[i] += vector.getAsVector().at(i);
     }
 
+    Point moved(const DirectionVector &vector) const
+    {
+        std::vector<CoordT> buffer;
+        buffer.reserve(coordinates.size());
+        for (size_t i = 0; i < coordinates.size(); ++i)
+            buffer.emplace_back(coordinates[i] + vector.getAsVector()[i]);
+
+        return Point(std::move(buffer));
+    }
+
     //################## Operators #####################
     Point &operator=(const Point &other)
     {
@@ -70,18 +83,42 @@ public:
         return *this;
     }
 
-    friend inline bool operator==(const Point &lhs, const Point &rhs)
+    /***************************************************************
+     * @brief Two points are equal if they are the same dimensions
+     * and all the coordinates are equal
+     ***************************************************************/
+    friend inline bool operator==(const Point<CoordinateType> &lhs, const Point<CoordinateType> &rhs)
     {
         if (lhs.coordinates.size() != rhs.coordinates.size())
             return false;
 
         for (size_t i = 0; i < lhs.coordinates.size(); ++i)
         {
-            if (lhs.coordinates[i] != rhs.coordinates[i])
+            if ((std::abs(lhs.coordinates[i] - rhs.coordinates[i]) > 1e-6f))
                 return false;
         }
 
         return true;
+    }
+
+    /*******************************************************************
+     * @brief A subtraction of two points that result in a DirectionVector.
+     * 
+     * @param lhs Point that the result vector is pointing to
+     * @param rhs Point that the result vector is pointing from
+     * @return DirectionVector vector pointing from rhs to lhs
+     *******************************************************************/
+    friend DirectionVector operator-(const Point<CoordinateType> &lhs, const Point<CoordinateType> &rhs)
+    {
+        if (lhs.coordinates.size() != rhs.coordinates.size())
+            return DirectionVector{0, 0, 0};
+
+        std::vector<CoordinateType> buffer;
+        buffer.reserve(lhs.coordinates.size());
+        for (size_t i = 0; i < lhs.coordinates.size(); ++i)
+            buffer.emplace_back(lhs.coordinates[i] - rhs.coordinates[i]);
+
+        return DirectionVector(std::move(buffer));
     }
 };
 
