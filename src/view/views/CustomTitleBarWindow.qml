@@ -11,6 +11,7 @@ ApplicationWindow {
     property alias titleText: titleLabel.text
 
     property color titleBarColor: "#212121"
+    property real borderWidth: 2.5
 
     property bool isDraggable: true
     property bool isFullScreen: false
@@ -23,6 +24,7 @@ ApplicationWindow {
         id: titleBar
 
         height: Math.max(titleLabel.height, buttonLayout.buttonIconHeight) + 10
+
         color: titleBarColor
         clip: false
 
@@ -30,9 +32,9 @@ ApplicationWindow {
         Label {
             id: titleLabel
 
-            visible: false
             anchors.centerIn: parent
 
+            visible: false
             font.pixelSize: 14
         }
 
@@ -117,29 +119,46 @@ ApplicationWindow {
             }
 
             onPressed: { lastMouseX = mouseX
-                         lastMouseY = mouseY }
+                lastMouseY = mouseY }
             onMouseXChanged: if(isDraggable) { root.x += (mouseX - lastMouseX) }
             onMouseYChanged: if(isDraggable) { root.y += (mouseY - lastMouseY) }
         }
     }
 
-    //Resize area
-    MouseArea {
-        id: resizeArea
+    //Left Border
+    Rectangle {
+        anchors {
+            left: parent.left
+            top: parent.top; bottom: parent.bottom
+        }
+        width: borderWidth
 
+        color: titleBarColor
+        z:1
+    }
+
+    //Right Border
+    Rectangle {
         anchors {
             right: parent.right
+            top: parent.top; bottom: parent.bottom
+        }
+        width: borderWidth
+
+        color: titleBarColor
+        z:1
+    }
+
+    //Bottom Border
+    Rectangle {
+        anchors {
+            left: parent.left; right: parent.right
             bottom: parent.bottom
         }
+        height: borderWidth
 
-        width: 25
-        height: 25
-
-        cursorShape: Qt.SizeFDiagCursor
-
-        DragHandler {
-            target: null
-            onActiveChanged: if (active) { root.startSystemResize(Qt.RightEdge | Qt.BottomEdge) }
-        }
+        color: titleBarColor
+        z:1
     }
+
 }
