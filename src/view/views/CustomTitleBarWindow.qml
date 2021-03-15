@@ -22,9 +22,9 @@ ApplicationWindow {
     menuBar: Rectangle {
         id: titleBar
 
-        height: Math.max(titleLabel.height, buttonLayout.buttonIconHeight) + 40
+        height: Math.max(titleLabel.height, buttonLayout.buttonIconHeight) + 10
         color: titleBarColor
-        clip: true
+        clip: false
 
         //Title
         Label {
@@ -33,7 +33,7 @@ ApplicationWindow {
             visible: false
             anchors.centerIn: parent
 
-            font.pixelSize: 15
+            font.pixelSize: 14
         }
 
         //Buttons
@@ -51,11 +51,12 @@ ApplicationWindow {
             spacing: 0
 
             //Minimize
-            Button {
+            ToolButton {
                 id: minimizeButton
 
                 icon.height: parent.buttonIconHeight
                 Layout.preferredWidth: icon.width + 2*parent.buttonPadding
+                Layout.preferredHeight: parent.height
 
                 flat: true
                 icon.source: "qrc:/minimize_white.png"
@@ -63,11 +64,12 @@ ApplicationWindow {
                 onClicked: showMinimized()
             }
             //Fullscreen
-            Button {
+            ToolButton {
                 id: fullScreenButton
 
                 icon.height: parent.buttonIconHeight
                 Layout.preferredWidth: icon.width + 2*parent.buttonPadding
+                Layout.preferredHeight: parent.height
 
                 flat: true
                 icon.source: isFullScreen ? "qrc:/fullscreen_exit_white.png" : "qrc:/fullscreen_white.png"
@@ -80,11 +82,12 @@ ApplicationWindow {
                 }
             }
             //Close
-            Button {
+            ToolButton {
                 id: closeButton
 
                 icon.height: parent.buttonIconHeight
                 Layout.preferredWidth: icon.width + 2*parent.buttonPadding
+                Layout.preferredHeight: parent.height
 
                 flat: true
                 icon.source: "qrc:/close_white.png"
