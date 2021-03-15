@@ -69,10 +69,14 @@ public:
 
     virtual ~Body()
     {
+        // Destroy child record in parent
+        if (parentBody != nullptr)
+            parentBody->detachBody(*this);
+        // Destroy parent record in child
+        for (auto &child : childBodies)
+            detachBody(*child);
+        // Leave Environment, children remain
         freeV();
-
-        if (parentBody)
-            parentBody->getChildren().erase(this);
     }
 
     //############################## IVolumeOccupant implementation ##########################################
@@ -93,7 +97,7 @@ public:
         containerVolume.push_back(&originVolume);
 
         // Self bodyparts -- occupation
-        for (auto bodypart : shape)
+        for (auto &bodypart : shape)
         {
             Point newPos = originVolume.getPosition().moved(DirectionVector(bodypart));
             environment.getVolume(newPos).occupyV(this);
@@ -101,7 +105,7 @@ public:
         }
 
         // All children - occupation
-        for (auto child : childBodies)
+        for (auto &child : childBodies)
         {
             DirectionVector this2child = child->getPose().getPosition() - pose.getPosition();
             Point newChildPos = originVolume.getPosition().moved(this2child);
