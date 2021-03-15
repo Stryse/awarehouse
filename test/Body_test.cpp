@@ -99,3 +99,99 @@ TEST_F(BodyTest, SelfMovement)
     EXPECT_TRUE(env->getVolume(Point<int>(2, 1, 2)).getOccupant() == &(*largeBody)) << "[ERROR] Body not found in the environment at it's location |" << testPhase << std::endl;
     EXPECT_TRUE(env->getVolume(largeBody->getPose().getPosition()).getOccupant() == &(*largeBody)) << "[ERROR] Position doesn't match actual location |" << testPhase << std::endl;
 }
+
+TEST_F(BodyTest, ChildCarrying)
+{
+    largeBody->attachBody(*tinyBody);
+    // Parent move up
+    int testPhase = 0;
+    largeBody->moveBody(DirectionVector<int>(Directions::UP));
+    EXPECT_EQ(tinyBody->getPose().getPosition(), Point<int>(1, 2, 2)) << "[ERROR] Child moved (UP) position was wrong |" << testPhase << std::endl;
+    EXPECT_TRUE(env->getVolume(Point<int>(1, 2, 2)).getOccupant() == &(*tinyBody)) << "[ERROR] Child not found in the environment at it's location |" << testPhase << std::endl;
+    EXPECT_TRUE(env->getVolume(tinyBody->getPose().getPosition()).getOccupant() == &(*tinyBody)) << "[ERROR] Child Position doesn't match actual location |" << testPhase << std::endl;
+    // Parent move right
+    ++testPhase;
+    largeBody->moveBody(DirectionVector<int>(Directions::RIGHT));
+    EXPECT_EQ(tinyBody->getPose().getPosition(), Point<int>(2, 2, 2)) << "[ERROR] Child moved (RIGHT) position was wrong |" << testPhase << std::endl;
+    EXPECT_TRUE(env->getVolume(Point<int>(2, 2, 2)).getOccupant() == &(*tinyBody)) << "[ERROR] Child not found in the environment at it's location |" << testPhase << std::endl;
+    EXPECT_TRUE(env->getVolume(tinyBody->getPose().getPosition()).getOccupant() == &(*tinyBody)) << "[ERROR] Child Position doesn't match actual location |" << testPhase << std::endl;
+    // Parent move left
+    ++testPhase;
+    largeBody->moveBody(DirectionVector<int>(Directions::LEFT));
+    EXPECT_EQ(tinyBody->getPose().getPosition(), Point<int>(1, 2, 2)) << "[ERROR] Child moved (LEFT) position was wrong |" << testPhase << std::endl;
+    EXPECT_TRUE(env->getVolume(Point<int>(1, 2, 2)).getOccupant() == &(*tinyBody)) << "[ERROR] Child not found in the environment at it's location |" << testPhase << std::endl;
+    EXPECT_TRUE(env->getVolume(tinyBody->getPose().getPosition()).getOccupant() == &(*tinyBody)) << "[ERROR] Child Position doesn't match actual location |" << testPhase << std::endl;
+    // Parent move down
+    ++testPhase;
+    largeBody->moveBody(DirectionVector<int>(Directions::DOWN));
+    EXPECT_EQ(tinyBody->getPose().getPosition(), Point<int>(1, 1, 2)) << "[ERROR] Child moved (DOWN) position was wrong |" << testPhase << std::endl;
+    EXPECT_TRUE(env->getVolume(Point<int>(1, 1, 2)).getOccupant() == &(*tinyBody)) << "[ERROR] Child not found in the environment at it's location |" << testPhase << std::endl;
+    EXPECT_TRUE(env->getVolume(tinyBody->getPose().getPosition()).getOccupant() == &(*tinyBody)) << "[ERROR] Child Position doesn't match actual location |" << testPhase << std::endl;
+    // Parent Move X_BY_1 && Z_UP_BY_2
+    ++testPhase;
+    largeBody->moveBody(DirectionVector<int>(1, 0, 2));
+    EXPECT_EQ(tinyBody->getPose().getPosition(), Point<int>(2, 1, 4)) << "[ERROR] Child moved (X_BY_1 && Z_UP_BY_2) position was wrong |" << testPhase << std::endl;
+    EXPECT_TRUE(env->getVolume(Point<int>(2, 1, 4)).getOccupant() == &(*tinyBody)) << "[ERROR] Child not found in the environment at it's location |" << testPhase << std::endl;
+    EXPECT_TRUE(env->getVolume(tinyBody->getPose().getPosition()).getOccupant() == &(*tinyBody)) << "[ERROR] Child Position doesn't match actual location |" << testPhase << std::endl;
+}
+
+TEST_F(BodyTest, ProperDestruction_References)
+{
+    //Attach Child
+    largeBody->attachBody(*tinyBody);
+    largeBody = std::make_unique<Body<ObservableNavEnvironment<Tile>>>(
+        Point<int>(4, 4, 4),
+        DirectionVector<int>(Directions::LEFT),
+        *env,
+        BodyShapeFactory::createShape(BodyShapeFactory::BodyShape::ONLY_ORIGIN));
+    // Original parent destroyed
+    EXPECT_EQ(tinyBody->getParent(), nullptr) << "[ERROR] Child still has record of destroyed parent" << std::endl;
+    // Destroy again
+    largeBody = nullptr;
+    EXPECT_EQ(tinyBody->getParent(), nullptr) << "[ERROR] Child still has record of destroyed parent" << std::endl;
+    // Renew parent
+    largeBody = std::make_unique<Body<ObservableNavEnvironment<Tile>>>(
+        Point<int>(4, 4, 4),
+        DirectionVector<int>(Directions::LEFT),
+        *env,
+        BodyShapeFactory::createShape(BodyShapeFactory::BodyShape::ONLY_ORIGIN));
+    // Attach
+    largeBody->attachBody(*tinyBody);
+    // Destroy child
+    tinyBody = std::make_unique<Body<ObservableNavEnvironment<Tile>>>(
+        Point<int>(4, 4, 5),
+        DirectionVector<int>(Directions::LEFT),
+        *env,
+        BodyShapeFactory::createShape(BodyShapeFactory::BodyShape::ONLY_ORIGIN));
+
+    EXPECT_EQ(largeBody->getChildren().size(), 0) << "[ERROR] Parent still has record of destroyed child" << std::endl;
+    EXPECT_TRUE(largeBody->getChildren().find(&(*tinyBody)) == largeBody->getChildren().end()) << "[ERROR] Parent still has record of destroyed child" << std::endl;
+    // Destroy child again
+    tinyBody = nullptr;
+    EXPECT_EQ(largeBody->getChildren().size(), 0) << "[ERROR] Parent still has record of destroyed child" << std::endl;
+    EXPECT_TRUE(largeBody->getChildren().find(&(*tinyBody)) == largeBody->getChildren().end()) << "[ERROR] Parent still has record of destroyed child" << std::endl;
+}
+
+TEST_F(BodyTest, ProperDestruction_Environment_Leaving)
+{
+    largeBody->attachBody(*tinyBody);
+    EXPECT_EQ(env->getVolume(largeBody->getPose().getPosition()).getOccupant(), &(*largeBody)) << "[ERROR] Body is not in it's place in environment" << std::endl;
+    EXPECT_FALSE(env->getVolume(largeBody->getPose().getPosition()).isVolumeFree()) << "[Error] Occupied volume is marked free" << std::endl;
+
+    EXPECT_EQ(env->getVolume(tinyBody->getPose().getPosition()).getOccupant(), &(*tinyBody)) << "[ERROR] Body is not in it's place in environment" << std::endl;
+    EXPECT_FALSE(env->getVolume(tinyBody->getPose().getPosition()).isVolumeFree()) << "[Error] Occupied volume is marked free" << std::endl;
+
+    // Destroy parent
+    const Point<int> lastPos = largeBody->getPose().getPosition();
+    void *lastAddress = &(*largeBody);
+    largeBody = nullptr;
+
+    // Parent leaves
+    EXPECT_NE(env->getVolume(lastPos).getOccupant(), lastAddress) << "[ERROR] Body remained in the environment after destruction" << std::endl;
+    EXPECT_EQ(env->getVolume(lastPos).getOccupant(), nullptr) << "[ERROR] Body remained in the environment after destruction" << std::endl;
+    EXPECT_TRUE(env->getVolume(lastPos).isVolumeFree()) << "[Error] Occupied volume is marked occupied after leaving" << std::endl;
+
+    // Child remains
+    EXPECT_EQ(env->getVolume(tinyBody->getPose().getPosition()).getOccupant(), &(*tinyBody)) << "[ERROR] Child left with parent" << std::endl;
+    EXPECT_FALSE(env->getVolume(tinyBody->getPose().getPosition()).isVolumeFree()) << "[Error] Occupied volume is marked free" << std::endl;
+}
