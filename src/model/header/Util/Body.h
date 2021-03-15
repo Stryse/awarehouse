@@ -184,8 +184,8 @@ public:
     /*******************************************************************************
      * @brief Returns the body's parent body if exist. Nullptr if no parent.
      *******************************************************************************/
-    const std::shared_ptr<Body<Environment>> &getParent() const { return parentBody; }
-    std::shared_ptr<Body<Environment>> &getParent() { return parentBody; }
+    const Body<Environment> *getParent() const { return parentBody; }
+    Body<Environment> *getParent() { return parentBody; }
 
     /*******************************************************************************
      * @brief Returns the Volumes that the body (except its children) occupies
