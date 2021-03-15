@@ -52,14 +52,14 @@ public:
 
     //################################ INavigationalEnvironment implementation ##################################
 
-    virtual const TVolumeType &getVolume(const Point &point) const override
+    virtual const VolumeType &getVolume(const Point &point) const override
     {
         return *tileSpace[point.getPosX() + yLength * (point.getPosY() + zLength * point.getPosZ())];
     }
 
-    virtual TVolumeType &getVolume(const Point &point) override
+    virtual VolumeType &getVolume(const Point &point) override
     {
-        return const_cast<TVolumeType &>(static_cast<const ObservableNavEnvironment &>(*this).getVolume(point));
+        return const_cast<VolumeType &>(static_cast<const ObservableNavEnvironment &>(*this).getVolume(point));
     }
 
     virtual bool isInBounds(const Point &point) const override
@@ -71,9 +71,9 @@ public:
 
     //############################################## Own Getter ####################################################
 
-    const std::vector<std::unique_ptr<TVolumeType>> &getBuffer() const { return tileSpace; }
+    const std::vector<std::unique_ptr<VolumeType>> &getBuffer() const { return tileSpace; }
 
-    std::vector<std::unique_ptr<TVolumeType>> &getBuffer() { return tileSpace; }
+    std::vector<std::unique_ptr<VolumeType>> &getBuffer() { return tileSpace; }
 
     size_t getXLength() const { return xLength; }
 
