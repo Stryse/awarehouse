@@ -61,7 +61,7 @@ public:
          const DirectionVector &orientation,
          Environment &environment,
          std::vector<Point> &&bodyShape = {})
-        : pose(position, orientation), environment(environment), shape(std::move(bodyShape)), parentBody(nullptr)
+        : pose(position, orientation), shape(std::move(bodyShape)), parentBody(nullptr), environment(environment)
     {
         //Place body in environment on creation.
         occupyV(environment.getVolume(position));
@@ -70,7 +70,9 @@ public:
     virtual ~Body()
     {
         freeV();
-        parentBody->getChildren().erase(this);
+
+        if (parentBody)
+            parentBody->getChildren().erase(this);
     }
 
     //############################## IVolumeOccupant implementation ##########################################
