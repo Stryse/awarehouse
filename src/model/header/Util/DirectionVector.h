@@ -78,6 +78,7 @@ public:
 
         case Directions::RIGHT:
             coordinates = {1, 0, 0};
+            break;
         default:
             throw std::invalid_argument("Unhandled value.");
         }
