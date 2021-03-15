@@ -1,4 +1,9 @@
 <RCC>
-    <qresource prefix="/rcs/">
+    <qresource prefix="/rcs"/>
+    <qresource prefix="/">
+        <file alias="close_white.png">icons/close_white.png</file>
+        <file alias="fullscreen_exit_white.png">icons/fullscreen_exit_white.png</file>
+        <file alias="fullscreen_white.png">icons/fullscreen_white.png</file>
+        <file alias="minimize_white.png">icons/minimize_white.png</file>
     </qresource>
 </RCC>
