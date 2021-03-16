@@ -6,20 +6,21 @@ import QtQuick.Layouts 1.12
 CustomTitleBarWindow {
     id: root
 
-    property string windowTitle: qsTr("aWarehouse Manager")
+    property string windowTitle:    qsTr("aWarehouse Manager")
+    property color  secondaryColor: "#292929"
 
-    title: windowTitle
     visible: true
 
+    title:        windowTitle
+    titleText:    windowTitle
     titleVisible: true
-    titleText: windowTitle
 
     x: Screen.width/2 - width/2
     y: Screen.height/2 - height/2
 
-    width: 1280
+    width:  1280
     height: 720
-    minimumWidth: 1280
+    minimumWidth:  1280
     minimumHeight: 720
 
     SplitView {
@@ -27,69 +28,112 @@ CustomTitleBarWindow {
 
         anchors.fill: parent
 
-        orientation: Qt.Horizontal
+        orientation:  Qt.Horizontal
 
-        //leftPadding: 1 //?????
-
+        //Left panel
         Item {
             id: leftPanel
 
-            implicitWidth: root.width * 0.3
-            SplitView.maximumWidth: root.width * 0.3
+            property real maxWidth:   root.width * 0.3
+            property bool isFullSize: leftPanel.width >= leftPanel.maxWidth * 0.7
+
+            implicitWidth:          maxWidth
+            SplitView.maximumWidth: maxWidth
 
             //Tabs
             TabBar {
                 id: leftPanelTabBar
 
                 anchors {
-                    left:parent.left; right: parent.right
-                    top: parent.top
+                    left: parent.left; right: parent.right
+                    top:  parent.top
                 }
-
                 contentHeight: parent.height * 0.06
-                contentWidth: parent.width / 4
 
-                TabButton { text: qsTr("Outliner") }
-                TabButton { text: qsTr("Statistics") }
-                TabButton { text: qsTr("Orders") }
-                TabButton { text: qsTr("Settings") }
+                Material.background: secondaryColor
+
+                TabButton { text: leftPanel.isFullSize  ?  qsTr("Outliner")   : qsTr("Out")  }
+                TabButton { text: leftPanel.isFullSize  ?  qsTr("Statistics") : qsTr("Stat") }
+                TabButton { text: leftPanel.isFullSize  ?  qsTr("Orders")     : qsTr("Ord")  }
+                TabButton { text: leftPanel.isFullSize  ?  qsTr("Settings")   : qsTr("Set")  }
             }
 
-            StackLayout {
-                id: leftPanelStack
+            Pane {
+                id: leftPanelContentPane
+
+                property real paddingWidth: 10
 
                 anchors {
-                    left:parent.left; right: parent.right
-                    top: leftPanelTabBar.bottom; bottom: parent.bottom
+                    left: parent.left;            right:  parent.right
+                    top:  leftPanelTabBar.bottom; bottom: parent.bottom
                 }
 
-                currentIndex: leftPanelTabBar.currentIndex
+                Material.elevation: 10
 
-                Item {
-                    id: outliner
+                padding:       0
+                topPadding:    paddingWidth
+                leftPadding:   paddingWidth
+                bottomPadding: paddingWidth
 
-                }
-                Item {
-                    id: statistics
+                StackLayout {
+                    id: leftPanelStack
 
-                }
-                Item {
-                    id: orders
+                    anchors.fill: parent
 
-                }
-                Item {
-                    id: settings
+                    currentIndex: leftPanelTabBar.currentIndex
 
+                    //Outliner
+                    Item {
+                        id: outliner
+
+                        //BUG: Items clip over parent
+                        ScrollView {
+                            anchors.fill: parent
+
+                            padding: 0
+
+                            ScrollBar.horizontal.policy:    ScrollBar.AlwaysOff
+                            ScrollBar.vertical.interactive: false
+
+                            ListView {
+                                //PLACEHOLDER
+                                model: 20
+                                delegate: ItemDelegate {
+                                    text: "Item " + index
+                                }
+                            }
+                        }
+                    }
+                    //Statistics
+                    Item {
+                        id: statistics
+                        //TODO
+                    }
+                    //Orders
+                    Item {
+                        id: orders
+                        //TODO
+                    }
+                    //Settings
+                    Item {
+                        id: settings
+                        //TODO
+                    }
                 }
             }
+
         }
+        //PLACEHOLDER
         Rectangle {
             id: centerItem
+
             SplitView.minimumWidth: 50
-            SplitView.fillWidth: true
+            SplitView.fillWidth:    true
+
             color: "lightgray"
+
             Label {
-                text: "View 2"
+                text: "Map"
                 anchors.centerIn: parent
             }
         }
