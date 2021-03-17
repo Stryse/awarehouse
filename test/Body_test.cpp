@@ -55,6 +55,13 @@ TEST_F(BodyTest, AttachChildDetachChild)
     EXPECT_EQ(largeBody->getChildren().size(), 1) << "[ERROR] Body didn't register children after attachment" << std::endl;
     EXPECT_FALSE(largeBody->getChildren().find(&(*tinyBody)) == largeBody->getChildren().end()) << "[ERROR] child body is not registered in parent" << std::endl;
     EXPECT_EQ(tinyBody->getParent(), &(*largeBody)) << "[ERROR] Wrong parent" << std::endl;
+
+    std::unique_ptr<Body<>> fakeParent = std::make_unique<Body<>>(Point<>(2, 2, 2), DirectionVector<>(Directions::UP), *env);
+    fakeParent->attachBody(*tinyBody);
+    //Check no attachment on fake parent
+    EXPECT_EQ(tinyBody->getParent(), &(*largeBody));
+    EXPECT_EQ(fakeParent->getChildren().size(), 0);
+
     //Detach
     largeBody->detachBody(*tinyBody);
     EXPECT_EQ(largeBody->getChildren().size(), 0) << "[ERROR] Body didn't register children after detachment" << std::endl;
