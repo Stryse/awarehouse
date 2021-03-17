@@ -5,5 +5,12 @@
     <qresource prefix="/view">
         <file alias="mainview.qml">views/mainview.qml</file>
         <file alias="CustomTitleBarWindow.qml">views/CustomTitleBarWindow.qml</file>
+        <file alias="OutlinerTab.qml">views/OutlinerTab.qml</file>
+        <file alias="OrdersTab.qml">views/OrdersTab.qml</file>
+        <file alias="SettingsTab.qml">views/SettingsTab.qml</file>
+        <file alias="StatisticsTab.qml">views/StatisticsTab.qml</file>
+        <file alias="LeftPanel.qml">views/LeftPanel.qml</file>
+        <file alias="BottomPanel.qml">views/BottomPanel.qml</file>
+        <file alias="Simulation.qml">views/Simulation.qml</file>
     </qresource>
 </RCC>

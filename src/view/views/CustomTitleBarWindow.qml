@@ -1,9 +1,8 @@
-import QtQuick 2.15
-import QtQuick.Controls 2.15
+import QtQuick                   2.15
+import QtQuick.Layouts           1.12
+import QtQuick.Controls          2.15
 import QtQuick.Controls.Material 2.15
-import QtQuick.Layouts 1.12
 
-//App window
 ApplicationWindow {
     id: root
 
@@ -14,7 +13,8 @@ ApplicationWindow {
     property real  borderWidth:   2.5
 
     property bool isDraggable:  true
-    property bool isFullScreen: false
+
+    readonly property alias isFullScreen: fullScreenButton.isFullScreen
 
     flags: Qt.FramelessWindowHint  |
            Qt.Window
@@ -26,8 +26,7 @@ ApplicationWindow {
         height: Math.max(titleLabel.height,
                          buttonLayout.buttonIconHeight) + 10
 
-        color:  titleBarColor
-        clip:   false
+        color: titleBarColor
 
         //Title
         Label {
@@ -35,11 +34,11 @@ ApplicationWindow {
 
             anchors.centerIn: parent
 
-            visible:          false
+            visible:          true
             font.pixelSize:   14
         }
 
-        //Buttons
+        //Button layout
         RowLayout {
             id: buttonLayout
 
@@ -59,9 +58,9 @@ ApplicationWindow {
 
                 Layout.preferredWidth:  icon.width + 2*parent.buttonPadding
                 Layout.preferredHeight: parent.height
-                icon.height:            parent.buttonIconHeight
 
                 flat:        true
+                icon.height: parent.buttonIconHeight
                 icon.source: "qrc:/minimize_white.png"
 
                 onClicked:   showMinimized()
@@ -70,11 +69,13 @@ ApplicationWindow {
             ToolButton {
                 id: fullScreenButton
 
+                property bool isFullScreen: false
+
                 Layout.preferredWidth:  icon.width + 2*parent.buttonPadding
                 Layout.preferredHeight: parent.height
-                icon.height:            parent.buttonIconHeight
 
                 flat:        true
+                icon.height: parent.buttonIconHeight
                 icon.source: isFullScreen ? "qrc:/fullscreen_exit_white.png" : "qrc:/fullscreen_white.png"
 
                 onClicked: {
@@ -90,9 +91,9 @@ ApplicationWindow {
 
                 Layout.preferredWidth:  icon.width + 2*parent.buttonPadding
                 Layout.preferredHeight: parent.height
-                icon.height:            parent.buttonIconHeight
 
                 flat:        true
+                icon.height: parent.buttonIconHeight
                 icon.source: "qrc:/close_white.png"
 
                 Rectangle{
@@ -123,13 +124,14 @@ ApplicationWindow {
 
             onPressed: { lastMouseX = mouseX
                          lastMouseY = mouseY }
-            onMouseXChanged: if(isDraggable) { root.x += (mouseX - lastMouseX) }
-            onMouseYChanged: if(isDraggable) { root.y += (mouseY - lastMouseY) }
+            onMouseXChanged: if(isDraggable && !isFullScreen) { root.x += (mouseX - lastMouseX) }
+            onMouseYChanged: if(isDraggable && !isFullScreen) { root.y += (mouseY - lastMouseY) }
         }
     }
 
     //Left Border
     Rectangle {
+        z: 1
         anchors {
             left: parent.left
             top:  parent.top; bottom: parent.bottom
@@ -137,11 +139,10 @@ ApplicationWindow {
         width: borderWidth
 
         color: titleBarColor
-        z:     1
     }
-
     //Right Border
     Rectangle {
+        z: 1
         anchors {
             right: parent.right
             top:   parent.top;  bottom: parent.bottom
@@ -149,11 +150,10 @@ ApplicationWindow {
         width: borderWidth
 
         color: titleBarColor
-        z:     1
     }
-
     //Bottom Border
     Rectangle {
+        z: 1
         anchors {
             left:   parent.left;  right: parent.right
             bottom: parent.bottom
@@ -161,6 +161,5 @@ ApplicationWindow {
         height: borderWidth
 
         color: titleBarColor
-        z:     1
     }
 }
