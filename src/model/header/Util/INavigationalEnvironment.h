@@ -1,6 +1,8 @@
 #ifndef INAVIGATIONAL_ENVIRONMENT__H
 #define INAVIGATIONAL_ENVIRONMENT__H
 
+#include "LibConfig.h"
+
 // ############################## Forward declarations ####################################
 template <typename T>
 class Point;
@@ -14,7 +16,7 @@ class Point;
  * @tparam TVolumeType Type of the 3D volume.
  * Should derive from INavigationVolume interface.
  ******************************************************************************************/
-template <typename TVolumeType>
+template <typename TVolumeType = config::navigation::DefaultVolumeType>
 class INavigationalEnvironment
 {
 public:

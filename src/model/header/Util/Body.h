@@ -1,7 +1,7 @@
 #ifndef BODY__H
 #define BODY__H
 
-#include "INavigationVolume.h"
+#include "INavigationalEnvironment.h"
 #include "IVolumeOccupant.h"
 #include "Pose.h"
 #include <memory>
@@ -9,8 +9,6 @@
 #include <vector>
 
 // ##################################### FORWARD DECLARATIONS ################################################
-template <typename VolumeType>
-class INavigationalEnvironment;
 // ###########################################################################################################
 
 /*************************************************************************************************************
@@ -18,7 +16,7 @@ class INavigationalEnvironment;
  * INavigationalEnvironment. The Environment must have a member type defined as
  * @code VolumeType @endcode which must derive from @code INavigationVolume @endcode
  *************************************************************************************************************/
-template <typename TEnvironment>
+template <typename TEnvironment = INavigationalEnvironment<>>
 class Body : public IVolumeOccupant<typename TEnvironment::VolumeType>
 {
 public:
@@ -159,6 +157,8 @@ public:
 
         childBodies.insert(&body);
         body.parentBody = this;
+
+        // TODO ne lehessen olyat attacholni aminek van parentje
     }
 
     /******************************************************************************

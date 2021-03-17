@@ -1,6 +1,7 @@
 #ifndef IVOLUMEOCCUPANT__H
 #define IVOLUMEOCCUPANT__H
 
+#include "LibConfig.h"
 #include <memory>
 #include <vector>
 
@@ -15,7 +16,7 @@ class INavigationVolume;
  * 
  * @tparam TVolumeType Type of volume the occupant can occupy.
  *****************************************************************************/
-template <typename TVolumeType>
+template <typename TVolumeType = config::navigation::DefaultVolumeType>
 class IVolumeOccupant
 {
 public:

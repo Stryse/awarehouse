@@ -4,11 +4,12 @@
 #include "IInfoProvider.h"
 #include "INavigationalEnvironment.h"
 #include "IObservableEnvironment.h"
+#include "LibConfig.h"
 #include "Point.h"
 #include <memory>
 #include <vector>
 
-template <typename TVolumeType>
+template <typename TVolumeType = config::navigation::DefaultVolumeType>
 class ObservableNavEnvironment : public INavigationalEnvironment<TVolumeType>
 {
 public:
