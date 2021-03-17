@@ -152,13 +152,11 @@ public:
      ******************************************************************************/
     void attachBody(Body<Environment> &body)
     {
-        if (&body == this)
+        if (&body == this || body.getParent() != nullptr)
             return;
 
         childBodies.insert(&body);
         body.parentBody = this;
-
-        // TODO ne lehessen olyat attacholni aminek van parentje
     }
 
     /******************************************************************************
