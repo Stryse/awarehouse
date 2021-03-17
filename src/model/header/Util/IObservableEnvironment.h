@@ -10,43 +10,43 @@ class Point;
 //
 
 /**
- * @brief Egy megfigyelhető környezet adatszerkezet interfésze.
- * 
- * Olyan környezetet ír le, amelyből információ nyerhető különböző módokon.
+ * @brief Interface of a data structure that can be observed
+ * and can retreive info of its elements
  */
 class IObservableEnvironment
 {
+public:
     using DirectionVector = DirectionVector<int>;
     using Point = Point<int>;
 
-public:
-    virtual ~IObservableEnvironment() {}
+    virtual ~IObservableEnvironment() = default;
 
     /**
-     * @brief Sugárvetés adott irányba, 
-     * visszaadja a sugár által végighaladt elemek információját.
-     * @param direction Sugár iránya
-     * @param depth Sugárvetés mélysége
-     * @return Info* Megfigyelt információ
+     * @brief Retreives info of it's elements starting from a point
+     * to a provided direction in a provided depth
+     * @param direction Direction of the scanray
+     * @param depth The amount of units the ray travels
+     * @return Info* Observed information
      */
-    virtual Info *rayCast(const DirectionVector &direction, int depth) const = 0;
+    virtual Info *rayCast(const Point &startPoint, const DirectionVector &direction, int depth) const = 0;
 
     /**
-     * @brief Adott középpontból minden irányba letapogatás adott távolságig
+     * @brief Retreives info of it's elements from a center point
+     * to a provided radius
      * 
-     * @param center Szkennelés középpontja
-     * @param range Maximum távolság
-     * @return Info* Megfigyelt információ
+     * @param center Center of scanning
+     * @param radius Maximum length of scan circle
+     * @return Info* Observed information
      */
-    virtual Info *scan(const Point &center, int range) const = 0;
+    virtual Info *scan(const Point &center, int radius) const = 0;
 
     /**
-     * @brief Konkrét pont megfigyelése
+     * @brief Retreives info from a provided point
      * 
-     * @param targetPoint Megfigyelendő pont
-     * @return Info* Megfigyelt információ
+     * @param targetPoint Point from which we want to get info
+     * @return Info* Observed information
      */
     virtual Info *getInfoAtPoint(const Point &targetPoint) const = 0;
 };
 
-#endif
+#endif /* I_OBSERVABLE_ENVIRONMENT__H */

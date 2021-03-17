@@ -10,6 +10,8 @@ set(T_SOURCES
 test_main.cpp
 Example_test.cpp
 Tile_test.cpp 
+Body_test.cpp
+ObservableNavEnvironment_test.cpp
 )
 #############################################################################
 add_executable(awh-test ${T_SOURCES})

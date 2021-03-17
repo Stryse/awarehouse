@@ -5,12 +5,10 @@
 
 namespace inav_util
 {
-    /**
- * @brief Térfogatütközés kivétele, kiváltódik ha egy térfogategységbe esik 2
- * különböző térfoglaló.
- * 
- * @tparam Occupant A térfoglaló típusa
- */
+    /*************************************************************************************
+ * @brief  Thrown when 2 or more occupants occupy one unit of volume (collision)
+ * @tparam Occupant Type of volume occupant
+ ****************************************************************************************/
     template <typename Occupant>
     class VolumeCollisionException : std::runtime_error
     {
@@ -21,50 +19,54 @@ namespace inav_util
         explicit VolumeCollisionException(const char *message, const Occupant &occupant, const Occupant &collider)
             : std::runtime_error(message), occupant(occupant), collider(collider) {}
     };
-} // namespace inav_util
+} // ############################ namespace inav_util ####################################
 
-/**
- *  @brief Egy térfogategység funkcióit előíró interfész.
+/*****************************************************************************************
+ *  @brief Interface of one unit of volume.
  *
- *  A térfogategységnek tudnia kell fogadni térfoglalókat és számontartani ki
- * foglalja el őket. Ha két térfoglaló foglalja el egyszerre kivételben jeleznie
- * kell az ütközést.
+ *  Implementors of this interface must accept Occupants and record which
+ *  are occupying them. If two of occupants try to occupy them simultaniously
+ *  it must throw an exception indicating collision.
  *
- *  @tparam Occupant A térfoglaló típusa.
- *  @throws VolumeCollisionException térfogat ütközéskor.
- */
+ *  @tparam Occupant Type of the occupant that this class accepts.
+ * Must call freeV() in destructor.
+ * Must be pointer type.
+ * 
+ *  @throws VolumeCollisionException thrown when collision happens.
+ *****************************************************************************************/
 template <typename Occupant>
 class INavigationVolume
 {
+    //[ASSERTION] Occupant template parameter is pointer type
+    static_assert(std::is_pointer<Occupant>::value,
+                  "Template parameter \"Occupant\" of type \"INavigationVolume\" must be of pointer type");
+
 public:
     using VolumeCollisionException = inav_util::VolumeCollisionException<Occupant>;
 
 public:
-    virtual ~INavigationVolume() {}
+    virtual ~INavigationVolume() = default;
 
-    /**
-   * @brief A térfoglaló megkísérli elfoglalni a térfogategységet.
-   * @throws VollumeCollisionException kiváltódik, ha egyszerre legalább 2
-   * térfoglaló próbálja birtokolni.
-   */
+    /***********
+   * @brief The occupant tries to enter (occupy) the volume. Volume registers occupant as holder.
+   * @throws VolumeCollisionException thrown when collision happens.
+   *************/
     virtual void occupyV(const Occupant &) = 0;
 
-    /**
-   * @brief Az Occupant térfoglaló elhagyja a térfogategységet, szabaddá
-   * teszi.
-   */
+    /************
+   * @brief The occupant tries to leave (free) the volume. Volume registers occupant as null.
+   **************/
     virtual void freeV() = 0;
 
-    /**
-   * @brief Visszaadja, hogy szabad-e a térfogategység.
-   */
+    /************
+   * @brief Returns whether the volume is free (safe to occupy)
+   **************/
     virtual bool isVolumeFree() const = 0;
 
-    /**
-   * @brief A térfogategységet jelenleg elfoglaló térfoglalót adja vissza
-   * 
-   * @return Occupant Térfoglaló, amennyiben létezik, különben pedig implementációfüggő (exception vagy nullptr)
-   */
+    /************
+   * @brief Returns the occupant that currently occupies the if it exists.
+   * @return Current occupant. Nullptr if no occupant.
+   **************/
     virtual const Occupant &getOccupant() const = 0;
 };
 #endif /* INAVIGATIONVOLUME__H */

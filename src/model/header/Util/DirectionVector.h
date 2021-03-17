@@ -6,11 +6,14 @@
 #include <type_traits>
 #include <vector>
 
-/**
- * @brief Irányok 2 dimenzióban, jobbsodrású koordinátarendszerben értelmezzük.
- * 
- * ↑_y →_x
- */
+template <typename CoordType>
+class Point;
+
+/*********************************************
+ * @brief Directions in 2 dimensional space.
+ * ↑y →x
+ * Can be used to construct DirectionVector
+ *********************************************/
 enum class Directions
 {
     UP,
@@ -19,35 +22,44 @@ enum class Directions
     RIGHT
 };
 
-/**
- * @brief A matematikai 3 dimenziós vektor típusa.
+/**********************************************
+ * @brief 3 dimensional mathematical vector
  * 
- * @tparam T Vektorkoordináták típusa.
- */
-template <typename T = int>
+ * @tparam CoordinateT type of vector coordinates,
+ * must be numerical.
+ **********************************************/
+template <typename CoordT = int>
 class DirectionVector
 {
-    static_assert(std::is_arithmetic<T>::value, "Type T must be arithmetic value eg. int,float");
+public:
+    //////[ASSERTION] Template parameter CoordinateT must be numeric type
+    static_assert(std::is_arithmetic<CoordT>::value, "Type CoordinateT must be arithmetic value eg. int,float");
+
+    using CoordinateT = CoordT;
 
 private:
-    std::vector<T> coordinates;
+    /********************
+     * @brief Buffer that holds vector coordinates
+     ********************/
+    std::vector<CoordinateT> coordinates;
 
 public:
-    /**
-     * @brief Vektort hoz létre pontkoordináták alapján
+    /*************************************************
+     * @brief Creates a vector of provided coordinates
      * 
-     * @param xAxis x koordináta
-     * @param yAxis y koordináta (alapértelmezetten 0)
-     * @param zAxis z koordináta (alapértelmezetten 0)
-     */
-    DirectionVector(T xAxis, T yAxis = 0, T zAxis = 0) : coordinates{xAxis, yAxis, zAxis} {}
+     * @param xAxis x coordinate
+     * @param yAxis y coordinate (default 0)
+     * @param zAxis z coordinate (default 0)
+     *************************************************/
+    explicit DirectionVector(CoordinateT xAxis, CoordinateT yAxis = 0, CoordinateT zAxis = 0)
+        : coordinates{xAxis, yAxis, zAxis} {}
 
-    /**
-     * @brief Egyhosszú 2 dimenziós vektort hoz létre irány alapján
+    /*************************************************
+     * @brief Creates a vector of length 1 with the provided direction
      * 
-     * @param direction Irány felsorolási típus.
-     * @throws std::invalid_argument ha le nem kezelt irány értékkel hívjuk.
-     */
+     * @param direction Points toward this direction (enum)
+     * @throws std::invalid_argument if a direction value is not handled
+     *************************************************/
     explicit DirectionVector(const Directions &direction) : coordinates(3)
     {
         switch (direction)
@@ -66,31 +78,41 @@ public:
 
         case Directions::RIGHT:
             coordinates = {1, 0, 0};
+            break;
         default:
             throw std::invalid_argument("Unhandled value.");
         }
     }
 
-    /**
-     * @brief Vektorok skaláris szorzata
-     * 
-     * @param v1 Első bemenő vektor
-     * @param v2 Második bemenő vektor
-     * @return T típusú skalár
-     */
-    static T dot(const DirectionVector &v1, const DirectionVector &v2)
+    /**************************************************
+     * @brief Creates a vector with the provided buffer
+     * DirectionVector takes hold of argument vector
+     **************************************************/
+    explicit DirectionVector(std::vector<CoordinateT> &&coordinateBuffer)
+        : coordinates(std::move(coordinateBuffer)) {}
+
+    explicit DirectionVector(const Point<CoordinateT> &sourcePoint)
+        : coordinates(sourcePoint.getCoordinates()) {}
+
+    /***************************************************
+     * @brief Dot product of two vectors
+     * @return CoordinateT: scalar
+     ***************************************************/
+    static CoordinateT dot(const DirectionVector &v1, const DirectionVector &v2)
     {
         if (v1.coordinates.size() != v2.coordinates.size())
             return false;
 
-        T value = 0;
+        CoordinateT value = 0;
         for (size_t i = 0; i < v1.coordinates.size; ++i)
             value += v1.coordinates[i] * v2.coordinates[i];
 
         return value;
     }
 
-    //Operators
+    /********************** Operator ******************
+     * @brief Equality on same size and same coordinates.
+     **************************************************/
     bool operator==(const DirectionVector &other) const
     {
         if (coordinates.size() != other.coordinates.size())
@@ -110,32 +132,33 @@ public:
         return !(*this == other);
     }
 
-    //Getter
-    const T &getX() const { return coordinates[0]; }
-    const T &getY() const { return coordinates[1]; }
-    const T &getZ() const { return coordinates[2]; }
-    const std::vector<T> &getAsVector() const { return coordinates; }
-    std::vector<T> &getAsVector() { return coordinates; }
+    //############################## Getter ####################################
+    const CoordinateT &getX() const { return coordinates[0]; }
+    const CoordinateT &getY() const { return coordinates[1]; }
+    const CoordinateT &getZ() const { return coordinates[2]; }
+    const std::vector<CoordinateT> &getAsVector() const { return coordinates; }
+    std::vector<CoordinateT> &getAsVector() { return coordinates; }
 
-    //Setter
-    void setX(const T &xAxis) { coordinates[0] = xAxis; }
-    void setY(const T &yAxis) { coordinates[1] = yAxis; }
-    void setZ(const T &zAxis) { coordinates[2] = zAxis; }
-    void setXY(T xAxis, T yAxis)
+    //############################### Setter ###################################
+    void setX(const CoordinateT &xAxis) { coordinates[0] = xAxis; }
+    void setY(const CoordinateT &yAxis) { coordinates[1] = yAxis; }
+    void setZ(const CoordinateT &zAxis) { coordinates[2] = zAxis; }
+
+    void setXY(CoordinateT xAxis, CoordinateT yAxis)
     {
         coordinates[0] = xAxis;
         coordinates[1] = yAxis;
     }
-    void setXZ(T xAxis, T zAxis)
+    void setXZ(CoordinateT xAxis, CoordinateT zAxis)
     {
         coordinates[0] = xAxis;
         coordinates[2] = zAxis;
     }
-    void setYZ(T yAxis, T zAxis)
+    void setYZ(CoordinateT yAxis, CoordinateT zAxis)
     {
         coordinates[1] = yAxis;
         coordinates[2] = zAxis;
     }
 };
 
-#endif
+#endif /* DIRECTIONVECTOR__H */

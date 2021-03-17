@@ -1,13 +1,11 @@
 #include "Tile.h"
 #include "IVolumeOccupant.h"
 
-Tile::Tile(const Point &pos) : INavigationVolume<Tile::OccupantType>(), position(pos), occupant(nullptr)
+Tile::Tile(const Point &pos) : position(pos), occupant(nullptr)
 {
 }
 
-Tile::~Tile()
-{
-}
+Tile::~Tile() = default;
 
 void Tile::occupyV(const Tile::OccupantType &occupant)
 {
@@ -19,7 +17,7 @@ void Tile::occupyV(const Tile::OccupantType &occupant)
 
 void Tile::freeV()
 {
-    occupant.reset();
+    occupant = nullptr;
 }
 
 bool Tile::isVolumeFree() const
