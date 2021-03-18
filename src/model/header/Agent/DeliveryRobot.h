@@ -23,10 +23,11 @@ class DeliveryRobot : public Agent<TEnvironment>
 {
 public:
     using Environment = TEnvironment;
+    using Body = Body<Environment>;
     using Energy = TEnergy;
     using IDepleting = IDepleting<Energy>;
-    using Point = typename Body<Environment>::Point;
-    using DirectionVector = typename Body<Environment>::DirectionVector;
+    using Point = typename Body::Point;
+    using DirectionVector = typename Body::DirectionVector;
 
 public:
     explicit DeliveryRobot(Environment &env, const Point &position, const DirectionVector &orientation)
@@ -37,7 +38,7 @@ public:
                              getNewRobotMCU()),
           // Init Members
           battery(Battery<Energy>(100)),
-          robotMovement(getNewRobotMovement(battery, 1, 1))
+          robotMovement(getNewRobotMovement(*(this->body), battery, 1, 1))
     {
     }
 
@@ -67,14 +68,14 @@ private:
     /************************************************************************
      * @brief Returns a new Robot body (Bodyshape is only origin)
      ************************************************************************/
-    static std::unique_ptr<Body<Environment>> getNewRobotBody(const Point &position,
-                                                              const DirectionVector &orientation,
-                                                              Environment &environment)
+    static std::unique_ptr<Body> getNewRobotBody(const Point &position,
+                                                 const DirectionVector &orientation,
+                                                 Environment &environment)
     {
-        return std::move(std::make_unique<Body<Environment>>(position,
-                                                             orientation,
-                                                             environment,
-                                                             BodyShapeFactory<Point>::onlyOrigin()));
+        return std::move(std::make_unique<Body>(position,
+                                                orientation,
+                                                environment,
+                                                BodyShapeFactory<Point>::onlyOrigin()));
     }
 
     /************************************************************************
@@ -89,9 +90,9 @@ private:
      * @brief Returns a new Robot Movement Mechanism
      ************************************************************************/
     static std::unique_ptr<RobotMoveMechanism<Environment, Energy>> getNewRobotMovement(
-        IDepleting &resource, const Energy &turnCost, const Energy &moveCost)
+        Body &body, IDepleting &resource, const Energy &turnCost, const Energy &moveCost)
     {
-        return std::move(std::make_unique<RobotMoveMechanism<Environment, Energy>>(resource, turnCost, moveCost));
+        return std::move(std::make_unique<RobotMoveMechanism<Environment, Energy>>(body, resource, turnCost, moveCost));
     }
 };
 

@@ -14,48 +14,78 @@ class RobotMoveMechanism : public IMoveMechanism<TEnvironment, TEnergy>
 {
 public:
     using Environment = TEnvironment;
+    using Body = Body<Environment>;
     using Energy = TEnergy;
     using IDepleting = IDepleting<Energy>;
-    using Body = Body<Environment>;
     using DirectionVector = typename Body::DirectionVector;
 
 public:
-    RobotMoveMechanism(IDepleting &resource, const Energy &turnCost, const Energy &moveCost)
-        : resource(resource), turnCost(turnCost), moveCost(moveCost) {}
+    RobotMoveMechanism(Body &body, IDepleting &resource, const Energy &turnCost, const Energy &moveCost)
+        : IMoveMechanism<TEnvironment, TEnergy>(body),
+          resource(resource), turnCost(turnCost), moveCost(moveCost) {}
 
 public:
     // ################### IMoveMechanism Interface implementation #############################
-    virtual void move(Body &body, const DirectionVector &direction) override
+
+    /**************************************************************
+     * @brief Moves physically the robot's body if the
+     * provided direction is valid
+     **************************************************************/
+    virtual void move(const DirectionVector &direction) override
     {
-        if (isValidMoveDirection(body, direction))
+        if (isValidMoveDirection(direction))
         {
-            body.moveBody(direction);
+            this->body.moveBody(direction);
             resource.deplete(moveCost);
         }
     }
 
-    virtual bool isValidMoveDirection(Body &body, const DirectionVector &direction) const override
+    /****************************************************************
+     * @brief Valid direction is when the robot is going forward
+     ****************************************************************/
+    virtual bool isValidMoveDirection(const DirectionVector &direction) const override
     {
-        return body.getPose().getOrientation() == direction;
+        return this->body.getPose().getOrientation() == direction;
     }
 
-    virtual void rotate(Body &body, const DirectionVector &targetOrientation) override
+    /*****************************************************************
+     * @brief Rotates the robot to a valid orientation.
+     * 90 degrees rotations are accepted only.
+     *****************************************************************/
+    virtual void rotate(const DirectionVector &targetOrientation) override
     {
-        if (isValidRotation(body, targetOrientation))
+        if (isValidRotation(targetOrientation))
         {
-            body.rotate(targetOrientation);
+            this->body.rotate(targetOrientation);
             resource.deplete(turnCost);
         }
     }
 
-    virtual bool isValidRotation(Body &body, const DirectionVector &targetOrientation) const override
+    /************************************************************************************
+     * @brief Valid rotations of a robot are 90 degree rotations
+     ************************************************************************************/
+    virtual bool isValidRotation(const DirectionVector &targetOrientation) const override
     {
-        return DirectionVector::dot(targetOrientation, body.getPose().getOrientation()) == 0;
+        return DirectionVector::dot(targetOrientation, this->body.getPose().getOrientation()) == 0;
     }
 
-    virtual Energy getMovementCost(Body &body, const DirectionVector &direction) const override
+    /*************************************************************************************
+     * @brief Returns the sum of energy cost of moving to an adjacent tile,
+     * including rotation and move costs.
+     *************************************************************************************/
+    virtual Energy getMovementCost(const DirectionVector &direction) const override
     {
-        return turnCost * (-DirectionVector::dot(direction, body.getPose().getOrientation()) + 1) + moveCost;
+        return turnCost * (-DirectionVector::dot(direction, this->body.getPose().getOrientation()) + 1) + moveCost;
+    }
+
+    /**************************************************************************************
+     * @brief Returns a sequence of actions (function calls) that is needed
+     * to reach an adjacent Tile. (Move and rotate)
+     **************************************************************************************/
+    virtual std::vector<std::function<void(const DirectionVector &)>> getMoveActionSeq(const DirectionVector &direction) const override
+    {
+        std::vector<std::function<void(const DirectionVector &)>> actions(3);
+        return actions;
     }
 
 private:
