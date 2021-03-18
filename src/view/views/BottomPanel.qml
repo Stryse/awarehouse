@@ -25,8 +25,7 @@ Item {
 
             SplitView.minimumWidth: parent.width *    horizontalSplit.splitMinimum
             SplitView.maximumWidth: parent.width * (1-horizontalSplit.splitMinimum)
-            //BUG: Resets when resizing left panel
-            implicitWidth: parent.width * 0.5 - 3
+            implicitWidth:          parent.width * 0.5 - 3
 
             titleBarHeight: maxHeight  * horizontalSplit.titleBarHeightRatio
             borderWidth:    root.width * 0.004
