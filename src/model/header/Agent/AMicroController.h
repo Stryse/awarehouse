@@ -5,8 +5,6 @@
 #include <string>
 #include <vector>
 
-class Port;
-
 class AMicroController
 {
 public:

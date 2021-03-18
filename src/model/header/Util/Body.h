@@ -143,6 +143,16 @@ public:
     }
 
     /******************************************************************************
+     * @brief Rotates the body's orientation
+     * 
+     * TODO: Rotate shaped bodies properly
+     ******************************************************************************/
+    void rotate(const DirectionVector &targetOrientation)
+    {
+        pose.setOrientation(targetOrientation);
+    }
+
+    /******************************************************************************
      * @brief Attaches another body as child body.
      * A body cannot be self attached.
      * 
