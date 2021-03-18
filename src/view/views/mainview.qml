@@ -34,6 +34,8 @@ CustomTitleBarWindow {
         LeftPanel {
             maxWidth:               parent.width * 0.28
             SplitView.maximumWidth: maxWidth
+
+            borderWidth: root.width * 0.0035
         }
 
         SplitView {

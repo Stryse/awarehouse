@@ -7,6 +7,7 @@ Item {
     id: root
 
     property real  maxWidth
+    property alias borderWidth: border.width
 
     readonly property bool isFullSize: width >= maxWidth * 0.8
 
@@ -64,5 +65,16 @@ Item {
             OrdersTab     { id: orders     }
             SettingsTab   { id: settings   }
         }
+    }
+
+    Rectangle {
+        id: border
+
+        anchors {
+            right: parent.right
+            top:   tabBar.bottom;  bottom: parent.bottom
+        }
+
+        color: Material.primary
     }
 }
