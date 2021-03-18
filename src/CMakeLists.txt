@@ -48,11 +48,16 @@ add_library(OBJ_AWSOURCE_FILES STATIC
 model/cpp/Tile/Tile.cpp
 )
 target_include_directories(OBJ_AWSOURCE_FILES PUBLIC ${header_dir_list})
+target_link_libraries(OBJ_AWSOURCE_FILES PRIVATE
+Qt${QT_VERSION_MAJOR}::Core
+Qt${QT_VERSION_MAJOR}::Quick
+Qt${QT_VERSION_MAJOR}::QuickControls2
+)
 
 #########################################################################
 ############################## BINARY ###################################
 
-qt_add_executable(awarehouse main.cpp ${QRC_RESOURCES} ${OBJ_AWSOURCE_FILES})
+qt_add_executable(awarehouse main.cpp ${QRC_RESOURCES})
 
 #########################################################################
 ######################### Include files (.h) ############################
