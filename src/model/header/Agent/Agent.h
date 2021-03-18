@@ -46,8 +46,8 @@ public:
         : environment(environment),
           body(std::move(body)),
           mcu(std::move(mcu)),
-          serialNumber(getNewSerialNumber()),
-          id(std::string(getNewId(id_category)))
+          id(std::string(getNewId(id_category))),
+          serialNumber(getNewSerialNumber())
     {
     }
 
@@ -83,7 +83,8 @@ private:
     {
         return std::string("[AGENT]{") +
                std::string(id_category) +
-               std::string("}_");
+               std::string("}_") +
+               std::to_string(Agent<Environment>::newSerialNumber);
     }
 
 protected:
@@ -108,15 +109,15 @@ protected:
 
 private:
     /******************************************************
-     * @brief Represents the creation number of the agent
-     ******************************************************/
-    const int serialNumber;
-
-    /******************************************************
      * @brief A unique ID identifying the agent.
      * Format: [AGENT]{CATEGORY}_SERIALID
      ******************************************************/
     const std::string id;
+
+    /******************************************************
+     * @brief Represents the creation number of the agent
+     ******************************************************/
+    const int serialNumber;
 
     /******************************************************
      * @brief Incremented each time an agent is constructed.
