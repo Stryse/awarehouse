@@ -104,7 +104,7 @@ public:
             return false;
 
         CoordinateT value = 0;
-        for (size_t i = 0; i < v1.coordinates.size; ++i)
+        for (size_t i = 0; i < v1.coordinates.size(); ++i)
             value += v1.coordinates[i] * v2.coordinates[i];
 
         return value;
