@@ -1,7 +1,7 @@
-import QtQuick                   2.15
-import QtQuick.Layouts           1.12
-import QtQuick.Controls          2.15
-import QtQuick.Controls.Material 2.15
+import QtQuick
+import QtQuick.Layouts
+import QtQuick.Controls
+import QtQuick.Controls.Material
 
 ApplicationWindow {
     id: root
@@ -10,7 +10,7 @@ ApplicationWindow {
     property alias titleText:    titleLabel.text
 
     property color titleBarColor: "#212121"
-    property real  borderWidth:   2.5
+    property real  borderWidth:   width * 0.002
 
     property bool isDraggable:  true
 

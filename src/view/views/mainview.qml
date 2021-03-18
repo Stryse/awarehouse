@@ -1,13 +1,13 @@
-import QtQuick                   2.15
-import QtQuick.Controls          2.15
-import QtQuick.Controls.Material 2.15
+import QtQuick
+import QtQuick.Window
+import QtQuick.Controls
+import QtQuick.Controls.Material
 
 CustomTitleBarWindow {
     id: root
 
     readonly property string windowTitle:     qsTr("aWarehouse Manager")
-    readonly property color  secondaryColor:  "#292929"
-    readonly property color  tertiaryColor:   "#2b2b2b"
+    readonly property color  secondaryColor:   "#2b2b2b"
 
     visible: true
 
@@ -34,40 +34,35 @@ CustomTitleBarWindow {
         LeftPanel {
             maxWidth:               parent.width * 0.28
             SplitView.maximumWidth: maxWidth
-
-            tabBarColor: secondaryColor
         }
 
-        Item {
-            id: contentArea
+        SplitView {
+            id: verticalSplit
 
-            SplitView.minimumWidth: 50
-            SplitView.fillWidth:    true
+            SplitView.fillWidth: true
 
-            SplitView {
-                id: verticalSplit
+            orientation:  Qt.Vertical
 
-                anchors.fill: parent
+            Pane {
+                id: simulationArea
 
-                orientation:  Qt.Vertical
+                SplitView.minimumHeight: 50
+                SplitView.fillHeight:    true
 
-                Pane {
-                    id: simulationArea
+                padding: 0
 
-                    SplitView.minimumHeight: 50
-                    SplitView.fillHeight:    true
+                Material.background: secondaryColor
 
-                    Material.background: tertiaryColor
-
-                    Simulation { id: simulation }
-                }
-                BottomPanel {
-                    id: bottomPanel
-
-                    maxHeight: parent.height * 0.325
-                }
-
+                Simulation { id: simulation }
             }
+
+            BottomPanel {
+                id: bottomPanel
+
+                maxHeight: parent.height * 0.325
+            }
+
         }
+
     }
 }

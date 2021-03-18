@@ -1,6 +1,6 @@
-import QtQuick                   2.15
-import QtQuick.Controls          2.15
-import QtQuick.Controls.Material 2.15
+import QtQuick
+import QtQuick.Controls
+import QtQuick.Controls.Material
 
 Item {
     id: root
@@ -10,12 +10,35 @@ Item {
     implicitHeight:          maxHeight
     SplitView.maximumHeight: maxHeight
 
-    Pane {
+    SplitView {
+        id: horizontalSplit
+
+        readonly property real splitMinimum:        1/3
+        readonly property real titleBarHeightRatio: 0.125
+
         anchors.fill: parent
 
-        Label {
-            text: "View 2"
-            anchors.centerIn: parent
+        orientation:  Qt.Horizontal
+
+        ActorInfoTab {
+            id: actorInfoTab
+
+            SplitView.minimumWidth: parent.width *    horizontalSplit.splitMinimum
+            SplitView.maximumWidth: parent.width * (1-horizontalSplit.splitMinimum)
+            //BUG: Resets when resizing left panel
+            implicitWidth: parent.width * 0.5 - 3
+
+            titleBarHeight: maxHeight  * horizontalSplit.titleBarHeightRatio
+            borderWidth:    root.width * 0.004
+        }
+
+        LogTab {
+            id: logTab
+
+            SplitView.fillWidth: true
+
+            titleBarHeight: maxHeight  * horizontalSplit.titleBarHeightRatio
+            borderWidth:    root.width * 0.004
         }
     }
 }

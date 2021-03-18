@@ -1,13 +1,12 @@
-import QtQuick                   2.15
-import QtQuick.Layouts           1.12
-import QtQuick.Controls          2.15
-import QtQuick.Controls.Material 2.15
+import QtQuick
+import QtQuick.Layouts
+import QtQuick.Controls
+import QtQuick.Controls.Material
 
 Item {
     id: root
 
     property real  maxWidth
-    property color tabBarColor
 
     readonly property bool isFullSize: width >= maxWidth * 0.8
 
@@ -18,18 +17,20 @@ Item {
     TabBar {
         id: tabBar
 
+        readonly property real textSize: contentHeight * 0.32
+
         anchors {
             left: parent.left; right: parent.right
             top:  parent.top
         }
         contentHeight: parent.height * 0.06
 
-        Material.background: tabBarColor
+        Material.background: Material.primary
 
-        TabButton { text: root.isFullSize  ?  qsTr("Outliner")   : qsTr("Out")  }
-        TabButton { text: root.isFullSize  ?  qsTr("Statistics") : qsTr("Stat") }
-        TabButton { text: root.isFullSize  ?  qsTr("Orders")     : qsTr("Ord")  }
-        TabButton { text: root.isFullSize  ?  qsTr("Settings")   : qsTr("Set")  }
+        TabButton { text: root.isFullSize  ?  qsTr("Outliner")   : qsTr("Out") ; font.capitalization: Font.MixedCase; font.pixelSize: tabBar.textSize }
+        TabButton { text: root.isFullSize  ?  qsTr("Statistics") : qsTr("Stat"); font.capitalization: Font.MixedCase; font.pixelSize: tabBar.textSize }
+        TabButton { text: root.isFullSize  ?  qsTr("Orders")     : qsTr("Ord") ; font.capitalization: Font.MixedCase; font.pixelSize: tabBar.textSize }
+        TabButton { text: root.isFullSize  ?  qsTr("Settings")   : qsTr("Set") ; font.capitalization: Font.MixedCase; font.pixelSize: tabBar.textSize }
     }
 
     Pane {
@@ -42,7 +43,7 @@ Item {
             top:  tabBar.bottom; bottom: parent.bottom
         }
 
-        Material.elevation:  10
+        Material.elevation:  6
 
         padding:       0
         topPadding:    paddingWidth
