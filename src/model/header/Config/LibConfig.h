@@ -4,7 +4,7 @@
 // FWD Declarations
 class Tile;
 template <typename T>
-class ObservableEnvironment;
+class ObservableNavEnvironment;
 //
 
 namespace config
@@ -12,7 +12,11 @@ namespace config
     namespace navigation
     {
         using DefaultVolumeType = Tile;
-        using DefaultEnvironment = ObservableEnvironment<DefaultVolumeType>;
+        using DefaultEnvironment = ObservableNavEnvironment<DefaultVolumeType>;
+    };
+    namespace agent
+    {
+        using DefaultEnergy = int;
     };
 };
 #endif /* LIB_CONFIG__H */
