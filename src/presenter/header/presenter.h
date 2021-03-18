@@ -1,29 +1,31 @@
 #ifndef PRESENTER_H
 #define PRESENTER_H
 
-#include <QAbstractItemModel>
+#include <QObject>
+#include <QVector>
+#include "Actors.h"
+#include "Order.h"
 
-class Presenter : public QAbstractItemModel
+class Presenter : public QObject
 {
     Q_OBJECT
+
+    Q_PROPERTY( int speed READ speed WRITE setSpeed NOTIFY speedChanged)
 
 public:
     explicit Presenter(QObject *parent = nullptr);
 
-    // Header:
-    QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const override;
+    int speed() const;
+    void setSpeed(int speed);
 
-    // Basic functionality:
-    QModelIndex index(int row, int column,
-                      const QModelIndex &parent = QModelIndex()) const override;
-    QModelIndex parent(const QModelIndex &index) const override;
-
-    int rowCount(const QModelIndex &parent = QModelIndex()) const override;
-    int columnCount(const QModelIndex &parent = QModelIndex()) const override;
-
-    QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
+signals:
+    void speedChanged();
 
 private:
+    QVector<Actors> mActor;
+    QVector<Order> mOrders;
+    int mAnimationSpeed;
+
 };
 
 #endif // PRESENTER_H
