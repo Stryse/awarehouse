@@ -1,6 +1,7 @@
 #include "Actors.h"
 
-Actors::Actors(QString name, QString action, int battery, Actors::Role role) : mName(name), mAction(action), mBatteryLevel(battery), mRole(role)
+Actors::Actors(QString name, QString action, int battery, Actors::Role role, Actors::Direction orientation) :
+    mName(name), mAction(action), mBatteryLevel(battery), mRole(role), mMoveCount(0), mOrientation(orientation)
 {
 }
 
@@ -58,5 +59,30 @@ void Actors::setRole(Actors::Role role)
 
     mRole = role;
     emit roleChanged();
+}
+
+int Actors::moveCount() const
+{
+    return mMoveCount;
+}
+
+void Actors::MoveCountInc()
+{
+    ++mMoveCount;
+    emit moveCountChanged();
+}
+
+Actors::Direction Actors::orientation() const
+{
+    return mOrientation;
+}
+
+void Actors::setOrientation(Actors::Direction dir)
+{
+    if(mOrientation == dir)
+        return;
+
+    mOrientation = dir;
+    emit orientationChanged();
 }
 
