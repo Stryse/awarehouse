@@ -55,11 +55,40 @@ Item {
             MediaControlButton {
                 id: speed
 
+                property real simulationSpeed: 1
+
+                states: [
+                    State {
+                        name: "normal"
+                        PropertyChanges { target: speed; text: "1×"; simulationSpeed: 1 }
+                    },
+                    State {
+                        name: "double"
+                        PropertyChanges { target: speed; text: "2×"; simulationSpeed: 2 }
+                    },
+                    State {
+                        name: "half"
+                        PropertyChanges { target: speed; text: "0.5×"; simulationSpeed: 0.5 }
+                    }
+                ]
+                state: "normal"
+
                 Layout.fillWidth:  true
                 Layout.fillHeight: true
 
-                icon.source: "qrc:/speed_white.png"
-                //text: "Speed"
+                //icon.source: "qrc:/speed_white.png"
+
+                font.bold: true
+                font.letterSpacing: 0
+                font.pixelSize: Math.min(parent.height * 0.35, 30)
+
+                onClicked: {
+                    switch (speed.state) {
+                    case "normal": speed.state = "double"; break
+                    case "double": speed.state = "half";   break
+                    case "half":   speed.state = "normal"; break
+                    }
+                }
             }
 
             MediaControlButton {
