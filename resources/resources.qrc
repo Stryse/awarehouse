@@ -5,5 +5,9 @@
         <file alias="fullscreen_exit_white.png">icons/fullscreen_exit_white.png</file>
         <file alias="fullscreen_white.png">icons/fullscreen_white.png</file>
         <file alias="minimize_white.png">icons/minimize_white.png</file>
+        <file alias="pause_white.png">icons/pause_white.png</file>
+        <file alias="play_white.png">icons/play_white.png</file>
+        <file alias="replay_white.png">icons/replay_white.png</file>
+        <file alias="speed_white.png">icons/speed_white.png</file>
     </qresource>
 </RCC>
