@@ -5,37 +5,25 @@
 #include <stdexcept>
 #include <vector>
 
+template <typename TPoint = Point<>>
 class BodyShapeFactory
 {
 public:
-    enum class BodyShape
-    {
-        ONLY_ORIGIN,
-        TWO_BY_TWO_CUBE,
-        TWO_BLOCKS_HEIGH
-    };
-    static std::vector<Point<int>> createShape(const BodyShape &shape)
-    {
-        switch (shape)
-        {
-        case BodyShape::ONLY_ORIGIN:
-            return {};
+    using Point = TPoint;
 
-        case BodyShape::TWO_BLOCKS_HEIGH:
-            return {Point<int>{0, 0, 1}};
-
-        case BodyShape::TWO_BY_TWO_CUBE:
-            return {
-                Point<int>{1, 0, 0},
-                Point<int>{0, 0, 1},
-                Point<int>{1, 0, 1},
-                Point<int>{0, -1, 0},
-                Point<int>{0, -1, 1},
-                Point<int>{1, -1, 0},
-                Point<int>{1, -1, 1}};
-        default:
-            throw std::runtime_error("Unhandled Body Shape");
-        }
+    static std::vector<Point> onlyOrigin() { return std::vector<Point>{}; }
+    static std::vector<Point> twoBlockHeigh() { return {Point(0, 0, 1)}; }
+    static std::vector<Point> twoByTwoCube()
+    {
+        std::vector<Point> buffer(7);
+        buffer.emplace_back(1, 0, 0);
+        buffer.emplace_back(0, 0, 1);
+        buffer.emplace_back(1, 0, 1);
+        buffer.emplace_back(0, -1, 0);
+        buffer.emplace_back(0, -1, 1);
+        buffer.emplace_back(1, -1, 0);
+        buffer.emplace_back(1, -1, 1);
+        return buffer;
     }
 };
 

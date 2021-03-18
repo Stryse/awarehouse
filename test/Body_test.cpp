@@ -25,14 +25,14 @@ protected:
             Point<>(1, 1, 0),
             DirectionVector<>(Directions::UP),
             *env,
-            BodyShapeFactory::createShape(BodyShapeFactory::BodyShape::TWO_BLOCKS_HEIGH));
+            BodyShapeFactory<>::twoBlockHeigh());
 
         // ####################### Setup Small Body ##########################
         tinyBody = std::make_unique<Body<>>(
             Point<>(1, 1, 2),
             DirectionVector<>(Directions::UP),
             *env,
-            BodyShapeFactory::createShape(BodyShapeFactory::BodyShape::ONLY_ORIGIN));
+            BodyShapeFactory<>::onlyOrigin());
     }
 
     static std::unique_ptr<ObservableNavEnvironment<>> env;
@@ -56,7 +56,7 @@ TEST_F(BodyTest, AttachChildDetachChild)
     EXPECT_FALSE(largeBody->getChildren().find(&(*tinyBody)) == largeBody->getChildren().end()) << "[ERROR] child body is not registered in parent" << std::endl;
     EXPECT_EQ(tinyBody->getParent(), &(*largeBody)) << "[ERROR] Wrong parent" << std::endl;
 
-    std::unique_ptr<Body<>> fakeParent = std::make_unique<Body<>>(Point<>(2, 2, 2), DirectionVector<>(Directions::UP), *env);
+    std::unique_ptr<Body<>> fakeParent = std::make_unique<Body<>>(Point<>(2, 2, 2), DirectionVector<>(Directions::UP), *env, BodyShapeFactory<>::onlyOrigin());
     fakeParent->attachBody(*tinyBody);
     //Check no attachment on fake parent
     EXPECT_EQ(tinyBody->getParent(), &(*largeBody));
@@ -150,7 +150,7 @@ TEST_F(BodyTest, ProperDestruction_References)
         Point<>(4, 4, 4),
         DirectionVector<>(Directions::LEFT),
         *env,
-        BodyShapeFactory::createShape(BodyShapeFactory::BodyShape::ONLY_ORIGIN));
+        BodyShapeFactory<>::onlyOrigin());
     // Original parent destroyed
     EXPECT_EQ(tinyBody->getParent(), nullptr) << "[ERROR] Child still has record of destroyed parent" << std::endl;
     // Destroy again
@@ -161,7 +161,7 @@ TEST_F(BodyTest, ProperDestruction_References)
         Point<>(4, 4, 4),
         DirectionVector<>(Directions::LEFT),
         *env,
-        BodyShapeFactory::createShape(BodyShapeFactory::BodyShape::ONLY_ORIGIN));
+        BodyShapeFactory<>::onlyOrigin());
     // Attach
     largeBody->attachBody(*tinyBody);
     // Destroy child
@@ -169,7 +169,7 @@ TEST_F(BodyTest, ProperDestruction_References)
         Point<>(4, 4, 5),
         DirectionVector<>(Directions::LEFT),
         *env,
-        BodyShapeFactory::createShape(BodyShapeFactory::BodyShape::ONLY_ORIGIN));
+        BodyShapeFactory<>::onlyOrigin());
     EXPECT_EQ(largeBody->getChildren().size(), 0) << "[ERROR] Parent still has record of destroyed child" << std::endl;
     EXPECT_TRUE(largeBody->getChildren().find(&(*tinyBody)) == largeBody->getChildren().end()) << "[ERROR] Parent still has record of destroyed child" << std::endl;
     // Destroy child again
