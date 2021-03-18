@@ -46,6 +46,7 @@ view/viewsource.qrc
 add_library(OBJ_AWSOURCE_FILES STATIC
 # Add sources here
 model/cpp/Tile/Tile.cpp
+presenter/cpp/presenter.cpp
 )
 target_include_directories(OBJ_AWSOURCE_FILES PUBLIC ${header_dir_list})
 
