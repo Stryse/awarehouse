@@ -132,13 +132,18 @@ public:
         return !(*this == other);
     }
 
+    friend inline bool operator<(const DirectionVector &lhs, const DirectionVector &rhs)
+    {
+        return lhs.getAsVector() < rhs.getAsVector();
+    }
+
     //############################## Getter ####################################
     const CoordinateT &getX() const { return coordinates[0]; }
     const CoordinateT &getY() const { return coordinates[1]; }
     const CoordinateT &getZ() const { return coordinates[2]; }
     const std::vector<CoordinateT> &getAsVector() const { return coordinates; }
     std::vector<CoordinateT> &getAsVector() { return coordinates; }
-
+    size_t getSize() const { return coordinates.size(); }
     //############################### Setter ###################################
     void setX(const CoordinateT &xAxis) { coordinates[0] = xAxis; }
     void setY(const CoordinateT &yAxis) { coordinates[1] = yAxis; }

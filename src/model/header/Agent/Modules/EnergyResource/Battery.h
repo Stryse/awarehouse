@@ -36,7 +36,8 @@ public:
     /************************************************************************
      * @brief Constructs a battery which can be used as an energy resoure
      * 
-     * @param maxCharge The maximum amound of energy the battery can hold in perfect condition
+     * @param maxCharge The maximum amound of energy the battery can hold
+     *  in perfect condition
      * @param timesUsed The times the battery was used (default = brand new)
      ************************************************************************/
     explicit Battery(const Energy &maxCharge, int timesUsed = 0)
@@ -49,6 +50,12 @@ public:
         this->maxCharge *= condition;
     }
 
+    /*********************************************************
+     * @brief The resource is refilled by the provided amount
+     * of energy.
+     * This action counts as usage so it degrades the
+     * battery if the battery has degradation policy.
+     ********************************************************/
     virtual void charge(const Energy &energy) override
     {
         if (currentCharge + energy >= maxCharge)
@@ -60,6 +67,13 @@ public:
         maxCharge *= condition;
     }
 
+    /*****************************************************
+     * @brief The resource is depleted due to usage.
+     * This action counts as usage so it degrades the
+     * battery if the battery has degradation policy.
+     * @throws EnergyDepletedException is thrown when
+     * there's not enough energy in the battery.
+     *****************************************************/
     virtual void deplete(const Energy &energy) override
     {
         if (currentCharge - energy < 0)
@@ -74,6 +88,9 @@ public:
         maxCharge *= condition;
     }
 
+    /*******************************************************
+     * @brief This Battery has no degradation
+     *******************************************************/
     virtual double degrade(int timesUsed) const override
     {
         return IDepleting<Energy>::NoDegradation;

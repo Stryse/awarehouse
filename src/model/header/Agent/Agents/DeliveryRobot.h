@@ -57,7 +57,7 @@ public:
     /*Todo Remove*/
     void move(const DirectionVector &direction)
     {
-        AgentAction *ma = robotMovement->move(direction);
+        AgentAction *ma = robotMovement->move(direction).front();
         (*ma)();
         int a = 5;
     }

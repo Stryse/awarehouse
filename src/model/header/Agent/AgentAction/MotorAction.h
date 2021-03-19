@@ -30,15 +30,8 @@ public:
           motorDrive(std::move(motorDrive)) {}
 
 protected:
-    virtual void depletingAction() override
-    {
-        motorDrive->executeMovement();
-    }
-
-    virtual bool canExecute() const override
-    {
-        return true;
-    }
+    virtual void depletingAction() override { motorDrive->executeMovement(); }
+    virtual bool canExecute() const override { return true; }
 
 private:
     std::unique_ptr<MotorDrive> motorDrive;

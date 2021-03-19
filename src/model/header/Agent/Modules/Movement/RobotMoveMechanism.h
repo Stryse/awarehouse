@@ -12,22 +12,28 @@ template <typename TBody, typename TEnergy = config::agent::DefaultEnergy>
 class RobotMoveMechanism : public IMoveMechanism<TBody, TEnergy>
 {
 public:
-    //Body Related
+    // ########################## Body Related ###############################
     using Body = TBody;
     using DirectionVector = typename Body::DirectionVector;
     using AMotor = AMotor<Body>;
     using TrackMotor = TrackMotor<Body>;
     using MotorDirection = typename AMotor::MotorDirection;
 
-    //Energy related
+    // ######################### Energy related ##############################
     using Energy = TEnergy;
     using IDepleting = IDepleting<Energy>;
     using MotorAction = MotorAction<Body, Energy>;
     using MotorDrive = MotorDrive<AMotor, Energy>;
     using MotorCommand = MotorCommand<AMotor>;
+    // #######################################################################
 
+public:
     explicit RobotMoveMechanism(Body &body, IDepleting &resource)
-        : IMoveMechanism<TBody, TEnergy>(getNewRobotMotors(body), resource)
+        : IMoveMechanism<TBody, TEnergy>(getNewRobotMotors(body), getNewRobotMoveSet(), resource),
+
+          ForwardMotorAction(std::make_unique<MotorAction>(forwardMotorDrive(this->motors), resource)),
+          LeftTurnMotorAction(std::make_unique<MotorAction>(leftTurnMotorDrive(this->motors), resource)),
+          RightTurnMotorAction(std::make_unique<MotorAction>(leftTurnMotorDrive(this->motors), resource))
     {
     }
 
@@ -36,10 +42,9 @@ public:
     {
         return true;
     }
-    virtual MotorAction *move(const DirectionVector &direction) override
+    virtual std::queue<MotorAction *> move(const DirectionVector &direction) override
     {
-        MotorAction *forward = new MotorAction(forwardMotorDrive(this->motors), this->resource);
-        return forward;
+        return std::queue<MotorAction *>{{ForwardMotorAction.get()}};
     }
     virtual Energy getEnergyCost(const DirectionVector &direction) const override
     {
@@ -50,17 +55,39 @@ public:
         return 0;
     }
 
+private:
+    std::unique_ptr<MotorAction> ForwardMotorAction;
+    std::unique_ptr<MotorAction> LeftTurnMotorAction;
+    std::unique_ptr<MotorAction> RightTurnMotorAction;
+
 public:
-    static std::vector<AMotor *> getNewRobotMotors(Body &body)
+    /*************************************************************
+     * @brief Constructs the motors of this MoveMechanism
+     * This mechanism has 2 track motors, a left and a right.
+     *************************************************************/
+    static std::vector<std::unique_ptr<AMotor>> getNewRobotMotors(Body &body)
     {
-        std::vector<AMotor *> motors;
+        std::vector<std::unique_ptr<AMotor>> motors;
         motors.reserve(2);
-        motors.push_back(new TrackMotor(body, TrackMotor::MotorSide::LEFT));
-        motors.push_back(new TrackMotor(body, TrackMotor::MotorSide::RIGHT));
+        motors.push_back(std::make_unique<TrackMotor>(body, TrackMotor::MotorSide::LEFT));
+        motors.push_back(std::make_unique<TrackMotor>(body, TrackMotor::MotorSide::RIGHT));
         return motors;
     }
 
-    static std::unique_ptr<MotorDrive> forwardMotorDrive(const std::vector<AMotor *> &motors)
+    static std::set<DirectionVector> getNewRobotMoveSet()
+    {
+        return std::set<DirectionVector>{{DirectionVector(Directions::UP),
+                                          DirectionVector(Directions::DOWN),
+                                          DirectionVector(Directions::LEFT),
+                                          DirectionVector(Directions::RIGHT)}};
+    }
+
+    /****************************************************************
+     * @brief Returns a MotorDrive which describes Forward Movement
+     * Both left and the right motor moves clockwise.
+     * This object can be passed to a MotorAction for execution
+     ****************************************************************/
+    static std::unique_ptr<MotorDrive> forwardMotorDrive(const std::vector<std::unique_ptr<AMotor>> &motors)
     {
         std::vector<MotorCommand> commands;
         commands.reserve(2);
@@ -69,7 +96,35 @@ public:
         return std::move(std::make_unique<MotorDrive>(1, 1, std::move(commands)));
     }
 
-private:
+    /****************************************************************
+     * @brief Returns a MotorDrive which describes Right Turn Movement
+     * The left Track motor moves CLOCKWISE
+     * The right Track motor moves COUNTER_CLOCKWISE
+     * This object can be passed to a MotorAction for execution
+     ****************************************************************/
+    static std::unique_ptr<MotorDrive> rightTurnMotorDrive(const std::vector<std::unique_ptr<AMotor>> &motors)
+    {
+        std::vector<MotorCommand> commands;
+        commands.reserve(2);
+        commands.emplace_back(*motors[0], MotorDirection::CLOCKWISE);
+        commands.emplace_back(*motors[1], MotorDirection::COUNTER_CLOCKWISE);
+        return std::move(std::make_unique<MotorDrive>(1, 1, std::move(commands)));
+    }
+
+    /****************************************************************
+     * @brief Returns a MotorDrive which describes Left Turn Movement
+     * The left Track motor moves COUNTER_CLOCKWISE
+     * The right Track motor moves CLOCKWISE
+     * This object can be passed to a MotorAction for execution
+     ****************************************************************/
+    static std::unique_ptr<MotorDrive> leftTurnMotorDrive(const std::vector<std::unique_ptr<AMotor>> &motors)
+    {
+        std::vector<MotorCommand> commands;
+        commands.reserve(2);
+        commands.emplace_back(*motors[0], MotorDirection::COUNTER_CLOCKWISE);
+        commands.emplace_back(*motors[1], MotorDirection::CLOCKWISE);
+        return std::move(std::make_unique<MotorDrive>(1, 1, std::move(commands)));
+    }
 };
 
 #endif /* ROBOT_MOVE_MECHANISM__H */
