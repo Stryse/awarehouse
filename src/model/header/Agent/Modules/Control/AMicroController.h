@@ -9,8 +9,6 @@ class AMicroController
 {
 public:
     virtual void tick(int time) = 0;
-
-private:
 };
 
 #endif

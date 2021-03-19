@@ -7,13 +7,14 @@
 #include "BodyShapeFactory.h"
 #include "DRobotMCU.h"
 #include "LibConfig.h"
+#include "MotorAction.h"
 #include "RobotMoveMechanism.h"
 
 // ######################## Forward Declarations #########################
 class DRobotMCU;
-template <typename Env, typename Energy>
+template <typename TBody, typename TEnergy>
 class IMoveMechanism;
-template <typename Energy>
+template <typename TEnergy>
 class IDepleting;
 // #######################################################################
 
@@ -38,7 +39,7 @@ public:
                              getNewRobotMCU()),
           // Init Members
           battery(Battery<Energy>(100)),
-          robotMovement(getNewRobotMovement(*(this->body), battery, 1, 1))
+          robotMovement(getNewRobotMovement(*(this->body), battery))
     {
     }
 
@@ -48,7 +49,7 @@ public:
         return battery;
     }
 
-    const IMoveMechanism<Environment, Energy> &getMoveMechanism() const
+    const IMoveMechanism<Body, Energy> &getMoveMechanism() const
     {
         return *(robotMovement->get());
     }
@@ -56,12 +57,14 @@ public:
     /*Todo Remove*/
     void move(const DirectionVector &direction)
     {
-        robotMovement->move(*(this->body), direction);
+        AgentAction *ma = robotMovement->move(direction);
+        (*ma)();
+        int a = 5;
     }
 
 private:
     Battery<Energy> battery;
-    std::unique_ptr<IMoveMechanism<Environment, Energy>> robotMovement;
+    std::unique_ptr<IMoveMechanism<Body, Energy>> robotMovement;
 
 private:
     // ########################## Static functions ###########################
@@ -89,10 +92,10 @@ private:
     /************************************************************************
      * @brief Returns a new Robot Movement Mechanism
      ************************************************************************/
-    static std::unique_ptr<RobotMoveMechanism<Environment, Energy>> getNewRobotMovement(
-        Body &body, IDepleting &resource, const Energy &turnCost, const Energy &moveCost)
+    static std::unique_ptr<RobotMoveMechanism<Body, Energy>> getNewRobotMovement(
+        Body &body, IDepleting &resource)
     {
-        return std::move(std::make_unique<RobotMoveMechanism<Environment, Energy>>(body, resource, turnCost, moveCost));
+        return std::move(std::make_unique<RobotMoveMechanism<Body, Energy>>(body, resource));
     }
 };
 

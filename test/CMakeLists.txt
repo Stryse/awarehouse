@@ -11,6 +11,7 @@ test_main.cpp
 Example_test.cpp
 Tile_test.cpp 
 Body_test.cpp
+Agent_test.cpp
 ObservableNavEnvironment_test.cpp
 )
 #############################################################################

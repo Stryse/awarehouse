@@ -1,0 +1,89 @@
+#ifndef BATTERY__H
+#define BATTERY__H
+
+#include "IDepleting.h"
+
+template <typename TEnergy = int>
+class Battery : public IDepleting<TEnergy>
+{
+public:
+    using Energy = TEnergy;
+
+private:
+    /**************************************************************
+     * @brief Maximum amount of energy that the resource can store
+     **************************************************************/
+    Energy maxCharge;
+
+    /********************************************************************
+     * @brief The amount of energy that the resource is currently storing
+     ********************************************************************/
+    Energy currentCharge;
+
+    /**************************************************************
+     * @brief The number of times that the resource is used.
+     * The resource degrade proportionally to this quantity
+     **************************************************************/
+    int timesUsed;
+
+    /***********************************************************************
+     * @brief The percentage of the maximum energy that the resource is now
+     * capable of storing.
+     ***********************************************************************/
+    double condition;
+
+public:
+    /************************************************************************
+     * @brief Constructs a battery which can be used as an energy resoure
+     * 
+     * @param maxCharge The maximum amound of energy the battery can hold in perfect condition
+     * @param timesUsed The times the battery was used (default = brand new)
+     ************************************************************************/
+    explicit Battery(const Energy &maxCharge, int timesUsed = 0)
+        : maxCharge(maxCharge), currentCharge(maxCharge), timesUsed(timesUsed)
+    {
+        if (maxCharge < 0)
+            this->maxCharge = 0;
+
+        condition = 1; // TODO FIX WITH FACTORY
+        this->maxCharge *= condition;
+    }
+
+    virtual void charge(const Energy &energy) override
+    {
+        if (currentCharge + energy >= maxCharge)
+            currentCharge = maxCharge;
+        else
+            currentCharge += energy;
+
+        condition = degrade(++timesUsed);
+        maxCharge *= condition;
+    }
+
+    virtual void deplete(const Energy &energy) override
+    {
+        if (currentCharge - energy < 0)
+        {
+            currentCharge = 0;
+            throw typename IDepleting<Energy>::EnergyDepletedException("No energy left in battery.");
+        }
+        else
+            currentCharge -= energy;
+
+        condition = degrade(++timesUsed);
+        maxCharge *= condition;
+    }
+
+    virtual double degrade(int timesUsed) const override
+    {
+        return IDepleting<Energy>::NoDegradation;
+    }
+
+    // ############################### GETTER ####################################
+    virtual const Energy &getCharge() const override { return currentCharge; }
+    virtual const Energy &getMaxCharge() const override { return maxCharge; }
+    virtual int getTimesUsed() const override { return timesUsed; }
+    virtual double getCondition() const override { return condition; }
+    // ###########################################################################
+};
+#endif /* BATTERY__H */

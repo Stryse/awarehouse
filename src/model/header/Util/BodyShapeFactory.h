@@ -15,7 +15,8 @@ public:
     static std::vector<Point> twoBlockHeigh() { return {Point(0, 0, 1)}; }
     static std::vector<Point> twoByTwoCube()
     {
-        std::vector<Point> buffer(7);
+        std::vector<Point> buffer;
+        buffer.reserve(7);
         buffer.emplace_back(1, 0, 0);
         buffer.emplace_back(0, 0, 1);
         buffer.emplace_back(1, 0, 1);
