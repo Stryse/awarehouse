@@ -6,6 +6,7 @@ Item {
     id: root
 
     property real maxHeight
+    property real borderWidth
 
     implicitHeight:          maxHeight
     SplitView.maximumHeight: maxHeight
@@ -28,7 +29,7 @@ Item {
             implicitWidth:          parent.width * 0.5 - 3
 
             titleBarHeight: maxHeight  * horizontalSplit.titleBarHeightRatio
-            borderWidth:    root.width * 0.004
+            borderWidth:    root.borderWidth
         }
 
         LogTab {
@@ -37,7 +38,7 @@ Item {
             SplitView.fillWidth: true
 
             titleBarHeight: maxHeight  * horizontalSplit.titleBarHeightRatio
-            borderWidth:    root.width * 0.004
+            borderWidth:    root.borderWidth
         }
     }
 }

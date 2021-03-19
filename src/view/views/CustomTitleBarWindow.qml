@@ -12,7 +12,7 @@ ApplicationWindow {
     property color titleBarColor: "#212121"
     property real  borderWidth:   width * 0.002
 
-    property bool isDraggable:  true
+    property bool  isDraggable:   true
 
     readonly property alias isFullScreen: fullScreenButton.isFullScreen
 

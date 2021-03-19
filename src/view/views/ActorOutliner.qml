@@ -24,6 +24,7 @@ Item {
                 left: parent.left; right: parent.right
             }
             height: parent.height * 0.12
+            clip:   true
 
             color:  Material.primary
 

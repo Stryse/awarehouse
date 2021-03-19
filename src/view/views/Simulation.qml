@@ -8,18 +8,43 @@ Item {
 
     anchors.fill: parent
 
-    Pane {
+    Item {
         id: simulation
 
+        property int wareHouseRows: 10
+        property int wareHouseCols: 10
         readonly property alias inProgress: play.paused
+
         readonly property real aspectRatio: 16/9
 
         anchors.centerIn: parent
         height: parent.height * 0.7
         width:  height * aspectRatio
 
-        Material.background: Material.accent
+        Material.background: Material.primary
         Material.elevation:  6
+
+        Grid {
+            id: simulationGrid
+
+            property real cellSize: Math.min(simulation.width  / simulation.wareHouseCols - spacing,
+                                             simulation.height / simulation.wareHouseRows - spacing)
+
+            anchors.centerIn: parent
+
+            rows:    simulation.wareHouseRows
+            columns: simulation.wareHouseCols
+            spacing: 1
+
+            Repeater {
+                model: simulation.wareHouseRows * simulation.wareHouseCols
+                Rectangle {
+                    width:  simulationGrid.cellSize
+                    height: simulationGrid.cellSize
+                    color:  Material.accent
+                }
+            }
+        }
     }
 
     Item {
