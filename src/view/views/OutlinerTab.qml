@@ -1,25 +1,27 @@
 import QtQuick
+import QtQuick.Layouts
 import QtQuick.Controls
 
 Item {
     id: root
 
-    ScrollView {
+    ColumnLayout {
+        id: columnLayout
+
         anchors.fill: parent
 
-        padding: 0
+        ActorOutliner {
+            id: actorOutliner
 
-        ScrollBar.horizontal.policy:    ScrollBar.AlwaysOff
-        ScrollBar.vertical.interactive: false
+            Layout.fillWidth:  true
+            Layout.fillHeight: true
+        }
 
-        ListView {
-            clip: true
+        TaskOutliner {
+            id: taskOutliner
 
-            //PLACEHOLDER
-            model: 20
-            delegate: ItemDelegate {
-                text: "Item " + index
-            }
+            Layout.fillWidth:  true
+            Layout.fillHeight: true
         }
     }
 }

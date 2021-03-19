@@ -47,9 +47,6 @@ Item {
         Material.elevation:  6
 
         padding:       0
-        topPadding:    paddingWidth
-        leftPadding:   paddingWidth
-        bottomPadding: paddingWidth
 
         //Tab layout
         StackLayout {

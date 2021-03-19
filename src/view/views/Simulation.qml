@@ -76,8 +76,6 @@ Item {
                 Layout.fillWidth:  true
                 Layout.fillHeight: true
 
-                //icon.source: "qrc:/speed_white.png"
-
                 font.bold: true
                 font.letterSpacing: 0
                 font.pixelSize: Math.min(parent.height * 0.35, 30)

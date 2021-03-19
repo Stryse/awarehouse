@@ -26,7 +26,31 @@ Item {
             }
 
             text:           qsTr("Log")
-            font.pixelSize: titleBar.height * 0.45
+            font.pixelSize: titleBar.height * 0.6
+        }
+    }
+
+    ScrollView {
+        id: asd
+
+        anchors {
+            left: border.right;    right:  parent.right
+            top:  titleBar.bottom; bottom: parent.bottom
+        }
+
+        padding: 5
+
+        ScrollBar.horizontal.policy:    ScrollBar.AlwaysOff
+        ScrollBar.vertical.interactive: false
+
+        ListView {
+            clip: true
+
+            //PLACEHOLDER
+            model: 100
+            delegate: ItemDelegate {
+                text: "Log " + index
+            }
         }
     }
 

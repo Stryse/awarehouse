@@ -15,5 +15,7 @@
         <file alias="MediaControlButton.qml">views/MediaControlButton.qml</file>
         <file alias="ActorInfoTab.qml">views/ActorInfoTab.qml</file>
         <file alias="LogTab.qml">views/LogTab.qml</file>
+        <file alias="ActorOutliner.qml">views/ActorOutliner.qml</file>
+        <file alias="TaskOutliner.qml">views/TaskOutliner.qml</file>
     </qresource>
 </RCC>

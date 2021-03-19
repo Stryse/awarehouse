@@ -26,7 +26,7 @@ Item {
             }
 
             text:           qsTr("Actor Info")
-            font.pixelSize: titleBar.height * 0.45
+            font.pixelSize: titleBar.height * 0.6
         }
     }
 
