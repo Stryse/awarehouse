@@ -1,5 +1,6 @@
 #include <QGuiApplication>
 #include <QQmlApplicationEngine>
+#include <QIcon>
 
 int main(int argc, char *argv[])
 {
@@ -8,6 +9,7 @@ int main(int argc, char *argv[])
 #endif
 
     QGuiApplication app(argc, argv);
+    app.setWindowIcon(QIcon(":/app_icon.png"));
 
     QQmlApplicationEngine engine;
     const QUrl url(QStringLiteral("qrc:/view/mainview.qml"));
