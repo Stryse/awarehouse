@@ -2,8 +2,10 @@
 #define OUTLINERLISTMODEL_H
 
 #include <QAbstractListModel>
+#include <QVector>
 
-class OutlinerListActor;
+class Presenter;
+class Actors;
 
 class OutlinerListModel : public QAbstractListModel
 {
@@ -21,7 +23,7 @@ public:
     };
 
     // Header:
-    QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const override;
+    // QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const override;
 
     // Basic functionality:
     int rowCount(const QModelIndex &parent = QModelIndex()) const override;
@@ -30,8 +32,11 @@ public:
 
     virtual QHash<int, QByteArray> roleNames() const override;
 
+    QVector<Actors> list() const;
+    void setList(QVector<Actors> *list);
+
 private:
-    OutlinerListActor *mList;
+    Presenter *mActorList;
 };
 
 #endif // OUTLINERLISTMODEL_H

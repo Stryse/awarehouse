@@ -1,5 +1,5 @@
 #include "OutlinerListModel.h"
-#include "OutlinerListActor.h"
+#include "Presenter.h"
 
 OutlinerListModel::OutlinerListModel(QObject *parent)
     : QAbstractListModel(parent)
@@ -18,15 +18,15 @@ int OutlinerListModel::rowCount(const QModelIndex &parent) const
     if (parent.isValid())
         return 0;
 
-    return mList->actorItems().size();
+    return mActorList->actorItems().size();
 }
 
 QVariant OutlinerListModel::data(const QModelIndex &index, int role) const
 {
-    if (!index.isValid() || !mList)
+    if (!index.isValid() || mActorList->actorItems().size() == 0)
         return QVariant();
 
-    const Actors item = mList->actorItems().at(index.row());
+    const Actors item = mActorList->actorItems().at(index.row());
     switch(role) {
         case NameRole:
             return QVariant(item.name());
@@ -51,23 +51,23 @@ QHash<int, QByteArray> OutlinerListModel::roleNames() const
     return names;
 }
 
-OutlinerListActor *OutlinerListModel::list() const
+QVector<Actors> OutlinerListModel::list() const
 {
-    return mList;
+    return mActorList->actorItems();
 }
 
-void OutlinerListModel::setList(OutlinerListActor *list)
+void OutlinerListModel::setList(QVector<Actors> *list)
 {
     beginResetModel();
 
-    if(mList)
-        mList->disconnect(this);
+    /*if(mActorList->actorItems().size() != 0)
+        mActorList->actorItems.disconnect(this);*/
 
-    mList = list;
+    mActorList->changeActorItems(list);
 
-    if(mList)
+    if(mActorList->actorItems().size() != 0)
     {
-        connect(mList, &OutlinerListActor::itemAppendedInActors, this, [=](){endInsertRows();});
+        connect(mActorList, &Presenter::itemAppendedInActors, this, [=](){endInsertRows();});
     }
 
     endResetModel();

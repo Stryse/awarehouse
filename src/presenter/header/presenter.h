@@ -19,7 +19,8 @@ public:
     int speed() const;
     void setSpeed(int speed);
 
-    QVector<Actors> actorItems() const;
+    QVector<Actors> actorItems() const; 
+    void changeActorItems(const QVector<Actors>* newActors);
     void addItemToActor(const Actors& newItem);
 
 signals:

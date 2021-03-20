@@ -10,6 +10,12 @@ QVector<Actors> Presenter::actorItems() const
     return mActor;
 }
 
+void Presenter::changeActorItems(const QVector<Actors>* newActors)
+{
+    mActor.clear();
+    mActor = *newActors;
+}
+
 void Presenter::addItemToActor(const Actors& newItem)
 {
     if(mActor.contains(newItem))
