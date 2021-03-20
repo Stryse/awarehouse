@@ -33,11 +33,12 @@ public:
     // ####################################################################
 
 protected:
-    explicit IMoveMechanism(std::vector<std::unique_ptr<AMotor>> &&motors,
+    explicit IMoveMechanism(Body &body,
+                            std::vector<std::unique_ptr<AMotor>> &&motors,
                             std::set<DirectionVector> &&moveSet,
                             IDepleting &resource)
 
-        : motors(std::move(motors)), moveSet(std::move(moveSet)), resource(resource)
+        : body(body), motors(std::move(motors)), moveSet(std::move(moveSet)), resource(resource)
     {
     }
 
@@ -82,6 +83,7 @@ public:
     const std::set<DirectionVector> &getMoveSet() const { return moveSet; }
 
 protected:
+    Body &body;
     std::vector<std::unique_ptr<AMotor>> motors;
     std::set<DirectionVector> moveSet;
     IDepleting &resource;

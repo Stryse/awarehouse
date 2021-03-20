@@ -8,6 +8,7 @@
 #include "MotorCommand.h"
 #include "MotorDrive.h"
 #include "RightTrackMotor.h"
+#include <cstddef>
 
 template <typename TBody, typename TEnergy = config::agent::DefaultEnergy>
 class RobotMoveMechanism : public IMoveMechanism<TBody, TEnergy>
@@ -31,36 +32,81 @@ public:
 
 public:
     explicit RobotMoveMechanism(Body &body, IDepleting &resource)
-        : IMoveMechanism<TBody, TEnergy>(getNewRobotMotors(body), getNewRobotMoveSet(), resource),
+        : IMoveMechanism<TBody, TEnergy>(body, getNewRobotMotors(body), getNewRobotMoveSet(), resource),
 
           ForwardMotorAction(std::make_unique<MotorAction>(forwardMotorDrive(this->motors), resource)),
           LeftTurnMotorAction(std::make_unique<MotorAction>(leftTurnMotorDrive(this->motors), resource)),
-          RightTurnMotorAction(std::make_unique<MotorAction>(leftTurnMotorDrive(this->motors), resource))
+          RightTurnMotorAction(std::make_unique<MotorAction>(rightTurnMotorDrive(this->motors), resource))
     {
     }
 
 public:
     virtual bool canMove(const DirectionVector &direction) const override
     {
-        return true;
+        return this->moveSet.find(direction) != this->moveSet.end();
     }
     virtual std::queue<MotorAction *> move(const DirectionVector &direction) override
     {
-        return std::queue<MotorAction *>{{ForwardMotorAction.get()}};
+        std::queue<MotorAction *> motorActionQ;
+        // We have to turn this much times
+        int rotationTimes = (-DirectionVector::dot(direction, this->body.getPose().getOrientation()) + 1);
+        int rotationAngle = (this->body.getPose().getOrientation().getX() * direction.getY()) -
+                            (this->body.getPose().getOrientation().getY() * direction.getX());
+
+        switch (rotationTimes)
+        {
+        case 0: // Travel direction
+            motorActionQ.emplace(ForwardMotorAction.get());
+            break;
+        case 2: // Backward direction
+            motorActionQ.emplace(LeftTurnMotorAction.get());
+            motorActionQ.emplace(LeftTurnMotorAction.get());
+            motorActionQ.emplace(ForwardMotorAction.get());
+            break;
+        case 1:
+            // Left or Right direction
+            // Angle if turn is 90 degrees
+
+            switch (rotationAngle)
+            {
+            case 1: //CounterClockWise
+                motorActionQ.emplace(LeftTurnMotorAction.get());
+                motorActionQ.emplace(ForwardMotorAction.get());
+                break;
+
+            case -1: // ClockWise
+                motorActionQ.emplace(RightTurnMotorAction.get());
+                motorActionQ.emplace(ForwardMotorAction.get());
+                break;
+            default:
+                throw std::runtime_error("Invalid value in RobotMoveMechanism move()");
+            }
+            break;
+        default:
+            throw std::runtime_error("Invalid value in RobotMoveMechanism move()");
+        }
+
+        return motorActionQ;
     }
     virtual Energy getEnergyCost(const DirectionVector &direction) const override
     {
-        return 0;
+        return RobotMoveMechanism<Body, Energy>::turnCost * (-DirectionVector::dot(direction, this->body.getPose().getOrientation()) + 1) +
+               RobotMoveMechanism<Body, Energy>::moveCost;
     }
     virtual int getTimeCost(const DirectionVector &direction) const override
     {
-        return 0;
+        return RobotMoveMechanism<Body, Energy>::turnDuration * (-DirectionVector::dot(direction, this->body.getPose().getOrientation()) + 1) +
+               RobotMoveMechanism<Body, Energy>::moveDuration;
     }
 
 private:
     std::unique_ptr<MotorAction> ForwardMotorAction;
     std::unique_ptr<MotorAction> LeftTurnMotorAction;
     std::unique_ptr<MotorAction> RightTurnMotorAction;
+    static const int turnDuration;
+    static const Energy turnCost;
+    static const int moveDuration;
+    static const Energy moveCost;
 
 public:
     /*************************************************************
@@ -95,7 +141,9 @@ public:
         commands.reserve(2);
         commands.emplace_back(*motors[0], MotorDirection::CLOCKWISE);
         commands.emplace_back(*motors[1], MotorDirection::CLOCKWISE);
-        return std::move(std::make_unique<MotorDrive>(1, 1, std::move(commands)));
+        return std::move(std::make_unique<MotorDrive>(RobotMoveMechanism<Body, Energy>::moveCost,
+                                                      RobotMoveMechanism<Body, Energy>::moveDuration,
+                                                      std::move(commands)));
     }
 
     /****************************************************************
@@ -110,7 +158,9 @@ public:
         commands.reserve(2);
         commands.emplace_back(*motors[1], MotorDirection::COUNTER_CLOCKWISE);
         commands.emplace_back(*motors[0], MotorDirection::CLOCKWISE);
-        return std::move(std::make_unique<MotorDrive>(1, 1, std::move(commands)));
+        return std::move(std::make_unique<MotorDrive>(RobotMoveMechanism<Body, Energy>::turnCost,
+                                                      RobotMoveMechanism<Body, Energy>::turnDuration,
+                                                      std::move(commands)));
     }
 
     /****************************************************************
@@ -125,8 +175,24 @@ public:
         commands.reserve(2);
         commands.emplace_back(*motors[0], MotorDirection::COUNTER_CLOCKWISE);
         commands.emplace_back(*motors[1], MotorDirection::CLOCKWISE);
-        return std::move(std::make_unique<MotorDrive>(1, 1, std::move(commands)));
+        return std::move(std::make_unique<MotorDrive>(RobotMoveMechanism<Body, Energy>::turnCost,
+                                                      RobotMoveMechanism<Body, Energy>::turnDuration,
+                                                      std::move(commands)));
     }
 };
+
+/************************* Settings ***************************/
+template <typename TBody, typename TEnergy>
+const int RobotMoveMechanism<TBody, TEnergy>::moveDuration = 1;
+
+template <typename TBody, typename TEnergy>
+const TEnergy RobotMoveMechanism<TBody, TEnergy>::moveCost = 1;
+
+template <typename TBody, typename TEnergy>
+const int RobotMoveMechanism<TBody, TEnergy>::turnDuration = 1;
+
+template <typename TBody, typename TEnergy>
+const TEnergy RobotMoveMechanism<TBody, TEnergy>::turnCost = 1;
+/************************ Settings *****************************/
 
 #endif /* ROBOT_MOVE_MECHANISM__H */

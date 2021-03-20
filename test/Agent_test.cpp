@@ -34,5 +34,8 @@ std::unique_ptr<DeliveryRobot<>> AgentTest::robot = nullptr;
 TEST_F(AgentTest, fasz)
 {
     robot->move(DirectionVector<>::UP());
+    robot->move(DirectionVector<>::DOWN());
+    robot->move(DirectionVector<>::LEFT());
+    robot->move(DirectionVector<>::RIGHT());
     EXPECT_TRUE(true);
 }

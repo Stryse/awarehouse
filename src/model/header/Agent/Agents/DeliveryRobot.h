@@ -8,8 +8,9 @@
 #include "DRobotMCU.h"
 #include "LibConfig.h"
 #include "MotorAction.h"
+#include "MotorAction.h" // TODO REMOVE
 #include "RobotMoveMechanism.h"
-
+#include <queue> // TODO REMOVE
 // ######################## Forward Declarations #########################
 class DRobotMCU;
 template <typename TBody, typename TEnergy>
@@ -57,9 +58,13 @@ public:
     /*Todo Remove*/
     void move(const DirectionVector &direction)
     {
-        AgentAction *ma = robotMovement->move(direction).front();
-        (*ma)();
-        int a = 5;
+        std::queue<MotorAction<Body, Energy> *> moveActions = robotMovement->move(direction);
+        while (!moveActions.empty())
+        {
+            auto moveAction = moveActions.front();
+            (*moveAction)();
+            moveActions.pop();
+        }
     }
 
 private:
