@@ -25,8 +25,8 @@ public:
 
     virtual QHash<int, QByteArray> roleNames() const override;
 
-    QVector<Order> list() const;
-    void setOrderList(QVector<Order>* orders);
+    QVector<Order*> list() const;
+    void setOrderList(QVector<Order*>* orders);
 
 private:
     Presenter* mOrderList;

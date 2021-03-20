@@ -19,7 +19,7 @@ QVariant OrderListModel::data(const QModelIndex &index, int role) const
     if (!index.isValid() || mOrderList->orderItems().size() == 0)
         return QVariant();
 
-    const Order item = mOrderList->orderItems().at(index.row());
+    const Order item = *(mOrderList->orderItems().at(index.row()));
     switch(role){
         case NameRole:
             return QVariant(item.assignedRobotName());
@@ -38,12 +38,12 @@ QHash<int, QByteArray> OrderListModel::roleNames() const
     return names;
 }
 
-QVector<Order> OrderListModel::list() const
+QVector<Order*> OrderListModel::list() const
 {
     return mOrderList->orderItems();
 }
 
-void OrderListModel::setOrderList(QVector<Order> *orders)
+void OrderListModel::setOrderList(QVector<Order*> *orders)
 {
     beginResetModel();
 

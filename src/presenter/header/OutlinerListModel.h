@@ -32,8 +32,8 @@ public:
 
     virtual QHash<int, QByteArray> roleNames() const override;
 
-    QVector<Actors> list() const;
-    void setList(QVector<Actors> *list);
+    QVector<Actors*> list() const;
+    void setList(QVector<Actors*> *list);
 
 private:
     Presenter *mActorList;

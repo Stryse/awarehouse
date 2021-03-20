@@ -26,7 +26,7 @@ QVariant OutlinerListModel::data(const QModelIndex &index, int role) const
     if (!index.isValid() || mActorList->actorItems().size() == 0)
         return QVariant();
 
-    const Actors item = mActorList->actorItems().at(index.row());
+    const Actors item = *(mActorList->actorItems().at(index.row()));
     switch(role) {
         case NameRole:
             return QVariant(item.name());
@@ -51,12 +51,12 @@ QHash<int, QByteArray> OutlinerListModel::roleNames() const
     return names;
 }
 
-QVector<Actors> OutlinerListModel::list() const
+QVector<Actors*> OutlinerListModel::list() const
 {
     return mActorList->actorItems();
 }
 
-void OutlinerListModel::setList(QVector<Actors> *list)
+void OutlinerListModel::setList(QVector<Actors*> *list)
 {
     beginResetModel();
 

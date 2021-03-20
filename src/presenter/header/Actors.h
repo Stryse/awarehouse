@@ -16,7 +16,7 @@ class Actors : public QObject
 public:
     enum Role { Robot, Task };
     enum Direction { Up, Down, Left, Right };
-    explicit Actors(QString name = "", QString action = "?\_(?)_/?", int battery = 100, Role role = Robot, Direction orientation = Up);
+    explicit Actors(QString name = "", QString action = "XD", int battery = 100, Role role = Robot, Direction orientation = Up);
     Actors(Actors const &newActor);
     Q_ENUM( Role )
     Q_ENUM( Direction )

@@ -5,43 +5,43 @@ Presenter::Presenter(QObject *parent) : QObject(parent)
 
 }
 
-QVector<Actors> Presenter::actorItems() const
+QVector<Actors*> Presenter::actorItems() const
 {
     return mActor;
 }
 
-void Presenter::changeActorItems(const QVector<Actors>* newActors)
+void Presenter::changeActorItems(const QVector<Actors*>* newActors)
 {
     mActor.clear();
     mActor = *newActors;
 }
 
-void Presenter::addItemToActor(const Actors& newItem)
+void Presenter::addItemToActor(Actors& newItem)
 {
     if(mActor.contains(newItem))
         return;
 
-    mActor.append(newItem);
+    mActor.append(&newItem);
     emit itemAppendedInActors();
 }
 
-QVector<Order> Presenter::orderItems() const
+QVector<Order*> Presenter::orderItems() const
 {
     return mOrders;
 }
 
-void Presenter::changeOrderItems(const QVector<Order>* newOrders)
+void Presenter::changeOrderItems(const QVector<Order*>* newOrders)
 {
     mOrders.clear();
     mOrders = *newOrders;
 }
 
-void Presenter::addItemToOrder(const Order &newItem)
+void Presenter::addItemToOrder(Order &newItem)
 {
     if(mOrders.contains(newItem))
         return;
 
-    mOrders.append(newItem);
+    mOrders.append(&newItem);
     emit itemAppendedInOrders();
 }
 

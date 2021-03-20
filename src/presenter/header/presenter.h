@@ -11,7 +11,7 @@ class Presenter : public QObject
     Q_OBJECT
 
     Q_PROPERTY ( int speed READ speed WRITE setSpeed NOTIFY speedChanged )
-    Q_PROPERTY ( QVector<Actors> actors READ actors NOTIFY actorsChanged )
+    Q_PROPERTY ( QVector<Actors*> actors READ actors NOTIFY actorsChanged )
 
 public:
     explicit Presenter(QObject *parent = nullptr);
@@ -19,13 +19,13 @@ public:
     int speed() const;
     void setSpeed(int speed);
 
-    QVector<Actors> actorItems() const; 
-    void changeActorItems(const QVector<Actors>* newActors);
-    void addItemToActor(const Actors& newItem);
+    QVector<Actors*> actorItems() const;
+    void changeActorItems(const QVector<Actors*>* newActors);
+    void addItemToActor(Actors& newItem);
 
-    QVector<Order> orderItems() const;
-    void changeOrderItems(const QVector<Order>* newActors);
-    void addItemToOrder(const Order& newItem);
+    QVector<Order*> orderItems() const;
+    void changeOrderItems(const QVector<Order*>* newActors);
+    void addItemToOrder(Order& newItem);
     void deleteItemFromOrder(const Order& item);
 
 signals:
@@ -35,8 +35,8 @@ signals:
     void itemDeletedFromOrders();
 
 private:
-    QVector<Actors> mActor;
-    QVector<Order> mOrders;
+    QVector<Actors*> mActor;
+    QVector<Order*> mOrders;
     int mAnimationSpeed;
 
 };
