@@ -5,6 +5,16 @@ Actors::Actors(QString name, QString action, int battery, Actors::Role role, Act
 {
 }
 
+Actors::Actors(const Actors &newActor)
+{
+    mName = newActor.mName;
+    mAction = newActor.mAction;
+    mBatteryLevel = newActor.mBatteryLevel;
+    mRole = newActor.mRole;
+    mMoveCount = newActor.mMoveCount;
+    mOrientation = newActor.mOrientation;
+}
+
 QString Actors::name() const
 {
     return mName;

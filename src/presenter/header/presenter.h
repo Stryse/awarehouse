@@ -10,7 +10,8 @@ class Presenter : public QObject
 {
     Q_OBJECT
 
-    Q_PROPERTY( int speed READ speed WRITE setSpeed NOTIFY speedChanged)
+    Q_PROPERTY ( int speed READ speed WRITE setSpeed NOTIFY speedChanged )
+    Q_PROPERTY ( QVector<Actors> actors READ actors NOTIFY actorsChanged )
 
 public:
     explicit Presenter(QObject *parent = nullptr);
@@ -18,8 +19,12 @@ public:
     int speed() const;
     void setSpeed(int speed);
 
+    QVector<Actors> actorItems() const;
+    void addItemToActor(const Actors& newItem);
+
 signals:
     void speedChanged();
+    void itemAppendedInActors();
 
 private:
     QVector<Actors> mActor;
