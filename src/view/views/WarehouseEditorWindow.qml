@@ -90,7 +90,7 @@ CustomTitleBarWindow {
                     left:   parent.left;  right: parent.right
                     bottom: parent.bottom
 
-                    leftMargin:   parent.width * 0.02; rightMargin:  parent.width * 0.02
+                    leftMargin:   parent.width * 0.02; rightMargin: parent.width * 0.02
                     bottomMargin: parent.height * 0.02
                 }
                 height: parent.height * 0.06
@@ -143,13 +143,15 @@ CustomTitleBarWindow {
                 id: warehouse
 
                 property int wareHouseRows: 10
-                property int wareHouseCols: 10
+                property int wareHouseCols: 20
 
                 readonly property real  aspectRatio: 16/9
 
                 anchors {
                     left: parent.left; right: parent.right
                     top: previewLabel.bottom; bottom: buttonsLayout.top
+
+                    leftMargin:   parent.width * 0.05; rightMargin: parent.width * 0.05
                     bottomMargin: parent.height * 0.03
                 }
 
