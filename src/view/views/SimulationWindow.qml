@@ -6,8 +6,8 @@ import QtQuick.Controls.Material
 CustomTitleBarWindow {
     id: mainRoot
 
-    readonly property string windowTitle:     qsTr("aWarehouse Manager")
-    readonly property color  secondaryColor:   "#2b2b2b"
+    readonly property string windowTitle:    qsTr("aWarehouse Manager")
+    readonly property color  secondaryColor: "#2b2b2b"
 
     visible: true
 
@@ -48,7 +48,6 @@ CustomTitleBarWindow {
             Pane {
                 id: simulationArea
 
-                SplitView.minimumHeight: 50
                 SplitView.fillHeight:    true
 
                 padding: 0
