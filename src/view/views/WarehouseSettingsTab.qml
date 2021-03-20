@@ -5,18 +5,26 @@ import QtQuick.Controls.Material
 Item {
     id: root
 
+    property alias titleBarHeight: titleBar.height
+    property alias borderWidth: border.width
+
     implicitHeight: pane.implicitHeight
     implicitWidth:  pane.implicitWidth
 
     Pane {
         id: pane
 
-        anchors.fill:   parent
+        anchors {
+            left: parent.left; right:  border.left
+            top:  parent.top;  bottom: parent.bottom
+        }
 
-        implicitHeight: titleBar.implicitHeight + actorScrollView.implicitHeight
+        implicitHeight: titleBar.implicitHeight + settingsScrollView.implicitHeight
 
         padding:       0
         bottomPadding: 10
+
+        clip:   true
 
         Rectangle {
             id: titleBar
@@ -24,8 +32,6 @@ Item {
             anchors {
                 left: parent.left; right: parent.right
             }
-            height: parent.height * 0.12
-            clip:   true
 
             color:  Material.primary
 
@@ -39,14 +45,14 @@ Item {
 
                 leftPadding:    10
 
-                text:           qsTr("Actors")
-                font.pixelSize: titleBar.height * 0.4
+                text:           qsTr("Settings")
+                font.pixelSize: titleBar.height * 0.5
             }
 
         }
 
         ScrollView {
-            id: actorScrollView
+            id: settingsScrollView
 
             anchors {
                 left: parent.left;     right:  parent.right
@@ -69,5 +75,16 @@ Item {
                 }
             }
         }
+    }
+
+    Rectangle {
+        id: border
+
+        anchors {
+            right: parent.right
+            top:   parent.top; bottom: parent.bottom
+        }
+
+        color: Material.primary
     }
 }

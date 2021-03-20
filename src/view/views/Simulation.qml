@@ -15,7 +15,7 @@ Item {
         property int wareHouseCols: 10
         readonly property alias inProgress: play.paused
 
-        readonly property real aspectRatio: 16/9
+        readonly property real  aspectRatio: 16/9
 
         anchors.centerIn: parent
         height: parent.height * 0.7
