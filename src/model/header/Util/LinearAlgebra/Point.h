@@ -67,7 +67,7 @@ public:
 
     Point moved(const DirectionVector &vector) const
     {
-        std::array<CoordT, N> buffer;
+        std::array<CoordT, N> buffer{};
         for (size_t i = 0; i < coordinates.size(); ++i)
             buffer[i] = coordinates[i] + vector.getBuffer()[i];
 
@@ -107,7 +107,7 @@ public:
      *******************************************************************/
     friend inline DirectionVector operator-(const Point<CoordinateType, N> &lhs, const Point<CoordinateType, N> &rhs)
     {
-        std::array<CoordinateType, N> buffer;
+        std::array<CoordinateType, N> buffer{};
         for (size_t i = 0; i < lhs.coordinates.size(); ++i)
             buffer[i] = lhs.coordinates[i] - rhs.coordinates[i];
 

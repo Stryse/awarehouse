@@ -23,8 +23,10 @@ public:
 
 public:
     virtual void activate(const MotorDirection &motorDirection) = 0;
+    const Body &getBody() const { return body; }
+    Body &getBody() { return body; }
 
-private:
+protected:
     Body &body;
 };
 

@@ -83,6 +83,21 @@ public:
         return value;
     }
 
+    void mulWithScalar(CoordinateT scalar)
+    {
+        for (auto &c : coordinates)
+            c *= scalar;
+    }
+
+    DirectionVector muledWithScalar(CoordinateT scalar)
+    {
+        std::array<CoordinateT, N> buffer{};
+        for (size_t i = 0; i < N; ++i)
+            buffer[i] = coordinates[i] * scalar;
+
+        return DirectionVector{std::move(buffer)};
+    }
+
     /********************** Operator ******************
      * @brief Equality on same size and same coordinates.
      **************************************************/

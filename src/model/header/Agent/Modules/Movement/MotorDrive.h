@@ -10,6 +10,7 @@ class MotorDrive
 {
 public:
     using Motor = TMotor;
+    using Body = typename Motor::Body;
     using MotorCommand = MotorCommand<Motor>;
     using Energy = TEnergy;
 
@@ -26,8 +27,16 @@ public:
      ***********************************************************/
     void executeMovement()
     {
+        // Free body
+        Body &body = motorCommands[0].motor.getBody();
+        body.freeV();
+
+        // Transform body
         for (MotorCommand &mc : motorCommands)
             mc.motor.activate(mc.motorDirection);
+
+        // Reseat body
+        body.occupyV(body.getEnvironment().getVolume(body.getPose().getPosition()));
     }
 
     /************************************************************

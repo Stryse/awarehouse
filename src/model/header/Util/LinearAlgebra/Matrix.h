@@ -32,7 +32,11 @@ public:
     Matrix &operator=(const Matrix &other) = default;
 
 protected:
-    Matrix();
+    explicit Matrix(std::array<CoordinateT, Row * Col> &buffer)
+        : elements(buffer) {}
+
+    Matrix(std::array<CoordinateT, Row * Col> &&buffer)
+        : elements(std::move(buffer)) {}
 
 public:
     /*********************************************************************
@@ -40,12 +44,7 @@ public:
      *********************************************************************/
     void transform(DirectionVector<CoordinateT, Col> &target) const
     {
-        for (size_t i = 0; i < Row; ++i)
-        {
-            target[i] = 0;
-            for (size_t j = 0; j < Col; ++j)
-                target[i] += getElement(i, j) * target[j];
-        }
+        target = transformed(target);
     }
 
     /*********************************************************************
@@ -53,12 +52,12 @@ public:
      *********************************************************************/
     DirectionVector<CoordinateT> transformed(const DirectionVector<CoordinateT, Col> &other) const
     {
-        std::array<CoordinateT, Col> buffer;
+        std::array<CoordinateT, Col> buffer{};
         for (size_t i = 0; i < Row; ++i)
         {
             buffer[i] = 0;
             for (size_t j = 0; j < Col; ++j)
-                buffer[i] += getElement(i, j) * buffer[j];
+                buffer[i] += getElement(i, j) * other.getBuffer()[j];
         }
 
         return DirectionVector<CoordinateT>(std::move(buffer));
@@ -70,9 +69,11 @@ public:
      **********************************************************************/
     static Matrix<int, 3, 3> ROTATE_Z_90_CLOCKWISE()
     {
-        return Matrix<int, 3, 3>{0, 1, 0,
+        std::array<int, 3 * 3> M{0, 1, 0,
                                  -1, 0, 0,
                                  0, 0, 1};
+
+        return Matrix<int, 3, 3>{std::move(M)};
     }
 
     /**********************************************************************
@@ -81,9 +82,10 @@ public:
      **********************************************************************/
     static Matrix<int, 3, 3> ROTATE_Z_90_COUNTERCLOCKWISE()
     {
-        return Matrix<int, 3, 3>{0, -1, 0,
+        std::array<int, 3 * 3> M{0, -1, 0,
                                  1, 0, 0,
                                  0, 0, 1};
+        return Matrix<int, 3, 3>{std::move(M)};
     }
 
     // ######################### GETTER ##################################

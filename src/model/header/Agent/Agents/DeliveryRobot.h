@@ -31,7 +31,7 @@ public:
     using DirectionVector = typename Body::DirectionVector;
 
 public:
-    explicit DeliveryRobot(Environment &env, const Point &position, const DirectionVector &orientation)
+    explicit DeliveryRobot(const std::shared_ptr<Environment> &env, const Point &position, const DirectionVector &orientation)
         // Init Agent BaseClass
         : Agent<Environment>("DELIVERY_ROBOT",
                              env,
@@ -73,7 +73,7 @@ private:
      ************************************************************************/
     static std::unique_ptr<Body> getNewRobotBody(const Point &position,
                                                  const DirectionVector &orientation,
-                                                 Environment &environment)
+                                                 const std::shared_ptr<Environment> &environment)
     {
         return std::move(std::make_unique<Body>(position,
                                                 orientation,

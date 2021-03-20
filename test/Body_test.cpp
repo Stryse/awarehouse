@@ -14,7 +14,7 @@ protected:
         const size_t X = 6;
         const size_t Y = 6;
         const size_t Z = 6;
-        env = std::make_unique<ObservableNavEnvironment<>>(X, Y, Z);
+        env = std::make_shared<ObservableNavEnvironment<>>(X, Y, Z);
         for (int x = 0; x < X; ++x)
             for (int y = 0; y < Y; ++y)
                 for (int z = 0; z < Z; ++z)
@@ -24,24 +24,24 @@ protected:
         largeBody = std::make_unique<Body<>>(
             Point<>(1, 1, 0),
             DirectionVector<>::UP(),
-            *env,
+            env,
             BodyShapeFactory<>::twoBlockHeigh());
 
         // ####################### Setup Small Body ##########################
         tinyBody = std::make_unique<Body<>>(
             Point<>(1, 1, 2),
             DirectionVector<>::UP(),
-            *env,
+            env,
             BodyShapeFactory<>::onlyOrigin());
     }
 
-    static std::unique_ptr<ObservableNavEnvironment<>> env;
+    static std::shared_ptr<ObservableNavEnvironment<>> env;
     static std::unique_ptr<Body<>> largeBody;
     static std::unique_ptr<Body<>> tinyBody;
 };
 
 // #################################### SHARED VARIABLES ######################################################
-std::unique_ptr<ObservableNavEnvironment<>> BodyTest::env = nullptr;
+std::shared_ptr<ObservableNavEnvironment<>> BodyTest::env = nullptr;
 std::unique_ptr<Body<>> BodyTest::largeBody = nullptr;
 std::unique_ptr<Body<>> BodyTest::tinyBody = nullptr;
 // ####################################### TESTS ##############################################################
@@ -56,7 +56,7 @@ TEST_F(BodyTest, AttachChildDetachChild)
     EXPECT_FALSE(largeBody->getChildren().find(&(*tinyBody)) == largeBody->getChildren().end()) << "[ERROR] child body is not registered in parent" << std::endl;
     EXPECT_EQ(tinyBody->getParent(), &(*largeBody)) << "[ERROR] Wrong parent" << std::endl;
 
-    std::unique_ptr<Body<>> fakeParent = std::make_unique<Body<>>(Point<>(2, 2, 2), DirectionVector<>::UP(), *env, BodyShapeFactory<>::onlyOrigin());
+    std::unique_ptr<Body<>> fakeParent = std::make_unique<Body<>>(Point<>(2, 2, 2), DirectionVector<>::UP(), env, BodyShapeFactory<>::onlyOrigin());
     fakeParent->attachBody(*tinyBody);
     //Check no attachment on fake parent
     EXPECT_EQ(tinyBody->getParent(), &(*largeBody));
@@ -149,7 +149,7 @@ TEST_F(BodyTest, ProperDestruction_References)
     largeBody = std::make_unique<Body<>>(
         Point<>(4, 4, 4),
         DirectionVector<>::LEFT(),
-        *env,
+        env,
         BodyShapeFactory<>::onlyOrigin());
     // Original parent destroyed
     EXPECT_EQ(tinyBody->getParent(), nullptr) << "[ERROR] Child still has record of destroyed parent" << std::endl;
@@ -160,7 +160,7 @@ TEST_F(BodyTest, ProperDestruction_References)
     largeBody = std::make_unique<Body<>>(
         Point<>(4, 4, 4),
         DirectionVector<>::LEFT(),
-        *env,
+        env,
         BodyShapeFactory<>::onlyOrigin());
     // Attach
     largeBody->attachBody(*tinyBody);
@@ -168,7 +168,7 @@ TEST_F(BodyTest, ProperDestruction_References)
     tinyBody = std::make_unique<Body<>>(
         Point<>(4, 4, 5),
         DirectionVector<>::LEFT(),
-        *env,
+        env,
         BodyShapeFactory<>::onlyOrigin());
     EXPECT_EQ(largeBody->getChildren().size(), 0) << "[ERROR] Parent still has record of destroyed child" << std::endl;
     EXPECT_TRUE(largeBody->getChildren().find(&(*tinyBody)) == largeBody->getChildren().end()) << "[ERROR] Parent still has record of destroyed child" << std::endl;

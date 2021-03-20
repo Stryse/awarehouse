@@ -2,11 +2,12 @@
 #define ROBOT_MOVE_MECHANISM__H
 
 #include "IMoveMechanism.h"
+#include "LeftTrackMotor.h"
 #include "LibConfig.h"
 #include "MotorAction.h"
 #include "MotorCommand.h"
 #include "MotorDrive.h"
-#include "TrackMotor.h"
+#include "RightTrackMotor.h"
 
 template <typename TBody, typename TEnergy = config::agent::DefaultEnergy>
 class RobotMoveMechanism : public IMoveMechanism<TBody, TEnergy>
@@ -16,7 +17,8 @@ public:
     using Body = TBody;
     using DirectionVector = typename Body::DirectionVector;
     using AMotor = AMotor<Body>;
-    using TrackMotor = TrackMotor<Body>;
+    using LeftTrackMotor = LeftTrackMotor<Body>;
+    using RightTrackMotor = RightTrackMotor<Body>;
     using MotorDirection = typename AMotor::MotorDirection;
 
     // ######################### Energy related ##############################
@@ -69,8 +71,8 @@ public:
     {
         std::vector<std::unique_ptr<AMotor>> motors;
         motors.reserve(2);
-        motors.push_back(std::make_unique<TrackMotor>(body, TrackMotor::MotorSide::LEFT));
-        motors.push_back(std::make_unique<TrackMotor>(body, TrackMotor::MotorSide::RIGHT));
+        motors.push_back(std::make_unique<LeftTrackMotor>(body));
+        motors.push_back(std::make_unique<RightTrackMotor>(body));
         return motors;
     }
 
@@ -106,8 +108,8 @@ public:
     {
         std::vector<MotorCommand> commands;
         commands.reserve(2);
-        commands.emplace_back(*motors[0], MotorDirection::CLOCKWISE);
         commands.emplace_back(*motors[1], MotorDirection::COUNTER_CLOCKWISE);
+        commands.emplace_back(*motors[0], MotorDirection::CLOCKWISE);
         return std::move(std::make_unique<MotorDrive>(1, 1, std::move(commands)));
     }
 

@@ -39,7 +39,7 @@ public:
      * @brief Construct a new Agent object
      *********************************************************/
     explicit Agent(const std::string &id_category,
-                   Environment &environment,
+                   const std::shared_ptr<Environment> &environment,
                    std::unique_ptr<Body<Environment>> body,
                    std::unique_ptr<AMicroController> mcu)
 
@@ -91,7 +91,7 @@ protected:
     /******************************************************
      * @brief Environment in which the agent acts.
      ******************************************************/
-    Environment &environment;
+    std::shared_ptr<Environment> environment;
 
     /******************************************************
      * @brief The agent's physical body,
