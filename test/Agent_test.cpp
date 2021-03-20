@@ -18,7 +18,7 @@ protected:
                 for (int z = 0; z < Z; ++z)
                     env->getBuffer()[env->getCoordAsIndex(x, y, z)] = std::make_unique<Tile>(Tile::Point{x, y, z});
 
-        robot = std::make_unique<DeliveryRobot<>>(*env, Point<>(1, 1, 0), DirectionVector<>(Directions::UP));
+        robot = std::make_unique<DeliveryRobot<>>(*env, Point<>(1, 1, 0), DirectionVector<>::UP());
     }
 
     static std::unique_ptr<ObservableNavEnvironment<>> env;
@@ -32,6 +32,6 @@ std::unique_ptr<DeliveryRobot<>> AgentTest::robot = nullptr;
 
 TEST_F(AgentTest, fasz)
 {
-    robot->move(DirectionVector<>(Directions::UP));
+    robot->move(DirectionVector<>::UP());
     EXPECT_TRUE(true);
 }

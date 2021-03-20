@@ -76,10 +76,10 @@ public:
 
     static std::set<DirectionVector> getNewRobotMoveSet()
     {
-        return std::set<DirectionVector>{{DirectionVector(Directions::UP),
-                                          DirectionVector(Directions::DOWN),
-                                          DirectionVector(Directions::LEFT),
-                                          DirectionVector(Directions::RIGHT)}};
+        return std::set<DirectionVector>{{DirectionVector::UP(),
+                                          DirectionVector::DOWN(),
+                                          DirectionVector::LEFT(),
+                                          DirectionVector::RIGHT()}};
     }
 
     /****************************************************************

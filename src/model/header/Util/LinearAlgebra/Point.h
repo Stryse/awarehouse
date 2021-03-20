@@ -2,14 +2,15 @@
 #define POINT__H
 
 #include "DirectionVector.h"
-#include <vector>
+#include <array>
+#include <cstddef>
 
 /*********************************************************
  * @brief 3 dimensional point in space.
  * 
  * @tparam CoordT type of coordinates (must be numeric).
  *********************************************************/
-template <typename CoordT = int>
+template <typename CoordT = int, std::size_t N = 3>
 class Point
 {
 public:
@@ -24,10 +25,10 @@ public:
     /*********************
      * @brief Type of the vector that the point can be moved with.
      *********************/
-    using DirectionVector = DirectionVector<CoordT>;
+    using DirectionVector = DirectionVector<CoordT, N>;
 
 private:
-    std::vector<CoordT> coordinates;
+    std::array<CoordT, N> coordinates;
 
 public:
     /**************************************************************
@@ -39,15 +40,15 @@ public:
      * @brief Constructs a N dimensional point with the coordinates 
      * of the provided vector
      **************************************************************/
-    explicit Point(const std::vector<CoordT> &coordinates) : coordinates(coordinates) {}
-    explicit Point(const std::vector<CoordT> &&coordinates) : coordinates(std::move(coordinates)) {}
+    explicit Point(const std::array<CoordT, N> &coordinates) : coordinates(coordinates) {}
+    explicit Point(const std::array<CoordT, N> &&coordinates) : coordinates(std::move(coordinates)) {}
 
     Point(const Point &other) : coordinates(other.coordinates) {}
 
     //################## Getter ########################
-
-    std::vector<CoordT> getCoordinates() { return coordinates; }
-    const std::vector<CoordT> getCoordinates() const { return coordinates; }
+    constexpr size_t getSize() const noexcept { return N; }
+    std::array<CoordT, N> getCoordinates() { return coordinates; }
+    const std::array<CoordT, N> getCoordinates() const { return coordinates; }
     CoordT getPosX() const { return coordinates[0]; }
     CoordT getPosY() const { return coordinates[1]; }
     CoordT getPosZ() const { return coordinates[2]; }
@@ -61,15 +62,14 @@ public:
     void move(const DirectionVector &vector)
     {
         for (size_t i = 0; i < coordinates.size(); ++i)
-            coordinates[i] += vector.getAsVector().at(i);
+            coordinates[i] += vector.getBuffer().at(i);
     }
 
     Point moved(const DirectionVector &vector) const
     {
-        std::vector<CoordT> buffer;
-        buffer.reserve(coordinates.size());
+        std::array<CoordT, N> buffer;
         for (size_t i = 0; i < coordinates.size(); ++i)
-            buffer.emplace_back(coordinates[i] + vector.getAsVector()[i]);
+            buffer[i] = coordinates[i] + vector.getBuffer()[i];
 
         return Point(std::move(buffer));
     }
@@ -87,11 +87,8 @@ public:
      * @brief Two points are equal if they are the same dimensions
      * and all the coordinates are equal
      ***************************************************************/
-    friend inline bool operator==(const Point<CoordinateType> &lhs, const Point<CoordinateType> &rhs)
+    friend inline bool operator==(const Point<CoordinateType, N> &lhs, const Point<CoordinateType, N> &rhs)
     {
-        if (lhs.coordinates.size() != rhs.coordinates.size())
-            return false;
-
         for (size_t i = 0; i < lhs.coordinates.size(); ++i)
         {
             if ((std::abs(lhs.coordinates[i] - rhs.coordinates[i]) > 1e-6f))
@@ -108,15 +105,11 @@ public:
      * @param rhs Point that the result vector is pointing from
      * @return DirectionVector vector pointing from rhs to lhs
      *******************************************************************/
-    friend DirectionVector operator-(const Point<CoordinateType> &lhs, const Point<CoordinateType> &rhs)
+    friend inline DirectionVector operator-(const Point<CoordinateType, N> &lhs, const Point<CoordinateType, N> &rhs)
     {
-        if (lhs.coordinates.size() != rhs.coordinates.size())
-            return DirectionVector{0, 0, 0};
-
-        std::vector<CoordinateType> buffer;
-        buffer.reserve(lhs.coordinates.size());
+        std::array<CoordinateType, N> buffer;
         for (size_t i = 0; i < lhs.coordinates.size(); ++i)
-            buffer.emplace_back(lhs.coordinates[i] - rhs.coordinates[i]);
+            buffer[i] = lhs.coordinates[i] - rhs.coordinates[i];
 
         return DirectionVector(std::move(buffer));
     }

@@ -1,34 +1,24 @@
 #ifndef DIRECTIONVECTOR__H
 #define DIRECTIONVECTOR__H
 
+#include <array>
 #include <cmath>
+#include <cstddef>
 #include <stdexcept>
 #include <type_traits>
-#include <vector>
 
-template <typename CoordType>
+// ######################## FORWARD DECLARATION ########################
+template <typename CoordT, std::size_t>
 class Point;
-
-/*********************************************
- * @brief Directions in 2 dimensional space.
- * ↑y →x
- * Can be used to construct DirectionVector
- *********************************************/
-enum class Directions
-{
-    UP,
-    DOWN,
-    LEFT,
-    RIGHT
-};
-
+// #####################################################################
 /**********************************************
  * @brief 3 dimensional mathematical vector
  * 
  * @tparam CoordinateT type of vector coordinates,
  * must be numerical.
+ * @tparam N dimension of the vector
  **********************************************/
-template <typename CoordT = int>
+template <typename CoordT = int, std::size_t N = 3>
 class DirectionVector
 {
 public:
@@ -41,7 +31,7 @@ private:
     /********************
      * @brief Buffer that holds vector coordinates
      ********************/
-    std::vector<CoordinateT> coordinates;
+    std::array<CoordinateT, N> coordinates;
 
 public:
     /*************************************************
@@ -55,54 +45,37 @@ public:
         : coordinates{xAxis, yAxis, zAxis} {}
 
     /*************************************************
-     * @brief Creates a vector of length 1 with the provided direction
-     * 
-     * @param direction Points toward this direction (enum)
-     * @throws std::invalid_argument if a direction value is not handled
+     * @brief Factories of common vectors
      *************************************************/
-    explicit DirectionVector(const Directions &direction) : coordinates(3)
+    static DirectionVector<CoordinateT, 3> UP() { return DirectionVector{0, 1, 0}; }
+    static DirectionVector<CoordinateT, 3> DOWN() { return DirectionVector{0, -1, 0}; }
+    static DirectionVector<CoordinateT, 3> LEFT() { return DirectionVector{-1, 0, 0}; }
+    static DirectionVector<CoordinateT, 3> RIGHT() { return DirectionVector{1, 0, 0}; }
+    static DirectionVector<CoordinateT, 3> ABOVE() { return DirectionVector{0, 0, 1}; }
+    static DirectionVector<CoordinateT, 3> BELOW() { return DirectionVector{0, 0, -1}; }
+    /**************************************************
+     * @brief Creates a vector with the provided buffer
+     * DirectionVector takes hold of argument vector.
+     **************************************************/
+    explicit DirectionVector(std::array<CoordinateT, N> &&coordinateBuffer)
+        : coordinates(std::move(coordinateBuffer))
     {
-        switch (direction)
-        {
-        case Directions::UP:
-            coordinates = {0, 1, 0};
-            break;
-
-        case Directions::DOWN:
-            coordinates = {0, -1, 0};
-            break;
-
-        case Directions::LEFT:
-            coordinates = {-1, 0, 0};
-            break;
-
-        case Directions::RIGHT:
-            coordinates = {1, 0, 0};
-            break;
-        default:
-            throw std::invalid_argument("Unhandled value.");
-        }
     }
 
     /**************************************************
-     * @brief Creates a vector with the provided buffer
-     * DirectionVector takes hold of argument vector
+     * @brief Creates a vector object out of a same
+     * dimensional point.
      **************************************************/
-    explicit DirectionVector(std::vector<CoordinateT> &&coordinateBuffer)
-        : coordinates(std::move(coordinateBuffer)) {}
-
-    explicit DirectionVector(const Point<CoordinateT> &sourcePoint)
+    explicit DirectionVector(const Point<CoordinateT, N> &sourcePoint)
         : coordinates(sourcePoint.getCoordinates()) {}
 
     /***************************************************
      * @brief Dot product of two vectors
      * @return CoordinateT: scalar
      ***************************************************/
-    static CoordinateT dot(const DirectionVector &v1, const DirectionVector &v2)
+    static CoordinateT dot(const DirectionVector<CoordinateT, N> &v1,
+                           const DirectionVector<CoordinateT, N> &v2)
     {
-        if (v1.coordinates.size() != v2.coordinates.size())
-            return false;
-
         CoordinateT value = 0;
         for (size_t i = 0; i < v1.coordinates.size(); ++i)
             value += v1.coordinates[i] * v2.coordinates[i];
@@ -113,37 +86,38 @@ public:
     /********************** Operator ******************
      * @brief Equality on same size and same coordinates.
      **************************************************/
-    bool operator==(const DirectionVector &other) const
+    friend inline bool operator==(const DirectionVector<CoordinateT, N> &lhs,
+                                  const DirectionVector<CoordinateT, N> &rhs)
     {
-        if (coordinates.size() != other.coordinates.size())
-            return false;
-
-        for (size_t i = 0; i < coordinates.size(); ++i)
+        for (size_t i = 0; i < lhs.coordinates.size(); ++i)
         {
-            if (std::abs(coordinates[i] - other.coordinates[i]) > 1e-6f)
+            if (std::abs(lhs.coordinates[i] - rhs.coordinates[i]) > 1e-6f)
                 return false;
         }
-
         return true;
     }
 
-    bool operator!=(const DirectionVector &other) const
+    friend inline bool operator!=(const DirectionVector<CoordinateT, N> &lhs,
+                                  const DirectionVector<CoordinateT, N> &rhs)
     {
-        return !(*this == other);
+        return !(lhs == rhs);
     }
 
+    /***************************************************
+     * @brief Component-wise comparison
+     ***************************************************/
     friend inline bool operator<(const DirectionVector &lhs, const DirectionVector &rhs)
     {
-        return lhs.getAsVector() < rhs.getAsVector();
+        return lhs.getBuffer() < rhs.getBuffer();
     }
 
     //############################## Getter ####################################
     const CoordinateT &getX() const { return coordinates[0]; }
     const CoordinateT &getY() const { return coordinates[1]; }
     const CoordinateT &getZ() const { return coordinates[2]; }
-    const std::vector<CoordinateT> &getAsVector() const { return coordinates; }
-    std::vector<CoordinateT> &getAsVector() { return coordinates; }
-    size_t getSize() const { return coordinates.size(); }
+    const std::array<CoordinateT, N> &getBuffer() const { return coordinates; }
+    std::array<CoordinateT, N> &getBuffer() { return coordinates; }
+    constexpr size_t getSize() const noexcept { return N; }
     //############################### Setter ###################################
     void setX(const CoordinateT &xAxis) { coordinates[0] = xAxis; }
     void setY(const CoordinateT &yAxis) { coordinates[1] = yAxis; }
