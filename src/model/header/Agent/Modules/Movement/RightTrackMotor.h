@@ -36,27 +36,15 @@ public:
             break;
 
         default:
-            throw std::runtime_error("Unhandled enum");
+            throw std::runtime_error("Unhandled enum in RightTrackMotor::activate()");
         }
     }
 
 private:
     static Matrix<> rotation;
 
-    void MoveForward(Pose &pose)
-    {
-        pose.getPosition().move(pose.getOrientation());
-    }
-
-    void RotateCounterClockWise(Pose &pose)
-    {
-        rotation.transform(pose.getOrientation());
-    }
-
-    void MoveBackWards(Pose &pose)
-    {
-        pose.getPosition().move(pose.getOrientation().muledWithScalar(-1));
-    }
+    void MoveBackWards(Pose &pose) { pose.getPosition().move(pose.getOrientation().muledWithScalar(-1)); }
+    void RotateCounterClockWise(Pose &pose) { rotation.transform(pose.getOrientation()); }
 };
 
 template <typename TBody>

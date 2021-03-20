@@ -15,8 +15,8 @@ public:
     using Energy = TEnergy;
 
 public:
-    MotorDrive(const Energy &energySum, int timeSum, std::vector<MotorCommand> &&motorCommands)
-        : motorCommands(std::move(motorCommands)), energySum(energySum), timeSum(timeSum)
+    MotorDrive(Body &body, std::vector<MotorCommand> &&motorCommands, const Energy &energySum, int timeSum)
+        : body(body), motorCommands(std::move(motorCommands)), energySum(energySum), timeSum(timeSum)
     {
     }
 
@@ -28,7 +28,6 @@ public:
     void executeMovement()
     {
         // Free body
-        Body &body = motorCommands[0].motor.getBody();
         body.freeV();
 
         // Transform body
@@ -52,6 +51,7 @@ public:
     const int getTimeSum() const { return timeSum; }
 
 private:
+    Body &body;
     std::vector<MotorCommand> motorCommands;
     Energy energySum;
     int timeSum;

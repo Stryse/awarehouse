@@ -34,9 +34,9 @@ public:
     explicit RobotMoveMechanism(Body &body, IDepleting &resource)
         : IMoveMechanism<TBody, TEnergy>(body, getNewRobotMotors(body), getNewRobotMoveSet(), resource),
 
-          ForwardMotorAction(std::make_unique<MotorAction>(forwardMotorDrive(this->motors), resource)),
-          LeftTurnMotorAction(std::make_unique<MotorAction>(leftTurnMotorDrive(this->motors), resource)),
-          RightTurnMotorAction(std::make_unique<MotorAction>(rightTurnMotorDrive(this->motors), resource))
+          ForwardMotorAction(std::make_unique<MotorAction>(forwardMotorDrive(body, this->motors), resource)),
+          LeftTurnMotorAction(std::make_unique<MotorAction>(leftTurnMotorDrive(body, this->motors), resource)),
+          RightTurnMotorAction(std::make_unique<MotorAction>(rightTurnMotorDrive(body, this->motors), resource))
     {
     }
 
@@ -135,15 +135,16 @@ public:
      * Both left and the right motor moves clockwise.
      * This object can be passed to a MotorAction for execution
      ****************************************************************/
-    static std::unique_ptr<MotorDrive> forwardMotorDrive(const std::vector<std::unique_ptr<AMotor>> &motors)
+    static std::unique_ptr<MotorDrive> forwardMotorDrive(Body &body, const std::vector<std::unique_ptr<AMotor>> &motors)
     {
         std::vector<MotorCommand> commands;
         commands.reserve(2);
         commands.emplace_back(*motors[0], MotorDirection::CLOCKWISE);
         commands.emplace_back(*motors[1], MotorDirection::CLOCKWISE);
-        return std::move(std::make_unique<MotorDrive>(RobotMoveMechanism<Body, Energy>::moveCost,
-                                                      RobotMoveMechanism<Body, Energy>::moveDuration,
-                                                      std::move(commands)));
+        return std::move(std::make_unique<MotorDrive>(body,
+                                                      std::move(commands),
+                                                      RobotMoveMechanism<Body, Energy>::moveCost,
+                                                      RobotMoveMechanism<Body, Energy>::moveDuration));
     }
 
     /****************************************************************
@@ -152,15 +153,16 @@ public:
      * The right Track motor moves COUNTER_CLOCKWISE
      * This object can be passed to a MotorAction for execution
      ****************************************************************/
-    static std::unique_ptr<MotorDrive> rightTurnMotorDrive(const std::vector<std::unique_ptr<AMotor>> &motors)
+    static std::unique_ptr<MotorDrive> rightTurnMotorDrive(Body &body, const std::vector<std::unique_ptr<AMotor>> &motors)
     {
         std::vector<MotorCommand> commands;
         commands.reserve(2);
         commands.emplace_back(*motors[1], MotorDirection::COUNTER_CLOCKWISE);
         commands.emplace_back(*motors[0], MotorDirection::CLOCKWISE);
-        return std::move(std::make_unique<MotorDrive>(RobotMoveMechanism<Body, Energy>::turnCost,
-                                                      RobotMoveMechanism<Body, Energy>::turnDuration,
-                                                      std::move(commands)));
+        return std::move(std::make_unique<MotorDrive>(body,
+                                                      std::move(commands),
+                                                      RobotMoveMechanism<Body, Energy>::turnCost,
+                                                      RobotMoveMechanism<Body, Energy>::turnDuration));
     }
 
     /****************************************************************
@@ -169,15 +171,16 @@ public:
      * The right Track motor moves CLOCKWISE
      * This object can be passed to a MotorAction for execution
      ****************************************************************/
-    static std::unique_ptr<MotorDrive> leftTurnMotorDrive(const std::vector<std::unique_ptr<AMotor>> &motors)
+    static std::unique_ptr<MotorDrive> leftTurnMotorDrive(Body &body, const std::vector<std::unique_ptr<AMotor>> &motors)
     {
         std::vector<MotorCommand> commands;
         commands.reserve(2);
         commands.emplace_back(*motors[0], MotorDirection::COUNTER_CLOCKWISE);
         commands.emplace_back(*motors[1], MotorDirection::CLOCKWISE);
-        return std::move(std::make_unique<MotorDrive>(RobotMoveMechanism<Body, Energy>::turnCost,
-                                                      RobotMoveMechanism<Body, Energy>::turnDuration,
-                                                      std::move(commands)));
+        return std::move(std::make_unique<MotorDrive>(body,
+                                                      std::move(commands),
+                                                      RobotMoveMechanism<Body, Energy>::turnCost,
+                                                      RobotMoveMechanism<Body, Energy>::turnDuration));
     }
 };
 

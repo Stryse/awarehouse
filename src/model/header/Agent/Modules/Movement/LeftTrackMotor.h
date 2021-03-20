@@ -34,22 +34,15 @@ public:
             break;
 
         default:
-            throw std::runtime_error("Unhandled enum");
+            throw std::runtime_error("Unhandled enum in LeftTrackmotor::activate()");
         }
     }
 
 private:
     static Matrix<> rotation;
 
-    void MoveForward(Pose &pose)
-    {
-        pose.getPosition().move(pose.getOrientation());
-    }
-
-    void RotateClockWise(Pose &pose)
-    {
-        rotation.transform(pose.getOrientation());
-    }
+    void MoveForward(Pose &pose) { pose.getPosition().move(pose.getOrientation()); }
+    void RotateClockWise(Pose &pose) { rotation.transform(pose.getOrientation()); }
 };
 
 template <typename TBody>
