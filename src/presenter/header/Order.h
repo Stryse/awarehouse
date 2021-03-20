@@ -15,14 +15,14 @@ class Order : public QObject
 
 public:
     explicit Order(/*Point position,*/ int orderNumber=0, QString assignedRobotName="");
-
+    Order(Order const &order);
     //Point position() const;
     //void setPosition(const Point &position);
 
     int orderNumber() const;
     void setOrderNumber(int orderNumber);
 
-    QString assignedRobotName();
+    QString assignedRobotName() const;
     void setAssignedRobotName(const QString &name);
 
 signals:

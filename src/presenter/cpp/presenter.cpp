@@ -25,4 +25,33 @@ void Presenter::addItemToActor(const Actors& newItem)
     emit itemAppendedInActors();
 }
 
+QVector<Order> Presenter::orderItems() const
+{
+    return mOrders;
+}
+
+void Presenter::changeOrderItems(const QVector<Order>* newOrders)
+{
+    mOrders.clear();
+    mOrders = *newOrders;
+}
+
+void Presenter::addItemToOrder(const Order &newItem)
+{
+    if(mOrders.contains(newItem))
+        return;
+
+    mOrders.append(newItem);
+    emit itemAppendedInOrders();
+}
+
+void Presenter::deleteItemFromOrder(const Order &item)
+{
+    if(!mOrders.contains(item))
+        return;
+
+    mOrders.removeOne(item);
+    emit itemDeletedFromOrders();
+}
+
 

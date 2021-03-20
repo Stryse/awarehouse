@@ -23,9 +23,16 @@ public:
     void changeActorItems(const QVector<Actors>* newActors);
     void addItemToActor(const Actors& newItem);
 
+    QVector<Order> orderItems() const;
+    void changeOrderItems(const QVector<Order>* newActors);
+    void addItemToOrder(const Order& newItem);
+    void deleteItemFromOrder(const Order& item);
+
 signals:
     void speedChanged();
     void itemAppendedInActors();
+    void itemAppendedInOrders();
+    void itemDeletedFromOrders();
 
 private:
     QVector<Actors> mActor;

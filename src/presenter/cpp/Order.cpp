@@ -4,6 +4,12 @@ Order::Order(/*Point position,*/ int orderNumber, QString assignedRobotName) : /
 {
 }
 
+Order::Order(const Order &order)
+{
+    mOrderNumber = order.mOrderNumber;
+    mAssignedRobotName = order.mAssignedRobotName;
+}
+
 /*Point Order::position() const
 {
     return mPosition;
@@ -32,7 +38,7 @@ void Order::setOrderNumber(int orderNumber)
     emit orderNumberChanged();
 }
 
-QString Order::assignedRobotName()
+QString Order::assignedRobotName() const
 {
     return mAssignedRobotName;
 }
