@@ -46,14 +46,22 @@ view/viewsource.qrc
 add_library(OBJ_AWSOURCE_FILES STATIC
 # Add sources here
 model/cpp/Tile/Tile.cpp
-presenter/cpp/presenter.cpp
+presenter/cpp/Presenter.cpp
+presenter/cpp/Actors.cpp
+presenter/cpp/OutlinerListModel.cpp
+presenter/cpp/Order.cpp
 )
 target_include_directories(OBJ_AWSOURCE_FILES PUBLIC ${header_dir_list})
+target_link_libraries(OBJ_AWSOURCE_FILES PRIVATE
+Qt${QT_VERSION_MAJOR}::Core
+Qt${QT_VERSION_MAJOR}::Quick
+Qt${QT_VERSION_MAJOR}::QuickControls2
+)
 
 #########################################################################
 ############################## BINARY ###################################
 
-qt_add_executable(awarehouse main.cpp ${QRC_RESOURCES} ${OBJ_AWSOURCE_FILES})
+qt_add_executable(awarehouse main.cpp ${QRC_RESOURCES})
 
 #########################################################################
 ######################### Include files (.h) ############################
