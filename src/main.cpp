@@ -12,7 +12,7 @@ int main(int argc, char *argv[])
     app.setWindowIcon(QIcon(":/app_icon.png"));
 
     QQmlApplicationEngine engine;
-    const QUrl url(QStringLiteral("qrc:/view/mainview.qml"));
+    const QUrl url(QStringLiteral("qrc:/view/SimulationWindow.qml"));
     QObject::connect(&engine, &QQmlApplicationEngine::objectCreated,
                      &app, [url](QObject *obj, const QUrl &objUrl) {
         if (!obj && url == objUrl)
