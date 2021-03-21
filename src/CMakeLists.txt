@@ -51,6 +51,9 @@ presenter/cpp/Actors.cpp
 presenter/cpp/OutlinerListModel.cpp
 presenter/cpp/Order.cpp
 presenter/cpp/OrderListModel.cpp
+model/cpp/Simulator/Simulator.cpp
+model/cpp/Warehouse/WarehouseManager.cpp
+model/cpp/Warehouse/Warehouse.cpp
 )
 target_include_directories(OBJ_AWSOURCE_FILES PUBLIC ${header_dir_list})
 target_link_libraries(OBJ_AWSOURCE_FILES PRIVATE
