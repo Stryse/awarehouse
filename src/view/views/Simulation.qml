@@ -75,12 +75,13 @@ Item {
                 //BUG: when button is at minimal size and clicked -> changed text appears
                 //text:        paused ? qsTr("Pause")                : qsTr("Play")
 
-                onClicked:{
-                            if(paused)
-                                Manager.simulationStart();
-                            else
-                                Manager.simulationStop();
-                            paused = !paused;
+                onClicked: {
+                    if(paused)
+                        Manager.simulationStart()
+                    else
+                        Manager.simulationStop()
+
+                    paused = !paused
                     }
             }
 
