@@ -1,8 +1,10 @@
-#include "Presenter.h"
+#include "presenter.h"
 
 Presenter::Presenter(QObject *parent) : QObject(parent)
 {
-
+    mActor.append(new Actors("01_Gazsi", "no action", 100, Actors::Robot, Actors::Up));
+    mActor.append(new Actors("02_Roboto", "no action", 100, Actors::Robot, Actors::Up));
+    mActor.append(new Actors("03_Lajcsi", "no action", 100, Actors::Robot, Actors::Up));
 }
 
 QVector<Actors*> Presenter::actorItems() const

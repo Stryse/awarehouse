@@ -1,5 +1,5 @@
 #include "OutlinerListModel.h"
-#include "Presenter.h"
+#include "presenter.h"
 
 OutlinerListModel::OutlinerListModel(QObject *parent)
     : QAbstractListModel(parent)
