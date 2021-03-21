@@ -14,7 +14,7 @@ protected:
         const size_t X = 6;
         const size_t Y = 6;
         const size_t Z = 6;
-        env = std::make_unique<ObservableNavEnvironment<>>(X, Y, Z);
+        env = std::make_shared<ObservableNavEnvironment<>>(X, Y, Z);
         for (int x = 0; x < X; ++x)
             for (int y = 0; y < Y; ++y)
                 for (int z = 0; z < Z; ++z)
@@ -23,25 +23,25 @@ protected:
         // ####################### Setup Large Body ##########################
         largeBody = std::make_unique<Body<>>(
             Point<>(1, 1, 0),
-            DirectionVector<>(Directions::UP),
-            *env,
-            BodyShapeFactory::createShape(BodyShapeFactory::BodyShape::TWO_BLOCKS_HEIGH));
+            DirectionVector<>::UP(),
+            env,
+            BodyShapeFactory<>::twoBlockHeigh());
 
         // ####################### Setup Small Body ##########################
         tinyBody = std::make_unique<Body<>>(
             Point<>(1, 1, 2),
-            DirectionVector<>(Directions::UP),
-            *env,
-            BodyShapeFactory::createShape(BodyShapeFactory::BodyShape::ONLY_ORIGIN));
+            DirectionVector<>::UP(),
+            env,
+            BodyShapeFactory<>::onlyOrigin());
     }
 
-    static std::unique_ptr<ObservableNavEnvironment<>> env;
+    static std::shared_ptr<ObservableNavEnvironment<>> env;
     static std::unique_ptr<Body<>> largeBody;
     static std::unique_ptr<Body<>> tinyBody;
 };
 
 // #################################### SHARED VARIABLES ######################################################
-std::unique_ptr<ObservableNavEnvironment<>> BodyTest::env = nullptr;
+std::shared_ptr<ObservableNavEnvironment<>> BodyTest::env = nullptr;
 std::unique_ptr<Body<>> BodyTest::largeBody = nullptr;
 std::unique_ptr<Body<>> BodyTest::tinyBody = nullptr;
 // ####################################### TESTS ##############################################################
@@ -56,7 +56,7 @@ TEST_F(BodyTest, AttachChildDetachChild)
     EXPECT_FALSE(largeBody->getChildren().find(&(*tinyBody)) == largeBody->getChildren().end()) << "[ERROR] child body is not registered in parent" << std::endl;
     EXPECT_EQ(tinyBody->getParent(), &(*largeBody)) << "[ERROR] Wrong parent" << std::endl;
 
-    std::unique_ptr<Body<>> fakeParent = std::make_unique<Body<>>(Point<>(2, 2, 2), DirectionVector<>(Directions::UP), *env);
+    std::unique_ptr<Body<>> fakeParent = std::make_unique<Body<>>(Point<>(2, 2, 2), DirectionVector<>::UP(), env, BodyShapeFactory<>::onlyOrigin());
     fakeParent->attachBody(*tinyBody);
     //Check no attachment on fake parent
     EXPECT_EQ(tinyBody->getParent(), &(*largeBody));
@@ -76,25 +76,25 @@ TEST_F(BodyTest, SelfMovement)
     EXPECT_TRUE(env->getVolume(Point<>(1, 1, 0)).getOccupant() == &(*largeBody)) << "[ERROR] Body not found in the environment at it's location |" << testPhase << std::endl;
     EXPECT_TRUE(env->getVolume(largeBody->getPose().getPosition()).getOccupant() == &(*largeBody)) << "[ERROR] Position doesn't match actual location |" << testPhase << std::endl;
     //MoveUp
-    largeBody->moveBody(DirectionVector<>(Directions::UP));
+    largeBody->moveBody(DirectionVector<>::UP());
     ++testPhase;
     EXPECT_EQ(largeBody->getPose().getPosition(), Point<>(1, 2, 0)) << "[ERROR] Body's moved (UP) position was wrong |" << testPhase << std::endl;
     EXPECT_TRUE(env->getVolume(Point<>(1, 2, 0)).getOccupant() == &(*largeBody)) << "[ERROR] Body not found in the environment at it's location |" << testPhase << std::endl;
     EXPECT_TRUE(env->getVolume(largeBody->getPose().getPosition()).getOccupant() == &(*largeBody)) << "[ERROR] Position doesn't match actual location |" << testPhase << std::endl;
     //MoveRight
-    largeBody->moveBody(DirectionVector<>(Directions::RIGHT));
+    largeBody->moveBody(DirectionVector<>::RIGHT());
     ++testPhase;
     EXPECT_EQ(largeBody->getPose().getPosition(), Point<>(2, 2, 0)) << "[ERROR] Body's moved (RIGHT) position was wrong |" << testPhase << std::endl;
     EXPECT_TRUE(env->getVolume(Point<>(2, 2, 0)).getOccupant() == &(*largeBody)) << "[ERROR] Body not found in the environment at it's location |" << testPhase << std::endl;
     EXPECT_TRUE(env->getVolume(largeBody->getPose().getPosition()).getOccupant() == &(*largeBody)) << "[ERROR] Position doesn't match actual location |" << testPhase << std::endl;
     //MoveLeft
-    largeBody->moveBody(DirectionVector<int>(Directions::LEFT));
+    largeBody->moveBody(DirectionVector<>::LEFT());
     ++testPhase;
     EXPECT_EQ(largeBody->getPose().getPosition(), Point<>(1, 2, 0)) << "[ERROR] Body's moved (LEFT) position was wrong |" << testPhase << std::endl;
     EXPECT_TRUE(env->getVolume(Point<>(1, 2, 0)).getOccupant() == &(*largeBody)) << "[ERROR] Body not found in the environment at it's location |" << testPhase << std::endl;
     EXPECT_TRUE(env->getVolume(largeBody->getPose().getPosition()).getOccupant() == &(*largeBody)) << "[ERROR] Position doesn't match actual location |" << testPhase << std::endl;
     //MoveDown
-    largeBody->moveBody(DirectionVector<>(Directions::DOWN));
+    largeBody->moveBody(DirectionVector<>::DOWN());
     ++testPhase;
     EXPECT_EQ(largeBody->getPose().getPosition(), Point<>(1, 1, 0)) << "[ERROR] Body's moved (DOWN) position was wrong |" << testPhase << std::endl;
     EXPECT_TRUE(env->getVolume(Point<>(1, 1, 0)).getOccupant() == &(*largeBody)) << "[ERROR] Body not found in the environment at it's location |" << testPhase << std::endl;
@@ -112,25 +112,25 @@ TEST_F(BodyTest, ChildCarrying)
     largeBody->attachBody(*tinyBody);
     // Parent move up
     int testPhase = 0;
-    largeBody->moveBody(DirectionVector<>(Directions::UP));
+    largeBody->moveBody(DirectionVector<>::UP());
     EXPECT_EQ(tinyBody->getPose().getPosition(), Point<>(1, 2, 2)) << "[ERROR] Child moved (UP) position was wrong |" << testPhase << std::endl;
     EXPECT_TRUE(env->getVolume(Point<>(1, 2, 2)).getOccupant() == &(*tinyBody)) << "[ERROR] Child not found in the environment at it's location |" << testPhase << std::endl;
     EXPECT_TRUE(env->getVolume(tinyBody->getPose().getPosition()).getOccupant() == &(*tinyBody)) << "[ERROR] Child Position doesn't match actual location |" << testPhase << std::endl;
     // Parent move right
     ++testPhase;
-    largeBody->moveBody(DirectionVector<>(Directions::RIGHT));
+    largeBody->moveBody(DirectionVector<>::RIGHT());
     EXPECT_EQ(tinyBody->getPose().getPosition(), Point<>(2, 2, 2)) << "[ERROR] Child moved (RIGHT) position was wrong |" << testPhase << std::endl;
     EXPECT_TRUE(env->getVolume(Point<>(2, 2, 2)).getOccupant() == &(*tinyBody)) << "[ERROR] Child not found in the environment at it's location |" << testPhase << std::endl;
     EXPECT_TRUE(env->getVolume(tinyBody->getPose().getPosition()).getOccupant() == &(*tinyBody)) << "[ERROR] Child Position doesn't match actual location |" << testPhase << std::endl;
     // Parent move left
     ++testPhase;
-    largeBody->moveBody(DirectionVector<>(Directions::LEFT));
+    largeBody->moveBody(DirectionVector<>::LEFT());
     EXPECT_EQ(tinyBody->getPose().getPosition(), Point<>(1, 2, 2)) << "[ERROR] Child moved (LEFT) position was wrong |" << testPhase << std::endl;
     EXPECT_TRUE(env->getVolume(Point<>(1, 2, 2)).getOccupant() == &(*tinyBody)) << "[ERROR] Child not found in the environment at it's location |" << testPhase << std::endl;
     EXPECT_TRUE(env->getVolume(tinyBody->getPose().getPosition()).getOccupant() == &(*tinyBody)) << "[ERROR] Child Position doesn't match actual location |" << testPhase << std::endl;
     // Parent move down
     ++testPhase;
-    largeBody->moveBody(DirectionVector<>(Directions::DOWN));
+    largeBody->moveBody(DirectionVector<>::DOWN());
     EXPECT_EQ(tinyBody->getPose().getPosition(), Point<>(1, 1, 2)) << "[ERROR] Child moved (DOWN) position was wrong |" << testPhase << std::endl;
     EXPECT_TRUE(env->getVolume(Point<>(1, 1, 2)).getOccupant() == &(*tinyBody)) << "[ERROR] Child not found in the environment at it's location |" << testPhase << std::endl;
     EXPECT_TRUE(env->getVolume(tinyBody->getPose().getPosition()).getOccupant() == &(*tinyBody)) << "[ERROR] Child Position doesn't match actual location |" << testPhase << std::endl;
@@ -148,9 +148,9 @@ TEST_F(BodyTest, ProperDestruction_References)
     largeBody->attachBody(*tinyBody);
     largeBody = std::make_unique<Body<>>(
         Point<>(4, 4, 4),
-        DirectionVector<>(Directions::LEFT),
-        *env,
-        BodyShapeFactory::createShape(BodyShapeFactory::BodyShape::ONLY_ORIGIN));
+        DirectionVector<>::LEFT(),
+        env,
+        BodyShapeFactory<>::onlyOrigin());
     // Original parent destroyed
     EXPECT_EQ(tinyBody->getParent(), nullptr) << "[ERROR] Child still has record of destroyed parent" << std::endl;
     // Destroy again
@@ -159,17 +159,17 @@ TEST_F(BodyTest, ProperDestruction_References)
     // Renew parent
     largeBody = std::make_unique<Body<>>(
         Point<>(4, 4, 4),
-        DirectionVector<>(Directions::LEFT),
-        *env,
-        BodyShapeFactory::createShape(BodyShapeFactory::BodyShape::ONLY_ORIGIN));
+        DirectionVector<>::LEFT(),
+        env,
+        BodyShapeFactory<>::onlyOrigin());
     // Attach
     largeBody->attachBody(*tinyBody);
     // Destroy child
     tinyBody = std::make_unique<Body<>>(
         Point<>(4, 4, 5),
-        DirectionVector<>(Directions::LEFT),
-        *env,
-        BodyShapeFactory::createShape(BodyShapeFactory::BodyShape::ONLY_ORIGIN));
+        DirectionVector<>::LEFT(),
+        env,
+        BodyShapeFactory<>::onlyOrigin());
     EXPECT_EQ(largeBody->getChildren().size(), 0) << "[ERROR] Parent still has record of destroyed child" << std::endl;
     EXPECT_TRUE(largeBody->getChildren().find(&(*tinyBody)) == largeBody->getChildren().end()) << "[ERROR] Parent still has record of destroyed child" << std::endl;
     // Destroy child again

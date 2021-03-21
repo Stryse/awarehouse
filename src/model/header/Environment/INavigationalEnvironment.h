@@ -2,9 +2,10 @@
 #define INAVIGATIONAL_ENVIRONMENT__H
 
 #include "LibConfig.h"
+#include <cstddef>
 
 // ############################## Forward declarations ####################################
-template <typename T>
+template <typename T, std::size_t>
 class Point;
 // ########################################################################################
 
@@ -20,7 +21,7 @@ template <typename TVolumeType = config::navigation::DefaultVolumeType>
 class INavigationalEnvironment
 {
 public:
-    using Point = Point<int>;
+    using Point = Point<int, 3>;
     using VolumeType = TVolumeType;
 
 public:

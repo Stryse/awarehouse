@@ -57,12 +57,12 @@ public:
      *********************************************************************************************************/
     Body(const Point &position,
          const DirectionVector &orientation,
-         Environment &environment,
+         const std::shared_ptr<Environment> &environment,
          std::vector<Point> &&bodyShape = {})
         : pose(position, orientation), shape(std::move(bodyShape)), parentBody(nullptr), environment(environment)
     {
         //Place body in environment on creation.
-        occupyV(environment.getVolume(position));
+        occupyV(environment->getVolume(position));
     }
 
     virtual ~Body()
@@ -72,7 +72,8 @@ public:
             parentBody->detachBody(*this);
         // Destroy parent record in child
         for (auto &child : childBodies)
-            detachBody(*child);
+            child->parentBody = nullptr;
+        childBodies.clear();
         // Leave Environment, children remain
         freeV();
     }
@@ -98,8 +99,8 @@ public:
         for (auto &bodypart : shape)
         {
             Point newPos = originVolume.getPosition().moved(DirectionVector(bodypart));
-            environment.getVolume(newPos).occupyV(this);
-            containerVolume.push_back(&environment.getVolume(newPos));
+            environment->getVolume(newPos).occupyV(this);
+            containerVolume.push_back(&environment->getVolume(newPos));
         }
 
         // All children - occupation
@@ -107,7 +108,7 @@ public:
         {
             DirectionVector this2child = child->getPose().getPosition() - pose.getPosition();
             Point newChildPos = originVolume.getPosition().moved(this2child);
-            child->occupyV(environment.getVolume(newChildPos));
+            child->occupyV(environment->getVolume(newChildPos));
         }
         pose.setPosition(originVolume.getPosition());
     }
@@ -139,7 +140,17 @@ public:
      ******************************************************************************/
     void moveBody(const DirectionVector &direction)
     {
-        occupyV(environment.getVolume(pose.getPosition().moved(direction)));
+        occupyV(environment->getVolume(pose.getPosition().moved(direction)));
+    }
+
+    /******************************************************************************
+     * @brief Rotates the body's orientation
+     * 
+     * TODO: Rotate shaped bodies properly
+     ******************************************************************************/
+    void rotate(const DirectionVector &targetOrientation)
+    {
+        pose.setOrientation(targetOrientation);
     }
 
     /******************************************************************************
@@ -176,6 +187,7 @@ public:
      * @brief Returns the position and orientation of the body's origin point
      *******************************************************************************/
     const Pose &getPose() const { return pose; }
+    Pose &getPose() { return pose; }
 
     /*******************************************************************************
      * @brief Returns the body's children.
@@ -197,8 +209,8 @@ public:
     /*******************************************************************************
      * @brief Returns the environment in which the body resides.
      *******************************************************************************/
-    const Environment &getEnvironment() const { return environment; }
-    Environment &getEnvironment() { return environment; }
+    const Environment &getEnvironment() const { return *environment; }
+    Environment &getEnvironment() { return *environment; }
 
 private:
     //####################################### Private Members ###############################################
@@ -244,6 +256,6 @@ private:
      * @brief Reference to the 3D environment in which the body resides.
      * Owner of parentVolume's elements.
      ***********************/
-    Environment &environment;
+    std::shared_ptr<Environment> environment;
 };
 #endif /* BODY__H */

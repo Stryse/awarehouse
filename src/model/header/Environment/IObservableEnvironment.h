@@ -1,11 +1,13 @@
 #ifndef I_OBSERVABLE_ENVIRONMENT__H
 #define I_OBSERVABLE_ENVIRONMENT__H
 
+#include <cstddef>
+
 //Forward Declarations
 class Info;
-template <typename T>
+template <typename T, std::size_t N>
 class DirectionVector;
-template <typename T>
+template <typename T, std::size_t N>
 class Point;
 //
 
@@ -16,8 +18,8 @@ class Point;
 class IObservableEnvironment
 {
 public:
-    using DirectionVector = DirectionVector<int>;
-    using Point = Point<int>;
+    using DirectionVector = DirectionVector<int, 3>;
+    using Point = Point<int, 3>;
 
     virtual ~IObservableEnvironment() = default;
 
