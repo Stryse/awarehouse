@@ -2,6 +2,7 @@ import QtQuick
 import QtQuick.Window
 import QtQuick.Controls
 import QtQuick.Controls.Material
+import WarehouseManager 1.0
 
 CustomTitleBarWindow {
     id: mainRoot

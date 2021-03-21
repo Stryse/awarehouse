@@ -2,6 +2,7 @@ import QtQuick
 import QtQuick.Layouts
 import QtQuick.Controls
 import QtQuick.Controls.Material
+import WarehouseManager 1.0
 
 Item {
     id: root
@@ -74,7 +75,9 @@ Item {
                 //BUG: when button is at minimal size and clicked -> changed text appears
                 //text:        paused ? qsTr("Pause")                : qsTr("Play")
 
-                onClicked:   paused = !paused
+                onClicked:   {
+                        Manager.simulationStart();
+                    }
             }
 
             MediaControlButton {
