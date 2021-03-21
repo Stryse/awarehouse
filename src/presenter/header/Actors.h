@@ -39,6 +39,16 @@ public:
     Direction orientation() const;
     void setOrientation(Direction dir);
 
+    friend bool operator==(Actors* const lhs, const Actors rhs)
+    {
+        return lhs->mName == rhs.mName &&
+               lhs->mAction == rhs.mAction &&
+               lhs->mBatteryLevel == rhs.mBatteryLevel &&
+               lhs->mRole == rhs.mRole &&
+               lhs->mMoveCount == rhs.mMoveCount &&
+               lhs->mOrientation == rhs.mOrientation;
+    }
+
 signals:
     void nameChanged();
     void actionChanged();

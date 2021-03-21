@@ -25,6 +25,11 @@ public:
     QString assignedRobotName() const;
     void setAssignedRobotName(const QString &name);
 
+    friend bool operator==(Order* const lhs, const Order rhs)
+    {
+        return lhs->mOrderNumber == rhs.mOrderNumber &&
+               lhs->mAssignedRobotName == rhs.mAssignedRobotName;
+    }
 signals:
     void positionChanged();
     void nameChanged();
