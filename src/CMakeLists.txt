@@ -50,14 +50,14 @@ model/header/Simulator/Simulator.h
 model/cpp/Warehouse/WarehouseManager.cpp
 model/header/Warehouse/WarehouseManager.h
 presenter/cpp/presenter.cpp
-presenter/cpp/Actors.cpp
-presenter/cpp/OutlinerListModel.cpp
-presenter/cpp/Order.cpp
-presenter/cpp/OrderListModel.cpp
 presenter/header/presenter.h
+presenter/cpp/Actors.cpp
 presenter/header/Actors.h
+presenter/cpp/OutlinerListModel.cpp
 presenter/header/OutlinerListModel.h
+presenter/cpp/Order.cpp
 presenter/header/Order.h
+presenter/cpp/OrderListModel.cpp
 presenter/header/OrderListModel.h
 )
 

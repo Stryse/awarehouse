@@ -1,5 +1,6 @@
 import QtQuick
 import QtQuick.Controls
+import Outliner 1.0
 
 Item {
     id: root
@@ -62,9 +63,16 @@ Item {
                 clip: true
 
                 //PLACEHOLDER
-                model: 20
-                delegate: ItemDelegate {
-                    text: "Item " + index
+                model: OutlinerListModel {
+                    list: Presenter
+                }
+
+                delegate: RowLayout {
+                    width: parent.width
+
+                    TextField {
+                        text: model.name
+                    }
                 }
             }
         }
