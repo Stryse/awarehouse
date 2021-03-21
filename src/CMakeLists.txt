@@ -43,15 +43,28 @@ view/viewsource.qrc
 ../resources/resources.qrc
 )
 
+set(QT_QOBJECT_FILES
+# Add CPP and Header files here - those which !!ARE!! Q_OBJECT
+model/cpp/Simulator/Simulator.cpp
+model/header/Simulator/Simulator.h
+model/cpp/Warehouse/WarehouseManager.cpp
+model/header/Warehouse/WarehouseManager.h
+)
+
 add_library(OBJ_AWSOURCE_FILES STATIC
-# Add sources here
+# Add CPP files here - those which are !!NOT!! Q_OBJECT
 model/cpp/Tile/Tile.cpp
 presenter/cpp/Presenter.cpp
 presenter/cpp/Actors.cpp
 presenter/cpp/OutlinerListModel.cpp
 presenter/cpp/Order.cpp
 presenter/cpp/OrderListModel.cpp
+model/cpp/Warehouse/Warehouse.cpp
+
+## QOBJECT FILES ##
+${QT_QOBJECT_FILES}
 )
+
 target_include_directories(OBJ_AWSOURCE_FILES PUBLIC ${header_dir_list})
 target_link_libraries(OBJ_AWSOURCE_FILES PRIVATE
 Qt${QT_VERSION_MAJOR}::Core

@@ -1,6 +1,7 @@
 #include <QGuiApplication>
 #include <QQmlApplicationEngine>
 #include <QIcon>
+#include "WarehouseManager.h"
 
 int main(int argc, char *argv[])
 {
@@ -19,6 +20,10 @@ int main(int argc, char *argv[])
             QCoreApplication::exit(-1);
     }, Qt::QueuedConnection);
     engine.load(url);
+
+    // Own variables
+    WarehouseManager manager;
+    qmlRegisterSingletonInstance<WarehouseManager>("manager",1,0,"WarehouseManager",&manager);
 
     return app.exec();
 }
