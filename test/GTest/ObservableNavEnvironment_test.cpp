@@ -1,5 +1,6 @@
 #include "Battery.h"
 #include "ChargingStation.h"
+#include "DeliveryRobot.h"
 #include "ObservableEnvironment.h"
 #include "Order.h"
 #include "Pod.h"
@@ -7,7 +8,6 @@
 #include "Tile.h"
 #include "gtest/gtest.h"
 #include <memory>
-
 class ObservableNavEnvironmentTest : public testing::Test
 {
 protected:
@@ -77,10 +77,14 @@ TEST_F(ObservableNavEnvironmentTest, PodTransfer)
                 docks.push_back(std::make_shared<PodDock<>>(Point<>(x, y, z)));
                 env->getBuffer()[env->getCoordAsIndex(x, y, z)] = docks[docks.size() - 1];
             }
-    docks[0]->addAssociatedPod(env);
-    docks[3]->addAssociatedPod(env);
-    docks[0]->getChildPod()->push(std::make_unique<Order>(3));
-    docks[0]->getChildPod()->push(std::make_unique<Order>(2));
-    docks[0]->getChildPod()->push(std::make_unique<Order>(3));
+    docks[1]->addAssociatedPod(env);
+    docks[1]->getChildPod()->push(std::make_unique<Order>(3));
+    docks[1]->getChildPod()->push(std::make_unique<Order>(2));
+    docks[1]->getChildPod()->push(std::make_unique<Order>(3));
+
+    DeliveryRobot<> robot(env, Point<>(0, 0, 0), DirectionVector<>::UP());
+    PickupPodSignal pps;
+    docks[1]->receive(robot.getPodHolder(), pps);
+
     EXPECT_TRUE(true);
 }

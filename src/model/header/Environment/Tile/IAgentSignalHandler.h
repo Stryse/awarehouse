@@ -23,7 +23,7 @@ public:
 
 public:
     virtual void receive(IDepleting<config::agent::DefaultEnergy> &resource, const ChargeSignal &chargeSignal) const {}
-    virtual void receive(IContaining<OwnedPod_Order> &carrier, const PickupPodSignal &pickupSignal) const {}
+    virtual void receive(IContaining<OwnedPod_Order> &carrier, const PickupPodSignal &pickupSignal) {}
 };
 
 #endif /* I_AGENT_SIGNAL_HANDLER__H */

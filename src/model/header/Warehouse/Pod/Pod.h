@@ -90,7 +90,15 @@ public:
      * @brief Returns the pods parentDock to which it shall be
      * carried back.
      ************************************************************************/
-    const PodDock &getParentDock() { return parentDock; }
+    const PodDock &getParentDock() const { return parentDock; }
+
+    /************************************************************************
+     * @brief Returns the Pod's inventory
+     ************************************************************************/
+    const std::set<ItemType, pointer_element_comparator<TItemType>> &getInventory() const
+    {
+        return inventory;
+    }
 
 private:
     Body body;
