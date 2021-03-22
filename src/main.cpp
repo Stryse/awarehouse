@@ -1,8 +1,11 @@
 #include "WarehouseManager.h"
+#include "OutlinerModel.h"
+#include "SimulationWindow_Presenter.h"
 #include <QGuiApplication>
 #include <QIcon>
 #include <QQmlApplicationEngine>
 #include <QScopedPointer>
+#include <QQmlContext>
 
 int main(int argc, char *argv[])
 {
@@ -13,9 +16,19 @@ int main(int argc, char *argv[])
     QGuiApplication app(argc, argv);
     app.setWindowIcon(QIcon(":/app_icon.png"));
 
+    // Instantiate //////
     QScopedPointer<WarehouseManager> manager(new WarehouseManager());
+    QScopedPointer<SimulationWindowPresenter> simpresenter(new SimulationWindowPresenter());
+    // //////////////////
+
+    // Register Types ///
+    qmlRegisterType<OutlinerModel>("Outliner",1,0,"OutlinerModel");
+    // //////////////////
     QQmlApplicationEngine engine;
+    // Register Instances
     qmlRegisterSingletonInstance<WarehouseManager>("WarehouseManager", 1, 0, "Manager", manager.get());
+    engine.rootContext()->setContextProperty(QStringLiteral("simpresenter"), simpresenter.get());
+    // //////////////////
 
     const QUrl url(QStringLiteral("qrc:/view/SimulationWindow.qml"));
     QObject::connect(

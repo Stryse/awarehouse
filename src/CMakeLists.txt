@@ -49,16 +49,22 @@ model/cpp/Simulator/Simulator.cpp
 model/header/Simulator/Simulator.h
 model/cpp/Warehouse/WarehouseManager.cpp
 model/header/Warehouse/WarehouseManager.h
+presenter/cpp/Actors.cpp
+presenter/header/Actors.h
+presenter/header/SimulationWindow_Presenter.h
+presenter/cpp/SimulationWindow_Presenter.cpp
+presenter/header/OutlinerModel.h
+presenter/cpp/OutlinerModel.cpp
 )
 
 add_library(OBJ_AWSOURCE_FILES STATIC
 # Add CPP files here - those which are !!NOT!! Q_OBJECT
 model/cpp/Tile/Tile.cpp
-presenter/cpp/Presenter.cpp
+#presenter/cpp/Presenter.cpp
 presenter/cpp/Actors.cpp
-presenter/cpp/OutlinerListModel.cpp
-presenter/cpp/Order.cpp
-presenter/cpp/OrderListModel.cpp
+#presenter/cpp/OutlinerListModel.cpp
+#presenter/cpp/Order.cpp
+#presenter/cpp/OrderListModel.cpp
 model/cpp/Warehouse/Warehouse.cpp
 
 ## QOBJECT FILES ##

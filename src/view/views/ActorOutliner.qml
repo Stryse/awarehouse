@@ -1,5 +1,6 @@
 import QtQuick
 import QtQuick.Controls
+import Outliner 1.0
 
 Item {
     id: root
@@ -62,9 +63,11 @@ Item {
                 clip: true
 
                 //PLACEHOLDER
-                model: 20
+                model: OutlinerModel {
+                    actors: simpresenter.actors
+                }
                 delegate: ItemDelegate {
-                    text: "Item " + index
+                    text: model.name + " " + model.action + " " + model.battery + " " + model.orientation
                 }
             }
         }
