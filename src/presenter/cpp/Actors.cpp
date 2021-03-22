@@ -96,3 +96,13 @@ void Actors::setOrientation(Actors::Direction dir)
     emit orientationChanged();
 }
 
+Actors& Actors::operator=(const Actors &other)
+{
+    this->mName = other.mName;
+    this->mAction = other.mAction;
+    this->mBatteryLevel = other.mBatteryLevel;
+    this->mRole = other.mRole;
+    this->mMoveCount = other.mMoveCount;
+    this->mOrientation = other.mOrientation;
+    return *this;
+}

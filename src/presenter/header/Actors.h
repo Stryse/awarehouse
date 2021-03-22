@@ -11,7 +11,7 @@ class Actors : public QObject
     Q_PROPERTY ( QString action READ action NOTIFY actionChanged )
     Q_PROPERTY ( int battery READ battery NOTIFY batteryChanged )
     Q_PROPERTY ( Role role READ role NOTIFY roleChanged )
-    Q_PROPERTY ( int moveCount READ moveCount NOTIFY moveChanged )
+    Q_PROPERTY ( int moveCount READ moveCount NOTIFY moveCountChanged )
     Q_PROPERTY ( Direction orientation READ orientation NOTIFY orientationChanged )
 public:
     enum Role { Robot, Task };
@@ -48,6 +48,8 @@ public:
                lhs->mMoveCount == rhs.mMoveCount &&
                lhs->mOrientation == rhs.mOrientation;
     }
+
+    Actors& operator=(const Actors& other);
 
 signals:
     void nameChanged();
