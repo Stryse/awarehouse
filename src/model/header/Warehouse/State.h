@@ -11,7 +11,7 @@ template <typename Environment>
 class Agent;
 class QJsonObject;
 // ###################################################################### //
-class State : public ISerializable<QJsonObject>
+class State
 {
 public:
     State();
@@ -19,10 +19,6 @@ public:
 
 public:
     void tick();
-
-public:
-    virtual void read(const QJsonObject &json) override;
-    virtual void write(QJsonObject &json) const override;
 
 private:
     ObservableNavEnvironment<Tile> environment;

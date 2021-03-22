@@ -16,12 +16,4 @@ void State::tick()
     //agent->tick(1);
 }
 
-void State::read(const QJsonObject &json)
-{
-}
-
-void State::write(QJsonObject &type) const
-{
-}
-
 State::~State() {}
