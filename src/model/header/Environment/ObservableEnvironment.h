@@ -1,5 +1,5 @@
 #ifndef OBSERVABLE_NAV_ENVIRONMENT__H
-#define OVSERVABLE_NAV_ENVIRONMENT__H
+#define OBSERVABLE_NAV_ENVIRONMENT__H
 
 #include "IInfoProvider.h"
 #include "INavigationalEnvironment.h"

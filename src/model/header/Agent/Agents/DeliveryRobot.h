@@ -7,7 +7,6 @@
 #include "BodyShapeFactory.h"
 #include "DRobotMCU.h"
 #include "LibConfig.h"
-#include "MotorAction.h"
 #include "MotorAction.h" // TODO REMOVE
 #include "RobotMoveMechanism.h"
 #include <queue> // TODO REMOVE
@@ -45,15 +44,8 @@ public:
     }
 
 public:
-    const Battery<Energy> &getBattery() const
-    {
-        return battery;
-    }
-
-    const IMoveMechanism<Body, Energy> &getMoveMechanism() const
-    {
-        return *(robotMovement->get());
-    }
+    const Battery<Energy> &getBattery() const { return battery; }
+    const IMoveMechanism<Body, Energy> &getMoveMechanism() const { return *(robotMovement->get()); }
 
     /*Todo Remove*/
     void move(const DirectionVector &direction)

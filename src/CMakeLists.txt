@@ -60,7 +60,7 @@ presenter/cpp/OutlinerListModel.cpp
 presenter/cpp/Order.cpp
 presenter/cpp/OrderListModel.cpp
 model/cpp/Warehouse/Warehouse.cpp
-
+model/cpp/Warehouse/State.cpp
 ## QOBJECT FILES ##
 ${QT_QOBJECT_FILES}
 )
