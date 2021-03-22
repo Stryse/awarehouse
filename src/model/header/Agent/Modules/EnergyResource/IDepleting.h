@@ -25,6 +25,7 @@ public:
     virtual double degrade(int timesUsed) const = 0;
     virtual const Energy &getCharge() const = 0;
     virtual const Energy &getMaxCharge() const = 0;
+    virtual const Energy &getMaxChargeRate() const = 0;
     virtual int getTimesUsed() const = 0;
     virtual double getCondition() const = 0;
     virtual bool isDepleted() const { return getCharge() < 1e-8f; }

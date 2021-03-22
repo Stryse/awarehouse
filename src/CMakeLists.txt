@@ -54,13 +54,14 @@ model/header/Warehouse/WarehouseManager.h
 add_library(OBJ_AWSOURCE_FILES STATIC
 # Add CPP files here - those which are !!NOT!! Q_OBJECT
 model/cpp/Tile/Tile.cpp
-presenter/cpp/Presenter.cpp
+#presenter/cpp/Presenter.cpp
 presenter/cpp/Actors.cpp
-presenter/cpp/OutlinerListModel.cpp
-presenter/cpp/Order.cpp
-presenter/cpp/OrderListModel.cpp
+#presenter/cpp/OutlinerListModel.cpp
+#presenter/cpp/Order.cpp
+#presenter/cpp/OrderListModel.cpp
 model/cpp/Warehouse/Warehouse.cpp
 model/cpp/Warehouse/State.cpp
+model/cpp/Warehouse/Pod/Order.cpp
 ## QOBJECT FILES ##
 ${QT_QOBJECT_FILES}
 )

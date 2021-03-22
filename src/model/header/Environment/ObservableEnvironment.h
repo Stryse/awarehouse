@@ -24,7 +24,7 @@ public:
     using Point = typename INavigationalEnvironment<VolumeType>::Point;
 
 private:
-    std::vector<std::unique_ptr<TVolumeType>> tileSpace;
+    std::vector<std::shared_ptr<TVolumeType>> tileSpace;
     size_t xLength;
     size_t yLength;
     size_t zLength;
@@ -72,9 +72,9 @@ public:
 
     //############################################## Own Getter ####################################################
 
-    const std::vector<std::unique_ptr<VolumeType>> &getBuffer() const { return tileSpace; }
+    const std::vector<std::shared_ptr<VolumeType>> &getBuffer() const { return tileSpace; }
 
-    std::vector<std::unique_ptr<VolumeType>> &getBuffer() { return tileSpace; }
+    std::vector<std::shared_ptr<VolumeType>> &getBuffer() { return tileSpace; }
 
     size_t getXLength() const { return xLength; }
 
