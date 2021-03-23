@@ -63,6 +63,8 @@ presenter/header/ChargingStationPresenter.h
 presenter/cpp/ChargingStationPresenter.cpp
 presenter/header/PodDockPresenter.h
 presenter/cpp/PodDockPresenter.cpp
+presenter/header/OutlinerList.h
+presenter/cpp/OutlinerList.cpp
 )
 
 add_library(OBJ_AWSOURCE_FILES STATIC

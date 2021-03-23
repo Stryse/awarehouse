@@ -5,20 +5,21 @@
 #include <QJsonObject>
 
 SimulationWindowPresenter::SimulationWindowPresenter(WarehouseManager &manager, QObject *parent)
-    : QObject(parent), manager(manager), layout(nullptr)
+    : QObject(parent), mActorOutliner(new OutlinerList(this)), manager(manager), layout(nullptr)
 {
-    mActors.append(Actors("József", "Lalalala", 100, Actors::Robot, Actors::Up));
-    mActors.append(Actors("Robi", "Szökdécsel", 100, Actors::Robot, Actors::Down));
-    mActors.append(Actors("Szia", "Lajos", 69, Actors::Robot, Actors::Down));
-    mActors.append(Actors("Sus", "Amongus", 42, Actors::Robot, Actors::Down));
     loadWarehouse(":/maps/Map01.json");
 }
 
 SimulationWindowPresenter::~SimulationWindowPresenter() {}
 
-const QList<Actors> *SimulationWindowPresenter::actors() const
+OutlinerList *SimulationWindowPresenter::actors() const
 {
-    return &mActors;
+    return mActorOutliner;
+}
+
+void SimulationWindowPresenter::setActors(OutlinerList* actors)
+{
+    mActorOutliner = actors;
 }
 
 void SimulationWindowPresenter::simulationStart()
@@ -60,24 +61,3 @@ void SimulationWindowPresenter::loadWarehouse(const QString& filePath)
             layout = new WarehouseLayoutPresenter(warehouseJsonObj,this);
         }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

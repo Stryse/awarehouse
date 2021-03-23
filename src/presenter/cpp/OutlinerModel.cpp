@@ -11,7 +11,7 @@ int OutlinerModel::rowCount(const QModelIndex& parent) const
     if(parent.isValid() || !m_actors)
         return 0;
 
-    return m_actors->size();
+    return m_actors->actors().size();
 }
 
 QVariant OutlinerModel::data(const QModelIndex& index, int role) const
@@ -19,7 +19,7 @@ QVariant OutlinerModel::data(const QModelIndex& index, int role) const
     if (!index.isValid() || !m_actors)
        return QVariant();
 
-    const Actors& actor = m_actors->at(index.row());
+    const Actors& actor = m_actors->actors().at(index.row());
     switch(role) {
             case NameRole:
                 return QVariant(actor.name());
@@ -34,6 +34,24 @@ QVariant OutlinerModel::data(const QModelIndex& index, int role) const
 }
 
 
+bool OutlinerModel::setData(const QModelIndex &index, const QVariant &value, int role)
+{
+    if(data(index,role) != value)
+    {
+        // TODO IMPLEMENT
+        emit dataChanged(index,index, QVector<int>() << role);
+        return true;
+    }
+    return false;
+}
+
+Qt::ItemFlags OutlinerModel::flags(const QModelIndex& index) const
+{
+    if(!index.isValid())
+        return Qt::NoItemFlags;
+
+    return Qt::ItemIsEditable;
+}
 
 QHash<int, QByteArray> OutlinerModel::roleNames() const
 {
@@ -45,14 +63,41 @@ QHash<int, QByteArray> OutlinerModel::roleNames() const
     return names;
 }
 
-void OutlinerModel::setActors(const QList<Actors>* actors)
+
+
+void OutlinerModel::setActors(OutlinerList* actors)
 {
     beginResetModel();
-    this->m_actors = actors;
+
+    if(m_actors)
+        m_actors->disconnect(this);
+
+    m_actors = actors;
+
+    if(m_actors)
+    {
+        connect(m_actors, &OutlinerList::preItemAppended,this,[=](){
+            const int index = m_actors->actors().size();
+            beginInsertRows(QModelIndex(),index,index);
+        });
+
+        connect(m_actors, &OutlinerList::postItemAppended,this,[=](){
+            endInsertRows();
+        });
+
+        connect(m_actors, &OutlinerList::preItemRemoved, this,[=](int index){
+            beginRemoveRows(QModelIndex(),index, index);
+        });
+
+        connect(m_actors, &OutlinerList::postItemRemoved, this, [=](){
+            endRemoveRows();
+        });
+    }
+
     endResetModel();
 }
 
-const QList<Actors>* OutlinerModel::actors() const
+OutlinerList* OutlinerModel::actors() const
 {
     return m_actors;
 }
