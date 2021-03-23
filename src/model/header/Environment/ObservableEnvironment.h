@@ -1,5 +1,5 @@
 #ifndef OBSERVABLE_NAV_ENVIRONMENT__H
-#define OVSERVABLE_NAV_ENVIRONMENT__H
+#define OBSERVABLE_NAV_ENVIRONMENT__H
 
 #include "IInfoProvider.h"
 #include "INavigationalEnvironment.h"
@@ -24,7 +24,7 @@ public:
     using Point = typename INavigationalEnvironment<VolumeType>::Point;
 
 private:
-    std::vector<std::unique_ptr<TVolumeType>> tileSpace;
+    std::vector<std::shared_ptr<TVolumeType>> tileSpace;
     size_t xLength;
     size_t yLength;
     size_t zLength;
@@ -72,9 +72,9 @@ public:
 
     //############################################## Own Getter ####################################################
 
-    const std::vector<std::unique_ptr<VolumeType>> &getBuffer() const { return tileSpace; }
+    const std::vector<std::shared_ptr<VolumeType>> &getBuffer() const { return tileSpace; }
 
-    std::vector<std::unique_ptr<VolumeType>> &getBuffer() { return tileSpace; }
+    std::vector<std::shared_ptr<VolumeType>> &getBuffer() { return tileSpace; }
 
     size_t getXLength() const { return xLength; }
 
@@ -83,6 +83,7 @@ public:
     size_t getZLength() const { return zLength; }
 
     size_t getCoordAsIndex(size_t x, size_t y, size_t z) const { return x + yLength * (y + zLength * z); }
+    size_t getCoordAsIndex(const Point& point) const { return getCoordAsIndex(point.getX(), point.getY(), point.getZ()); }
 };
 
 #endif /* OBSERVABLE_NAV_ENVIRONMENT__H */

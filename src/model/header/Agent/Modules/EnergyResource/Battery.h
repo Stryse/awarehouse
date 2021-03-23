@@ -20,6 +20,12 @@ private:
      ********************************************************************/
     Energy currentCharge;
 
+    /********************************************************************
+     * @brief The maximum amount of energy that the battery can be charged
+     * one tick
+     ********************************************************************/
+    Energy maxChargeRate;
+
     /**************************************************************
      * @brief The number of times that the resource is used.
      * The resource degrade proportionally to this quantity
@@ -40,8 +46,8 @@ public:
      *  in perfect condition
      * @param timesUsed The times the battery was used (default = brand new)
      ************************************************************************/
-    explicit Battery(const Energy &maxCharge, int timesUsed = 0)
-        : maxCharge(maxCharge), currentCharge(maxCharge), timesUsed(timesUsed)
+    explicit Battery(const Energy &maxCharge, const Energy &maxChargeRate = 1, int timesUsed = 0)
+        : maxCharge(maxCharge), maxChargeRate(maxChargeRate), currentCharge(maxCharge), timesUsed(timesUsed)
     {
         if (maxCharge < 0)
             this->maxCharge = 0;
@@ -101,6 +107,7 @@ public:
     virtual const Energy &getMaxCharge() const override { return maxCharge; }
     virtual int getTimesUsed() const override { return timesUsed; }
     virtual double getCondition() const override { return condition; }
+    virtual const Energy &getMaxChargeRate() const override { return maxChargeRate; }
     // ###########################################################################
 };
 #endif /* BATTERY__H */

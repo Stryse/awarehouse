@@ -1,7 +1,9 @@
 #ifndef TILE__H
 #define TILE__H
 
+#include "IAgentSignalHandler.h"
 #include "INavigationVolume.h"
+#include "LibConfig.h"
 #include "Point.h"
 
 // ######################### FORWARD DECLARATIONS ##############################
@@ -14,7 +16,8 @@ class IVolumeOccupant;
  * Element of volume in the Warehouse space.
  * Can accept occupants of that derive from IVolumeOccupant<Tile>
  *******************************************************************************/
-class Tile : public INavigationVolume<IVolumeOccupant<Tile> *>
+class Tile : public INavigationVolume<IVolumeOccupant<Tile> *>,
+             public IAgentSignalHandler<config::navigation::DefaultEnvironment>
 {
 public:
     /*****************************************************
@@ -58,7 +61,7 @@ public:
 
     // Getter
 
-    const Point &getPosition() const;
+    virtual const Point &getPosition() const;
 };
 
 #endif /* TILE__H */

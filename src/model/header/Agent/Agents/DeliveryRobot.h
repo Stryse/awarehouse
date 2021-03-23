@@ -7,8 +7,8 @@
 #include "BodyShapeFactory.h"
 #include "DRobotMCU.h"
 #include "LibConfig.h"
-#include "MotorAction.h"
 #include "MotorAction.h" // TODO REMOVE
+#include "PodHolder.h"
 #include "RobotMoveMechanism.h"
 #include <queue> // TODO REMOVE
 // ######################## Forward Declarations #########################
@@ -45,15 +45,9 @@ public:
     }
 
 public:
-    const Battery<Energy> &getBattery() const
-    {
-        return battery;
-    }
-
-    const IMoveMechanism<Body, Energy> &getMoveMechanism() const
-    {
-        return *(robotMovement->get());
-    }
+    const Battery<Energy> &getBattery() const { return battery; }
+    const IMoveMechanism<Body, Energy> &getMoveMechanism() const { return *(robotMovement->get()); }
+    PodHolder<Environment> &getPodHolder() { return podHolder; }
 
     /*Todo Remove*/
     void move(const DirectionVector &direction)
@@ -70,6 +64,7 @@ public:
 private:
     Battery<Energy> battery;
     std::unique_ptr<IMoveMechanism<Body, Energy>> robotMovement;
+    PodHolder<Environment> podHolder;
 
 private:
     // ########################## Static functions ###########################
@@ -80,10 +75,10 @@ private:
                                                  const DirectionVector &orientation,
                                                  const std::shared_ptr<Environment> &environment)
     {
-        return std::move(std::make_unique<Body>(position,
-                                                orientation,
-                                                environment,
-                                                BodyShapeFactory<Point>::onlyOrigin()));
+        return std::make_unique<Body>(position,
+                                      orientation,
+                                      environment,
+                                      BodyShapeFactory<Point>::onlyOrigin());
     }
 
     /************************************************************************
@@ -91,7 +86,7 @@ private:
      ************************************************************************/
     static std::unique_ptr<DRobotMCU> getNewRobotMCU()
     {
-        return std::move(std::make_unique<DRobotMCU>());
+        return std::make_unique<DRobotMCU>();
     }
 
     /************************************************************************
@@ -100,7 +95,7 @@ private:
     static std::unique_ptr<RobotMoveMechanism<Body, Energy>> getNewRobotMovement(
         Body &body, IDepleting &resource)
     {
-        return std::move(std::make_unique<RobotMoveMechanism<Body, Energy>>(body, resource));
+        return std::make_unique<RobotMoveMechanism<Body, Energy>>(body, resource);
     }
 };
 

@@ -2,10 +2,10 @@
 #define WAREHOUSE__H
 
 #include <memory>
-#include <string>
 #include "State.h"
 
 // ################# FORWARD DECLARATIONS #######################
+class QString;
 class AScheduler;
 class AController;
 class Warehouse;
@@ -21,14 +21,14 @@ public:
     ~Warehouse();
 public:
     void tick();
-    void loadState(std::string& srcPath);
-    void saveState(std::string& destPath);
+    //void loadState(std::string& srcPath);
+    //void saveState(std::string& destPath);
 
 private:
     int timeStamp;
     std::unique_ptr<AScheduler> scheduler;
     std::unique_ptr<AController> controller;
-    std::unique_ptr<IWarehousePersistence<std::string>> persistence;
+    std::unique_ptr<IWarehousePersistence<QString>> persistence;
     std::unique_ptr<State> state;
 };
 

@@ -4,6 +4,9 @@
 cmake_minimum_required(VERSION 3.16.0)
 include(GoogleTest)
 include(Dart)
+# C++ 17 neccessary
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
 ############################# SOURCE FILES ##################################
 set(T_SOURCES
 # Add files here

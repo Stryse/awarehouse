@@ -81,7 +81,8 @@ model/cpp/Tile/Tile.cpp
 #presenter/cpp/Order.cpp
 #presenter/cpp/OrderListModel.cpp
 model/cpp/Warehouse/Warehouse.cpp
-
+model/cpp/Warehouse/State.cpp
+model/cpp/Warehouse/Pod/OrderModel.cpp
 ## QOBJECT FILES ##
 ${QT_QOBJECT_FILES}
 )
