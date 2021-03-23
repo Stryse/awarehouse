@@ -1,11 +1,7 @@
 #include "State.h"
-#include "Agent.h"
-#include "Tile.h"
-#include <QJsonObject>
 #include <iostream>
 
 State::State()
-    : environment(8, 8, 2)
 {
 }
 

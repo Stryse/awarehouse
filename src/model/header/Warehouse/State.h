@@ -2,14 +2,13 @@
 #define STATE__H
 
 #include "ObservableEnvironment.h"
+#include "DeliveryRobot.h"
+#include "Agent.h"
+#include "PodDock.h"
+#include "ChargingStation.h"
 #include <memory>
-#include <vector>
 
 // ######################## FORWARD DECLARATIONS ######################### //
-class Tile;
-template <typename Environment>
-class Agent;
-class QJsonObject;
 // ###################################################################### //
 class State
 {
@@ -21,8 +20,7 @@ public:
     void tick();
 
 private:
-    ObservableNavEnvironment<Tile> environment;
-    std::vector<std::unique_ptr<Agent<ObservableNavEnvironment<Tile>>>> agents;
+    std::shared_ptr<ObservableNavEnvironment<>> environment;
 };
 
 #endif /* STATE__H */

@@ -2,14 +2,38 @@
 #define WAREHOUSE_FILE_PERSISTENCE__H
 
 #include "IWarehousePersistence.h"
-#include <stdexcept>
-#include <string>
+#include <QString>
+#include <QJsonObject>
+#include <vector>
+#include <memory>
+#include "State.h"
 
-class WarehouseFilePersistence : public IWarehousePersistence<std::string>
+class WarehouseFilePersistence : public QObject, public IWarehousePersistence<QString>
 {
+    Q_OBJECT
+
 public:
-    virtual State load(std::string &resource) { throw std::runtime_error("Not implemented WarehouseFilePersistence::load()"); }
-    virtual void save(const State &state, std::string &resource) {}
+
+    WarehouseFilePersistence(QObject* parent = nullptr);
+    virtual ~WarehouseFilePersistence();
+
+public:
+    virtual State* load(QString &resource) override;
+    virtual void save(const State &state, QString &resource) const override;
+
+public: signals:
+    void warehouseLoaded(const State* state);
+
+
+private:
+    State* loadFromJsonObject(QJsonObject json);
+    void loadChargingStation(std::vector<std::shared_ptr<ChargingStation<>>>& chStations,
+                             std::shared_ptr<ObservableNavEnvironment<>>& env,
+                             QJsonObject& warehouseLayoutData);
+
+    void loadPodDock(std::vector<std::shared_ptr<PodDock<>>>& podDocks,
+                     std::shared_ptr<ObservableNavEnvironment<>>& env,
+                     QJsonObject& warehouseLayoutData);
 };
 
 #endif /* WAREHOUSE_FILE_PERSISTENCE__H */
