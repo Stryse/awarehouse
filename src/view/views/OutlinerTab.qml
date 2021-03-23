@@ -13,8 +13,8 @@ Item {
         ActorOutliner {
             id: actorOutliner
 
-            Layout.fillWidth:  true
-            Layout.fillHeight: true
+            Layout.fillWidth:       true
+            Layout.preferredHeight: parent.height * 0.5
         }
 
         TaskOutliner {

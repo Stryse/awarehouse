@@ -14,7 +14,6 @@ Item {
     z: 1
     implicitWidth: maxWidth
 
-    //Tabs
     TabBar {
         id: tabBar
 
@@ -49,7 +48,6 @@ Item {
         padding:     0
         leftPadding: borderWidth
 
-        //Tab layout
         StackLayout {
             id: tabLayout
 
