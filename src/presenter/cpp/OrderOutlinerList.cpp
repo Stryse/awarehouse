@@ -44,6 +44,6 @@ void OrderOutlinerList::clear()
 void OrderOutlinerList::appendOrder(const Order &order)
 {
     emit preItemAppended();
-    mOrders.append(mOrders);
+    mOrders.append(order);
     emit postItemAppended();
 }
