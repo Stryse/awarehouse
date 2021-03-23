@@ -43,7 +43,6 @@ public slots:
     void simulationStop();
     void setTickRate(TickRate tickRate);
     void loadWarehouse(const QString& filePath);
-    void addActor();
     //void reloadSimulation();
 
 private:

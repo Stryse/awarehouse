@@ -25,6 +25,11 @@ void SimulationWindowPresenter::setActors(OutlinerList* actors)
     mActorOutliner = actors;
 }
 
+const QList<Order>* SimulationWindowPresenter::orders() const
+{
+    return &mOrders;
+}
+
 void SimulationWindowPresenter::simulationStart()
 {
     manager.simulationStart();
