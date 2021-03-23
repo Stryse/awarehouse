@@ -17,5 +17,8 @@
         <file alias="LogTab.qml">views/LogTab.qml</file>
         <file alias="ActorOutliner.qml">views/ActorOutliner.qml</file>
         <file alias="TaskOutliner.qml">views/TaskOutliner.qml</file>
+        <file alias="WarehouseEditorWindow.qml">views/WarehouseEditorWindow.qml</file>
+        <file alias="WarehouseSettingsTab.qml">views/WarehouseSettingsTab.qml</file>
+        <file alias="WarehouseTilesTab.qml">views/WarehouseTilesTab.qml</file>
     </qresource>
 </RCC>

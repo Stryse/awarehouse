@@ -1,6 +1,7 @@
 import QtQuick
 import QtQuick.Controls
 import Outliner 1.0
+import QtQuick.Controls.Material
 
 Item {
     id: root
