@@ -2,6 +2,7 @@
 #define SIMULATION_WINDOW_PRESENTER__H
 
 #include "Actors.h"
+#include "Order.h"
 #include "WarehouseManager.h"
 #include "WarehouseLayoutPresenter.h"
 #include "OutlinerList.h"
@@ -12,6 +13,7 @@
 class SimulationWindowPresenter : public QObject
 {
     Q_OBJECT
+    Q_PROPERTY(const QList<Order> *orders READ orders NOTIFY ordersChanged)
     Q_PROPERTY(OutlinerList* actors READ actors CONSTANT)
 
 public:
@@ -30,7 +32,11 @@ public:
 public:
     OutlinerList *actors() const;
     void setActors(OutlinerList* actors);
+    const QList<Order> *orders() const;
 
+public:
+signals:
+    void ordersChanged();
 
 public slots:
     void simulationStart();
@@ -42,6 +48,7 @@ public slots:
 
 private:
     OutlinerList* mActorOutliner;
+    QList<Order> mOrders;
     WarehouseManager &manager;
     WarehouseLayoutPresenter* layout;
 };

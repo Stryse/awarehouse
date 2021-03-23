@@ -7,6 +7,9 @@
 SimulationWindowPresenter::SimulationWindowPresenter(WarehouseManager &manager, QObject *parent)
     : QObject(parent), mActorOutliner(new OutlinerList(this)), manager(manager), layout(nullptr)
 {
+    mOrders.append(Order(0, 1, 3, "3_FELADAT01"));
+    mOrders.append(Order(1, 2, 1, "1_FELADAT01"));
+    mOrders.append(Order(3, 4, 2, "2_FELADAT01"));
     loadWarehouse(":/maps/Map01.json");
 }
 

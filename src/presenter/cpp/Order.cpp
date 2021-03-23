@@ -1,28 +1,44 @@
 #include "Order.h"
 
-Order::Order(/*Point position,*/ int orderNumber, QString assignedRobotName) : /*mPosition(position),*/ mOrderNumber(orderNumber), mAssignedRobotName(assignedRobotName)
+Order::Order(int positionX, int positionY, int orderNumber, QString orderName, QString assignedRobotName)
+    : mOrderPositionX(positionX), mOrderPositionY(positionY), mOrderNumber(orderNumber),
+      mOrderName(orderName), mAssignedRobotName(assignedRobotName)
 {
 }
 
 Order::Order(const Order &order)
+    : mOrderPositionX(order.mOrderPositionX), mOrderPositionY(order.mOrderPositionY), mOrderNumber(order.mOrderNumber),
+      mOrderName(order.mOrderName), mAssignedRobotName(order.mAssignedRobotName)
 {
-    mOrderNumber = order.mOrderNumber;
-    mAssignedRobotName = order.mAssignedRobotName;
 }
 
-/*Point Order::position() const
+int Order::positionX() const
 {
-    return mPosition;
+    return mOrderPositionX;
 }
 
-void Order::setPosition(const Point &position)
+void Order::setPositionX(int positionX)
 {
-    if(mPosition == position)
+    if(mOrderPositionX == positionX)
         return;
 
-    mPosition = position;
-    emit positionChanged();
-}*/
+    mOrderPositionX = positionX;
+    emit positionXChanged();
+}
+
+int Order::positionY() const
+{
+    return mOrderPositionY;
+}
+
+void Order::setPositionY(int positionY)
+{
+    if(mOrderPositionY == positionY)
+        return;
+
+    mOrderPositionY = positionY;
+    emit positionYChanged();
+}
 
 int Order::orderNumber() const
 {
@@ -38,6 +54,20 @@ void Order::setOrderNumber(int orderNumber)
     emit orderNumberChanged();
 }
 
+QString Order::orderName() const
+{
+    return mOrderName;
+}
+
+void Order::setOrderName(const QString &name)
+{
+    if(mOrderName == name)
+        return;
+
+    mOrderName = name;
+    emit orderNameChanged();
+}
+
 QString Order::assignedRobotName() const
 {
     return mAssignedRobotName;
@@ -49,5 +79,15 @@ void Order::setAssignedRobotName(const QString &name)
         return;
 
     mAssignedRobotName = name;
-    emit nameChanged();
+    emit robotNameChanged();
+}
+
+Order& Order::operator=(const Order &other)
+{
+    this->mAssignedRobotName = other.mAssignedRobotName;
+    this->mOrderName = other.mOrderName;
+    this->mOrderNumber = other.mOrderNumber;
+    this->mOrderPositionX = other.mOrderPositionX;
+    this->mOrderPositionY = other.mOrderPositionY;
+    return *this;
 }
