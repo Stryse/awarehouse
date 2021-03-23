@@ -1,4 +1,5 @@
 #include "WarehouseLayoutPresenter.h"
+#include "PodDockPresenter.h"
 #include <QDebug>
 #include <QJsonObject>
 #include <QJsonArray>
@@ -37,15 +38,15 @@ WarehouseLayoutPresenter::WarehouseLayoutPresenter(QJsonObject& source, QObject*
         }
 
         // Read Pods
-        if(WarehouseLayoutData.contains("Pods") && WarehouseLayoutData["Pods"].isArray())
+        if(WarehouseLayoutData.contains("PodDocks") && WarehouseLayoutData["PodDocks"].isArray())
         {
             QJsonArray PodsJSon = WarehouseLayoutData["Pods"].toArray();
-            pods.reserve(PodsJSon.size());
+            podDocks.reserve(PodsJSon.size());
 
             for(int i = 0; i < PodsJSon.size(); ++i)
             {
                 QJsonObject podObj = PodsJSon[i].toObject();
-                pods.append(PodDockPresenter::read(podObj,this));
+                podDocks.append(PodDockPresenter::read(podObj,this));
             }
         }
 

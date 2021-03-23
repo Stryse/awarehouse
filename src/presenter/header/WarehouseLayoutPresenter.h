@@ -42,7 +42,7 @@ private:
         QList<MapItemPresenter*> map;
         //QList<DeliveryRobotPresenter> robots;
         QList<ChargingStationsPresenter> chargingStations;
-        //QList<PodDockPresenter> podDocks;
+        QList<PodDockPresenter> podDocks;
         //QList<PodPresenter> pods;
 };
 #endif
