@@ -1,4 +1,5 @@
 import QtQuick
+import QtQuick.Layouts
 import QtQuick.Controls
 import QtQuick.Controls.Material
 
@@ -60,15 +61,93 @@ Item {
                 id: actorListView
 
                 anchors.fill: parent
+                anchors {
+                    leftMargin: 5;  rightMargin:  20
+                    topMargin:  10; bottomMargin: 10
+                }
 
                 clip: true
 
-                //PLACEHOLDER
                 model: OutlinerModel {
                     actors: simpresenter.actors
                 }
-                delegate: ItemDelegate {
-                    text: model.name + " " + model.action + " " + model.battery + " " + model.orientation
+
+                delegate: GridLayout {
+                    id: actorDelegate
+
+                    width:  actorListView.width
+                    height: root.height * 0.2
+
+                    columns:       3
+                    columnSpacing: 0
+
+                    Item {
+                        id: actorImg
+
+                        Layout.alignment: Qt.AlignLeft | Qt.AlignVCenter
+                        Layout.row:       0
+                        Layout.column:    0
+                        Layout.rowSpan:   3
+
+                        Layout.preferredWidth: height
+                        Layout.fillHeight:     true
+
+                        Rectangle {
+                            id: img
+
+                            anchors.centerIn: parent
+
+                            height: parent.height * (3/4)
+                            width:  height
+
+                            color:  Material.accent
+                        }
+                    }
+
+                    Label {
+                        id: actorName
+
+                        Layout.alignment: Qt.AlignLeft | Qt.AlignBottom
+                        Layout.row:       0
+                        Layout.column:    1
+
+                        text:           model.name
+                        font.pixelSize: actorDelegate.height * 0.25
+                    }
+
+                    ProgressBar {
+                        id: actorBatteryProgress
+
+                        Layout.row:        1
+                        Layout.column:     1
+                        Layout.columnSpan: 2
+
+                        Layout.preferredWidth: actorDelegate.width - actorImg.width
+
+                        from:  0
+                        to:    100
+                        value: model.battery
+                    }
+
+                    Label {
+                        id: taskAndOrientationLabel
+
+                        Layout.alignment: Qt.AlignLeft | Qt.AlignTop
+                        Layout.row:       2
+                        Layout.column:    1
+
+                        text: model.action + " | " + model.orientation
+                    }
+
+                    Label {
+                        id: actorBatteryLabel
+
+                        Layout.alignment: Qt.AlignRight | Qt.AlignTop
+                        Layout.row:       2
+                        Layout.column:    2
+
+                        text: model.battery
+                    }
                 }
             }
         }
