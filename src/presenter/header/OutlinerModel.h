@@ -3,13 +3,13 @@
 
 #include <QObject>
 #include <QAbstractListModel>
-#include <QList>
 #include "Actors.h"
+#include "OutlinerList.h"
 
 class OutlinerModel : public QAbstractListModel
 {
     Q_OBJECT
-    Q_PROPERTY(const QList<Actors>* actors READ actors WRITE setActors)
+    Q_PROPERTY(OutlinerList* actors READ actors WRITE setActors)
 
 public:
 
@@ -26,16 +26,24 @@ public:
 
     // QAbstractItemModel interface
 public:
+
     int rowCount(const QModelIndex& parent) const override;
     QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const override;
 
     // Editable:
+    bool setData(const QModelIndex &index, const QVariant &value,
+                 int role = Qt::EditRole) override;
+
+    Qt::ItemFlags flags(const QModelIndex& index) const override;
     QHash<int, QByteArray> roleNames() const override;
-    void setActors(const QList<Actors>* actors);
-    const QList<Actors>* actors() const;
+
+
+    // Getter setter
+    void setActors(OutlinerList* actors);
+    OutlinerList* actors() const;
 
 private:
-    const QList<Actors>* m_actors;
+    OutlinerList *m_actors;
 };
 
 #endif

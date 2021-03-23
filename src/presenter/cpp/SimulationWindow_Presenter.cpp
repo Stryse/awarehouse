@@ -1,20 +1,33 @@
 #include "SimulationWindow_Presenter.h"
 #include <QDebug>
+#include <QFile>
+#include <QJsonDocument>
+#include <QJsonObject>
 
 SimulationWindowPresenter::SimulationWindowPresenter(WarehouseManager &manager, QObject *parent)
-    : QObject(parent), manager(manager)
+    : QObject(parent), mActorOutliner(new OutlinerList(this)), manager(manager), layout(nullptr)
 {
-    mActors.append(Actors("József", "Lalalala", 100, Actors::Robot, Actors::Up));
-    mActors.append(Actors("Robi", "Szökdécsel", 100, Actors::Robot, Actors::Down));
-    mActors.append(Actors("Szia", "Lajos", 69, Actors::Robot, Actors::Down));
-    mActors.append(Actors("Sus", "Amongus", 42, Actors::Robot, Actors::Down));
+    mOrders.append(Order(0, 1, 3, "3_FELADAT01"));
+    mOrders.append(Order(1, 2, 1, "1_FELADAT01"));
+    mOrders.append(Order(3, 4, 2, "2_FELADAT01"));
+    loadWarehouse(":/maps/Map01.json");
 }
 
 SimulationWindowPresenter::~SimulationWindowPresenter() {}
 
-const QList<Actors> *SimulationWindowPresenter::actors() const
+OutlinerList *SimulationWindowPresenter::actors() const
 {
-    return &mActors;
+    return mActorOutliner;
+}
+
+void SimulationWindowPresenter::setActors(OutlinerList* actors)
+{
+    mActorOutliner = actors;
+}
+
+const QList<Order>* SimulationWindowPresenter::orders() const
+{
+    return &mOrders;
 }
 
 void SimulationWindowPresenter::simulationStart()
@@ -40,4 +53,19 @@ void SimulationWindowPresenter::setTickRate(TickRate tickRate)
             break;
     }
     qDebug() << "TickRate changed to " << tickRate;
+}
+
+void SimulationWindowPresenter::loadWarehouse(const QString& filePath)
+{
+    QString jsonString;
+    QFile sourceFile(filePath);
+    if(sourceFile.exists())
+        if(sourceFile.open(QIODevice::ReadOnly | QIODevice::Text)) {
+            jsonString = sourceFile.readAll();
+            sourceFile.close();
+
+            QJsonDocument warehouseDoc = QJsonDocument::fromJson(jsonString.toUtf8());
+            QJsonObject warehouseJsonObj = warehouseDoc.object();
+            layout = new WarehouseLayoutPresenter(warehouseJsonObj,this);
+        }
 }

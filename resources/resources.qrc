@@ -10,5 +10,6 @@
         <file alias="replay_white.png">icons/replay_white.png</file>
         <file alias="speed_white.png">icons/speed_white.png</file>
         <file alias="app_icon.png">icons/app_icon.png</file>
+        <file>maps/Map01.json</file>
     </qresource>
 </RCC>

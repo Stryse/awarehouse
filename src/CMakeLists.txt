@@ -51,17 +51,30 @@ model/cpp/Warehouse/WarehouseManager.cpp
 model/header/Warehouse/WarehouseManager.h
 presenter/cpp/Actors.cpp
 presenter/header/Actors.h
+presenter/cpp/Order.cpp
+presenter/header/Order.h
 presenter/header/SimulationWindow_Presenter.h
 presenter/cpp/SimulationWindow_Presenter.cpp
 presenter/header/OutlinerModel.h
 presenter/cpp/OutlinerModel.cpp
+presenter/header/MapItemPresenter.h
+presenter/cpp/MapItemPresenter.cpp
+presenter/header/WarehouseLayoutPresenter.h
+presenter/cpp/WarehouseLayoutPresenter.cpp
+presenter/header/ChargingStationPresenter.h
+presenter/cpp/ChargingStationPresenter.cpp
+presenter/header/PodDockPresenter.h
+presenter/cpp/PodDockPresenter.cpp
+presenter/header/OutlinerList.h
+presenter/cpp/OutlinerList.cpp
+presenter/cpp/OrderOutlinerModel.cpp
+presenter/header/OrderOutlinerModel.h
 )
 
 add_library(OBJ_AWSOURCE_FILES STATIC
 # Add CPP files here - those which are !!NOT!! Q_OBJECT
 model/cpp/Tile/Tile.cpp
 #presenter/cpp/Presenter.cpp
-presenter/cpp/Actors.cpp
 #presenter/cpp/OutlinerListModel.cpp
 #presenter/cpp/Order.cpp
 #presenter/cpp/OrderListModel.cpp
