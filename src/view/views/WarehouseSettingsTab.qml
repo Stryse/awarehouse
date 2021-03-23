@@ -1,12 +1,16 @@
 import QtQuick
+import QtQuick.Layouts
 import QtQuick.Controls
 import QtQuick.Controls.Material
 
 Item {
     id: root
 
+    readonly property alias rowCount:    rowsSpinBox.value
+    readonly property alias columnCount: columnsSpinBox.value
+
     property alias titleBarHeight: titleBar.height
-    property alias borderWidth: border.width
+    property alias borderWidth:    border.width
 
     implicitHeight: pane.implicitHeight
     implicitWidth:  pane.implicitWidth
@@ -18,11 +22,10 @@ Item {
             left: parent.left; right:  border.left
             top:  parent.top;  bottom: parent.bottom
         }
+        padding:        0
+        bottomPadding:  10
 
         implicitHeight: titleBar.implicitHeight + settingsScrollView.implicitHeight
-
-        padding:       0
-        bottomPadding: 10
 
         clip:   true
 
@@ -42,13 +45,11 @@ Item {
                     left: parent.left
                     verticalCenter: parent.verticalCenter
                 }
-
                 leftPadding:    10
 
                 text:           qsTr("Settings")
                 font.pixelSize: titleBar.height * 0.5
             }
-
         }
 
         ScrollView {
@@ -58,20 +59,72 @@ Item {
                 left: parent.left;     right:  parent.right
                 top:  titleBar.bottom; bottom: parent.bottom
             }
-
             padding:    0
             topPadding: 5
+
+            clip: true
 
             ScrollBar.horizontal.policy:    ScrollBar.AlwaysOff
             ScrollBar.vertical.interactive: false
 
-            ListView {
-                clip: true
+            //?????????????????
+            Rectangle {
+                anchors.fill: gridLayout
+                color: "transparent"
+            }
+            //????????????????
 
-                //PLACEHOLDER
-                model: 20
-                delegate: ItemDelegate {
-                    text: "Item " + index
+            GridLayout {
+                id: gridLayout
+
+                readonly property real settingPixelSize: editorRoot.height * 0.021
+
+                anchors {
+                    top: parent.top
+                    horizontalCenter: parent.horizontalCenter
+                }
+
+                width:   parent.width * 0.8
+
+                columns: 2
+
+                Label {
+                    id: rowsLabel
+
+                    padding: 0
+
+                    text:           qsTr("Rows")
+                    font.pixelSize: gridLayout.settingPixelSize
+                }
+                SpinBox {
+                    id: rowsSpinBox
+
+                    Layout.alignment: Qt.AlignRight
+
+                    from:  3
+                    to:    100
+                    value: 10
+
+                    editable: true
+                }
+                Label {
+                    id: columnsLabel
+
+                    padding: 0
+
+                    text:           qsTr("Columns")
+                    font.pixelSize: gridLayout.settingPixelSize
+                }
+                SpinBox {
+                    id: columnsSpinBox
+
+                    Layout.alignment: Qt.AlignRight
+
+                    from:  3
+                    to:    100
+                    value: 10
+
+                    editable: true
                 }
             }
         }

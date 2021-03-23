@@ -1,4 +1,5 @@
 import QtQuick
+import QtQuick.Layouts
 import QtQuick.Controls
 import QtQuick.Controls.Material
 
@@ -6,10 +7,7 @@ Item {
     id: root
 
     property alias titleBarHeight: titleBar.height
-    property alias borderWidth: border.width
-
-    implicitHeight: pane.implicitHeight
-    implicitWidth:  pane.implicitWidth
+    property alias borderWidth:    border.width
 
     Pane {
         id: pane
@@ -19,12 +17,10 @@ Item {
             top:  parent.top;  bottom: parent.bottom
         }
 
-        implicitHeight: titleBar.implicitHeight + settingsScrollView.implicitHeight
-
         padding:       0
         bottomPadding: 10
 
-        clip:   true
+        clip: true
 
         Rectangle {
             id: titleBar
@@ -33,7 +29,7 @@ Item {
                 left: parent.left; right: parent.right
             }
 
-            color:  Material.primary
+            color: Material.primary
 
             Label {
                 id: title
@@ -42,13 +38,11 @@ Item {
                     left: parent.left
                     verticalCenter: parent.verticalCenter
                 }
-
                 leftPadding:    10
 
                 text:           qsTr("Tiles")
                 font.pixelSize: titleBar.height * 0.5
             }
-
         }
 
         ScrollView {
@@ -58,20 +52,72 @@ Item {
                 left: parent.left;     right:  parent.right
                 top:  titleBar.bottom; bottom: parent.bottom
             }
-
             padding:    0
             topPadding: 5
+
+            clip: true
 
             ScrollBar.horizontal.policy:    ScrollBar.AlwaysOff
             ScrollBar.vertical.interactive: false
 
-            ListView {
-                clip: true
+            GridView {
+                id: gridView
 
-                //PLACEHOLDER
-                model: 20
-                delegate: ItemDelegate {
-                    text: "Item " + index
+                readonly property real cellSize: horizontalSplit.leftPanelMaxWidth / 3.05
+
+                anchors.fill: parent
+                anchors {
+                    topMargin: editorRoot.height * 0.025; bottomMargin: editorRoot.height * 0.025
+                }
+
+                cellWidth:  cellSize
+                cellHeight: cellSize
+
+                model: ListModel {
+                    ListElement {
+                        type: "Robot"
+                    }
+                    ListElement {
+                        type: "Shelf"
+                    }
+                    ListElement {
+                        type: "Charging Station"
+                    }
+                    ListElement {
+                        type: "Delivery Station"
+                    }
+                }
+
+                delegate: ColumnLayout {
+                    id: tileDelegate
+
+                    height: gridView.cellSize
+                    width:  gridView.cellSize
+
+                    spacing: 0
+
+                    Rectangle {
+                        id: tileImg
+
+                        Layout.alignment:       Qt.AlignHCenter
+                        Layout.preferredHeight: gridView.cellSize * (4/5)
+                        Layout.preferredWidth:  Layout.preferredHeight
+
+                        color: Material.accent
+                    }
+                    Text {
+                        id: tileLabel
+
+                        Layout.alignment: Qt.AlignHCenter
+
+                        height: gridView.cellSize * (1/5)
+                        width:  gridView.cellSize
+
+                        color:    Material.foreground
+
+                        text:     qsTr(model.type)
+                        wrapMode: Text.WordWrap
+                    }
                 }
             }
         }

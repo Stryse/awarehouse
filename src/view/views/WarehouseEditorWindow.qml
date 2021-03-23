@@ -28,6 +28,8 @@ CustomTitleBarWindow {
     SplitView {
         id: horizontalSplit
 
+        readonly property real leftPanelMaxWidth: width * 0.25
+
         anchors.fill: parent
 
         orientation:  Qt.Horizontal
@@ -35,24 +37,27 @@ CustomTitleBarWindow {
         SplitView {
             id: verticalSplit
 
-            SplitView.maximumWidth: parent.width * 0.28
-            implicitWidth:          parent.width * 0.28
+            readonly property real tabRatio: 1/4
+
+            SplitView.preferredWidth: horizontalSplit.leftPanelMaxWidth
+            SplitView.maximumWidth:   horizontalSplit.leftPanelMaxWidth
 
             orientation:  Qt.Vertical
 
             WarehouseSettingsTab {
                 id: warehouseSettings
 
-                implicitHeight: parent.height * (2/5)
+                SplitView.preferredHeight: parent.height * verticalSplit.tabRatio
+                SplitView.minimumHeight:   parent.height * verticalSplit.tabRatio
 
                 titleBarHeight: editorRoot.height * 0.05
                 borderWidth:    editorRoot.width  * 0.0025
             }
-
             WarehouseTilesTab {
                 id: warehouseTiles
 
-                SplitView.fillHeight: true
+                SplitView.fillHeight:    true
+                SplitView.minimumHeight: parent.height * verticalSplit.tabRatio
 
                 titleBarHeight: editorRoot.height * 0.05
                 borderWidth:    editorRoot.width  * 0.0025
@@ -63,7 +68,6 @@ CustomTitleBarWindow {
             id: editorArea
 
             SplitView.fillWidth: true
-
             padding: 0
 
             Material.background: secondaryColor
@@ -75,16 +79,17 @@ CustomTitleBarWindow {
                     left: parent.left
                     top:  parent.top
                 }
-
                 leftPadding: editorRoot.width  * 0.01
                 topPadding:  editorRoot.height * 0.005
 
-                text: qsTr("Preview")
+                text:           qsTr("Preview")
                 font.pixelSize: editorRoot.height * 0.04
             }
 
             RowLayout {
                 id: buttonsLayout
+
+                readonly property real buttonFontSize: height * 0.4
 
                 anchors {
                     left:   parent.left;  right: parent.right
@@ -98,27 +103,28 @@ CustomTitleBarWindow {
                 Button {
                     id: saveButton
 
-                    Layout.fillHeight: true
+                    Layout.fillHeight:   true
 
-                    flat: true
+                    flat:                true
                     Material.background: Material.primary
 
-                    text: qsTr("Save")
+                    text:                qsTr("Save")
+                    font.pixelSize:      buttonsLayout.buttonFontSize
                     font.capitalization: Font.MixedCase;
-                    font.pixelSize: buttonsLayout.height * 0.4
                 }
                 Button {
                     id: loadButton
 
-                    Layout.fillHeight: true
+                    Layout.fillHeight:   true
 
-                    flat: true
+                    flat:                true
                     Material.background: Material.primary
 
-                    text: qsTr("Load")
+                    text:                qsTr("Load")
+                    font.pixelSize:      buttonsLayout.buttonFontSize
                     font.capitalization: Font.MixedCase;
-                    font.pixelSize: buttonsLayout.height * 0.4
                 }
+                //Space filler
                 Item {
                     id: space
 
@@ -128,30 +134,30 @@ CustomTitleBarWindow {
                 Button {
                     id: cancelButton
 
-                    Layout.fillHeight: true
+                    Layout.fillHeight:   true
 
-                    flat: true
+                    flat:                true
                     Material.background: Material.primary
 
-                    text: qsTr("Cancel")
+                    text:                qsTr("Cancel")
+                    font.pixelSize:      buttonsLayout.buttonFontSize
                     font.capitalization: Font.MixedCase;
-                    font.pixelSize: buttonsLayout.height * 0.4
                 }
             }
 
             Item {
                 id: warehouse
 
-                property int wareHouseRows: 10
-                property int wareHouseCols: 20
+                property int wareHouseRows: warehouseSettings.rowCount
+                property int wareHouseCols: warehouseSettings.columnCount
 
                 readonly property real  aspectRatio: 16/9
 
                 anchors {
-                    left: parent.left; right: parent.right
-                    top: previewLabel.bottom; bottom: buttonsLayout.top
+                    left: parent.left;         right:  parent.right
+                    top:  previewLabel.bottom; bottom: buttonsLayout.top
 
-                    leftMargin:   parent.width * 0.05; rightMargin: parent.width * 0.05
+                    leftMargin:   parent.width  * 0.05; rightMargin: parent.width * 0.05
                     bottomMargin: parent.height * 0.03
                 }
 
@@ -172,9 +178,11 @@ CustomTitleBarWindow {
 
                     Repeater {
                         model: warehouse.wareHouseRows * warehouse.wareHouseCols
+
                         Rectangle {
                             width:  warehouseGrid.cellSize
                             height: warehouseGrid.cellSize
+
                             color:  Material.accent
                         }
                     }
