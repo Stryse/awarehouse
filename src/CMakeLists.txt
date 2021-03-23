@@ -69,6 +69,8 @@ presenter/header/OutlinerList.h
 presenter/cpp/OutlinerList.cpp
 presenter/cpp/OrderOutlinerModel.cpp
 presenter/header/OrderOutlinerModel.h
+presenter/header/OrderOutlinerList.h
+presenter/cpp/OrderOutlinerList.cpp
 )
 
 add_library(OBJ_AWSOURCE_FILES STATIC

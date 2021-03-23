@@ -6,6 +6,7 @@
 #include "WarehouseManager.h"
 #include "WarehouseLayoutPresenter.h"
 #include "OutlinerList.h"
+#include "OrderOutlinerList.h"
 #include "ISimulator.h"
 #include <QObject>
 #include <QVector>
@@ -13,8 +14,8 @@
 class SimulationWindowPresenter : public QObject
 {
     Q_OBJECT
-    Q_PROPERTY(const QList<Order> *orders READ orders NOTIFY ordersChanged)
-    Q_PROPERTY(OutlinerList* actors READ actors CONSTANT)
+    Q_PROPERTY(OrderOutlinerList* orders READ orders CONSTANT)
+    Q_PROPERTY(ActorOutlinerList* actors READ actors CONSTANT)
 
 public:
     enum TickRate
@@ -30,13 +31,11 @@ public:
     virtual ~SimulationWindowPresenter();
 
 public:
-    OutlinerList *actors() const;
-    void setActors(OutlinerList* actors);
-    const QList<Order> *orders() const;
+    ActorOutlinerList *actors() const;
+    void setActors(ActorOutlinerList* actors);
 
-public:
-signals:
-    void ordersChanged();
+    OrderOutlinerList *orders() const;
+    void setOrders(OrderOutlinerList* orders);
 
 public slots:
     void simulationStart();
@@ -46,8 +45,9 @@ public slots:
     //void reloadSimulation();
 
 private:
-    OutlinerList* mActorOutliner;
-    QList<Order> mOrders;
+    ActorOutlinerList* mActorOutliner;
+    OrderOutlinerList* mOrderOutliner;
+
     WarehouseManager &manager;
     WarehouseLayoutPresenter* layout;
 };
