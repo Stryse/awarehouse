@@ -17,6 +17,7 @@ ChargingStationPresenter* ChargingStationPresenter::read(QJsonObject& jsonObj, Q
         int colCoord = jsonObj["ColCoord"].toInt();
         return new ChargingStationPresenter(rowCoord,colCoord,parent);
     }
+    return nullptr;
 }
 
 QString ChargingStationPresenter::imagePath = "asd.png";

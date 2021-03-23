@@ -41,12 +41,12 @@ WarehouseLayoutPresenter::WarehouseLayoutPresenter(QJsonObject& source, QObject*
         // Read Pods
         if(WarehouseLayoutData.contains("PodDocks") && WarehouseLayoutData["PodDocks"].isArray())
         {
-            QJsonArray PodsJSon = WarehouseLayoutData["Pods"].toArray();
-            podDocks.reserve(PodsJSon.size());
+            QJsonArray PodDocksJSon = WarehouseLayoutData["PodDocks"].toArray();
+            podDocks.reserve(PodDocksJSon.size());
 
-            for(int i = 0; i < PodsJSon.size(); ++i)
+            for(int i = 0; i < PodDocksJSon.size(); ++i)
             {
-                QJsonObject podObj = PodsJSon[i].toObject();
+                QJsonObject podObj = PodDocksJSon[i].toObject();
                 podDocks.append(PodDockPresenter::read(podObj,this));
             }
         }
