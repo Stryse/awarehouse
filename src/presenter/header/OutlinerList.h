@@ -5,12 +5,12 @@
 #include <QList>
 #include "Actors.h"
 
-class OutlinerList : public QObject
+class ActorOutlinerList : public QObject
 {
     Q_OBJECT
 
 public:
-    explicit OutlinerList(QObject *parent = nullptr);
+    explicit ActorOutlinerList(QObject *parent = nullptr);
 
     QList<Actors> actors() const;
     bool setActorAt(int index, const Actors& actor);
@@ -27,7 +27,7 @@ public slots:
     void removeActor(int index);
     void clear();
 
-private:
+public:
     QList<Actors> mActors;
 };
 

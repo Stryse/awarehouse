@@ -1,6 +1,6 @@
 #include "OutlinerList.h"
 
-OutlinerList::OutlinerList(QObject* parent)
+ActorOutlinerList::ActorOutlinerList(QObject* parent)
     : QObject(parent)
 {
     mActors.append(Actors("József", "Lalalala", 100, Actors::Robot, Actors::Up));
@@ -9,12 +9,12 @@ OutlinerList::OutlinerList(QObject* parent)
     mActors.append(Actors("Sus", "Amongus", 42, Actors::Robot, Actors::Down));
 }
 
-QList<Actors> OutlinerList::actors() const
+QList<Actors> ActorOutlinerList::actors() const
 {
     return mActors;
 }
 
-bool OutlinerList::setActorAt(int index, const Actors &actor)
+bool ActorOutlinerList::setActorAt(int index, const Actors &actor)
 {
     if (index < 0 || index >= mActors.size())
         return false;
@@ -23,7 +23,7 @@ bool OutlinerList::setActorAt(int index, const Actors &actor)
     return true;
 }
 
-void OutlinerList::removeActor(int index)
+void ActorOutlinerList::removeActor(int index)
 {
     if(index < 0 || index >= mActors.size())
         return;
@@ -33,14 +33,14 @@ void OutlinerList::removeActor(int index)
     emit postItemRemoved();
 }
 
-void OutlinerList::clear()
+void ActorOutlinerList::clear()
 {
     emit preItemRemoved(0);
     mActors.clear();
     emit postItemRemoved();
 }
 
-void OutlinerList::appendActor(const Actors &actor)
+void ActorOutlinerList::appendActor(const Actors &actor)
 {
     emit preItemAppended();
     mActors.append(actor);

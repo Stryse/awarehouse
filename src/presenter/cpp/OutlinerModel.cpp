@@ -65,7 +65,7 @@ QHash<int, QByteArray> OutlinerModel::roleNames() const
 
 
 
-void OutlinerModel::setActors(OutlinerList* actors)
+void OutlinerModel::setActors(ActorOutlinerList* actors)
 {
     beginResetModel();
 
@@ -76,20 +76,20 @@ void OutlinerModel::setActors(OutlinerList* actors)
 
     if(m_actors)
     {
-        connect(m_actors, &OutlinerList::preItemAppended,this,[=](){
+        connect(m_actors, &ActorOutlinerList::preItemAppended,this,[=](){
             const int index = m_actors->actors().size();
             beginInsertRows(QModelIndex(),index,index);
         });
 
-        connect(m_actors, &OutlinerList::postItemAppended,this,[=](){
+        connect(m_actors, &ActorOutlinerList::postItemAppended,this,[=](){
             endInsertRows();
         });
 
-        connect(m_actors, &OutlinerList::preItemRemoved, this,[=](int index){
+        connect(m_actors, &ActorOutlinerList::preItemRemoved, this,[=](int index){
             beginRemoveRows(QModelIndex(),index, index);
         });
 
-        connect(m_actors, &OutlinerList::postItemRemoved, this, [=](){
+        connect(m_actors, &ActorOutlinerList::postItemRemoved, this, [=](){
             endRemoveRows();
         });
     }
@@ -97,7 +97,7 @@ void OutlinerModel::setActors(OutlinerList* actors)
     endResetModel();
 }
 
-OutlinerList* OutlinerModel::actors() const
+ActorOutlinerList* OutlinerModel::actors() const
 {
     return m_actors;
 }

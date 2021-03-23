@@ -9,7 +9,7 @@
 class OutlinerModel : public QAbstractListModel
 {
     Q_OBJECT
-    Q_PROPERTY(OutlinerList* actors READ actors WRITE setActors)
+    Q_PROPERTY(ActorOutlinerList* actors READ actors WRITE setActors)
 
 public:
 
@@ -39,11 +39,11 @@ public:
 
 
     // Getter setter
-    void setActors(OutlinerList* actors);
-    OutlinerList* actors() const;
+    void setActors(ActorOutlinerList* actors);
+    ActorOutlinerList* actors() const;
 
 private:
-    OutlinerList *m_actors;
+    ActorOutlinerList *m_actors;
 };
 
 #endif
