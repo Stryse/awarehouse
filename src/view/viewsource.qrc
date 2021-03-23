@@ -20,5 +20,6 @@
         <file alias="WarehouseEditorWindow.qml">views/WarehouseEditorWindow.qml</file>
         <file alias="WarehouseSettingsTab.qml">views/WarehouseSettingsTab.qml</file>
         <file alias="WarehouseTilesTab.qml">views/WarehouseTilesTab.qml</file>
+        <file alias="MainView.qml">views/MainView.qml</file>
     </qresource>
 </RCC>

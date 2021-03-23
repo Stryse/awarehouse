@@ -32,7 +32,7 @@ int main(int argc, char *argv[])
     engine.rootContext()->setContextProperty(QStringLiteral("simpresenter"), simpresenter.get());
     // //////////////////
 
-    const QUrl url(QStringLiteral("qrc:/view/SimulationWindow.qml"));
+    const QUrl url(QStringLiteral("qrc:/view/MainView.qml"));
     QObject::connect(
         &engine, &QQmlApplicationEngine::objectCreated,
         &app, [url](QObject *obj, const QUrl &objUrl) {

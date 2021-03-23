@@ -33,7 +33,7 @@ ScrollView {
             padding: 0
 
             text: qsTr("Battery")
-            font.pixelSize: mainRoot.height * 0.021
+            font.pixelSize: simulationRoot.height * 0.021
         }
 
         Slider {
@@ -56,7 +56,7 @@ ScrollView {
             padding: 0
 
             text: qsTr("Warehouse")
-            font.pixelSize: mainRoot.height * 0.021
+            font.pixelSize: simulationRoot.height * 0.021
         }
 
         ComboBox {
@@ -82,6 +82,8 @@ ScrollView {
             font.capitalization: Font.MixedCase;
 
             text: qsTr("Open Editor")
+
+            onClicked: simulationRoot.editorOpened()
         }
     }
 }
