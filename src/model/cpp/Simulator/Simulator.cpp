@@ -3,9 +3,9 @@
 #include <stdexcept>
 
 Simulator::Simulator()
-    : isRunning(false), warehouse(nullptr), timer(this), tickRate(TickRate::NORMAL)
+    : isRunning(false), warehouse(nullptr), timer(this), tickRate(1000)
 {
-    timer.setInterval(static_cast<int>(tickRate));
+    timer.setInterval(tickRate);
     timer.callOnTimeout([=]() {
         warehouse->tick();
     });
@@ -41,11 +41,18 @@ void Simulator::stopSimulation()
     }
 }
 
-void Simulator::setTickRate(TickRate tickrate)
+void Simulator::setTickRate(int tickrate)
 {
-    stopSimulation();
+    bool wasRunning = isRunning;
+
+    if(wasRunning)
+        stopSimulation();
+
     this->tickRate = tickrate;
-    startSimulation();
+    timer.setInterval(tickRate);
+
+    if(wasRunning)
+        startSimulation();
 }
 
 void Simulator::setWarehouseStateAt(int)

@@ -63,7 +63,10 @@ void WarehouseManager::simulationStop(Warehouse* warehouse)
     if(simulatorIt != wh2sim.end() /* Has corresponding simulator object */)
     {
         ISimulator* sim = simulatorIt->second;
-        wh2sim.erase(simulatorIt);
+
+        if(simulatorIt->first != displayed)
+            wh2sim.erase(simulatorIt);
+
         sim->stopSimulation();
     }
 }
@@ -73,7 +76,7 @@ void WarehouseManager::simulationStop()
     simulationStop(displayed);
 }
 
-void WarehouseManager::setTickRate(TickRate tickrate, Warehouse* warehouse)
+void WarehouseManager::setTickRate(int tickrate, Warehouse* warehouse)
 {
     auto simulatorIt = wh2sim.find(warehouse);
     if(simulatorIt != wh2sim.end() /* Has corresponding simulator object */)
@@ -83,7 +86,7 @@ void WarehouseManager::setTickRate(TickRate tickrate, Warehouse* warehouse)
     }
 }
 
-void WarehouseManager::setTickRate(TickRate tickrate)
+void WarehouseManager::setTickRate(int tickrate)
 {
     setTickRate(tickrate,displayed);
 }

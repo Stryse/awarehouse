@@ -14,19 +14,16 @@ class Simulator : public QObject, public ISimulator<Warehouse>
     Q_OBJECT
 
 public:
-    using TickRate = ISimulator<Warehouse>::TickRate;
-
-public:
     Simulator();
     virtual ~Simulator();
 
 public slots:
-    virtual bool isAvailable() const /* override*/;
-    virtual void bindSimTypeData(Warehouse *warehouse) /* override*/;
-    virtual void startSimulation() /* override*/;
-    virtual void stopSimulation() /* override*/;
-    virtual void setTickRate(TickRate) /* override*/;
-    virtual void setWarehouseStateAt(int timeStamp) /* override*/;
+    virtual bool isAvailable() const override;
+    virtual void bindSimTypeData(Warehouse *warehouse) override;
+    virtual void startSimulation() override;
+    virtual void stopSimulation() override;
+    virtual void setTickRate(int tickRate) override;
+    virtual void setWarehouseStateAt(int timeStamp) override;
 
 private:
     void makeAvailable();
@@ -36,7 +33,7 @@ private:
     bool isRunning;
     Warehouse *warehouse;
     QTimer timer;
-    TickRate tickRate;
+    int tickRate;
 };
 
 #endif /* SIMULATOR__H */

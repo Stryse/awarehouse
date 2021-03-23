@@ -2,7 +2,7 @@ import QtQuick
 import QtQuick.Layouts
 import QtQuick.Controls
 import QtQuick.Controls.Material
-import WarehouseManager 1.0
+import Simulator 1.0
 
 Item {
     id: root
@@ -77,9 +77,9 @@ Item {
 
                 onClicked: {
                     if(paused)
-                        Manager.simulationStart()
+                        simpresenter.simulationStart()
                     else
-                        Manager.simulationStop()
+                        simpresenter.simulationStop()
 
                     paused = !paused
                     }
@@ -115,9 +115,9 @@ Item {
 
                 onClicked: {
                     switch (speed.state) {
-                    case "normal": speed.state = "double"; break
-                    case "double": speed.state = "half";   break
-                    case "half":   speed.state = "normal"; break
+                    case "normal": speed.state = "double"; simpresenter.setTickRate(TickRate.TWICE); break
+                    case "double": speed.state = "half";   simpresenter.setTickRate(TickRate.HALF_SPEED); break
+                    case "half":   speed.state = "normal"; simpresenter.setTickRate(TickRate.NORMAL); break
                     }
                 }
             }

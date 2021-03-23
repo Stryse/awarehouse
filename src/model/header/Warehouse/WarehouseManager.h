@@ -4,20 +4,16 @@
 #include <map>
 #include <memory>
 #include <vector>
-#include <QObject>
 #include "ISimulator.h"
 
 // ############################# FORWARD DECLARATIONS ################################
 class Warehouse;
 // ###################################################################################
 
-class WarehouseManager : public QObject
+class WarehouseManager
 {
-    Q_OBJECT
-
 public:
     using ISimulator = ISimulator<Warehouse>;
-    using TickRate = typename ISimulator::TickRate;
 
 private:
     Warehouse *displayed;
@@ -29,15 +25,15 @@ public:
     WarehouseManager();
     virtual ~WarehouseManager();
 
-public slots:
+public:
     void simulationStart();
     void simulationStart(Warehouse *);
 
     void simulationStop();
     void simulationStop(Warehouse *);
 
-    void setTickRate(TickRate);
-    void setTickRate(TickRate, Warehouse *);
+    void setTickRate(int);
+    void setTickRate(int, Warehouse *);
 
     void setWarehouseStateAt(int timeStamp);
     void setWarehouseStateAt(int timeStamp, Warehouse *);

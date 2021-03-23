@@ -1,27 +1,45 @@
 #ifndef SIMULATION_WINDOW_PRESENTER__H
 #define SIMULATION_WINDOW_PRESENTER__H
 
+#include "Actors.h"
+#include "WarehouseManager.h"
+#include "ISimulator.h"
 #include <QObject>
 #include <QVector>
-#include "Actors.h"
 
 class SimulationWindowPresenter : public QObject
 {
     Q_OBJECT
-    Q_PROPERTY(const QList<Actors>* actors READ actors NOTIFY actorsChanged)
+    Q_PROPERTY(const QList<Actors> *actors READ actors NOTIFY actorsChanged)
 
 public:
-    SimulationWindowPresenter(QObject *parent = nullptr);
+    enum TickRate
+    {
+        HALF_SPEED,
+        NORMAL,
+        TWICE
+    };
+    Q_ENUM(TickRate);
+
+
+    SimulationWindowPresenter(WarehouseManager &manager, QObject *parent = nullptr);
     virtual ~SimulationWindowPresenter();
 
 public:
-    const QList<Actors>* actors() const;
+    const QList<Actors> *actors() const;
 
-public: signals:
+public:
+signals:
     void actorsChanged();
+
+public slots:
+    void simulationStart();
+    void simulationStop();
+    void setTickRate(TickRate tickRate);
 
 private:
     QList<Actors> mActors;
+    WarehouseManager &manager;
 };
 
 #endif
