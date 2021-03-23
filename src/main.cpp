@@ -1,11 +1,12 @@
-#include "WarehouseManager.h"
 #include "OutlinerModel.h"
 #include "SimulationWindow_Presenter.h"
+#include "WarehouseManager.h"
 #include <QGuiApplication>
 #include <QIcon>
 #include <QQmlApplicationEngine>
-#include <QScopedPointer>
 #include <QQmlContext>
+#include <QScopedPointer>
+#include "Simulator.h"
 
 int main(int argc, char *argv[])
 {
@@ -18,15 +19,16 @@ int main(int argc, char *argv[])
 
     // Instantiate //////
     QScopedPointer<WarehouseManager> manager(new WarehouseManager());
-    QScopedPointer<SimulationWindowPresenter> simpresenter(new SimulationWindowPresenter());
+    QScopedPointer<SimulationWindowPresenter> simpresenter(new SimulationWindowPresenter(*manager));
     // //////////////////
 
     // Register Types ///
-    qmlRegisterType<OutlinerModel>("Outliner",1,0,"OutlinerModel");
+    qmlRegisterType<OutlinerModel>("Outliner", 1, 0, "OutlinerModel");
+    qmlRegisterType<SimulationWindowPresenter>("Simulator", 1, 0, "TickRate");
     // //////////////////
     QQmlApplicationEngine engine;
     // Register Instances
-    qmlRegisterSingletonInstance<WarehouseManager>("WarehouseManager", 1, 0, "Manager", manager.get());
+    //qmlRegisterSingletonInstance<WarehouseManager>("WarehouseManager", 1, 0, "Manager", manager.get());
     engine.rootContext()->setContextProperty(QStringLiteral("simpresenter"), simpresenter.get());
     // //////////////////
 
