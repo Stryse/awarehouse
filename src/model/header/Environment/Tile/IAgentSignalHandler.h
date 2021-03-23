@@ -12,14 +12,14 @@ template <typename TItemType>
 class IContaining;
 template <typename ItemType, typename Environment>
 class Pod;
-class Order;
+class OrderModel;
 // ################################################################
 
 template <typename Environment>
 class IAgentSignalHandler
 {
 public:
-    using OwnedPod_Order = std::unique_ptr<Pod<Order, Environment>>;
+    using OwnedPod_Order = std::unique_ptr<Pod<OrderModel, Environment>>;
 
 public:
     virtual void receive(IDepleting<config::agent::DefaultEnergy> &resource, const ChargeSignal &chargeSignal) const {}

@@ -2,7 +2,7 @@
 #include "ChargingStation.h"
 #include "DeliveryRobot.h"
 #include "ObservableEnvironment.h"
-#include "Order.h"
+#include "OrderModel.h"
 #include "Pod.h"
 #include "PodDock.h"
 #include "Tile.h"
@@ -78,9 +78,9 @@ TEST_F(ObservableNavEnvironmentTest, PodTransfer)
                 env->getBuffer()[env->getCoordAsIndex(x, y, z)] = docks[docks.size() - 1];
             }
     docks[1]->addAssociatedPod(env);
-    docks[1]->getChildPod()->push(std::make_unique<Order>(3));
-    docks[1]->getChildPod()->push(std::make_unique<Order>(2));
-    docks[1]->getChildPod()->push(std::make_unique<Order>(3));
+    docks[1]->getChildPod()->push(std::make_unique<OrderModel>(3));
+    docks[1]->getChildPod()->push(std::make_unique<OrderModel>(2));
+    docks[1]->getChildPod()->push(std::make_unique<OrderModel>(3));
 
     DeliveryRobot<> robot(env, Point<>(0, 0, 0), DirectionVector<>::UP());
     PickupPodSignal pps;

@@ -3,7 +3,7 @@
 
 #include "IContaining.h"
 #include "LibConfig.h"
-#include "Order.h"
+#include "OrderModel.h"
 #include "Pod.h"
 #include <memory>
 
@@ -16,11 +16,11 @@
  * transfer pods and then put them down.
  ******************************************************************************/
 template <typename TEnvironment = config::navigation::DefaultEnvironment>
-class PodHolder : public IContaining<std::unique_ptr<Pod<Order, TEnvironment>>>
+class PodHolder : public IContaining<std::unique_ptr<Pod<OrderModel, TEnvironment>>>
 {
 public:
     using Environment = TEnvironment;
-    using OwnedPod = std::unique_ptr<Pod<Order, Environment>>;
+    using OwnedPod = std::unique_ptr<Pod<OrderModel, Environment>>;
 
 public:
     PodHolder(){};

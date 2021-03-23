@@ -10,7 +10,7 @@
 // ######################### Forward Declarations ##########################
 template <typename TItemType, typename TEnvironment>
 class Pod;
-class Order;
+class OrderModel;
 // #########################################################################
 
 /***********************************************************************************
@@ -22,13 +22,13 @@ class Order;
  ***********************************************************************************/
 template <typename TEnvironment = config::navigation::DefaultEnvironment>
 class PodDock : public Tile,
-                public IContaining<std::unique_ptr<Pod<Order, TEnvironment>>>
+                public IContaining<std::unique_ptr<Pod<OrderModel, TEnvironment>>>
 {
 public:
     using Environment = TEnvironment;
     using Point = Tile::Point;
     using OccupantType = Tile::OccupantType;
-    using Pod_Order = Pod<Order, Environment>;
+    using Pod_Order = Pod<OrderModel, Environment>;
     using OwnedPod = std::unique_ptr<Pod_Order>;
 
 public:

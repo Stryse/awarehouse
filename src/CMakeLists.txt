@@ -61,7 +61,7 @@ presenter/cpp/Actors.cpp
 #presenter/cpp/OrderListModel.cpp
 model/cpp/Warehouse/Warehouse.cpp
 model/cpp/Warehouse/State.cpp
-model/cpp/Warehouse/Pod/Order.cpp
+model/cpp/Warehouse/Pod/OrderModel.cpp
 ## QOBJECT FILES ##
 ${QT_QOBJECT_FILES}
 )

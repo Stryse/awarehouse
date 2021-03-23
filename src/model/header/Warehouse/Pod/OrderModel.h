@@ -1,14 +1,14 @@
-#ifndef ORDER__H
-#define ORDER__H
+#ifndef ORDER_MODEL__H
+#define ORDER_MODEL__H
 
 #include <string>
 
-class Order
+class OrderModel
 {
 public:
-    Order(int category);
+    OrderModel(int category);
 
-    friend inline bool operator<(const Order &lhs, const Order &rhs)
+    friend inline bool operator<(const OrderModel &lhs, const OrderModel &rhs)
     {
         return lhs.category < rhs.category;
     }
@@ -20,4 +20,4 @@ private:
     static std::string makeId(int category);
 };
 
-#endif /* ORDER__H */
+#endif /* ORDER_MODEL__H */
