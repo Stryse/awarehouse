@@ -61,6 +61,8 @@ presenter/header/WarehouseLayoutPresenter.h
 presenter/cpp/WarehouseLayoutPresenter.cpp
 presenter/header/ChargingStationPresenter.h
 presenter/cpp/ChargingStationPresenter.cpp
+presenter/header/PodDockPresenter.h
+presenter/cpp/PodDockPresenter.cpp
 )
 
 add_library(OBJ_AWSOURCE_FILES STATIC
