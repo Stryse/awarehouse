@@ -3,6 +3,7 @@
 
 #include "Actors.h"
 #include "WarehouseManager.h"
+#include "WarehouseLayoutPresenter.h"
 #include "ISimulator.h"
 #include <QObject>
 #include <QVector>
@@ -36,10 +37,13 @@ public slots:
     void simulationStart();
     void simulationStop();
     void setTickRate(TickRate tickRate);
+    void loadWarehouse(const QString& filePath);
+    //void reloadSimulation();
 
 private:
     QList<Actors> mActors;
     WarehouseManager &manager;
+    WarehouseLayoutPresenter* layout;
 };
 
 #endif
