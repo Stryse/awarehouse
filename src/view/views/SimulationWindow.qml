@@ -1,28 +1,17 @@
 import QtQuick
-import QtQuick.Window
 import QtQuick.Controls
 import QtQuick.Controls.Material
 
-CustomTitleBarWindow {
-    id: mainRoot
+Item {
+    id: simulationRoot
 
-    readonly property string windowTitle:    qsTr("aWarehouse Manager")
-    readonly property color  secondaryColor: "#2b2b2b"
+    signal editorOpened()
 
-    visible: true
+    readonly property string windowTitle: qsTr("aWarehouse Manager")
 
-    title:        windowTitle
-    titleText:    windowTitle
-    titleVisible: true
+    property color secondaryColor
+    property real  borderWidth
 
-    x: Screen.width/2  - width/2
-    y: Screen.height/2 - height/2
-
-    width:  1280
-    height: 720
-
-    minimumWidth:  1280
-    minimumHeight: 720
 
     SplitView {
         id: horizontalSplit
@@ -35,7 +24,7 @@ CustomTitleBarWindow {
             maxWidth:               parent.width * 0.28
             SplitView.maximumWidth: maxWidth
 
-            borderWidth: mainRoot.borderWidth
+            borderWidth: simulationRoot.borderWidth
         }
 
         SplitView {
@@ -61,7 +50,7 @@ CustomTitleBarWindow {
                 id: bottomPanel
 
                 maxHeight:   parent.height * 0.325
-                borderWidth: mainRoot.borderWidth
+                borderWidth: simulationRoot.borderWidth
             }
 
         }

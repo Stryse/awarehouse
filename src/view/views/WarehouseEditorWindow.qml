@@ -1,29 +1,17 @@
 import QtQuick
 import QtQuick.Layouts
-import QtQuick.Window
 import QtQuick.Controls
 import QtQuick.Controls.Material
 
-CustomTitleBarWindow {
+Item {
     id: editorRoot
 
-    readonly property string windowTitle:    qsTr("aWarehouse Editor")
-    readonly property color  secondaryColor: "#2b2b2b"
+    signal editorClosed()
 
-    visible: true
+    readonly property string windowTitle: qsTr("aWarehouse Editor")
 
-    title:        windowTitle
-    titleText:    windowTitle
-    titleVisible: true
-
-    x: Screen.width/2  - width/2
-    y: Screen.height/2 - height/2
-
-    width:  1280
-    height: 720
-
-    minimumWidth:  1280
-    minimumHeight: 720
+    property color secondaryColor
+    property real  borderWidth
 
     SplitView {
         id: horizontalSplit
@@ -142,6 +130,8 @@ CustomTitleBarWindow {
                     text:                qsTr("Cancel")
                     font.pixelSize:      buttonsLayout.buttonFontSize
                     font.capitalization: Font.MixedCase;
+
+                    onClicked: editorRoot.editorClosed()
                 }
             }
 
