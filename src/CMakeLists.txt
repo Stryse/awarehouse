@@ -51,6 +51,8 @@ model/cpp/Warehouse/WarehouseManager.cpp
 model/header/Warehouse/WarehouseManager.h
 presenter/cpp/Actors.cpp
 presenter/header/Actors.h
+presenter/cpp/Order.cpp
+presenter/header/Order.h
 presenter/header/SimulationWindow_Presenter.h
 presenter/cpp/SimulationWindow_Presenter.cpp
 presenter/header/OutlinerModel.h
@@ -63,6 +65,8 @@ presenter/header/ChargingStationPresenter.h
 presenter/cpp/ChargingStationPresenter.cpp
 presenter/header/PodDockPresenter.h
 presenter/cpp/PodDockPresenter.cpp
+presenter/cpp/OrderOutlinerModel.cpp
+presenter/header/OrderOutlinerModel.h
 )
 
 add_library(OBJ_AWSOURCE_FILES STATIC

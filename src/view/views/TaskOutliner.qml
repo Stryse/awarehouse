@@ -1,5 +1,6 @@
 import QtQuick
 import QtQuick.Controls
+import Outliner 1.0
 
 Item {
     id: root
@@ -62,9 +63,12 @@ Item {
                 clip: true
 
                 //PLACEHOLDER
-                model: 20
+                model: OrderOutlinerModel{
+                    orders: simpresenter.orders
+                }
+
                 delegate: ItemDelegate {
-                    text: "Item " + index
+                    text: model.ordername + " " + model.position + " " + model.robotname + " " + model.ordernumber
                 }
             }
         }
