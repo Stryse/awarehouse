@@ -6,7 +6,7 @@
 #include <QList>
 #include "MapItemPresenter.h"
 #include "ChargingStationPresenter.h"
-#include "Actors.h"
+#include "DeliveryRobotPresenter.h"
 class PodDockPresenter;
 class PodPresenter;
 
@@ -39,8 +39,8 @@ private:
         int m_colCount;
 
         QList<MapItemPresenter*> map;
-        QList<Actors*> robots;
-        QList<ChargingStationPresenter*> chargingStations;
+        QList<DeliveryRobotPresenter> robots;
+        QList<ChargingStationPresenter> chargingStations;
         //QList<PodDockPresenter> podDocks;
         //QList<PodPresenter> pods;
 };

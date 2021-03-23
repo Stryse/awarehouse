@@ -6,15 +6,14 @@
 
 class MapItemPresenter : public QObject
 {
-  Q_OBJECT
-  Q_PROPERTY (QString image READ imagePath WRITE setImagePath NOTIFY imagePathChanged)
-  Q_PROPERTY (int row READ rowCoord WRITE setRowCoord NOTIFY rowCoordChanged)
-  Q_PROPERTY (int col READ colCoord WRITE setColCoord NOTIFY colCoordChanged)
+    Q_OBJECT
+    Q_PROPERTY(QString image READ imagePath WRITE setImagePath NOTIFY imagePathChanged)
+    Q_PROPERTY(int row READ rowCoord WRITE setRowCoord NOTIFY rowCoordChanged)
+    Q_PROPERTY(int col READ colCoord WRITE setColCoord NOTIFY colCoordChanged)
 
 public:
-
     QString imagePath() const;
-    void setImagePath(const QString& imagePath);
+    void setImagePath(const QString &imagePath);
 
     int rowCoord() const;
     void setRowCoord(int value);
@@ -22,7 +21,7 @@ public:
     int colCoord() const;
     void setColCoord(int value);
 
-    explicit MapItemPresenter(const QString& imagePath, int rowCoord, int colCoord,QObject *parent = nullptr);
+    explicit MapItemPresenter(const QString &imagePath, int rowCoord, int colCoord, QObject *parent = nullptr);
 signals:
     void imagePathChanged();
     void rowCoordChanged();

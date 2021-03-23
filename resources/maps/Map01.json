@@ -1,34 +1,34 @@
 {
     "WarehouseLayoutData": {
         "RowCount": 12,
-        "ColCount": 12
-    },
-    "ChargingStations": [
-        {
-            "RowCoord": 1,
-            "ColCoord": 0
-        },
-        {
-            "RowCoord": 3,
-            "ColCoord": 0
-        },
-        {
-            "RowCoord": 5,
-            "ColCoord": 0
-        },
-        {
-            "RowCoord": 7,
-            "ColCoord": 0
-        }
-    ],
-    "PodDocks": [
-        {
-            "RowCoord": 1,
-            "ColCoord": 2
-        },
-        {
-            "RowCoord": 1,
-            "ColCoord": 3
-        }
-    ]
+        "ColCount": 12,
+        "ChargingStations": [
+            {
+                "RowCoord": 1,
+                "ColCoord": 0
+            },
+            {
+                "RowCoord": 3,
+                "ColCoord": 0
+            },
+            {
+                "RowCoord": 5,
+                "ColCoord": 0
+            },
+            {
+                "RowCoord": 7,
+                "ColCoord": 0
+            }
+        ],
+        "PodDocks": [
+            {
+                "RowCoord": 1,
+                "ColCoord": 2
+            },
+            {
+                "RowCoord": 1,
+                "ColCoord": 3
+            }
+        ]
+    }
 }
