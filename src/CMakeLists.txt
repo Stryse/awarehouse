@@ -65,12 +65,18 @@ presenter/header/ChargingStationPresenter.h
 presenter/cpp/ChargingStationPresenter.cpp
 presenter/header/PodDockPresenter.h
 presenter/cpp/PodDockPresenter.cpp
+presenter/header/RoadPresenter.h
+presenter/cpp/RoadPresenter.cpp
 presenter/header/OutlinerList.h
 presenter/cpp/OutlinerList.cpp
 presenter/cpp/OrderOutlinerModel.cpp
 presenter/header/OrderOutlinerModel.h
 presenter/header/OrderOutlinerList.h
 presenter/cpp/OrderOutlinerList.cpp
+presenter/header/MapTablePresenterModel.h
+presenter/cpp/MapTablePresenterModel.cpp
+presenter/header/MapTableList.h
+presenter/cpp/MapTableList.cpp
 )
 
 add_library(OBJ_AWSOURCE_FILES STATIC

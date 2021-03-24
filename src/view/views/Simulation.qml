@@ -3,6 +3,7 @@ import QtQuick.Layouts
 import QtQuick.Controls
 import QtQuick.Controls.Material
 import Simulator 1.0
+import SimulationMap 1.0
 
 Item {
     id: root
@@ -25,26 +26,31 @@ Item {
         Material.background: Material.primary
         Material.elevation:  6
 
-        Grid {
-            id: simulationGrid
+        TableView {
+            id: simulationMap
+            anchors.fill: parent
 
-            property real cellSize: Math.min(simulation.width  / simulation.wareHouseCols - spacing,
-                                             simulation.height / simulation.wareHouseRows - spacing)
+            rowSpacing: 1
+            columnSpacing: 1
 
-            anchors.centerIn: parent
+            ScrollBar.horizontal: ScrollBar{}
+            ScrollBar.vertical: ScrollBar{}
 
-            rows:    simulation.wareHouseRows
-            columns: simulation.wareHouseCols
-            spacing: 1
+            delegate: Rectangle {
 
-            Repeater {
-                model: simulation.wareHouseRows * simulation.wareHouseCols
-                Rectangle {
-                    width:  simulationGrid.cellSize
-                    height: simulationGrid.cellSize
-                    color:  Material.accent
-                }
+                id: cell
+                implicitWidth: 30
+                implicitHeight: 30
+                color: model.image
             }
+
+            model: MapTablePresenterModel {
+                items: simpresenter.layout.map
+            }
+
+
+            contentX: (contentWidth - width) / 2;
+            contentY: (contentHeight - height) / 2;
         }
     }
 

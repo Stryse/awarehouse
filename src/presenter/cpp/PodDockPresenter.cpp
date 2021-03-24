@@ -11,4 +11,4 @@ PodDockPresenter::PodDockPresenter(const PodDock<ObservableNavEnvironment<Tile>>
 
 }
 
-QString PodDockPresenter::imagePath = "asd2.png";
+QString PodDockPresenter::imagePath = "blue";

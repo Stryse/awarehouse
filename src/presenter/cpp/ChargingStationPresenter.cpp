@@ -3,7 +3,7 @@
 
 
 
-QString ChargingStationPresenter::imagePath = "asd.png";
+QString ChargingStationPresenter::imagePath = "yellow";
 
 ChargingStationPresenter::ChargingStationPresenter(const ChargingStation<int>* model, QObject* parent)
     : MapItemPresenter(ChargingStationPresenter::imagePath,

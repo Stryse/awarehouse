@@ -8,13 +8,14 @@
 SimulationWindowPresenter::SimulationWindowPresenter(WarehouseManager &manager, QObject *parent)
     : QObject(parent),
       mActorOutliner(nullptr),
-      mOrderOutliner(new OrderOutlinerList(this)),
+      mOrderOutliner(nullptr),
       manager(manager),
-      layout(nullptr)
+      m_layout(nullptr) // TODO RESOLVE dependencies + instantiation order (factory??)
 {
     loadWarehouse(":/maps/Map01.json");
-    layout = new WarehouseLayoutPresenter(manager.getDisplayedWarehouse()->getState().get());
-    mActorOutliner = new ActorOutlinerList(layout->getActors(),this);
+    m_layout = new WarehouseLayoutPresenter(manager.getDisplayedWarehouse()->getState().get());
+    mActorOutliner = new ActorOutlinerList(m_layout->getActors(),this);
+    mOrderOutliner = new OrderOutlinerList(m_layout->getOrders(),this);
 }
 
 SimulationWindowPresenter::~SimulationWindowPresenter() {}
@@ -39,9 +40,20 @@ void SimulationWindowPresenter::setOrders(OrderOutlinerList *orders)
     mOrderOutliner = orders;
 }
 
+WarehouseLayoutPresenter* SimulationWindowPresenter::layout() const
+{
+    return m_layout;
+}
+
 bool SimulationWindowPresenter::paused() const
 {
     return manager.getDisplayedWarehouseSimulator()->isAvailable();
+}
+
+void SimulationWindowPresenter::setPaused(bool paused)
+{
+    m_paused = paused;
+    emit pausedChanged();
 }
 
 void SimulationWindowPresenter::simulationStart()
@@ -85,10 +97,4 @@ void SimulationWindowPresenter::reloadWarehouse()
 {
     loadWarehouse(loadedWarehousePath);
     simulationStop();
-}
-
-void SimulationWindowPresenter::setPaused(bool paused)
-{
-    m_paused = paused;
-    emit pausedChanged();
 }
