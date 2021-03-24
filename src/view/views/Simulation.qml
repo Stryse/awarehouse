@@ -130,6 +130,8 @@ Item {
 
                 icon.source: "qrc:/replay_white.png"
                 //text: "Reset"
+
+                onClicked: simpresenter.reloadWarehouse();
             }
         }
     }

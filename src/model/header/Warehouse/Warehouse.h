@@ -21,8 +21,8 @@ public:
 
 public:
     void tick();
-    void loadState(const QString &srcPath);
-    void saveState(const QString &destPath);
+    bool loadState(const QString &srcPath);
+    bool saveState(const QString &destPath);
 
 public:
     const std::unique_ptr<State> &getState() const;

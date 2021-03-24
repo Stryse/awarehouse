@@ -42,6 +42,7 @@ public slots:
     void simulationStop();
     void setTickRate(TickRate tickRate);
     void loadWarehouse(const QString& filePath);
+    void reloadWarehouse();
     //void reloadSimulation();
 
 private:
@@ -50,6 +51,7 @@ private:
 
     WarehouseManager &manager;
     WarehouseLayoutPresenter* layout;
+    QString loadedWarehousePath;
 };
 
 #endif

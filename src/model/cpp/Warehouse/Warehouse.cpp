@@ -24,15 +24,17 @@ void Warehouse::tick()
     ++timeStamp;
 }
 
-void Warehouse::loadState(const QString &srcPath)
+bool Warehouse::loadState(const QString &srcPath)
 {
     state.reset(persistence->load(srcPath));
     timeStamp = 0;
+
+    return state != nullptr;
 }
 
-void Warehouse::saveState(const QString &destPath)
+bool Warehouse::saveState(const QString &destPath)
 {
-    persistence->save(*state, destPath);
+    return persistence->save(*state, destPath);
 }
 
 const std::unique_ptr<State> &Warehouse::getState() const
