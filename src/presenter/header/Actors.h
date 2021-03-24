@@ -41,18 +41,6 @@ public:
     Direction orientation() const;
     void setOrientation(Direction dir);
 
-    // Operators
-    friend bool operator==(Actors* const lhs, const Actors rhs)
-    {
-        return lhs->mName == rhs.mName &&
-               lhs->mAction == rhs.mAction &&
-               lhs->mBatteryLevel == rhs.mBatteryLevel &&
-               lhs->mMoveCount == rhs.mMoveCount &&
-               lhs->mOrientation == rhs.mOrientation;
-    }
-
-    Actors& operator=(const Actors& other);
-
 signals:
     void nameChanged();
     void actionChanged();
@@ -66,6 +54,8 @@ private:
     int mBatteryLevel;
     int mMoveCount;
     Direction mOrientation;
+
+    const DeliveryRobot<ObservableNavEnvironment<Tile>,int>* model;
 
     // Static
     static QString imagePath;

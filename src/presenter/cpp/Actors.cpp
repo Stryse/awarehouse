@@ -11,7 +11,8 @@ Actors::Actors(const DeliveryRobot<ObservableNavEnvironment<Tile>,int>* model, Q
       mAction("IDLE"),
       mBatteryLevel(model->getBattery().getCharge()),
       mMoveCount(0),
-      mOrientation(Direction::Up)
+      mOrientation(Direction::Up),
+      model(model)
 {
 }
 
@@ -67,14 +68,4 @@ void Actors::setOrientation(Actors::Direction dir)
 
     mOrientation = dir;
     emit orientationChanged();
-}
-
-Actors& Actors::operator=(const Actors &other)
-{
-    this->mName = other.mName;
-    this->mAction = other.mAction;
-    this->mBatteryLevel = other.mBatteryLevel;
-    this->mMoveCount = other.mMoveCount;
-    this->mOrientation = other.mOrientation;
-    return *this;
 }
