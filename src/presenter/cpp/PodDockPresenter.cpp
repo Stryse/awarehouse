@@ -1,20 +1,13 @@
 #include "PodDockPresenter.h"
+#include "PodDock.h"
 
-PodDockPresenter::PodDockPresenter(int rowCoord, int colCoord, QObject *parent)
-    : MapItemPresenter(PodDockPresenter::imagePath, rowCoord, colCoord, parent)
+PodDockPresenter::PodDockPresenter(const PodDock<ObservableNavEnvironment<Tile>>* model, QObject *parent)
+    : MapItemPresenter(PodDockPresenter::imagePath,
+                       model->getPosition().getPosY(),
+                       model->getPosition().getPosX(),
+                       parent)
 {
-}
 
-PodDockPresenter *PodDockPresenter::read(QJsonObject &jsonObject, QObject *parent)
-{
-    if (jsonObject.contains("RowCoord") && jsonObject["RowCoord"].isDouble() &&
-        jsonObject.contains("ColCoord") && jsonObject["ColCoord"].isDouble())
-    {
-        int rowCoord = jsonObject["RowCoord"].toInt();
-        int colCoord = jsonObject["ColCoord"].toInt();
-        return new PodDockPresenter(rowCoord, colCoord, parent);
-    }
-    return nullptr;
 }
 
 QString PodDockPresenter::imagePath = "asd2.png";

@@ -7,12 +7,14 @@
 
 SimulationWindowPresenter::SimulationWindowPresenter(WarehouseManager &manager, QObject *parent)
     : QObject(parent),
-      mActorOutliner(new ActorOutlinerList(this)),
+      mActorOutliner(nullptr),
       mOrderOutliner(new OrderOutlinerList(this)),
       manager(manager),
       layout(nullptr)
 {
     loadWarehouse(":/maps/Map01.json");
+    layout = new WarehouseLayoutPresenter(manager.getDisplayedWarehouse()->getState().get());
+    mActorOutliner = new ActorOutlinerList(layout->getActors(),this);
 }
 
 SimulationWindowPresenter::~SimulationWindowPresenter() {}
