@@ -13,10 +13,7 @@ Item {
     Item {
         id: simulation
 
-        property int wareHouseRows: 10
-        property int wareHouseCols: 10
         readonly property alias inProgress: play.paused
-
         readonly property real  aspectRatio: 16/9
 
         anchors.centerIn: parent
@@ -26,9 +23,19 @@ Item {
         Material.background: Material.primary
         Material.elevation:  6
 
+        onWidthChanged:  simulationGrid.forceLayout()
+        onHeightChanged: simulationGrid.forceLayout()
+
         TableView {
-            id: simulationMap
+            id: simulationGrid
+
+            property real cellSize: Math.min(simulation.width  / simulation.wareHouseCols - spacing,
+                                             simulation.height / simulation.wareHouseRows - spacing)
+
+            columnWidthProvider: function(column) { return cellSize; }
+            rowHeightProvider: function(row) { return cellSize; }
             anchors.fill: parent
+            anchors.centerIn: parent
 
             rowSpacing: 1
             columnSpacing: 1
@@ -39,9 +46,12 @@ Item {
             delegate: Rectangle {
 
                 id: cell
-                implicitWidth: 30
-                implicitHeight: 30
-                color: model.image
+                implicitWidth: simulationGrid.cellSize
+                implicitHeight: simulationGrid.cellSize
+                Image {
+                    source: model.image
+                    anchors.fill: parent
+                }
             }
 
             model: MapTablePresenterModel {
@@ -49,8 +59,8 @@ Item {
             }
 
 
-            contentX: (contentWidth - width) / 2;
-            contentY: (contentHeight - height) / 2;
+            contentX: (contentWidth - parent.width) / 2;
+            contentY: (contentHeight - parent.height) / 2;
         }
     }
 

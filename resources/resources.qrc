@@ -11,5 +11,9 @@
         <file alias="speed_white.png">icons/speed_white.png</file>
         <file alias="app_icon.png">icons/app_icon.png</file>
         <file>maps/Map01.json</file>
+        <file>images/chstation.png</file>
+        <file>images/pod.png</file>
+        <file>images/robot.png</file>
+        <file>images/tile.png</file>
     </qresource>
 </RCC>

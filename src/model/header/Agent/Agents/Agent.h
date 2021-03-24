@@ -40,8 +40,8 @@ public:
      *********************************************************/
     explicit Agent(const std::string &id_category,
                    const std::shared_ptr<Environment> &environment,
-                   std::unique_ptr<Body<Environment>> body,
-                   std::unique_ptr<AMicroController> mcu)
+                   std::unique_ptr<Body<Environment>> &&body,
+                   std::unique_ptr<AMicroController> &&mcu)
 
         : environment(environment),
           body(std::move(body)),

@@ -28,22 +28,182 @@
             {
                 "RowCoord": 1,
                 "ColCoord": 3
+            },
+            {
+                "RowCoord": 2,
+                "ColCoord": 2
+            },
+            {
+                "RowCoord": 2,
+                "ColCoord": 3
+            },
+            {
+                "RowCoord": 3,
+                "ColCoord": 2
+            },
+            {
+                "RowCoord": 3,
+                "ColCoord": 3
+            },
+            {
+                "RowCoord": 4,
+                "ColCoord": 2
+            },
+            {
+                "RowCoord": 4,
+                "ColCoord": 3
+            },
+            {
+                "RowCoord": 5,
+                "ColCoord": 2
+            },
+            {
+                "RowCoord": 5,
+                "ColCoord": 3
+            },
+            {
+                "RowCoord": 6,
+                "ColCoord": 2
+            },
+            {
+                "RowCoord": 6,
+                "ColCoord": 3
+            },
+            {
+                "RowCoord": 7,
+                "ColCoord": 2
+            },
+            {
+                "RowCoord": 7,
+                "ColCoord": 3
+            },
+            {
+                "RowCoord": 1,
+                "ColCoord": 5
+            },
+            {
+                "RowCoord": 1,
+                "ColCoord": 6
+            },
+            {
+                "RowCoord": 2,
+                "ColCoord": 5
+            },
+            {
+                "RowCoord": 2,
+                "ColCoord": 6
+            },
+            {
+                "RowCoord": 3,
+                "ColCoord": 5
+            },
+            {
+                "RowCoord": 3,
+                "ColCoord": 6
+            },
+            {
+                "RowCoord": 4,
+                "ColCoord": 5
+            },
+            {
+                "RowCoord": 4,
+                "ColCoord": 6
+            },
+            {
+                "RowCoord": 5,
+                "ColCoord": 5
+            },
+            {
+                "RowCoord": 5,
+                "ColCoord": 6
+            },
+            {
+                "RowCoord": 6,
+                "ColCoord": 5
+            },
+            {
+                "RowCoord": 6,
+                "ColCoord": 6
+            },
+            {
+                "RowCoord": 7,
+                "ColCoord": 5
+            },
+            {
+                "RowCoord": 7,
+                "ColCoord": 6
+            },
+            {
+                "RowCoord": 1,
+                "ColCoord": 8
+            },
+            {
+                "RowCoord": 1,
+                "ColCoord": 9
+            },
+            {
+                "RowCoord": 2,
+                "ColCoord": 8
+            },
+            {
+                "RowCoord": 2,
+                "ColCoord": 9
+            },
+            {
+                "RowCoord": 3,
+                "ColCoord": 8
+            },
+            {
+                "RowCoord": 3,
+                "ColCoord": 9
+            },
+            {
+                "RowCoord": 4,
+                "ColCoord": 8
+            },
+            {
+                "RowCoord": 4,
+                "ColCoord": 9
+            },
+            {
+                "RowCoord": 5,
+                "ColCoord": 8
+            },
+            {
+                "RowCoord": 5,
+                "ColCoord": 9
+            },
+            {
+                "RowCoord": 6,
+                "ColCoord": 8
+            },
+            {
+                "RowCoord": 6,
+                "ColCoord": 9
+            },
+            {
+                "RowCoord": 7,
+                "ColCoord": 8
+            },
+            {
+                "RowCoord": 7,
+                "ColCoord": 9
             }
         ],
         "DeliveryRobots": [
             {
-                "RowCoord": 2,
-                "ColCoord": 7,
+                "RowCoord": 8,
+                "ColCoord": 11,
                 "OrientationY": 1
             },
             {
-                "RowCoord": 4,
-                "ColCoord": 7,
+                "RowCoord": 9,
+                "ColCoord": 11,
                 "OrientationY": 1
             },
             {
-                "RowCoord": 6,
-                "ColCoord": 7,
+                "RowCoord": 10,
+                "ColCoord": 11,
                 "OrientationY": 1
             }
         ]
