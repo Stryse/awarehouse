@@ -40,6 +40,7 @@ public:
 
     Warehouse* getDisplayedWarehouse();
     const Warehouse* getDisplayedWarehouse() const;
+    const ISimulator* getDisplayedWarehouseSimulator() const;
 
 private:
     void init();
