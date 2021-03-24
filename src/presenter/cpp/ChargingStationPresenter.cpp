@@ -10,6 +10,7 @@ ChargingStationPresenter::ChargingStationPresenter(const ChargingStation<int>* m
                        model->getPosition().getPosY(),
                        model->getPosition().getPosX(),
                        parent)
+    ,model(model)
 {
 
 }

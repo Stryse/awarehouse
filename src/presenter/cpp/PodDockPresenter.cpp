@@ -6,6 +6,7 @@ PodDockPresenter::PodDockPresenter(const PodDock<ObservableNavEnvironment<Tile>>
                        model->getPosition().getPosY(),
                        model->getPosition().getPosX(),
                        parent)
+    ,model(model)
 {
 
 }
