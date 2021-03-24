@@ -39,6 +39,11 @@ void SimulationWindowPresenter::setOrders(OrderOutlinerList *orders)
     mOrderOutliner = orders;
 }
 
+bool SimulationWindowPresenter::paused() const
+{
+    return manager.getDisplayedWarehouseSimulator()->isAvailable();
+}
+
 void SimulationWindowPresenter::simulationStart()
 {
     manager.simulationStart();
@@ -79,4 +84,11 @@ void SimulationWindowPresenter::loadWarehouse(const QString &filePath)
 void SimulationWindowPresenter::reloadWarehouse()
 {
     loadWarehouse(loadedWarehousePath);
+    simulationStop();
+}
+
+void SimulationWindowPresenter::setPaused(bool paused)
+{
+    m_paused = paused;
+    emit pausedChanged();
 }
