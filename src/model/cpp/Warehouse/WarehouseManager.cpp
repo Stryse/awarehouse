@@ -4,6 +4,7 @@
 #include "ISimulator.h"
 #include <algorithm>
 #include <utility>
+#include "WarehouseFilePersistence.h"
 
 WarehouseManager::WarehouseManager()
     : displayed(nullptr)
@@ -17,7 +18,8 @@ WarehouseManager::~WarehouseManager()
 void WarehouseManager::init()
 {
     // Add one default empty warehouse to manager
-    warehouses.push_back(std::make_unique<Warehouse>());
+    warehouses.push_back(std::make_unique<Warehouse>(
+                         std::make_unique<WarehouseFilePersistence>()));
 
     // Set default as displayed
     displayed = warehouses[0].get();
@@ -99,6 +101,16 @@ void WarehouseManager::setWarehouseStateAt(int timeStamp, Warehouse* warehouse)
         ISimulator* sim = simulatorIt->second;
         sim->setWarehouseStateAt(timeStamp);
     }
+}
+
+Warehouse* WarehouseManager::getDisplayedWarehouse()
+{
+    return displayed;
+}
+
+const Warehouse* WarehouseManager::getDisplayedWarehouse() const
+{
+    return displayed;
 }
 
 void WarehouseManager::setWarehouseStateAt(int timeStamp)

@@ -83,6 +83,7 @@ model/cpp/Tile/Tile.cpp
 model/cpp/Warehouse/Warehouse.cpp
 model/cpp/Warehouse/State.cpp
 model/cpp/Warehouse/Pod/OrderModel.cpp
+persistence/WarehouseFilePersistence.cpp
 ## QOBJECT FILES ##
 ${QT_QOBJECT_FILES}
 )

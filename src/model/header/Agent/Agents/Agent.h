@@ -64,9 +64,14 @@ public:
     const std::string &getId() const { return id; }
 
     /*********************************************************
-     * @brief Get the Serial Number object.
+     * @brief Returns the Agent's serial number (creation number)
      *********************************************************/
     int getSerialNumber() const { return serialNumber; }
+
+    /*********************************************************
+     * @brief Returns the agent's body
+     *********************************************************/
+    const std::unique_ptr<Body<Environment>> &getBody() const { return body; }
 
 private:
     /*********************************************************

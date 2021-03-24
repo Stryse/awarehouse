@@ -1,13 +1,14 @@
 #include "Warehouse.h"
+#include <iostream>
 #include "ControllerImpl.h"
 #include "SchedulerImpl.h"
-#include "WarehouseFilePersistence.h"
-#include <iostream>
+#include "IWarehousePersistence.h"
 
-Warehouse::Warehouse()
+Warehouse::Warehouse(std::unique_ptr<IWarehousePersistence<QString>>&& persistence)
     : timeStamp(0),
       scheduler(new SchedulerImpl()),
       controller(new ControllerImpl()),
+      persistence(std::move(persistence)),
       state(nullptr)
 {
 }
@@ -22,3 +23,14 @@ void Warehouse::tick()
     state->tick();
     ++timeStamp;
 }
+
+ void Warehouse::loadState(const QString &srcPath)
+ {
+     state.reset(persistence->load(srcPath));
+     timeStamp = 0;
+ }
+
+ void Warehouse::saveState(const QString& destPath)
+ {
+     persistence->save(*state,destPath);
+ }

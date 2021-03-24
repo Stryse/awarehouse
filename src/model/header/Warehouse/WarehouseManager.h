@@ -38,6 +38,9 @@ public:
     void setWarehouseStateAt(int timeStamp);
     void setWarehouseStateAt(int timeStamp, Warehouse *);
 
+    Warehouse* getDisplayedWarehouse();
+    const Warehouse* getDisplayedWarehouse() const;
+
 private:
     void init();
     ISimulator* findFreeSimulator();

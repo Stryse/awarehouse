@@ -1,28 +1,28 @@
 #ifndef WAREHOUSE__H
 #define WAREHOUSE__H
 
-#include <memory>
 #include "State.h"
+#include "IWarehousePersistence.h"
+#include <memory>
 
 // ################# FORWARD DECLARATIONS #######################
 class QString;
 class AScheduler;
 class AController;
 class Warehouse;
-template <typename rsc> class IWarehousePersistence;
+class QString;
 // ##############################################################
 
 class Warehouse
 {
 public:
-    Warehouse();
-    Warehouse(State&& state);
-    Warehouse(const State& state);
-    ~Warehouse();
+    Warehouse(std::unique_ptr<IWarehousePersistence<QString>>&& persistence = nullptr);
+    virtual ~Warehouse();
+
 public:
     void tick();
-    //void loadState(std::string& srcPath);
-    //void saveState(std::string& destPath);
+    void loadState(const QString &srcPath);
+    void saveState(const QString &destPath);
 
 private:
     int timeStamp;
