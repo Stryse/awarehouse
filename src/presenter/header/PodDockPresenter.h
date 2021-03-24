@@ -2,18 +2,22 @@
 #define PODDOCKPRESENTER_H
 
 #include <MapItemPresenter.h>
-#include <QJsonObject>
 #include <QObject>
+
+template <typename E> class PodDock;
+template <typename V> class ObservableNavEnvironment;
+class Tile;
 
 class PodDockPresenter : public MapItemPresenter
 {
     Q_OBJECT
+
 public:
-    explicit PodDockPresenter(int rowCoord, int colCoord, QObject *parent=nullptr);
-
-    static PodDockPresenter* read(QJsonObject &jsonObject, QObject *parent=nullptr);
-
+    explicit PodDockPresenter(const PodDock<ObservableNavEnvironment<Tile>>* model,
+                              QObject *parent=nullptr);
 private:
+
+    const PodDock<ObservableNavEnvironment<Tile>>* model;
     static QString imagePath;
 };
 

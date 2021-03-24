@@ -10,9 +10,9 @@ class ActorOutlinerList : public QObject
     Q_OBJECT
 
 public:
-    explicit ActorOutlinerList(QObject *parent = nullptr);
+    explicit ActorOutlinerList(QList<const Actors*>* actorList , QObject *parent = nullptr);
 
-    QList<Actors> actors() const;
+    QList<const Actors*> actors() const;
     bool setActorAt(int index, const Actors& actor);
 
 signals:
@@ -28,7 +28,7 @@ public slots:
     void clear();
 
 public:
-    QList<Actors> mActors;
+    QList<const Actors*>* mActors;
 };
 
 #endif /* OUTLINER_LIST__H */

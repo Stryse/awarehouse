@@ -9,6 +9,9 @@
 #include <QList>
 #include <QObject>
 
+class State;
+//
+
 class WarehouseLayoutPresenter : public QObject
 {
         Q_OBJECT
@@ -16,8 +19,7 @@ class WarehouseLayoutPresenter : public QObject
         Q_PROPERTY(int colCount READ colCount WRITE setColCount NOTIFY colCountChanged)
 
 public:
-        explicit WarehouseLayoutPresenter(QObject *parent = nullptr);
-        explicit WarehouseLayoutPresenter(QJsonObject &source, QObject *parent = nullptr);
+        explicit WarehouseLayoutPresenter(const State* state, QObject *parent = nullptr);
 
 public:
         int rowCount() const;
@@ -26,18 +28,24 @@ public:
         int colCount() const;
         void setColCount(int colCount);
 
+        QList<const MapItemPresenter *>* getMap();
+        QList<const Actors*>* getActors();
+        QList<const ChargingStationPresenter*>* getChargingStations();
+        QList<const PodDockPresenter*>* getPodDocks();
+
+
 signals:
-        void rowCountChanged();
-        void colCountChanged();
+        void rowCountChanged(int rowCount);
+        void colCountChanged(int colCount);
 
 private:
         int m_rowCount;
         int m_colCount;
 
-        QList<MapItemPresenter *> map;
-        QList<Actors *> robots;
-        QList<ChargingStationPresenter *> chargingStations;
-        QList<PodDockPresenter *> podDocks;
+        QList<const MapItemPresenter *> map;
+        QList<const Actors*> robots;
+        QList<const ChargingStationPresenter*> chargingStations;
+        QList<const PodDockPresenter*> podDocks;
         //QList<PodPresenter> pods;
 };
 #endif
