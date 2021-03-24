@@ -2,38 +2,38 @@
 #define WAREHOUSE_FILE_PERSISTENCE__H
 
 #include "IWarehousePersistence.h"
-#include <QString>
-#include <QJsonObject>
-#include <vector>
-#include <memory>
 #include "State.h"
+#include <QJsonObject>
+#include <QString>
+#include <memory>
+#include <vector>
 
-class WarehouseFilePersistence : public QObject, public IWarehousePersistence<QString>
+class WarehouseFilePersistence : public IWarehousePersistence<QString>
 {
-    Q_OBJECT
-
 public:
-
-    WarehouseFilePersistence(QObject* parent = nullptr);
+    WarehouseFilePersistence();
     virtual ~WarehouseFilePersistence();
 
 public:
-    virtual State* load(QString &resource) override;
-    virtual void save(const State &state, QString &resource) const override;
-
-public: signals:
-    void warehouseLoaded(const State* state);
-
+    virtual State *load(const QString &resource) override;
+    virtual bool save(const State &state, const QString &resource) const override;
 
 private:
-    State* loadFromJsonObject(QJsonObject json);
-    void loadChargingStation(std::vector<std::shared_ptr<ChargingStation<>>>& chStations,
-                             std::shared_ptr<ObservableNavEnvironment<>>& env,
-                             QJsonObject& warehouseLayoutData);
+        State* loadFromJsonObject(QJsonObject json);
 
-    void loadPodDock(std::vector<std::shared_ptr<PodDock<>>>& podDocks,
-                     std::shared_ptr<ObservableNavEnvironment<>>& env,
-                     QJsonObject& warehouseLayoutData);
+        void fillEmptyVolumes(std::shared_ptr<ObservableNavEnvironment<>>& env);
+
+        void loadChargingStation(std::vector<std::shared_ptr<ChargingStation<>>>& chStations,
+                                 std::shared_ptr<ObservableNavEnvironment<>>& env,
+                                 QJsonObject& warehouseLayoutData);
+
+        void loadPodDock(std::vector<std::shared_ptr<PodDock<>>>& podDocks,
+                         std::shared_ptr<ObservableNavEnvironment<>>& env,
+                         QJsonObject& warehouseLayoutData);
+
+        void loadRobots(std::vector<std::shared_ptr<DeliveryRobot<>>>& robots,
+                        std::shared_ptr<ObservableNavEnvironment<>>& env,
+                        QJsonObject& warehouseLayoutData);
 };
 
 #endif /* WAREHOUSE_FILE_PERSISTENCE__H */

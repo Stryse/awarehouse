@@ -53,7 +53,7 @@ public:
     Pod(const Point &position,
         const std::shared_ptr<Environment> &environment,
         const PodDock &parentDock)
-        : body(position, DirectionVector::ABOVE(), environment, BodyShapeFactory<Point>::twoBlockHeigh()),
+        : body(position, DirectionVector::ABOVE(), environment, BodyShapeFactory<Point>::onlyOrigin()), // TODO make Two blocks high again
           parentDock(parentDock)
     {
     }

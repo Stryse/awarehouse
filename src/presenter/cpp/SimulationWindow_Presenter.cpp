@@ -1,4 +1,5 @@
 #include "SimulationWindow_Presenter.h"
+#include "Warehouse.h"
 #include <QDebug>
 #include <QFile>
 #include <QJsonDocument>
@@ -21,17 +22,17 @@ ActorOutlinerList *SimulationWindowPresenter::actors() const
     return mActorOutliner;
 }
 
-void SimulationWindowPresenter::setActors(ActorOutlinerList* actors)
+void SimulationWindowPresenter::setActors(ActorOutlinerList *actors)
 {
     mActorOutliner = actors;
 }
 
-OrderOutlinerList* SimulationWindowPresenter::orders() const
+OrderOutlinerList *SimulationWindowPresenter::orders() const
 {
     return mOrderOutliner;
 }
 
-void SimulationWindowPresenter::setOrders(OrderOutlinerList* orders)
+void SimulationWindowPresenter::setOrders(OrderOutlinerList *orders)
 {
     mOrderOutliner = orders;
 }
@@ -50,28 +51,22 @@ void SimulationWindowPresenter::simulationStop()
 
 void SimulationWindowPresenter::setTickRate(TickRate tickRate)
 {
-    switch (tickRate) {
-        case NORMAL: manager.setTickRate(1000);
-            break;
-        case HALF_SPEED: manager.setTickRate(2000);
-            break;
-        case TWICE: manager.setTickRate(500);
-            break;
+    switch (tickRate)
+    {
+    case NORMAL:
+        manager.setTickRate(1000);
+        break;
+    case HALF_SPEED:
+        manager.setTickRate(2000);
+        break;
+    case TWICE:
+        manager.setTickRate(500);
+        break;
     }
     qDebug() << "TickRate changed to " << tickRate;
 }
 
-void SimulationWindowPresenter::loadWarehouse(const QString& filePath)
+void SimulationWindowPresenter::loadWarehouse(const QString &filePath)
 {
-    QString jsonString;
-    QFile sourceFile(filePath);
-    if(sourceFile.exists())
-        if(sourceFile.open(QIODevice::ReadOnly | QIODevice::Text)) {
-            jsonString = sourceFile.readAll();
-            sourceFile.close();
-
-            QJsonDocument warehouseDoc = QJsonDocument::fromJson(jsonString.toUtf8());
-            QJsonObject warehouseJsonObj = warehouseDoc.object();
-            layout = new WarehouseLayoutPresenter(warehouseJsonObj,this);
-        }
+    manager.getDisplayedWarehouse()->loadState(filePath);
 }

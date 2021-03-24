@@ -29,6 +29,23 @@
                 "RowCoord": 1,
                 "ColCoord": 3
             }
+        ],
+        "DeliveryRobots": [
+            {
+                "RowCoord": 2,
+                "ColCoord": 7,
+                "OrientationY": 1
+            },
+            {
+                "RowCoord": 4,
+                "ColCoord": 7,
+                "OrientationY": 1
+            },
+            {
+                "RowCoord": 6,
+                "ColCoord": 7,
+                "OrientationY": 1
+            }
         ]
     }
 }

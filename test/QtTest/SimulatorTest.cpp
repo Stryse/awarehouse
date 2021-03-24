@@ -8,7 +8,7 @@
 void SimulatorTest::toUpper()
 {
     std::unique_ptr<Warehouse> warehouse = nullptr;
-    warehouse = std::make_unique<Warehouse>();
+    warehouse = std::make_unique<Warehouse>(nullptr);
 
     std::unique_ptr<ISimulator<Warehouse>> simulator = nullptr;
     simulator = std::make_unique<Simulator>();

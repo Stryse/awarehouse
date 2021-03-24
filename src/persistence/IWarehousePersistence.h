@@ -7,8 +7,8 @@ template <typename ResourceType>
 class IWarehousePersistence
 {
 public:
-    virtual State* load(ResourceType &resource) = 0;
-    virtual void save(const State &state, ResourceType &resource) const = 0;
+    virtual State* load(const ResourceType &resource) = 0;
+    virtual bool save(const State &state, const ResourceType &resource) const = 0;
 };
 
 #endif /* I_WAREHOUSE_PERSISTENCE__H */

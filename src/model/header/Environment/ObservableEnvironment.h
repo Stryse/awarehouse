@@ -83,7 +83,7 @@ public:
     size_t getZLength() const { return zLength; }
 
     size_t getCoordAsIndex(size_t x, size_t y, size_t z) const { return x + yLength * (y + zLength * z); }
-    size_t getCoordAsIndex(const Point& point) const { return getCoordAsIndex(point.getX(), point.getY(), point.getZ()); }
+    size_t getCoordAsIndex(const Point& point) const { return getCoordAsIndex(point.getPosX(), point.getPosY(), point.getPosZ()); }
 };
 
 #endif /* OBSERVABLE_NAV_ENVIRONMENT__H */
