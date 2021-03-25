@@ -3,21 +3,18 @@
 
 #include <QObject>
 #include <MapItemPresenter.h>
-#include <QJsonObject>
 
+template <typename T> class ChargingStation;
 class ChargingStationPresenter : public MapItemPresenter
 {
     Q_OBJECT
 
 public:
-    explicit ChargingStationPresenter(int rowCoord,
-                                      int colCoord,
-                                      QObject *parent = nullptr);
+    explicit ChargingStationPresenter(const ChargingStation<int>* model, QObject *parent = nullptr);
 
-
-    static ChargingStationPresenter* read(QJsonObject& jsonObj, QObject *parent = nullptr);
 private:
 
+    const ChargingStation<int>* model;
     static QString imagePath;
 };
 

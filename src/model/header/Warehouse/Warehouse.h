@@ -1,8 +1,8 @@
 #ifndef WAREHOUSE__H
 #define WAREHOUSE__H
 
-#include "State.h"
 #include "IWarehousePersistence.h"
+#include "State.h"
 #include <memory>
 
 // ################# FORWARD DECLARATIONS #######################
@@ -16,13 +16,16 @@ class QString;
 class Warehouse
 {
 public:
-    Warehouse(std::unique_ptr<IWarehousePersistence<QString>>&& persistence = nullptr);
+    Warehouse(std::unique_ptr<IWarehousePersistence<QString>> &&persistence = nullptr);
     virtual ~Warehouse();
 
 public:
     void tick();
-    void loadState(const QString &srcPath);
-    void saveState(const QString &destPath);
+    bool loadState(const QString &srcPath);
+    bool saveState(const QString &destPath);
+
+public:
+    const std::unique_ptr<State> &getState() const;
 
 private:
     int timeStamp;

@@ -4,58 +4,29 @@
 #include <QDebug>
 #include <QJsonObject>
 #include <QJsonArray>
+#include "State.h"
 
-WarehouseLayoutPresenter::WarehouseLayoutPresenter(QObject* parent)
+WarehouseLayoutPresenter::WarehouseLayoutPresenter(const State* state, QObject* parent)
     : QObject(parent)
 {
-}
+    // Connect row and column to model
+    setRowCount(state->getRowCount());
+    setColCount(state->getColCount());
 
-WarehouseLayoutPresenter::WarehouseLayoutPresenter(QJsonObject& source, QObject* parent)
-    : QObject(parent)
-{
-    if(source.contains("WarehouseLayoutData") && source["WarehouseLayoutData"].isObject())
-    {
-        QJsonObject WarehouseLayoutData = source["WarehouseLayoutData"].toObject();
+    // Connect charging stations presenter to model
+    chargingStations.reserve(state->getChargingStations().size());
+    for(auto& station : state->getChargingStations())
+        chargingStations.append(new ChargingStationPresenter(station.get(),this));
 
-        // Read Row and Column
-        if(WarehouseLayoutData.contains("RowCount") && WarehouseLayoutData["RowCount"].isDouble() &&
-           WarehouseLayoutData.contains("ColCount") && WarehouseLayoutData["ColCount"].isDouble())
-        {
-            m_rowCount = WarehouseLayoutData["RowCount"].toInt();
-            m_colCount = WarehouseLayoutData["ColCount"].toInt();
-        }
+    // Connect pod docks presenter to model
+    podDocks.reserve(state->getPodDocks().size());
+    for(auto& podDock : state->getPodDocks())
+        podDocks.append(new PodDockPresenter(podDock.get(),this));
 
-        // Read Charging Stations
-        if(WarehouseLayoutData.contains("ChargingStations") && WarehouseLayoutData["ChargingStations"].isArray())
-        {
-            QJsonArray chargingStationsJson = WarehouseLayoutData["ChargingStations"].toArray();
-            chargingStations.reserve(chargingStationsJson.size());
-
-            for (int i = 0; i < chargingStationsJson.size(); ++i) {
-
-                QJsonObject chargingStationObj = chargingStationsJson[i].toObject();
-                chargingStations.append(ChargingStationPresenter::read(chargingStationObj,this));
-            }
-        }
-
-        // Read Pods
-        if(WarehouseLayoutData.contains("PodDocks") && WarehouseLayoutData["PodDocks"].isArray())
-        {
-            QJsonArray PodDocksJSon = WarehouseLayoutData["PodDocks"].toArray();
-            podDocks.reserve(PodDocksJSon.size());
-
-            for(int i = 0; i < PodDocksJSon.size(); ++i)
-            {
-                QJsonObject podObj = PodDocksJSon[i].toObject();
-                podDocks.append(PodDockPresenter::read(podObj,this));
-            }
-        }
-
-    }
-    else
-    {
-        qDebug() << "Jaj jaj nagy a baj";
-    }
+    // Connect robots presenter to model
+    robots.reserve(state->getRobots().size());
+    for(auto& robot : state->getRobots())
+        robots.append(new Actors(robot.get(),this));
 }
 
 int WarehouseLayoutPresenter::rowCount() const
@@ -66,7 +37,7 @@ int WarehouseLayoutPresenter::rowCount() const
 void WarehouseLayoutPresenter::setRowCount(int value)
 {
     m_rowCount = value;
-    emit rowCountChanged();
+    emit rowCountChanged(m_rowCount);
 }
 
 int WarehouseLayoutPresenter::colCount() const
@@ -77,5 +48,10 @@ int WarehouseLayoutPresenter::colCount() const
 void WarehouseLayoutPresenter::setColCount(int colCount)
 {
     m_colCount = colCount;
-    emit colCountChanged();
+    emit colCountChanged(m_colCount);
 }
+
+QList<const MapItemPresenter*>* WarehouseLayoutPresenter::getMap() { return &map; }
+QList<const Actors*>* WarehouseLayoutPresenter::getActors() { return &robots; }
+QList<const ChargingStationPresenter*>* WarehouseLayoutPresenter::getChargingStations() { return &chargingStations; }
+QList<const PodDockPresenter*>* WarehouseLayoutPresenter::getPodDocks() { return &podDocks; }

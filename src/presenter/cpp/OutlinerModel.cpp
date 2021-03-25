@@ -19,7 +19,7 @@ QVariant OutlinerModel::data(const QModelIndex& index, int role) const
     if (!index.isValid() || !m_actors)
        return QVariant();
 
-    const Actors& actor = m_actors->actors().at(index.row());
+    const Actors& actor =  *m_actors->actors().at(index.row());
     switch(role) {
             case NameRole:
                 return QVariant(actor.name());

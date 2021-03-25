@@ -7,12 +7,14 @@
 
 SimulationWindowPresenter::SimulationWindowPresenter(WarehouseManager &manager, QObject *parent)
     : QObject(parent),
-      mActorOutliner(new ActorOutlinerList(this)),
+      mActorOutliner(nullptr),
       mOrderOutliner(new OrderOutlinerList(this)),
       manager(manager),
       layout(nullptr)
 {
     loadWarehouse(":/maps/Map01.json");
+    layout = new WarehouseLayoutPresenter(manager.getDisplayedWarehouse()->getState().get());
+    mActorOutliner = new ActorOutlinerList(layout->getActors(),this);
 }
 
 SimulationWindowPresenter::~SimulationWindowPresenter() {}
@@ -35,6 +37,11 @@ OrderOutlinerList *SimulationWindowPresenter::orders() const
 void SimulationWindowPresenter::setOrders(OrderOutlinerList *orders)
 {
     mOrderOutliner = orders;
+}
+
+bool SimulationWindowPresenter::paused() const
+{
+    return manager.getDisplayedWarehouseSimulator()->isAvailable();
 }
 
 void SimulationWindowPresenter::simulationStart()
@@ -68,5 +75,20 @@ void SimulationWindowPresenter::setTickRate(TickRate tickRate)
 
 void SimulationWindowPresenter::loadWarehouse(const QString &filePath)
 {
-    manager.getDisplayedWarehouse()->loadState(filePath);
+    bool success = manager.getDisplayedWarehouse()->loadState(filePath);
+
+    if(success)
+        loadedWarehousePath = filePath;
+}
+
+void SimulationWindowPresenter::reloadWarehouse()
+{
+    loadWarehouse(loadedWarehousePath);
+    simulationStop();
+}
+
+void SimulationWindowPresenter::setPaused(bool paused)
+{
+    m_paused = paused;
+    emit pausedChanged();
 }

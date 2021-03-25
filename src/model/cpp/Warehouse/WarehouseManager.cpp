@@ -113,6 +113,17 @@ const Warehouse* WarehouseManager::getDisplayedWarehouse() const
     return displayed;
 }
 
+const WarehouseManager::ISimulator* WarehouseManager::getDisplayedWarehouseSimulator() const
+{
+    auto simulatorIt = wh2sim.find(displayed);
+    if(simulatorIt != wh2sim.end() /* Has corresponding simulator object */)
+    {
+        ISimulator* sim = simulatorIt->second;
+        return sim;
+    }
+    return nullptr;
+}
+
 void WarehouseManager::setWarehouseStateAt(int timeStamp)
 {
     setWarehouseStateAt(timeStamp,displayed);

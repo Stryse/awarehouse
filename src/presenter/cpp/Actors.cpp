@@ -1,24 +1,24 @@
 #include "Actors.h"
+#include "DeliveryRobot.h"
+#include "ObservableEnvironment.h"
 
-Actors::Actors(QString name, QString action, int battery, Actors::Role role, Actors::Direction orientation) :
-    mName(name), mAction(action), mBatteryLevel(battery), mRole(role), mMoveCount(0), mOrientation(orientation)
+Actors::Actors(const DeliveryRobot<ObservableNavEnvironment<Tile>,int>* model, QObject* parent)
+    : MapItemPresenter(Actors::imagePath,
+                       model->getBody()->getPose().getPosition().getPosY(),
+                       model->getBody()->getPose().getPosition().getPosX(),
+                       parent),
+      mName(QString::fromStdString(model->getId())),
+      mAction("IDLE"),
+      mBatteryLevel(model->getBattery().getCharge()),
+      mMoveCount(0),
+      mOrientation(Direction::Up),
+      model(model)
 {
 }
 
-Actors::Actors(const Actors &newActor)
-{
-    mName = newActor.mName;
-    mAction = newActor.mAction;
-    mBatteryLevel = newActor.mBatteryLevel;
-    mRole = newActor.mRole;
-    mMoveCount = newActor.mMoveCount;
-    mOrientation = newActor.mOrientation;
-}
+QString Actors::imagePath = "asd3.png";
 
-QString Actors::name() const
-{
-    return mName;
-}
+QString Actors::name() const { return mName; }
 
 void Actors::setName(const QString &name)
 {
@@ -29,10 +29,7 @@ void Actors::setName(const QString &name)
     emit nameChanged();
 }
 
-QString Actors::action() const
-{
-    return mAction;
-}
+QString Actors::action() const { return mAction; }
 
 void Actors::setAction(const QString &action)
 {
@@ -43,10 +40,7 @@ void Actors::setAction(const QString &action)
     emit actionChanged();
 }
 
-int Actors::battery() const
-{
-    return mBatteryLevel;
-}
+int Actors::battery() const { return mBatteryLevel; }
 
 void Actors::setBattery(int level)
 {
@@ -57,24 +51,7 @@ void Actors::setBattery(int level)
     emit batteryChanged();
 }
 
-Actors::Role Actors::role() const
-{
-    return mRole;
-}
-
-void Actors::setRole(Actors::Role role)
-{
-    if(mRole == role)
-        return;
-
-    mRole = role;
-    emit roleChanged();
-}
-
-int Actors::moveCount() const
-{
-    return mMoveCount;
-}
+int Actors::moveCount() const { return mMoveCount; }
 
 void Actors::MoveCountInc()
 {
@@ -82,10 +59,7 @@ void Actors::MoveCountInc()
     emit moveCountChanged();
 }
 
-Actors::Direction Actors::orientation() const
-{
-    return mOrientation;
-}
+Actors::Direction Actors::orientation() const { return mOrientation; }
 
 void Actors::setOrientation(Actors::Direction dir)
 {
@@ -94,15 +68,4 @@ void Actors::setOrientation(Actors::Direction dir)
 
     mOrientation = dir;
     emit orientationChanged();
-}
-
-Actors& Actors::operator=(const Actors &other)
-{
-    this->mName = other.mName;
-    this->mAction = other.mAction;
-    this->mBatteryLevel = other.mBatteryLevel;
-    this->mRole = other.mRole;
-    this->mMoveCount = other.mMoveCount;
-    this->mOrientation = other.mOrientation;
-    return *this;
 }
