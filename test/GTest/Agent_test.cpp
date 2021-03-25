@@ -31,7 +31,7 @@ std::shared_ptr<ObservableNavEnvironment<>> AgentTest::env = nullptr;
 std::unique_ptr<DeliveryRobot<>> AgentTest::robot = nullptr;
 // ####################################### TESTS ##############################################################
 
-TEST_F(AgentTest, fasz)
+TEST_F(AgentTest, Move)
 {
     robot->move(DirectionVector<>::UP());
     robot->move(DirectionVector<>::DOWN());
