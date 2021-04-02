@@ -17,6 +17,16 @@ template <class TEnergy>
 class IDepleting;
 // ########################################################################
 
+/***********************************************************************************
+ * @brief A mechanism which has a set of motors required to move the body in
+ * different directions in its environment.
+ * 
+ * The mechanism needs a set of directionvectors which tells the movable directions
+ * and its costs so a path planner can plan accurately.
+ * 
+ * It also needs to provide a sequence of motor actions which lead to the accessible
+ * directions.
+ ***********************************************************************************/
 template <typename TBody, typename TEnergy = config::agent::DefaultEnergy>
 class IMoveMechanism
 {
@@ -26,7 +36,7 @@ public:
     using DirectionVector = typename Body::DirectionVector;
     using AMotor = AMotor<Body>;
 
-    //Energy related
+    //######################### Energy related ############################
     using Energy = TEnergy;
     using IDepleting = IDepleting<Energy>;
     using MotorAction = MotorAction<Body, Energy>;

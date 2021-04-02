@@ -59,7 +59,7 @@ public:
     void tick(int timeStamp) { mcu->tick(timeStamp); }
 
     /*********************************************************
-     * @brief 
+     * @brief Returns the agent's unique identifier
      *********************************************************/
     const std::string &getId() const { return id; }
 

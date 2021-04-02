@@ -31,15 +31,20 @@ private:
 
 public:
     //################################## Constructors, destructors ############################################
-    /**
-     * @brief Creates a observable,navigatable 3D environment of the sizes provided
-     * @param xLength X (width)  -- Navplane
+    /**********************************************************************************************************
+     * @brief Creates a observable,navigatable 3D environment of the sizes provided filled with default volumes
+     * @param xLength X (Width)  -- Navplane
      * @param yLength Y (Height) -- Navplane
      * @param zLength Z (Depth)  -- Air -- Default is 1 meaning it's a plane
-     */
+     **********************************************************************************************************/
     ObservableNavEnvironment(size_t xLength, size_t yLength, size_t zLength = 1)
         : tileSpace(xLength * yLength * zLength), xLength(xLength), yLength(yLength), zLength(zLength)
     {
+        // Fill with defaults
+        for (size_t x = 0; x < xLength; ++x)
+            for (size_t y = 0; y < yLength; ++y)
+                for (size_t z = 0; z < zLength; ++z)
+                    tileSpace[getCoordAsIndex(x, y, z)] = std::make_shared<TVolumeType>(Point(x, y, z));
     }
 
     ObservableNavEnvironment(const ObservableNavEnvironment &other)
@@ -83,7 +88,7 @@ public:
     size_t getZLength() const { return zLength; }
 
     size_t getCoordAsIndex(size_t x, size_t y, size_t z) const { return x + yLength * (y + zLength * z); }
-    size_t getCoordAsIndex(const Point& point) const { return getCoordAsIndex(point.getPosX(), point.getPosY(), point.getPosZ()); }
+    size_t getCoordAsIndex(const Point &point) const { return getCoordAsIndex(point.getPosX(), point.getPosY(), point.getPosZ()); }
 };
 
 #endif /* OBSERVABLE_NAV_ENVIRONMENT__H */

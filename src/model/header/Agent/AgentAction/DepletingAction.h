@@ -5,6 +5,11 @@
 #include "IDepleting.h"
 #include "LibConfig.h"
 
+/********************************************************************************
+ * @brief A kind of Agent Action that needs energy to be performed.
+ * It is neccessary to provide an Energy resource of IDepleting interface to
+ * consume the amount of energy needed.
+ ********************************************************************************/
 template <typename TEnergy = config::agent::DefaultEnergy>
 class DepletingAction : public AgentAction
 {
@@ -18,9 +23,6 @@ public:
         : AgentAction(duration), resource(resource), energyCost(energyCost) {}
 
 protected:
-    /**
-     * @brief 
-     */
     virtual void action() override
     {
         try

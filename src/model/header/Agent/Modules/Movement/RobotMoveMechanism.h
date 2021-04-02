@@ -41,10 +41,17 @@ public:
     }
 
 public:
+    /**********************************************************************
+     * @brief Returns whether a direction is reachable (by motors)
+     **********************************************************************/
     virtual bool canMove(const DirectionVector &direction) const override
     {
         return this->moveSet.find(direction) != this->moveSet.end();
     }
+
+    /******************************************************************************************
+     * @brief Returns a sequence of MotorActions which lead to a provided reachable direction.
+     ******************************************************************************************/
     virtual std::queue<MotorAction *> move(const DirectionVector &direction) override
     {
         std::queue<MotorAction *> motorActionQ;
@@ -88,11 +95,19 @@ public:
 
         return motorActionQ;
     }
+
+    /*************************************************************************************************
+     * @brief Sum of energy cost of a motorAction that leads to the provided (reachable!) direction.
+     *************************************************************************************************/
     virtual Energy getEnergyCost(const DirectionVector &direction) const override
     {
         return RobotMoveMechanism<Body, Energy>::turnCost * (-DirectionVector::dot(direction, this->body.getPose().getOrientation()) + 1) +
                RobotMoveMechanism<Body, Energy>::moveCost;
     }
+
+    /*************************************************************************************************
+     * @brief Sum of time cost of a motorAction that leads to the provided (reachable!) direction.
+     *************************************************************************************************/
     virtual int getTimeCost(const DirectionVector &direction) const override
     {
         return RobotMoveMechanism<Body, Energy>::turnDuration * (-DirectionVector::dot(direction, this->body.getPose().getOrientation()) + 1) +

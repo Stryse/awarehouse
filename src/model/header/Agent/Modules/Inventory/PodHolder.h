@@ -28,7 +28,7 @@ public:
 
 public:
     /***************************************************************************************
-     * @brief Don't use this function because unique pointer cant be reassigned without move
+     * @brief Don't use this function because unique pointer cant be reassigned without move.
      ***************************************************************************************/
     virtual void push(const OwnedPod &item) override
     {
@@ -37,8 +37,8 @@ public:
 
     /**************************************************************
      * @brief The PodHolder acquires the provided pod
-     * item will be set to nullptr
-     * @throws runtime error if holder already has a pod
+     * item will be set to nullptr.
+     * @throws runtime error if holder already has a pod.
      **************************************************************/
     virtual void push(OwnedPod &&item) override
     {
@@ -69,10 +69,8 @@ public:
      * @brief Returns the associated pod if the holder has one.
      * Returns nullptr if the holder has no pod.
      ***************************************************************/
-    const OwnedPod &getChildPod() const
-    {
-        return pod;
-    }
+    const OwnedPod &getChildPod() const { return pod; }
+    OwnedPod &getChildPod() { return pod; }
 
 private:
     OwnedPod pod;

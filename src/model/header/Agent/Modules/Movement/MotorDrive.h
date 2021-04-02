@@ -5,6 +5,10 @@
 #include "MotorCommand.h"
 #include <vector>
 
+/****************************************************************************
+ * @brief A configuration of motors and motordirections which can be executed
+ * in a motorAction along with a sum of time and energy costs.
+ ****************************************************************************/
 template <typename TMotor, typename TEnergy = config::agent::DefaultEnergy>
 class MotorDrive
 {

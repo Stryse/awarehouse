@@ -7,10 +7,8 @@
 #include "BodyShapeFactory.h"
 #include "DRobotMCU.h"
 #include "LibConfig.h"
-#include "MotorAction.h" // TODO REMOVE
 #include "PodHolder.h"
 #include "RobotMoveMechanism.h"
-#include <queue> // TODO REMOVE
 // ######################## Forward Declarations #########################
 class DRobotMCU;
 template <typename TBody, typename TEnergy>
@@ -21,6 +19,7 @@ class IDepleting;
 
 template <typename TEnvironment = config::navigation::DefaultEnvironment,
           typename TEnergy = config::agent::DefaultEnergy>
+
 class DeliveryRobot : public Agent<TEnvironment>
 {
 public:
@@ -44,27 +43,16 @@ public:
     {
     }
 
-public:
-    const Battery<Energy> &getBattery() const { return battery; }
-    const IMoveMechanism<Body, Energy> &getMoveMechanism() const { return *(robotMovement->get()); }
-    PodHolder<Environment> &getPodHolder() { return podHolder; }
-
-    /*Todo Remove*/
-    void move(const DirectionVector &direction)
-    {
-        std::queue<MotorAction<Body, Energy> *> moveActions = robotMovement->move(direction);
-        while (!moveActions.empty())
-        {
-            auto moveAction = moveActions.front();
-            (*moveAction)();
-            moveActions.pop();
-        }
-    }
-
 private:
     Battery<Energy> battery;
     std::unique_ptr<IMoveMechanism<Body, Energy>> robotMovement;
     PodHolder<Environment> podHolder;
+
+public:
+    const Battery<Energy> &getBattery() const { return battery; }
+    const IMoveMechanism<Body, Energy> &getMoveMechanism() const { return *(robotMovement->get()); }
+    const PodHolder<Environment> &getPodHolder() const { return podHolder; }
+    PodHolder<Environment> &getPodHolder() { return podHolder; } // TODO REMOVE
 
 private:
     // ########################## Static functions ###########################

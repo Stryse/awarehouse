@@ -10,7 +10,13 @@
 
 // ############################ Forward Declarations ###############################
 // #################################################################################
-
+/***********************************************************************************
+ * @brief A kind of Action which includes motors.
+ * This is a energy depleting action so it needs an energy resource in order
+ * to be performed.
+ * It also needs a MotorDrive which is a set of motors configured to run in a
+ * provided direction with a sum of energy and time cost.
+ **********************************************************************************/
 template <typename TBody, typename TEnergy = config::agent::DefaultEnergy>
 class MotorAction : public DepletingAction<TEnergy>
 {
