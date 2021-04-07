@@ -50,36 +50,24 @@ bool WarehouseFilePersistence::save(const State &state, const QString &resource)
     // Write Charging Stations
     QJsonArray chargingStations;
     for (const auto &station : state.getChargingStations())
-    {
-        QJsonObject stationObject;
-        stationObject.insert("RowCoord", station->getPosition().getPosY());
-        stationObject.insert("ColCoord", station->getPosition().getPosX());
-        chargingStations.append(stationObject);
-    }
+        chargingStations.append(ChargingStationLoader::save(*station));
+
     warehouseLayoutData.insert("ChargingStations", chargingStations);
 
     // Write PodDocks
     QJsonArray podDocks;
     for (const auto &podDock : state.getPodDocks())
-    {
-        QJsonObject podDockObject;
-        podDockObject.insert("RowCoord", podDock->getPosition().getPosY());
-        podDockObject.insert("ColCoord", podDock->getPosition().getPosX());
-        podDocks.append(podDockObject);
-    }
+        podDocks.append(PodDockLoader::save(*podDock));
+
     warehouseLayoutData.insert("PodDocks", podDocks);
 
     // Write Robots
     QJsonArray robots;
     for (const auto &robot : state.getRobots())
-    {
-        QJsonObject robotObject;
-        robotObject.insert("RowCoord", robot->getBody()->getPose().getPosition().getPosY());
-        robotObject.insert("ColCoord", robot->getBody()->getPose().getPosition().getPosX());
-        robotObject.insert("OrientationY", robot->getBody()->getPose().getOrientation().getY());
-        robots.append(robotObject);
-    }
+        robots.append(RobotLoader::save(*robot));
+
     warehouseLayoutData.insert("DeliveryRobots", robots);
+
 
     saveObject.insert("WarehouseLayoutData", warehouseLayoutData);
     saveFile.write(QJsonDocument(saveObject).toJson());

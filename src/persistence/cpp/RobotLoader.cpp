@@ -18,7 +18,11 @@ std::shared_ptr<DeliveryRobot<>> RobotLoader::load(const QJsonObject &robotObj, 
     return nullptr;
 }
 
-QJsonObject RobotLoader::save(const DeliveryRobot<> &robotObj)
+QJsonObject RobotLoader::save(const DeliveryRobot<> &robot)
 {
-    return QJsonObject();
+    QJsonObject robotObject;
+    robotObject.insert("RowCoord", robot.getBody()->getPose().getPosition().getPosY());
+    robotObject.insert("ColCoord", robot.getBody()->getPose().getPosition().getPosX());
+    robotObject.insert("OrientationY", robot.getBody()->getPose().getOrientation().getY());
+    return robotObject;
 }

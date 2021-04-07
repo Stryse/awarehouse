@@ -10,6 +10,17 @@
 #include "RightTrackMotor.h"
 #include <cstddef>
 
+/****************************************************************************
+ * @brief Am implementation of a Move Mechanism which consists of two
+ * assymetrical track motors.
+ *
+ * This move mechanism enables an agent to move on a 2D plane (ground)
+ * with the following moves and costs:
+ *
+ * - Moving forward in the orientation direction (1 Energy 1 Time unit)
+ * - Rotate 90 degrees clockwise/counterclockwise (1 Energy 1 Time unit)
+ *
+ ****************************************************************************/
 template <typename TBody, typename TEnergy = config::agent::DefaultEnergy>
 class RobotMoveMechanism : public IMoveMechanism<TBody, TEnergy>
 {
@@ -17,17 +28,17 @@ public:
     // ########################## Body Related ###############################
     using Body = TBody;
     using DirectionVector = typename Body::DirectionVector;
-    using AMotor = AMotor<Body>;
-    using LeftTrackMotor = LeftTrackMotor<Body>;
-    using RightTrackMotor = RightTrackMotor<Body>;
+    using AMotor = ::AMotor<Body>;
+    using LeftTrackMotor = ::LeftTrackMotor<Body>;
+    using RightTrackMotor = ::RightTrackMotor<Body>;
     using MotorDirection = typename AMotor::MotorDirection;
 
     // ######################### Energy related ##############################
     using Energy = TEnergy;
-    using IDepleting = IDepleting<Energy>;
-    using MotorAction = MotorAction<Body, Energy>;
-    using MotorDrive = MotorDrive<AMotor, Energy>;
-    using MotorCommand = MotorCommand<AMotor>;
+    using IDepleting = ::IDepleting<Energy>;
+    using MotorAction = ::MotorAction<Body, Energy>;
+    using MotorDrive = ::MotorDrive<AMotor, Energy>;
+    using MotorCommand = ::MotorCommand<AMotor>;
     // #######################################################################
 
 public:
@@ -57,6 +68,8 @@ public:
         std::queue<MotorAction *> motorActionQ;
         // We have to turn this much times
         int rotationTimes = (-DirectionVector::dot(direction, this->body.getPose().getOrientation()) + 1);
+
+        // Angle of the rotation (clockwise or counterclockwise) when rotating 90 degrees
         int rotationAngle = (this->body.getPose().getOrientation().getX() * direction.getY()) -
                             (this->body.getPose().getOrientation().getY() * direction.getX());
 

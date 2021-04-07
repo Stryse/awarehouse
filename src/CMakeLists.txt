@@ -97,7 +97,7 @@ Qt${QT_VERSION_MAJOR}::QuickControls2
 #########################################################################
 ############################## BINARY ###################################
 
-qt_add_executable(awarehouse main.cpp ${QRC_RESOURCES})
+add_executable(awarehouse main.cpp ${QRC_RESOURCES})
 
 #########################################################################
 ######################### Include files (.h) ############################

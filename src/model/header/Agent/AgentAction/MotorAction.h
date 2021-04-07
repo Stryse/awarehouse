@@ -11,11 +11,12 @@
 // ############################ Forward Declarations ###############################
 // #################################################################################
 /***********************************************************************************
- * @brief A kind of Action which includes motors.
- * This is a energy depleting action so it needs an energy resource in order
+ * @brief A kind of Action which includes the use of motors.
+ * This is an energy depleting action so it needs an energy resource in order
  * to be performed.
  * It also needs a MotorDrive which is a set of motors configured to run in a
  * provided direction with a sum of energy and time cost.
+ *
  **********************************************************************************/
 template <typename TBody, typename TEnergy = config::agent::DefaultEnergy>
 class MotorAction : public DepletingAction<TEnergy>
@@ -27,11 +28,11 @@ public:
 
     //Energy related
     using Energy = TEnergy;
-    using IDepleting = IDepleting<Energy>;
-    using MotorDrive = MotorDrive<Motor, Energy>;
+    using IDepleting = ::IDepleting<Energy>;
+    using MotorDrive = ::MotorDrive<Motor, Energy>;
 
 public:
-    MotorAction(std::unique_ptr<MotorDrive> motorDrive, IDepleting &resource)
+    MotorAction(std::unique_ptr<MotorDrive>&& motorDrive, IDepleting &resource)
         : DepletingAction<Energy>(resource, motorDrive->getEnergySum(), motorDrive->getTimeSum()),
           motorDrive(std::move(motorDrive)) {}
 

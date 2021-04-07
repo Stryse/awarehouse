@@ -20,31 +20,36 @@ template <typename TEnvironment = INavigationalEnvironment<>>
 class Body : public IVolumeOccupant<typename TEnvironment::VolumeType>
 {
 public:
-    /****************** TYPES ********************
-     * @brief Type of environment in which the body resides
-     *********************************************/
+    /****************** TYPES ******************************
+     * @brief Type of environment in which the body resides.
+     *
+     *******************************************************/
     using Environment = TEnvironment;
 
-    /******************
+    /*******************************************************
      * @brief The type of the environment's volume.
      * Must be derived from @code INavigationVolume @endcode
-     ******************/
+     *
+     *******************************************************/
     using VolumeType = typename Environment::VolumeType;
 
-    /******************
+    /*******************************************************
      * @brief The Type of the environment's point unit.
-     ******************/
+     *
+     *******************************************************/
     using Point = typename Environment::Point;
 
-    /******************
+    /*************************************************************
      * @brief Directions are the same type as environment's points
-     ******************/
-    using DirectionVector = DirectionVector<typename Environment::Point::CoordinateType>;
+     *
+     *************************************************************/
+    using DirectionVector = ::DirectionVector<typename Environment::Point::CoordinateType>;
 
-    /******************
-     * @brief Position an direction aggregate
-     ******************/
-    using Pose = Pose<typename Environment::Point::CoordinateType, typename Environment::Point::CoordinateType>;
+    /*****************************************
+     * @brief Position and direction aggregate
+     *
+     *****************************************/
+    using Pose = ::Pose<typename Environment::Point::CoordinateType, typename Environment::Point::CoordinateType>;
 
 public:
     /*************************************** Constructors ****************************************************
@@ -54,11 +59,13 @@ public:
      * @param orientation Orientation of the body's origin point
      * @param environment The reference to the environment in which the body is placed
      * @param bodyShape Holds the non-origin points of the body
+     *
      *********************************************************************************************************/
     Body(const Point &position,
          const DirectionVector &orientation,
          const std::shared_ptr<Environment> &environment,
          std::vector<Point> &&bodyShape = {})
+
         : pose(position, orientation), shape(std::move(bodyShape)), parentBody(nullptr), environment(environment)
     {
         //Place body in environment on creation.
@@ -85,7 +92,7 @@ public:
      * All associated child bodies will be placed as well.
      * 
      * @param originVolume Occupied volume of the body's origin point
-     * @throws BodyCollisionException thrown when any part of the body collides.
+     * @throws VolumeCollisionException thrown when any part of the body collides.
      *********************************************************************************************************/
     virtual void occupyV(VolumeType &originVolume) override
     {

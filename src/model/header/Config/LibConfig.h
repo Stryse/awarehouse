@@ -7,6 +7,9 @@ template <typename T>
 class ObservableNavEnvironment;
 //
 
+/*******************************************************
+ * @brief Contains default parameters of the library.
+ *******************************************************/
 namespace config
 {
     namespace navigation

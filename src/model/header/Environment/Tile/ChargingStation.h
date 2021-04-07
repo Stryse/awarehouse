@@ -6,6 +6,10 @@
 #include "Tile.h"
 #include <algorithm>
 
+/************************************************************
+ * @brief A Tile which can charge Depleting energy resources.
+ *
+ ***********************************************************/
 template <typename TEnergy = config::agent::DefaultEnergy>
 class ChargingStation : public Tile
 {
@@ -22,7 +26,7 @@ public:
 
 public:
     // IAgentSignalHandler Implementation
-    virtual void receive(IDepleting<config::agent::DefaultEnergy> &resource, const ChargeSignal &chargeSignal) const override
+    virtual void receive(IDepleting<config::agent::DefaultEnergy> &resource, const ChargeSignal &) const override
     {
         doCharge(resource);
     }
@@ -33,7 +37,7 @@ public:
 
 private:
     /**************************************************************
-     * @brief Charges the resource with the bottleneck chargerate
+     * @brief Charges the resource with the bottleneck chargerate.
      **************************************************************/
     void doCharge(IDepleting<Energy> &resource) const
     {
@@ -44,7 +48,7 @@ private:
 private:
     /**********************************************************************
      * @brief The amount of energy that the station is capable of charging
-     * in one chargeSignal
+     * in one chargeSignal.
      **********************************************************************/
     Energy chargeRate;
 };

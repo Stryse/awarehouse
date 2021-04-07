@@ -24,9 +24,9 @@ class DeliveryRobot : public Agent<TEnvironment>
 {
 public:
     using Environment = TEnvironment;
-    using Body = Body<Environment>;
+    using Body = ::Body<Environment>;
     using Energy = TEnergy;
-    using IDepleting = IDepleting<Energy>;
+    using IDepleting = ::IDepleting<Energy>;
     using Point = typename Body::Point;
     using DirectionVector = typename Body::DirectionVector;
 

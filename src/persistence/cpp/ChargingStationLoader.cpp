@@ -17,4 +17,8 @@ std::shared_ptr<ChargingStation<>> ChargingStationLoader::load(const QJsonObject
 
 QJsonObject ChargingStationLoader::save(const ChargingStation<> &station)
 {
+    QJsonObject stationObject;
+    stationObject.insert("RowCoord", station.getPosition().getPosY());
+    stationObject.insert("ColCoord", station.getPosition().getPosX());
+    return stationObject;
 }

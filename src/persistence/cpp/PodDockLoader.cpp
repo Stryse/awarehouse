@@ -14,7 +14,10 @@ std::shared_ptr<PodDock<>> PodDockLoader::load(const QJsonObject &podObj)
     }
     return nullptr;
 }
-QJsonObject PodDockLoader::save(const PodDock<> &station)
+QJsonObject PodDockLoader::save(const PodDock<> &podDock)
 {
-    return QJsonObject();
+    QJsonObject podDockObject;
+    podDockObject.insert("RowCoord", podDock.getPosition().getPosY());
+    podDockObject.insert("ColCoord", podDock.getPosition().getPosX());
+    return podDockObject;
 }

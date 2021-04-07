@@ -7,6 +7,7 @@ namespace agent_action_util
 {
     /***************************************************************************
      * @brief Thrown when an agent is unable to perform the associated action.
+     *
      ***************************************************************************/
     class ActionFailedException : public std::runtime_error
     {
@@ -20,9 +21,10 @@ namespace agent_action_util
  * Actions are added to the agent's action queue which is polled each tick and
  * if the agent's controll mechanism decides it can start to perform the action.
  *
- * Each action has a duration which indicates the amount of time needed to execute it.
- * When an agent starts to execute the action, it automatically progresses, if
- * the full progress is achieved then the action is executed.
+ * Each action has a duration which indicates the amount of activations needed to
+ * execute it. When an agent starts to execute the action, it automatically
+ * progresses, if the full progress is achieved then the action is executed.
+ *
  *******************************************************************************/
 class AgentAction
 {
@@ -42,9 +44,7 @@ public:
             throw ActionFailedException("Agent action failed");
 
         if (progress < duration)
-        {
             ++progress;
-        }
 
         if (progress >= duration)
             action();

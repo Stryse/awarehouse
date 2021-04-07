@@ -15,7 +15,7 @@ class MotorDrive
 public:
     using Motor = TMotor;
     using Body = typename Motor::Body;
-    using MotorCommand = MotorCommand<Motor>;
+    using MotorCommand = ::MotorCommand<Motor>;
     using Energy = TEnergy;
 
 public:

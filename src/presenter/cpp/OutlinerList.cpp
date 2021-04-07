@@ -25,7 +25,7 @@ void ActorOutlinerList::removeActor(int index)
         return;
 
     emit preItemRemoved(index);
-    mActors->remove(index);
+    mActors->removeAt(index);
     emit postItemRemoved();
 }
 

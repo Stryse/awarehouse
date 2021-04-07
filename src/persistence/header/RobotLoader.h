@@ -11,7 +11,7 @@ class RobotLoader
 {
 public:
     static std::shared_ptr<DeliveryRobot<>> load(const QJsonObject &robotObj, std::shared_ptr<ObservableNavEnvironment<>> &env);
-    static QJsonObject save(const DeliveryRobot<> &robotObj);
+    static QJsonObject save(const DeliveryRobot<> &robot);
 };
 
 #endif /* ROBOT_LOADER__H */

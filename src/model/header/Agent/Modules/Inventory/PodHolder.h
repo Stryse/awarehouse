@@ -30,7 +30,7 @@ public:
     /***************************************************************************************
      * @brief Don't use this function because unique pointer cant be reassigned without move.
      ***************************************************************************************/
-    virtual void push(const OwnedPod &item) override
+    virtual void push(const OwnedPod &) override
     {
         throw std::runtime_error("PodHolder::push(const ItemType &item) is not supported please use PodHolder::push(const ItemType &&item)");
     }
@@ -52,9 +52,9 @@ public:
      * @brief Removes and returns a pod if the holder has one.
      * std::nullopt returned when there's no associated pod.
      ******************************************************************/
-    virtual std::optional<OwnedPod> pop(const OwnedPod &item) override
+    virtual std::optional<OwnedPod> pop(const OwnedPod &) override
     {
-        return std::nullopt;
+        return std::nullopt; // TODO Implement
     }
 
     /**************************************************************
@@ -69,7 +69,7 @@ public:
      * @brief Returns the associated pod if the holder has one.
      * Returns nullptr if the holder has no pod.
      ***************************************************************/
-    const OwnedPod &getChildPod() const { return pod; }
+    const OwnedPod &getChildPod() const { return pod; } // TODO std optional
     OwnedPod &getChildPod() { return pod; }
 
 private:

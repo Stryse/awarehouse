@@ -5,11 +5,10 @@
 #include <QJsonDocument>
 #include <QJsonObject>
 
-SimulationWindowPresenter::SimulationWindowPresenter(WarehouseManager &manager, QObject *parent)
+SimulationWindowPresenter::SimulationWindowPresenter(QObject *parent)
     : QObject(parent),
       mActorOutliner(nullptr),
       mOrderOutliner(new OrderOutlinerList(this)),
-      manager(manager),
       layout(nullptr)
 {
     loadWarehouse(":/maps/Map01.json");

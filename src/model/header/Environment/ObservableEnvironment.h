@@ -9,6 +9,12 @@
 #include <memory>
 #include <vector>
 
+/*******************************************************************
+ * @brief A 3D navigateable and observable environment.
+ * Volume units can be queried and occupied, also it can provide
+ * different kinds of informations with different methods.
+ *
+ *******************************************************************/
 template <typename TVolumeType = config::navigation::DefaultVolumeType>
 class ObservableNavEnvironment : public INavigationalEnvironment<TVolumeType>
 {

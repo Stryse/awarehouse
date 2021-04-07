@@ -9,13 +9,14 @@
  * @brief A kind of Agent Action that needs energy to be performed.
  * It is neccessary to provide an Energy resource of IDepleting interface to
  * consume the amount of energy needed.
+ *
  ********************************************************************************/
 template <typename TEnergy = config::agent::DefaultEnergy>
 class DepletingAction : public AgentAction
 {
 public:
     using Energy = TEnergy;
-    using IDepleting = IDepleting<Energy>;
+    using IDepleting = ::IDepleting<Energy>;
     using EnergyDepletedException = typename IDepleting::EnergyDepletedException;
 
 public:

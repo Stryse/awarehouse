@@ -13,7 +13,7 @@ class Warehouse;
 class WarehouseManager
 {
 public:
-    using ISimulator = ISimulator<Warehouse>;
+    using ISimulator = ::ISimulator<Warehouse>;
 
 private:
     Warehouse *displayed;

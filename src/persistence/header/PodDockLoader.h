@@ -11,7 +11,7 @@ class PodDockLoader
 {
 public:
     static std::shared_ptr<PodDock<>> load(const QJsonObject &podObj);
-    static QJsonObject save(const PodDock<> &podObj);
+    static QJsonObject save(const PodDock<> &podDock);
 };
 
 #endif /* POD_DOCK_LOADER__H */
