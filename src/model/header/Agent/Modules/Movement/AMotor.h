@@ -3,6 +3,11 @@
 
 namespace motor_util
 {
+    /***********************************************************************
+     * @brief A Motor can be instructed to move in two directions.
+     * The motor affects the body in different ways when driven in different
+     * directions.
+     ***********************************************************************/
     enum MotorDirection
     {
         CLOCKWISE = 1,
@@ -10,6 +15,10 @@ namespace motor_util
     };
 };
 
+/**********************************************************************
+ * @brief A motor is an entity which can transform an associated body.
+ * It can be driven in two directions. (CLOCKWISE,COUNTERCLOCKWISE)
+ **********************************************************************/
 template <typename TBody>
 class AMotor
 {

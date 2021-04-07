@@ -18,8 +18,8 @@ class Point;
 class IObservableEnvironment
 {
 public:
-    using DirectionVector = DirectionVector<int, 3>;
-    using Point = Point<int, 3>;
+    using DirectionVector = ::DirectionVector<int, 3>;
+    using Point = ::Point<int, 3>;
 
     virtual ~IObservableEnvironment() = default;
 

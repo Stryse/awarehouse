@@ -21,7 +21,7 @@ template <typename TVolumeType = config::navigation::DefaultVolumeType>
 class INavigationalEnvironment
 {
 public:
-    using Point = Point<int, 3>;
+    using Point = ::Point<int, 3>;
     using VolumeType = TVolumeType;
 
 public:

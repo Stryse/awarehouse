@@ -1,6 +1,10 @@
 #ifndef MOTOR_COMMAND__H
 #define MOTOR_COMMAND__H
 
+/*******************************************************************
+ * @brief A pair of motor and motordirection which needs to be
+ * activated in a motorDrive.
+ *******************************************************************/
 template <typename TMotor>
 struct MotorCommand
 {
