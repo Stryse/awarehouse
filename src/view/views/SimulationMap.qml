@@ -10,8 +10,8 @@ Item {
 
     readonly property real  aspectRatio: 16/9
 
-    property real rows:    12
-    property real columns: 12
+    property real rows:    3
+    property real columns: 3
 
     property real cellSpacing: 1
     property real cellScale:   1
@@ -35,6 +35,10 @@ Item {
             id: img
 
             anchors.fill: parent
+
+            source: modelData.imgSource
+
+            rotation: modelData.rotation
         }
 
     }
@@ -42,9 +46,8 @@ Item {
     ListModel {
         id: placeholderModel
 
-        ListElement { rowIdx: 1; columnIdx: 1; imgSource: "qrc:/placeholder_amogus.png"}
-        ListElement { rowIdx: 3; columnIdx: 7; imgSource: "qrc:/placeholder_amogus.png"}
-        ListElement { rowIdx: 9; columnIdx: 4; imgSource: "qrc:/placeholder_amogus.png"}
+        ListElement { rowIdx: 1; columnIdx: 1; imgSource: "qrc:/placeholder_amogus.png"; rotation: 35}
+        ListElement { rowIdx: 2; columnIdx: 0; imgSource: "qrc:/placeholder_amogus.png"; rotation: 170}
     }
 
     Rectangle {

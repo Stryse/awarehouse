@@ -7,16 +7,31 @@ GridLayout {
 
     property real cellSize
 
-    required property ListModel model
+    required property variant   model
     required property Component delegate
 
     function addCells() {
         for (var i = 0; i < model.count; ++i) {
             var cell = model.get(i)
 
-            delegate.createObject(placeholderRepeater.itemAt(cell.rowIdx*columns + cell.columnIdx),
-                                 { source:   cell.imgSource,
-                                   rotation: cell.rotation })
+//            wrapperComponent.createObject(placeholderRepeater.itemAt(cell.rowIdx*columns + cell.columnIdx),
+//                                 { source:   cell.imgSource,
+//                                   rotation: cell.rotation })
+            wrapperComponent.createObject(placeholderRepeater.itemAt(cell.rowIdx*columns + cell.columnIdx),
+                                          { modelData: cell })
+        }
+    }
+
+    Component {
+        id: wrapperComponent
+
+        Loader {
+            id: connectedDelegate
+
+            anchors.fill: parent
+
+            property variant modelData
+            sourceComponent: delegate
         }
     }
 
@@ -25,7 +40,7 @@ GridLayout {
 
         property int completedPlaceholders: 0
 
-        model:    root.rows * root.columns
+        model: root.rows * root.columns
         delegate: Rectangle{
             id: placeholderCell
 
