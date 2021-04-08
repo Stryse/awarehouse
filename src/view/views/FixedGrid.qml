@@ -14,9 +14,6 @@ GridLayout {
         for (var i = 0; i < model.count; ++i) {
             var cell = model.get(i)
 
-//            wrapperComponent.createObject(placeholderRepeater.itemAt(cell.rowIdx*columns + cell.columnIdx),
-//                                 { source:   cell.imgSource,
-//                                   rotation: cell.rotation })
             wrapperComponent.createObject(placeholderRepeater.itemAt(cell.rowIdx*columns + cell.columnIdx),
                                           { modelData: cell })
         }
