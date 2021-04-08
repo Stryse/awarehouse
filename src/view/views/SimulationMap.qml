@@ -10,8 +10,8 @@ Item {
 
     readonly property real  aspectRatio: 16/9
 
-    property int rows:    100
-    property int columns: 100
+    property int rows:    10
+    property int columns: 10
 
     property int   cellSpacing: 1
     property real  cellScale:   zoomArea.zoomScale
@@ -27,21 +27,6 @@ Item {
 
     Material.background: Material.primary
     Material.elevation:  6
-
-//    Component {
-//        id: mapComponent
-
-//        Image {
-//            id: img
-
-//            anchors.fill: parent
-
-//            source: modelData.imgSource
-
-//            rotation: modelData.rotation
-//        }
-
-//    }
 
     ListModel {
         id: placeholderModel
@@ -109,17 +94,13 @@ Item {
         }
     }
 
-//    Rectangle {
-//        color: "red"
-
-//        anchors.fill: mapFlickable
-//    }
-
     MouseArea {
         id: zoomArea
         z:  100
 
         property real zoomScale: 1
+        property real zoomX
+        property real zoomY
 
         anchors.fill: mapFlickable
 
@@ -127,11 +108,8 @@ Item {
 
         onWheel: {
             zoomScale = Math.max(zoomScale + wheel.angleDelta.y / (120*2), 1)
-
-//            if (wheel.angleDelta.y < 0) {
-//                mapFlickable.returnToBounds()
-//                console.log("Returned to bound")
-//            }
+            zoomX     = wheel.x
+            zoomY     = wheel.y
         }
     }
 
@@ -145,8 +123,8 @@ Item {
         contentWidth:  map.width
         contentHeight: map.height
 
-        contentX: (contentWidth  - width)  / 2
-        contentY: (contentHeight - height) / 2
+        contentX: root.cellScale == 1 ? (contentWidth  - width)  / 2 : contentWidth/2  - width  + zoomArea.zoomX
+        contentY: root.cellScale == 1 ? (contentHeight - height) / 2 : contentHeight/2 - height + zoomArea.zoomY
 
         boundsBehavior: Flickable.StopAtBounds
 
@@ -155,8 +133,8 @@ Item {
 
             anchors.centerIn: parent
 
-            width:  Math.max(mapFlickable.width  * 1.5,  root.mapWidth  * 1.1)
-            height: Math.max(mapFlickable.height * 1.5,  root.mapHeight * 1.1)
+            width:  Math.max(mapFlickable.width  * 1.5, root.mapWidth  * 1.1)
+            height: Math.max(mapFlickable.height * 1.5, root.mapHeight * 1.1)
 
             GridLayout {
                 id: tiles
