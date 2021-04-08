@@ -102,7 +102,7 @@ State *WarehouseFilePersistence::loadFromJsonObject(QJsonObject json)
         }
 
         // Create Environment
-        std::shared_ptr<ObservableNavEnvironment<>> env = std::make_shared<ObservableNavEnvironment<>>(colSize, rowSize, 3);
+        std::shared_ptr<ObservableNavEnvironment<>> env = std::make_shared<ObservableNavEnvironment<>>(rowSize, colSize, 3);
         std::vector<std::shared_ptr<ChargingStation<>>> chStations;
         std::vector<std::shared_ptr<PodDock<>>> podDocks;
         std::vector<std::shared_ptr<DeliveryRobot<>>> robots;

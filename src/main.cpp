@@ -8,6 +8,7 @@
 #include <QScopedPointer>
 #include "Simulator.h"
 #include "OrderOutlinerModel.h"
+#include "MapTablePresenterModel.h"
 
 int main(int argc, char *argv[])
 {
@@ -27,6 +28,8 @@ int main(int argc, char *argv[])
     qmlRegisterType<OutlinerModel>("Outliner", 1, 0, "OutlinerModel");
     qmlRegisterType<OrderOutlinerModel>("Outliner", 1, 0, "OrderOutlinerModel");
     qmlRegisterType<SimulationWindowPresenter>("Simulator", 1, 0, "TickRate");
+    qmlRegisterType<MapTablePresenterModel>("SimulationMap", 1, 0, "MapTablePresenterModel");
+
     // //////////////////
     QQmlApplicationEngine engine;
     // Register Instances

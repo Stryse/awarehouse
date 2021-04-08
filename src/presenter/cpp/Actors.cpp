@@ -16,7 +16,7 @@ Actors::Actors(const DeliveryRobot<ObservableNavEnvironment<Tile>,int>* model, Q
 {
 }
 
-QString Actors::imagePath = "asd3.png";
+QString Actors::imagePath = "qrc:/images/robot.png";
 
 QString Actors::name() const { return mName; }
 

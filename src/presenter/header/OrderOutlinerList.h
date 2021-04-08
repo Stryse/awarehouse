@@ -10,9 +10,9 @@ class OrderOutlinerList : public QObject
     Q_OBJECT
 
 public:
-    explicit OrderOutlinerList(QObject *parent = nullptr);
+    explicit OrderOutlinerList(QList<const Order*>* orders,QObject *parent = nullptr);
 
-    QList<Order> orders() const;
+    QList<const Order*> orders() const;
     bool setOrderAt(int index, const Order &order);
 
 signals:
@@ -28,7 +28,7 @@ public slots:
     void clear();
 
 public:
-    QList<Order> mOrders;
+    QList<const Order*>* mOrders;
 };
 
 #endif /* OUTLINER_LIST__H */

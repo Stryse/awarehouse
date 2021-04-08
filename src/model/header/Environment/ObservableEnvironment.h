@@ -55,7 +55,8 @@ public:
 
     virtual const VolumeType &getVolume(const Point &point) const override
     {
-        return *tileSpace[point.getPosX() + yLength * (point.getPosY() + zLength * point.getPosZ())];
+        int ind = point.getPosX() + (xLength * point.getPosY()) + (xLength * yLength * point.getPosZ());
+        return *tileSpace[ind];
     }
 
     virtual VolumeType &getVolume(const Point &point) override
@@ -82,7 +83,7 @@ public:
 
     size_t getZLength() const { return zLength; }
 
-    size_t getCoordAsIndex(size_t x, size_t y, size_t z) const { return x + yLength * (y + zLength * z); }
+    size_t getCoordAsIndex(size_t x, size_t y, size_t z) const { return x + (xLength * y) + (xLength * yLength * z); }
     size_t getCoordAsIndex(const Point& point) const { return getCoordAsIndex(point.getPosX(), point.getPosY(), point.getPosZ()); }
 };
 

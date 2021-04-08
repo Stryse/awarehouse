@@ -21,5 +21,7 @@
         <file alias="WarehouseSettingsTab.qml">views/WarehouseSettingsTab.qml</file>
         <file alias="WarehouseTilesTab.qml">views/WarehouseTilesTab.qml</file>
         <file alias="MainView.qml">views/MainView.qml</file>
+        <file alias="SimulationMap.qml">views/SimulationMap.qml</file>
+        <file alias="FixedGrid.qml">views/FixedGrid.qml</file>
     </qresource>
 </RCC>

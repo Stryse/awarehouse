@@ -16,6 +16,7 @@ class SimulationWindowPresenter : public QObject
     Q_OBJECT
     Q_PROPERTY(OrderOutlinerList* orders READ orders CONSTANT)
     Q_PROPERTY(ActorOutlinerList* actors READ actors CONSTANT)
+    Q_PROPERTY(WarehouseLayoutPresenter* layout READ layout CONSTANT)
     Q_PROPERTY(bool paused READ paused NOTIFY pausedChanged)
 
 public:
@@ -38,6 +39,8 @@ public:
     OrderOutlinerList *orders() const;
     void setOrders(OrderOutlinerList* orders);
 
+    WarehouseLayoutPresenter* layout() const;
+
     bool paused() const;
 
 
@@ -50,7 +53,6 @@ public slots:
     void setTickRate(TickRate tickRate);
     void loadWarehouse(const QString& filePath);
     void reloadWarehouse();
-    //void reloadSimulation();
 
 private:
     void setPaused(bool paused);
@@ -60,7 +62,7 @@ private:
     OrderOutlinerList* mOrderOutliner;
 
     WarehouseManager &manager;
-    WarehouseLayoutPresenter* layout;
+    WarehouseLayoutPresenter* m_layout;
     QString loadedWarehousePath;
     bool m_paused;
 };

@@ -17,7 +17,7 @@ QVariant OrderOutlinerModel::data(const QModelIndex &index, int role) const
     if (!index.isValid() || !mOrders)
        return QVariant();
 
-    const Order& order = mOrders->orders().at(index.row());
+    const Order& order = *mOrders->orders().at(index.row());
     switch(role) {
             case OrderNameRole:
                 return QVariant(order.orderName());

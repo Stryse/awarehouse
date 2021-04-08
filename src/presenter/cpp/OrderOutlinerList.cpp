@@ -2,48 +2,48 @@
 
 #include "OutlinerList.h"
 
-OrderOutlinerList::OrderOutlinerList(QObject* parent)
-    : QObject(parent)
+OrderOutlinerList::OrderOutlinerList(QList<const Order*>* orders, QObject* parent)
+    : QObject(parent), mOrders(orders)
 {
-    mOrders.append(Order(0, 1, 3, "3_FELADAT01"));
-    mOrders.append(Order(1, 2, 1, "1_FELADAT01"));
-    mOrders.append(Order(3, 4, 2, "2_FELADAT01"));
+    mOrders->append(new Order(0, 1, 3, "3_FELADAT01"));
+    mOrders->append(new Order(1, 2, 1, "1_FELADAT01"));
+    mOrders->append(new Order(3, 4, 2, "2_FELADAT01"));
 }
 
-QList<Order> OrderOutlinerList::orders() const
+QList<const Order*> OrderOutlinerList::orders() const
 {
-    return mOrders;
+    return *mOrders;
 }
 
 bool OrderOutlinerList::setOrderAt(int index, const Order &order)
 {
-    if (index < 0 || index >= mOrders.size())
+    if (index < 0 || index >= mOrders->size())
         return false;
 
-    mOrders[index] = order;
+    (*mOrders)[index] = &order;
     return true;
 }
 
 void OrderOutlinerList::removeOrder(int index)
 {
-    if(index < 0 || index >= mOrders.size())
+    if(index < 0 || index >= mOrders->size())
         return;
 
     emit preItemRemoved(index);
-    mOrders.remove(index);
+    mOrders->remove(index);
     emit postItemRemoved();
 }
 
 void OrderOutlinerList::clear()
 {
     emit preItemRemoved(0);
-    mOrders.clear();
+    mOrders->clear();
     emit postItemRemoved();
 }
 
 void OrderOutlinerList::appendOrder(const Order &order)
 {
     emit preItemAppended();
-    mOrders.append(order);
+    mOrders->append(&order);
     emit postItemAppended();
 }
