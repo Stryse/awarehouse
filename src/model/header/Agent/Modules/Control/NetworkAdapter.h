@@ -3,9 +3,9 @@
 
 #include <queue>
 #include <memory>
+#include "NetworkMessage.h"
 
 // ################## FORWARD DECLARATIONS #####################
-class NetworkMessage;
 class Network;
 // #############################################################
 
@@ -16,7 +16,9 @@ public:
     virtual ~NetworkAdapter();
 
 public:
-    bool connect(Network& network);
+
+    bool connectWithAddress(const std::shared_ptr<Network>& network, int address);
+    bool connect(const std::shared_ptr<Network>& network);
     void disconnect();
     bool send(std::unique_ptr<NetworkMessage>&& message, int recipientAddress);
     void receive(std::unique_ptr<NetworkMessage>&& message);
@@ -26,7 +28,7 @@ public:
 
 private:
     std::queue<std::unique_ptr<NetworkMessage>> messageQueue;
-    Network* network;
+    std::shared_ptr<Network> network;
     int address;
 };
 

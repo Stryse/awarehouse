@@ -1,6 +1,11 @@
 #include "Network.h"
 #include "NetworkAdapter.h"
 
+Network::Network()
+    : addressCounter(100)
+{
+}
+
 Network::~Network()
 {
     for(auto& adapter : adapter2address)
@@ -18,6 +23,18 @@ int Network::connect(NetworkAdapter& networkAdapter)
         return address;
     }
     return 0;
+}
+
+bool Network::connectWithAddress(NetworkAdapter& networkAdapter, int address)
+{
+    auto it = address2adapter.find(address);
+    if(it == address2adapter.end())
+    {
+        adapter2address.insert({&networkAdapter,address});
+        address2adapter.insert({address,&networkAdapter});
+        return true;
+    }
+    return false;
 }
 
 void Network::disconnect(NetworkAdapter& networkAdapter)
@@ -42,9 +59,17 @@ bool Network::sendMessage(std::unique_ptr<NetworkMessage>&& message, int recipie
     return false;
 }
 
-int Network::getNewAddress() const
+int Network::getNewAddress()
 {
-    return Network::addressCounter++;
+    return addressCounter++;
 }
 
-int Network::addressCounter = 100;
+void Network::reset()
+{
+    for(auto& adapter : adapter2address)
+        adapter.first->disconnect();
+
+    adapter2address.clear();
+    address2adapter.clear();
+    addressCounter = 100;
+}

@@ -31,11 +31,21 @@ std::unique_ptr<NetworkMessage> NetworkAdapter::poll()
     return std::move(message);
 }
 
-bool NetworkAdapter::connect(Network& network)
+bool NetworkAdapter::connect(const std::shared_ptr<Network>& network)
 {
-    if(this->address = network.connect(*this))
+    if(this->address = network->connect(*this))
     {
-        this->network = &network;
+        this->network = network;
+        return true;
+    }
+    return false;
+}
+
+bool NetworkAdapter::connectWithAddress(const std::shared_ptr<Network>& network, int address)
+{
+    if(network->connectWithAddress(*this,address))
+    {
+        this->network = network;
         return true;
     }
     return false;
@@ -58,5 +68,5 @@ int NetworkAdapter::getAddress() const
 
 bool NetworkAdapter::isConnected() const
 {
-    return network;
+    return network.get() != nullptr;
 }

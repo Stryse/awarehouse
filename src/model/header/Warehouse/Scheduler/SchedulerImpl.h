@@ -2,12 +2,22 @@
 #define SCHEDULER_IMPL__H
 
 #include "AScheduler.h"
+#include "NetworkAdapter.h"
 
 class SchedulerImpl : public AScheduler
 {
 public:
-    virtual void tick() override {}
-    virtual void doTaskAssignment() override {}
+    SchedulerImpl();
+    virtual ~SchedulerImpl();
+
+public:
+    virtual void tick() override;
+    virtual void doTaskAssignment() override;
+    virtual const NetworkAdapter& getNetworkAdapter() const override;
+    virtual NetworkAdapter& getNetworkAdapter() override;
+
+private:
+    NetworkAdapter networkAdapter;
 };
 
 #endif /* SCHEDULER_IMPL__H */

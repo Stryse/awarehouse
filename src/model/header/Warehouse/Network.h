@@ -17,16 +17,18 @@ public:
 
 public:
     int connect(NetworkAdapter& networkAdapter);
+    bool connectWithAddress(NetworkAdapter& networkAdapter, int address);
     void disconnect(NetworkAdapter& networkAdapter);
     bool sendMessage(std::unique_ptr<NetworkMessage>&& message, int recipientAddress) const;
+    void reset();
 
 private:
-    int getNewAddress() const;
+    int getNewAddress();
 
 private:
     std::map<int,NetworkAdapter*> address2adapter;
     std::map<NetworkAdapter*,int> adapter2address;
 
-    static int addressCounter;
+    int addressCounter;
 };
 #endif /* NETWORK__H */

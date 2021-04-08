@@ -9,6 +9,7 @@
 class QString;
 class AScheduler;
 class AController;
+class Network;
 class Warehouse;
 class QString;
 // ##############################################################
@@ -33,6 +34,7 @@ private:
     std::unique_ptr<AController> controller;
     std::unique_ptr<IWarehousePersistence<QString>> persistence;
     std::unique_ptr<State> state;
+    std::shared_ptr<Network> network;
 };
 
 #endif /* WAREHOUSE__H */

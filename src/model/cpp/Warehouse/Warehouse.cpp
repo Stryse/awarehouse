@@ -2,6 +2,7 @@
 #include "ControllerImpl.h"
 #include "IWarehousePersistence.h"
 #include "SchedulerImpl.h"
+#include "Network.h"
 #include <iostream>
 
 Warehouse::Warehouse(std::unique_ptr<IWarehousePersistence<QString>> &&persistence)
@@ -9,8 +10,10 @@ Warehouse::Warehouse(std::unique_ptr<IWarehousePersistence<QString>> &&persisten
       scheduler(new SchedulerImpl()),
       controller(new ControllerImpl()),
       persistence(std::move(persistence)),
-      state(nullptr)
+      state(nullptr),
+      network(new Network())
 {
+    
 }
 
 Warehouse::~Warehouse() = default;
@@ -27,7 +30,16 @@ void Warehouse::tick()
 bool Warehouse::loadState(const QString &srcPath)
 {
     state.reset(persistence->load(srcPath));
-    timeStamp = 0;
+    if(state)
+    {
+        timeStamp = 0;
+        network->reset();
+        controller->getNetworkAdapter().connectWithAddress(network,0x0);
+        scheduler->getNetworkAdapter().connectWithAddress(network,0x1);
+
+        for(auto& agent : state->getRobots())
+            agent->getNetworkAdapter().connect(network);
+    }
 
     return state != nullptr;
 }

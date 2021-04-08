@@ -4,6 +4,7 @@
 #include "AMicroController.h"
 #include "Body.h"
 #include "LibConfig.h"
+#include "NetworkAdapter.h"
 #include <memory>
 #include <string>
 
@@ -73,6 +74,12 @@ public:
      *********************************************************/
     const std::unique_ptr<Body<Environment>> &getBody() const { return body; }
 
+    /*********************************************************
+     * @brief Returns the agent's network adapter
+     *********************************************************/
+    const NetworkAdapter& getNetworkAdapter() const { return networkAdapter; }
+    NetworkAdapter& getNetworkAdapter() { return networkAdapter; }
+
 private:
     /*********************************************************
      * @brief Used to acquire a serial number each time an
@@ -111,6 +118,12 @@ protected:
      *     communications -> message receiving and dispatch
      ******************************************************/
     std::unique_ptr<AMicroController> mcu;
+
+    /******************************************************
+     * @brief Agents connect to network in order to communicate
+     * with each other or the central controllers.
+     ******************************************************/
+    NetworkAdapter networkAdapter;
 
 private:
     /******************************************************
