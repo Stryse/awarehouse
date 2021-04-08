@@ -5,6 +5,10 @@
 #include <string>
 #include <vector>
 
+/*******************************************************************************
+ * @brief Part of an agent which is reponsible for control and decision making.
+ * Each tick it makes a decision or polls it from a central controller.
+ *******************************************************************************/
 class AMicroController
 {
 public:

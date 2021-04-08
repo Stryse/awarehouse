@@ -15,6 +15,9 @@ class Pod;
 class OrderModel;
 // ################################################################
 
+/**************************************************************************
+ * @brief An Interface which is responsible for reacting to agent signals.
+ **************************************************************************/
 template <typename Environment>
 class IAgentSignalHandler
 {

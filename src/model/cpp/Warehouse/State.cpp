@@ -42,27 +42,9 @@ void State::tick()
 }
 
 
-int State::getRowCount() const
-{
-    return rowCount;
-}
+int State::getRowCount() const { return rowCount; }
+int State::getColCount() const { return colCount; }
 
-int State::getColCount() const
-{
-    return colCount;
-}
-
-const std::vector<std::shared_ptr<ChargingStation<> > >& State::getChargingStations() const
-{
-    return chStations;
-}
-
-const std::vector<std::shared_ptr<PodDock<> > >& State::getPodDocks() const
-{
-    return podDocks;
-}
-
-const std::vector<std::shared_ptr<DeliveryRobot<> > >& State::getRobots() const
-{
-    return robots;
-}
+const std::vector<std::shared_ptr<ChargingStation<>>>& State::getChargingStations() const { return chStations; }
+const std::vector<std::shared_ptr<PodDock<>>>& State::getPodDocks() const { return podDocks; }
+const std::vector<std::shared_ptr<DeliveryRobot<> > >& State::getRobots() const { return robots; }

@@ -28,7 +28,7 @@ public:
     };
     Q_ENUM(TickRate);
 
-
+    SimulationWindowPresenter(QObject *parent = nullptr);
     SimulationWindowPresenter(WarehouseManager &manager, QObject *parent = nullptr);
     virtual ~SimulationWindowPresenter();
 
@@ -61,7 +61,7 @@ private:
     ActorOutlinerList* mActorOutliner;
     OrderOutlinerList* mOrderOutliner;
 
-    WarehouseManager &manager;
+    WarehouseManager manager;
     WarehouseLayoutPresenter* m_layout;
     QString loadedWarehousePath;
     bool m_paused;

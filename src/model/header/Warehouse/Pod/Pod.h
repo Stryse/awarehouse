@@ -43,10 +43,10 @@ class Pod : public IContaining<std::unique_ptr<TItemType>>
 {
 public:
     using Environment = TEnvironment;
-    using Body = Body<Environment>;
+    using Body = ::Body<Environment>;
     using Point = typename Body::Point;
     using DirectionVector = typename Body::DirectionVector;
-    using PodDock = PodDock<Environment>;
+    using PodDock = ::PodDock<Environment>;
     using ItemType = std::unique_ptr<TItemType>;
 
 public:

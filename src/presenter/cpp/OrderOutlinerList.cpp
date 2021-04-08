@@ -30,7 +30,7 @@ void OrderOutlinerList::removeOrder(int index)
         return;
 
     emit preItemRemoved(index);
-    mOrders->remove(index);
+    mOrders->removeAt(index);
     emit postItemRemoved();
 }
 

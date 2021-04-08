@@ -5,6 +5,11 @@
 
 namespace idepleting_util
 {
+    /*****************************************************
+     * @brief Thrown when a resource is tried to be used
+     * when it is already depleted enough.
+     *
+     *****************************************************/
     class EnergyDepletedException : public std::runtime_error
     {
     public:
@@ -12,6 +17,10 @@ namespace idepleting_util
     };
 };
 
+/*********************************************************
+ * @brief Interface of a depleting energy resource.
+ *
+ *********************************************************/
 template <typename TEnergy>
 class IDepleting
 {
