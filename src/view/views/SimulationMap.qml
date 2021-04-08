@@ -10,8 +10,8 @@ Item {
 
     readonly property real  aspectRatio: 16/9
 
-    property int rows:    10
-    property int columns: 10
+    property int rows:    100
+    property int columns: 100
 
     property int   cellSpacing: 1
     property real  cellScale:   zoomArea.zoomScale
@@ -155,8 +155,8 @@ Item {
 
             anchors.centerIn: parent
 
-            width:  Math.max(mapFlickable.width,  root.mapWidth)  * 1.5
-            height: Math.max(mapFlickable.height, root.mapHeight) * 1.5
+            width:  Math.max(mapFlickable.width  * 1.5,  root.mapWidth  * 1.1)
+            height: Math.max(mapFlickable.height * 1.5,  root.mapHeight * 1.1)
 
             GridLayout {
                 id: tiles

@@ -16,10 +16,10 @@ Item {
         id: simulationControl
 
         anchors {
-            top: simulation.bottom; bottom: parent.bottom
-            horizontalCenter: simulation.horizontalCenter
+            top: simulationMap.bottom; bottom: parent.bottom
+            horizontalCenter: simulationMap.horizontalCenter
         }
-        width:  simulation.width  * 0.4
+        width:  simulationMap.width  * 0.4
 
         RowLayout {
             id: controlLayout
