@@ -15,5 +15,6 @@
         <file>images/pod.png</file>
         <file>images/robot.png</file>
         <file>images/tile.png</file>
+        <file alias="placeholder_amogus.png">images/placeholder_amogus.png</file>
     </qresource>
 </RCC>

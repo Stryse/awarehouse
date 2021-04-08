@@ -2,67 +2,15 @@ import QtQuick
 import QtQuick.Layouts
 import QtQuick.Controls
 import QtQuick.Controls.Material
+
 import Simulator 1.0
-import SimulationMap 1.0
 
 Item {
     id: root
 
     anchors.fill: parent
 
-    Item {
-        id: simulation
-
-        readonly property alias inProgress: play.paused
-        readonly property real  aspectRatio: 16/9
-
-        anchors.centerIn: parent
-        height: parent.height * 0.7
-        width:  height * aspectRatio
-
-        Material.background: Material.primary
-        Material.elevation:  6
-
-        onWidthChanged:  simulationGrid.forceLayout()
-        onHeightChanged: simulationGrid.forceLayout()
-
-        TableView {
-            id: simulationGrid
-
-            property real cellSize: Math.min(simulation.width  / simulation.wareHouseCols - spacing,
-                                             simulation.height / simulation.wareHouseRows - spacing)
-
-            columnWidthProvider: function(column) { return cellSize; }
-            rowHeightProvider: function(row) { return cellSize; }
-            anchors.fill: parent
-            anchors.centerIn: parent
-
-            rowSpacing: 1
-            columnSpacing: 1
-
-            ScrollBar.horizontal: ScrollBar{}
-            ScrollBar.vertical: ScrollBar{}
-
-            delegate: Rectangle {
-
-                id: cell
-                implicitWidth: simulationGrid.cellSize
-                implicitHeight: simulationGrid.cellSize
-                Image {
-                    source: model.image
-                    anchors.fill: parent
-                }
-            }
-
-            model: MapTablePresenterModel {
-                items: simpresenter.layout.map
-            }
-
-
-            contentX: (contentWidth - parent.width) / 2;
-            contentY: (contentHeight - parent.height) / 2;
-        }
-    }
+    SimulationMap { id: simulationMap }
 
     Item {
         id: simulationControl
@@ -98,7 +46,7 @@ Item {
                         simpresenter.simulationStop()
 
                     paused = !paused
-                    }
+                }
             }
 
             MediaControlButton {
@@ -131,9 +79,9 @@ Item {
 
                 onClicked: {
                     switch (speed.state) {
-                    case "normal": speed.state = "double"; simpresenter.setTickRate(TickRate.TWICE); break
+                    case "normal": speed.state = "double"; simpresenter.setTickRate(TickRate.TWICE);      break
                     case "double": speed.state = "half";   simpresenter.setTickRate(TickRate.HALF_SPEED); break
-                    case "half":   speed.state = "normal"; simpresenter.setTickRate(TickRate.NORMAL); break
+                    case "half":   speed.state = "normal"; simpresenter.setTickRate(TickRate.NORMAL);     break
                     }
                 }
             }
