@@ -43,12 +43,12 @@ public:
     // ####################################################################
 
 protected:
-    explicit IMoveMechanism(Body &body,
+    explicit IMoveMechanism(const std::shared_ptr<Body> &body,
+                            IDepleting &resource,
                             std::vector<std::unique_ptr<AMotor>> &&motors,
-                            std::set<DirectionVector> &&moveSet,
-                            IDepleting &resource)
+                            std::set<DirectionVector> &&moveSet)
 
-        : body(body), motors(std::move(motors)), moveSet(std::move(moveSet)), resource(resource)
+        : body(body), resource(resource), motors(std::move(motors)), moveSet(std::move(moveSet))
     {
     }
 
@@ -92,11 +92,17 @@ public:
      ***************************************************************************/
     const std::set<DirectionVector> &getMoveSet() const { return moveSet; }
 
+    /***************************************************************************
+     * @brief Returns the move mechanism's associated body
+     ***************************************************************************/
+    const std::shared_ptr<const Body> &getBody() const { return body; }
+    const std::shared_ptr<Body> &getBody() { return body; }
+
 protected:
-    Body &body;
+    std::shared_ptr<Body> body;
+    IDepleting &resource;
     std::vector<std::unique_ptr<AMotor>> motors;
     std::set<DirectionVector> moveSet;
-    IDepleting &resource;
 };
 
 #endif /* I_MOVE_MECHANISM__H */

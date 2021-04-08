@@ -4,7 +4,6 @@
 #include "AMicroController.h"
 #include "Body.h"
 #include "LibConfig.h"
-#include "NetworkAdapter.h"
 #include <memory>
 #include <string>
 
@@ -49,11 +48,11 @@ public:
      *********************************************************/
     explicit Agent(const std::string &id_category,
                    const std::shared_ptr<Environment> &environment,
-                   std::unique_ptr<Body<Environment>> body,
-                   std::unique_ptr<AMicroController> mcu)
+                   const std::shared_ptr<Body<Environment>> &body,
+                   std::unique_ptr<AMicroController> &&mcu)
 
         : environment(environment),
-          body(std::move(body)),
+          body(body),
           mcu(std::move(mcu)),
           id(std::string(getNewId(id_category))),
           serialNumber(getNewSerialNumber())
@@ -80,13 +79,7 @@ public:
     /*********************************************************
      * @brief Returns the agent's body
      *********************************************************/
-    const std::unique_ptr<Body<Environment>> &getBody() const { return body; }
-
-    /*********************************************************
-     * @brief Returns the agent's network adapter
-     *********************************************************/
-    const NetworkAdapter& getNetworkAdapter() const { return networkAdapter; }
-    NetworkAdapter& getNetworkAdapter() { return networkAdapter; }
+    const std::shared_ptr<Body<Environment>> &getBody() const { return body; }
 
 private:
     /*********************************************************
@@ -117,7 +110,7 @@ protected:
      * @brief The agent's physical body,
      * has position,orientation,shape etc.
      ******************************************************/
-    std::unique_ptr<Body<Environment>> body;
+    std::shared_ptr<Body<Environment>> body;
 
     /******************************************************
      * @brief A mechanism controlling the agent's modules,
@@ -127,12 +120,6 @@ protected:
      *     communications -> message receiving and dispatch
      ******************************************************/
     std::unique_ptr<AMicroController> mcu;
-
-    /******************************************************
-     * @brief Agents connect to network in order to communicate
-     * with each other or the central controllers.
-     ******************************************************/
-    NetworkAdapter networkAdapter;
 
 private:
     /******************************************************

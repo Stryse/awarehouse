@@ -5,9 +5,13 @@
 #include "NetworkAdapter.h"
 #include <queue>
 
-// ############################ FORWARD DECLARATIONS ##############################
-class AgentAction;
-// ################################################################################
+// ####################### FORWARD DECLARATIONS ############################ //
+template <typename Body, typename Energy>
+class IMoveMechanism;
+template <typename Environment>
+class PodHolder;
+class NetworkAdapter;
+// #########################################################################
 
 /**********************************************************************************
  * @brief Micro Controller Unit of a DeliveryRobot.
@@ -19,16 +23,34 @@ class AgentAction;
  * - Performs the polled action.
  *
  **********************************************************************************/
+template <typename TEnvironment, typename TBody, typename TEnergy>
 class DRobotMCU : public AMicroController
 {
+public:
+    using Body = TBody;
+    using Energy = TEnergy;
+    using IMoveMechanism = ::IMoveMechanism<Body, Energy>;
+    using Environment = TEnvironment;
+    using PodHolder = ::PodHolder<Environment>;
+
+public:
+    DRobotMCU(IMoveMechanism &moveMechanism, NetworkAdapter &networkAdapter, PodHolder &podHolder)
+        : moveMechanism(moveMechanism),
+          networkAdapter(networkAdapter),
+          podHolder(podHolder)
+    {
+    }
+    virtual ~DRobotMCU() {}
+
 public:
     virtual void tick(int time) override
     {
     }
 
 private:
-    NetworkAdapter networkAdapter;
-    std::queue<AgentAction *> actionQueue;
+    IMoveMechanism &moveMechanism;
+    NetworkAdapter &networkAdapter;
+    PodHolder &podHolder;
 };
 
 #endif

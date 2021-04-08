@@ -56,7 +56,7 @@ void NetworkAdapter::disconnect()
     if(network)
     {
         network->disconnect(*this);
-        address = -1;
+        address = 0;
         network = nullptr;
     }
 }
