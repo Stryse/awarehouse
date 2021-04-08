@@ -37,7 +37,15 @@ public:
 
 public:
     /*********************************************************
-     * @brief Construct a new Agent object
+     * @brief Construct a new Agent subclass object.
+     *
+     * @param id_category Should be the name of the subclass
+     * @param environment Shared pointer of the environment.
+     * (Since agent has a body which leaves environment on
+     * destruction, it needs to keep the environment alive
+     * with a resource sharing.
+     * @param body Agent's physical form.
+     * @param mcu A subclass of AMicroController.
      *********************************************************/
     explicit Agent(const std::string &id_category,
                    const std::shared_ptr<Environment> &environment,
@@ -60,7 +68,7 @@ public:
     void tick(int timeStamp) { mcu->tick(timeStamp); }
 
     /*********************************************************
-     * @brief 
+     * @brief Returns the agent's unique identifier
      *********************************************************/
     const std::string &getId() const { return id; }
 
@@ -112,7 +120,8 @@ protected:
     std::unique_ptr<Body<Environment>> body;
 
     /******************************************************
-     * @brief A mechanism controlling the agent's modules
+     * @brief A mechanism controlling the agent's modules,
+     * each tick it makes a decision.
      * eg. motors  -> movement
      *     sensors -> observing
      *     communications -> message receiving and dispatch

@@ -25,7 +25,7 @@ public:
     /*********************
      * @brief Type of the vector that the point can be moved with.
      *********************/
-    using DirectionVector = DirectionVector<CoordT, N>;
+    using DirectionVector = ::DirectionVector<CoordT, N>;
 
 private:
     std::array<CoordT, N> coordinates;
@@ -59,12 +59,19 @@ public:
     void setPosZ(CoordT posZ) { coordinates[2] = posZ; }
 
     //################ Functionality ###################
+
+    /***************************************************
+     * @brief Moves a point with a direction vector.
+     ***************************************************/
     void move(const DirectionVector &vector)
     {
         for (size_t i = 0; i < coordinates.size(); ++i)
             coordinates[i] += vector.getBuffer().at(i);
     }
 
+    /****************************************************
+     * @brief Returns a new point moved in a direction.
+     ****************************************************/
     Point moved(const DirectionVector &vector) const
     {
         std::array<CoordT, N> buffer{};

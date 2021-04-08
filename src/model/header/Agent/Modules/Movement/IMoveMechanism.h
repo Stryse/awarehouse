@@ -17,6 +17,16 @@ template <class TEnergy>
 class IDepleting;
 // ########################################################################
 
+/***********************************************************************************
+ * @brief A mechanism which has a set of motors required to move the body in
+ * different directions in its environment.
+ * 
+ * The mechanism needs a set of directionvectors which tells the movable directions
+ * (of the origin point) and its costs so a path planner can plan accurately.
+ * 
+ * It also needs to provide a sequence of motor actions which lead to the accessible
+ * directions with the associated costs.
+ ***********************************************************************************/
 template <typename TBody, typename TEnergy = config::agent::DefaultEnergy>
 class IMoveMechanism
 {
@@ -24,12 +34,12 @@ public:
     // ######################### Body Related #############################
     using Body = TBody;
     using DirectionVector = typename Body::DirectionVector;
-    using AMotor = AMotor<Body>;
+    using AMotor = ::AMotor<Body>;
 
-    //Energy related
+    //######################### Energy related ############################
     using Energy = TEnergy;
-    using IDepleting = IDepleting<Energy>;
-    using MotorAction = MotorAction<Body, Energy>;
+    using IDepleting = ::IDepleting<Energy>;
+    using MotorAction = ::MotorAction<Body, Energy>;
     // ####################################################################
 
 protected:
@@ -48,7 +58,7 @@ public:
 public:
     /************************************************************************
      * @brief Returns whether the entity can move to the
-     * provided direction.
+     * provided direction. (According to its motors)
      ************************************************************************/
     virtual bool canMove(const DirectionVector &direction) const = 0;
 
@@ -78,7 +88,7 @@ public:
     const std::vector<std::unique_ptr<AMotor>> &getMotors() const { return motors; }
 
     /***************************************************************************
-     * @brief Returns all the directions where the entity can move.
+     * @brief Returns all the directions where the entity (its origin point) can move.
      ***************************************************************************/
     const std::set<DirectionVector> &getMoveSet() const { return moveSet; }
 

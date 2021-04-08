@@ -23,7 +23,7 @@ public:
     /*****************************************************
      * @brief Type of 3D point in which tile can be placed
      *****************************************************/
-    using Point = Point<int, 3>;
+    using Point = ::Point<int, 3>;
 
     /*****************************************************
      * @brief Type of occupant that the tile can accept.

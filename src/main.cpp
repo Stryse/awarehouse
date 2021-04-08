@@ -19,8 +19,7 @@ int main(int argc, char *argv[])
     app.setWindowIcon(QIcon(":/app_icon.png"));
 
     // Instantiate //////
-    QScopedPointer<WarehouseManager> manager(new WarehouseManager());
-    QScopedPointer<SimulationWindowPresenter> simpresenter(new SimulationWindowPresenter(*manager));
+    QScopedPointer<SimulationWindowPresenter> simpresenter(new SimulationWindowPresenter());
     // //////////////////
 
     // Register Types ///
@@ -30,7 +29,6 @@ int main(int argc, char *argv[])
     // //////////////////
     QQmlApplicationEngine engine;
     // Register Instances
-    //qmlRegisterSingletonInstance<WarehouseManager>("WarehouseManager", 1, 0, "Manager", manager.get());
     engine.rootContext()->setContextProperty(QStringLiteral("simpresenter"), simpresenter.get());
     // //////////////////
 

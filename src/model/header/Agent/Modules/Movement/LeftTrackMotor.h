@@ -3,13 +3,22 @@
 
 #include "AMotor.h"
 #include "Matrix.h"
+
+
+/*******************************************************
+ * @brief An implementation of an Agent's left track motor.
+ * It must be used with a RightTrackMotor in order to function
+ * properly, because the two are assymetrical so they don't
+ * need to use floating point transformations, but integers.
+ *
+ *******************************************************/
 template <typename TBody>
 class LeftTrackMotor : public AMotor<TBody>
 {
 public:
     using Body = TBody;
     using Pose = typename Body::Pose;
-    using AMotor = AMotor<Body>;
+    using AMotor = ::AMotor<Body>;
     using MotorDirection = typename AMotor::MotorDirection;
     using DirectionVector = typename Body::DirectionVector;
 

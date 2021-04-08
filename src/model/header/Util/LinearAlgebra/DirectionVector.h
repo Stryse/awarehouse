@@ -83,12 +83,18 @@ public:
         return value;
     }
 
+    /**************************************************
+     * @brief Multiplies each coordinate with a scalar.
+     **************************************************/
     void mulWithScalar(CoordinateT scalar)
     {
         for (auto &c : coordinates)
             c *= scalar;
     }
 
+    /**************************************************
+     * @brief Returns a new vector multiplied with a scalar.
+     **************************************************/
     DirectionVector muledWithScalar(CoordinateT scalar)
     {
         std::array<CoordinateT, N> buffer{};

@@ -76,18 +76,17 @@ presenter/cpp/OrderOutlinerList.cpp
 add_library(OBJ_AWSOURCE_FILES STATIC
 # Add CPP files here - those which are !!NOT!! Q_OBJECT
 model/cpp/Tile/Tile.cpp
-#presenter/cpp/Presenter.cpp
-#presenter/cpp/OutlinerListModel.cpp
-#presenter/cpp/Order.cpp
-#presenter/cpp/OrderListModel.cpp
 model/cpp/Warehouse/Warehouse.cpp
 model/cpp/Warehouse/State.cpp
 model/cpp/Warehouse/Pod/OrderModel.cpp
+persistence/cpp/WarehouseFilePersistence.cpp
+persistence/cpp/ChargingStationLoader.cpp
+persistence/cpp/PodDockLoader.cpp
+persistence/cpp/RobotLoader.cpp
 model/cpp/Warehouse/Controller/ControllerImpl.cpp
 model/cpp/Warehouse/Scheduler/SchedulerImpl.cpp
 model/cpp/Warehouse/Network.cpp
 model/cpp/Agent/Modules/Control/NetworkAdapter.cpp
-persistence/WarehouseFilePersistence.cpp
 ## QOBJECT FILES ##
 ${QT_QOBJECT_FILES}
 )
@@ -102,7 +101,7 @@ Qt${QT_VERSION_MAJOR}::QuickControls2
 #########################################################################
 ############################## BINARY ###################################
 
-qt_add_executable(awarehouse main.cpp ${QRC_RESOURCES})
+add_executable(awarehouse main.cpp ${QRC_RESOURCES})
 
 #########################################################################
 ######################### Include files (.h) ############################

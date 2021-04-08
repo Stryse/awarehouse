@@ -5,6 +5,9 @@
 #include <stdexcept>
 #include <vector>
 
+/**********************************************************
+ * @bried This class can construct predefined body shapes
+ **********************************************************/
 template <typename TPoint = Point<>>
 class BodyShapeFactory
 {

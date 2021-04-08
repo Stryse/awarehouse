@@ -18,8 +18,8 @@ Actors::Actors(const DeliveryRobot<ObservableNavEnvironment<Tile>,int>* model, Q
 
 QString Actors::imagePath = "asd3.png";
 
+// ###################### GETTER SETTER ######################## //
 QString Actors::name() const { return mName; }
-
 void Actors::setName(const QString &name)
 {
     if(mName == name)
@@ -30,7 +30,6 @@ void Actors::setName(const QString &name)
 }
 
 QString Actors::action() const { return mAction; }
-
 void Actors::setAction(const QString &action)
 {
     if(mAction == action)
@@ -41,7 +40,6 @@ void Actors::setAction(const QString &action)
 }
 
 int Actors::battery() const { return mBatteryLevel; }
-
 void Actors::setBattery(int level)
 {
     if(mBatteryLevel == level)
@@ -52,7 +50,6 @@ void Actors::setBattery(int level)
 }
 
 int Actors::moveCount() const { return mMoveCount; }
-
 void Actors::MoveCountInc()
 {
     ++mMoveCount;
@@ -60,7 +57,6 @@ void Actors::MoveCountInc()
 }
 
 Actors::Direction Actors::orientation() const { return mOrientation; }
-
 void Actors::setOrientation(Actors::Direction dir)
 {
     if(mOrientation == dir)

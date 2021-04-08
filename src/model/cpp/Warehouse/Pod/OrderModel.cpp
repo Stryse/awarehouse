@@ -13,9 +13,4 @@ std::string OrderModel::makeId(int category)
            std::to_string(idCounter++);
 }
 
-// bool operator<(const Order &lhs, const Order &rhs)
-// {
-//     return lhs.category < rhs.category;
-// }
-
 int OrderModel::idCounter = 0;
