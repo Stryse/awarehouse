@@ -4,11 +4,13 @@
 #include "AMicroController.h"
 #include "AgentAction.h"
 #include "AgentSignals.h"
+#include "IDepleting.h"
 #include "IMoveMechanism.h"
 #include "LibConfig.h"
 #include "MotorAction.h"
 #include "NetworkAdapter.h"
 #include "NetworkMessageHandler.h"
+#include "RackMotor.h"
 #include <queue>
 
 // ####################### FORWARD DECLARATIONS ############################ //
@@ -36,17 +38,29 @@ public:
     using Body = TBody;
     using Energy = TEnergy;
     using IMoveMechanism = ::IMoveMechanism<Body, Energy>;
+    using IDepleting = ::IDepleting<Energy>;
     using Environment = TEnvironment;
+    using RackMotor = ::RackMotor<Body, Energy>;
     using PodHolder = ::PodHolder<Environment>;
     using MotorAction = ::MotorAction<Body, Energy>;
 
 public:
-    DRobotMCU(IMoveMechanism &moveMechanism, NetworkAdapter &networkAdapter, PodHolder &podHolder)
+    DRobotMCU(IMoveMechanism &moveMechanism,
+              NetworkAdapter &networkAdapter,
+              RackMotor &rackMotor,
+              PodHolder &podHolder,
+              IDepleting &energySource,
+              Environment &env)
+
         : moveMechanism(moveMechanism),
           networkAdapter(networkAdapter),
-          podHolder(podHolder)
+          rackMotor(rackMotor),
+          podHolder(podHolder),
+          energySource(energySource),
+          environment(env)
     {
     }
+
     virtual ~DRobotMCU() {}
 
 public:
@@ -116,9 +130,15 @@ private:
     }
 
 private:
+    // ############ Modules ################ //
     IMoveMechanism &moveMechanism;
     NetworkAdapter &networkAdapter;
+    RackMotor &rackMotor;
     PodHolder &podHolder;
+    IDepleting &energySource;
+    Environment &environment;
+
+    // ##################################### //
     std::queue<AgentAction *> actionQueue;
 };
 

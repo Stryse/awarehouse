@@ -12,6 +12,7 @@
 #include "NetworkModule.h"
 #include "PodHolder.h"
 #include "PodHolderModule.h"
+#include "RackMotorModule.h"
 #include "RobotMoveMechanism.h"
 // ######################## Forward Declarations #########################
 template <typename TEnvironment, typename TBody, typename TEnergy>
@@ -24,6 +25,7 @@ template <typename TEnvironment = config::navigation::DefaultEnvironment,
 class DeliveryRobot : public EnergyModule<TEnergy>,
                       public MovementModule<Body<TEnvironment>, TEnergy>,
                       public NetworkModule,
+                      public RackMotorModule<Body<TEnvironment>, TEnergy>,
                       public PodHolderModule<TEnvironment>,
                       public Agent<TEnvironment>
 {
@@ -40,12 +42,16 @@ public:
     explicit DeliveryRobot(const std::shared_ptr<Environment> &env, const Point &position, const DirectionVector &orientation)
         : EnergyModule<Energy>(std::make_unique<Battery<Energy>>(100)),
           MovementModule<Body, Energy>(getNewRobotMovement(getNewRobotBody(position, orientation, env), *EnergyModule<Energy>::getEnergySource())),
+          RackMotorModule<Body, Energy>(*(*MovementModule<Body, Energy>::getMoveMechanism()).getBody(), *EnergyModule<Energy>::getEnergySource()),
           Agent<Environment>("DELIVERY_ROBOT",
                              env,
                              MovementModule<Body, Energy>::getMoveMechanism()->getBody(),
                              getNewRobotMCU(*MovementModule<Body, Energy>::getMoveMechanism(),
                                             NetworkModule::getNetworkAdapter(),
-                                            PodHolderModule<TEnvironment>::getPodHolder()))
+                                            RackMotorModule<Body, Energy>::getRackMotor(),
+                                            PodHolderModule<TEnvironment>::getPodHolder(),
+                                            *EnergyModule<Energy>::getEnergySource(),
+                                            *env))
     {
     }
 
@@ -69,9 +75,12 @@ private:
      ************************************************************************/
     static std::unique_ptr<DRobotMCU> getNewRobotMCU(IMoveMechanism<Body, Energy> &moveMechanism,
                                                      NetworkAdapter &networkAdapter,
-                                                     PodHolder<Environment> &podHolder)
+                                                     RackMotor<Body, Energy> &rackMotor,
+                                                     PodHolder<Environment> &podHolder,
+                                                     IDepleting &energySource,
+                                                     Environment &env)
     {
-        return std::make_unique<DRobotMCU>(moveMechanism, networkAdapter, podHolder);
+        return std::make_unique<DRobotMCU>(moveMechanism, networkAdapter, rackMotor, podHolder, energySource, env);
     }
 
     /************************************************************************
