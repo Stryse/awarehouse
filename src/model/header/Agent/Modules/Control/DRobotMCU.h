@@ -3,6 +3,7 @@
 
 #include "AMicroController.h"
 #include "AgentAction.h"
+#include "AgentSignals.h"
 #include "IMoveMechanism.h"
 #include "LibConfig.h"
 #include "MotorAction.h"
@@ -71,6 +72,23 @@ public:
         }
     }
 
+    virtual void receive(const ChargeAgentMessage &message) override
+    {
+    }
+
+    virtual void receive(const PickupPodMessage &message) override
+    {
+    }
+
+    virtual void receive(const PutDownPodMessage &message) override
+    {
+    }
+
+    virtual void receive(const PutDownOrderMessage &message) override
+    {
+    }
+
+    // #####################################################################################################
 private:
     void processMessages()
     {
