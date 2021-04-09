@@ -83,6 +83,9 @@ private:
 
     void doActions()
     {
+        if (actionQueue.empty())
+            return;
+
         while (true)
         {
             AgentAction *action = actionQueue.front();
