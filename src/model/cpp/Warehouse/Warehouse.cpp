@@ -28,13 +28,13 @@ void Warehouse::tick()
 
 bool Warehouse::loadState(const QString &srcPath)
 {
+    network->reset();
     state.reset(persistence->load(srcPath));
     if (state)
     {
         timeStamp = 0;
-        network->reset();
-        controller->getNetworkAdapter().connectWithAddress(network, 0x0);
-        scheduler->getNetworkAdapter().connectWithAddress(network, 0x1);
+        controller->getNetworkAdapter().connectWithAddress(network, 0x1);
+        scheduler->getNetworkAdapter().connectWithAddress(network, 0x2);
 
         for (auto &agent : state->getRobots())
             agent->getNetworkAdapter().connect(network);

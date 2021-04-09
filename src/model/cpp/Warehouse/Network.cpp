@@ -66,8 +66,11 @@ int Network::getNewAddress()
 
 void Network::reset()
 {
-    for (auto &adapter : adapter2address)
-        adapter.first->disconnect();
+    for (auto it = adapter2address.cbegin(), next_it = it; it != adapter2address.cend(); it = next_it)
+    {
+        ++next_it;
+        it->first->disconnect();
+    }
 
     adapter2address.clear();
     address2adapter.clear();
