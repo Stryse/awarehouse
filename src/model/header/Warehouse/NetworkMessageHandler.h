@@ -9,10 +9,8 @@ class MoveAgentMessage;
 class NetworkMessageHandler
 {
 public:
-    virtual void receive(const AbstractNetworkMessage &message) const {}
-    virtual void receive(const MoveAgentMessage &message) const
-    { /* receive(static_cast<const AbstractNetworkMessage &>(message)); */
-    }
+    virtual void receive(const AbstractNetworkMessage &message) {}
+    virtual void receive(const MoveAgentMessage &message) {}
 
 protected:
     NetworkMessageHandler() = default;

@@ -13,7 +13,6 @@ class AbstractNetworkMessage
 {
 public:
     virtual ~AbstractNetworkMessage() = default;
-    virtual void dispatch(const NetworkMessageHandler &networkMessageHandler) const = 0;
     virtual void dispatch(NetworkMessageHandler &networkMessageHandler) = 0;
 };
 
@@ -28,11 +27,6 @@ class NetworkMessage : public AbstractNetworkMessage
 {
 public:
     virtual ~NetworkMessage() = default;
-    virtual void dispatch(const NetworkMessageHandler &networkMessageHandler) const override
-    {
-        networkMessageHandler.receive(static_cast<const Derived &>(*this));
-    }
-
     virtual void dispatch(NetworkMessageHandler &networkMessageHandler) override
     {
         networkMessageHandler.receive(static_cast<const Derived &>(*this));

@@ -70,3 +70,8 @@ bool NetworkAdapter::isConnected() const
 {
     return network.get() != nullptr;
 }
+
+bool NetworkAdapter::isMessageQueueEmpty() const
+{
+    return messageQueue.empty();
+}

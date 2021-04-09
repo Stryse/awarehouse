@@ -29,6 +29,7 @@ public:
     bool send(std::unique_ptr<AbstractNetworkMessage> &&message, int recipientAddress);
     void receive(std::unique_ptr<AbstractNetworkMessage> &&message);
     std::unique_ptr<AbstractNetworkMessage> poll();
+    bool isMessageQueueEmpty() const;
     int getAddress() const;
     bool isConnected() const;
 

@@ -2,7 +2,12 @@
 #define D_ROBOT_MCU__H
 
 #include "AMicroController.h"
+#include "AgentAction.h"
+#include "IMoveMechanism.h"
+#include "LibConfig.h"
+#include "MotorAction.h"
 #include "NetworkAdapter.h"
+#include "NetworkMessageHandler.h"
 #include <queue>
 
 // ####################### FORWARD DECLARATIONS ############################ //
@@ -23,8 +28,8 @@ class NetworkAdapter;
  * - Performs the polled action.
  *
  **********************************************************************************/
-template <typename TEnvironment, typename TBody, typename TEnergy>
-class DRobotMCU : public AMicroController
+template <typename TEnvironment, typename TBody, typename TEnergy = config::agent::DefaultEnergy>
+class DRobotMCU : public AMicroController, public NetworkMessageHandler
 {
 public:
     using Body = TBody;
@@ -32,6 +37,7 @@ public:
     using IMoveMechanism = ::IMoveMechanism<Body, Energy>;
     using Environment = TEnvironment;
     using PodHolder = ::PodHolder<Environment>;
+    using MotorAction = ::MotorAction<Body, Energy>;
 
 public:
     DRobotMCU(IMoveMechanism &moveMechanism, NetworkAdapter &networkAdapter, PodHolder &podHolder)
@@ -45,12 +51,54 @@ public:
 public:
     virtual void tick(int time) override
     {
+        processMessages();
+        doActions();
+    }
+
+public:
+    // ########################## NetworkMessageHandler Implementation ################################ //
+
+    virtual void receive(const MoveAgentMessage &message) override
+    {
+        if (moveMechanism.canMove(message.getMoveDirection()))
+        {
+            std::queue<MotorAction *> motorActions = moveMechanism.move(message.getMoveDirection());
+            while (!motorActions.empty())
+            {
+                actionQueue.push(motorActions.front());
+                motorActions.pop();
+            }
+        }
+    }
+
+private:
+    void processMessages()
+    {
+        while (!networkAdapter.isMessageQueueEmpty())
+        {
+            std::unique_ptr<AbstractNetworkMessage> message = networkAdapter.poll();
+            message->dispatch(*this);
+        }
+    }
+
+    void doActions()
+    {
+        while (true)
+        {
+            AgentAction *action = actionQueue.front();
+            (*action)();
+
+            actionQueue.pop();
+            if (action->getDuration() != 0)
+                break;
+        }
     }
 
 private:
     IMoveMechanism &moveMechanism;
     NetworkAdapter &networkAdapter;
     PodHolder &podHolder;
+    std::queue<AgentAction *> actionQueue;
 };
 
 #endif
