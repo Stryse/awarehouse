@@ -11,29 +11,29 @@ NetworkAdapter::~NetworkAdapter()
     disconnect();
 }
 
-bool NetworkAdapter::send(std::unique_ptr<NetworkMessage>&& message, int recipientAddress)
+bool NetworkAdapter::send(std::unique_ptr<AbstractNetworkMessage> &&message, int recipientAddress)
 {
-    if(network)
-        return network->sendMessage(std::move(message),recipientAddress);
+    if (network)
+        return network->sendMessage(std::move(message), recipientAddress);
 
     return false;
 }
 
-void NetworkAdapter::receive(std::unique_ptr<NetworkMessage>&& message)
+void NetworkAdapter::receive(std::unique_ptr<AbstractNetworkMessage> &&message)
 {
     messageQueue.push(std::move(message));
 }
 
-std::unique_ptr<NetworkMessage> NetworkAdapter::poll()
+std::unique_ptr<AbstractNetworkMessage> NetworkAdapter::poll()
 {
-    std::unique_ptr<NetworkMessage> message = std::move(messageQueue.front());
+    std::unique_ptr<AbstractNetworkMessage> message = std::move(messageQueue.front());
     messageQueue.pop();
     return std::move(message);
 }
 
-bool NetworkAdapter::connect(const std::shared_ptr<Network>& network)
+bool NetworkAdapter::connect(const std::shared_ptr<Network> &network)
 {
-    if(this->address = network->connect(*this))
+    if (this->address = network->connect(*this))
     {
         this->network = network;
         return true;
@@ -41,9 +41,9 @@ bool NetworkAdapter::connect(const std::shared_ptr<Network>& network)
     return false;
 }
 
-bool NetworkAdapter::connectWithAddress(const std::shared_ptr<Network>& network, int address)
+bool NetworkAdapter::connectWithAddress(const std::shared_ptr<Network> &network, int address)
 {
-    if(network->connectWithAddress(*this,address))
+    if (network->connectWithAddress(*this, address))
     {
         this->network = network;
         return true;
@@ -53,7 +53,7 @@ bool NetworkAdapter::connectWithAddress(const std::shared_ptr<Network>& network,
 
 void NetworkAdapter::disconnect()
 {
-    if(network)
+    if (network)
     {
         network->disconnect(*this);
         address = 0;

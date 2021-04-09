@@ -86,6 +86,7 @@ persistence/cpp/RobotLoader.cpp
 model/cpp/Warehouse/Controller/ControllerImpl.cpp
 model/cpp/Warehouse/Scheduler/SchedulerImpl.cpp
 model/cpp/Warehouse/Network.cpp
+model/cpp/Warehouse/NetworkMessage.cpp
 model/cpp/Agent/Modules/Control/NetworkAdapter.cpp
 ## QOBJECT FILES ##
 ${QT_QOBJECT_FILES}
