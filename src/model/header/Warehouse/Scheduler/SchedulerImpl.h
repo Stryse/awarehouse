@@ -11,10 +11,10 @@ public:
     virtual ~SchedulerImpl();
 
 public:
-    virtual void tick() override;
+    virtual void tick(int timeStamp) override;
     virtual void doTaskAssignment() override;
-    virtual const NetworkAdapter& getNetworkAdapter() const override;
-    virtual NetworkAdapter& getNetworkAdapter() override;
+    virtual const NetworkAdapter &getNetworkAdapter() const override;
+    virtual NetworkAdapter &getNetworkAdapter() override;
 
 private:
     NetworkAdapter networkAdapter;

@@ -9,7 +9,7 @@ ControllerImpl::~ControllerImpl()
     networkAdapter.disconnect();
 }
 
-void ControllerImpl::tick()
+void ControllerImpl::tick(int timeStamp)
 {
 }
 
@@ -17,12 +17,12 @@ void ControllerImpl::doActionAssignment()
 {
 }
 
-const NetworkAdapter& ControllerImpl::getNetworkAdapter() const
+const NetworkAdapter &ControllerImpl::getNetworkAdapter() const
 {
     return networkAdapter;
 }
 
-NetworkAdapter& ControllerImpl::getNetworkAdapter()
+NetworkAdapter &ControllerImpl::getNetworkAdapter()
 {
     return networkAdapter;
 }

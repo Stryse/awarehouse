@@ -7,11 +7,11 @@
 
 Warehouse::Warehouse(std::unique_ptr<IWarehousePersistence<QString>> &&persistence)
     : timeStamp(0),
-      scheduler(new SchedulerImpl()),
-      controller(new ControllerImpl()),
+      scheduler(std::make_unique<SchedulerImpl>()),
+      controller(std::make_unique<ControllerImpl>()),
       persistence(std::move(persistence)),
       state(nullptr),
-      network(new Network())
+      network(std::make_shared<Network>())
 {
 }
 
@@ -20,9 +20,9 @@ Warehouse::~Warehouse() = default;
 void Warehouse::tick()
 {
     std::cerr << "Warehouse tick! Timestamp: " << timeStamp << std::endl;
-    scheduler->tick();
-    controller->tick();
-    state->tick();
+    scheduler->tick(timeStamp);
+    controller->tick(timeStamp);
+    state->tick(timeStamp);
     ++timeStamp;
 }
 

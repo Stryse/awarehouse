@@ -9,13 +9,13 @@ class ControllerImpl : public AController
 public:
     ControllerImpl();
     virtual ~ControllerImpl();
-    
+
 public:
-    virtual void tick() override;
+    virtual void tick(int timeStamp) override;
     virtual void doActionAssignment() override;
 
-    const NetworkAdapter& getNetworkAdapter() const override;
-    NetworkAdapter& getNetworkAdapter() override;
+    const NetworkAdapter &getNetworkAdapter() const override;
+    NetworkAdapter &getNetworkAdapter() override;
 
 private:
     NetworkAdapter networkAdapter;
