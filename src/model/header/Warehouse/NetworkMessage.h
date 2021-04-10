@@ -69,6 +69,7 @@ private:
  ****************************************************************/
 class ChargeAgentMessage : public NetworkMessage<ChargeAgentMessage>
 {
+public:
     explicit ChargeAgentMessage(int senderAddress)
         : NetworkMessage(senderAddress) {}
 
@@ -80,6 +81,7 @@ class ChargeAgentMessage : public NetworkMessage<ChargeAgentMessage>
  *****************************************************************/
 class PickupPodMessage : public NetworkMessage<PickupPodMessage>
 {
+public:
     explicit PickupPodMessage(int senderAddress)
         : NetworkMessage(senderAddress) {}
 
@@ -91,6 +93,7 @@ class PickupPodMessage : public NetworkMessage<PickupPodMessage>
  ******************************************************************/
 class PutDownPodMessage : public NetworkMessage<PutDownPodMessage>
 {
+public:
     explicit PutDownPodMessage(int senderAddress)
         : NetworkMessage(senderAddress) {}
 
@@ -102,6 +105,7 @@ class PutDownPodMessage : public NetworkMessage<PutDownPodMessage>
  *********************************************************************/
 class PutDownOrderMessage : public NetworkMessage<PutDownOrderMessage>
 {
+public:
     explicit PutDownOrderMessage(int senderAddress)
         : NetworkMessage(senderAddress) {}
 
@@ -113,6 +117,7 @@ class PutDownOrderMessage : public NetworkMessage<PutDownOrderMessage>
  *********************************************************************/
 class RechargedMessage : public NetworkMessage<RechargedMessage>
 {
+public:
     explicit RechargedMessage(int senderAddress)
         : NetworkMessage(senderAddress) {}
 
