@@ -14,10 +14,6 @@
 #include "PodHolderModule.h"
 #include "RackMotorModule.h"
 #include "RobotMoveMechanism.h"
-// ######################## Forward Declarations #########################
-template <typename TEnvironment, typename TBody, typename TEnergy>
-class DRobotMCU;
-// #######################################################################
 
 template <typename TEnvironment = config::navigation::DefaultEnvironment,
           typename TEnergy = config::agent::DefaultEnergy>
@@ -25,8 +21,8 @@ template <typename TEnvironment = config::navigation::DefaultEnvironment,
 class DeliveryRobot : public EnergyModule<TEnergy>,
                       public MovementModule<Body<TEnvironment>, TEnergy>,
                       public NetworkModule,
-                      public RackMotorModule<Body<TEnvironment>, TEnergy>,
                       public PodHolderModule<TEnvironment>,
+                      public RackMotorModule<Body<TEnvironment>, TEnergy>,
                       public Agent<TEnvironment>
 {
 public:
@@ -41,8 +37,14 @@ public:
 public:
     explicit DeliveryRobot(const std::shared_ptr<Environment> &env, const Point &position, const DirectionVector &orientation)
         : EnergyModule<Energy>(std::make_unique<Battery<Energy>>(100)),
-          MovementModule<Body, Energy>(getNewRobotMovement(getNewRobotBody(position, orientation, env), *EnergyModule<Energy>::getEnergySource())),
-          RackMotorModule<Body, Energy>(*(*MovementModule<Body, Energy>::getMoveMechanism()).getBody(), *EnergyModule<Energy>::getEnergySource()),
+
+          MovementModule<Body, Energy>(getNewRobotMovement(getNewRobotBody(position, orientation, env),
+                                                           *EnergyModule<Energy>::getEnergySource())),
+
+          RackMotorModule<Body, Energy>(*(*MovementModule<Body, Energy>::getMoveMechanism()).getBody(),
+                                        *EnergyModule<Energy>::getEnergySource(),
+                                        PodHolderModule<Environment>::getPodHolder()),
+
           Agent<Environment>("DELIVERY_ROBOT",
                              env,
                              MovementModule<Body, Energy>::getMoveMechanism()->getBody(),
