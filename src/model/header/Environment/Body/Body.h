@@ -154,6 +154,25 @@ public:
         occupyV(environment->getVolume(pose.getPosition().moved(direction)));
     }
 
+    /*****************************************************************************
+     * @brief Moves the body outside the environment without occupying volumes
+     *
+     * @param direction Direction of the movement
+     * ***************************************************************************/
+    void moveBodyOutsideEnvironment(const DirectionVector &direction)
+    {
+        Point newOriginPos = pose.getPosition().moved(direction);
+
+        //Move children
+        for (auto &child : childBodies)
+        {
+            DirectionVector this2child = child->getPose().getPosition() - pose.getPosition();
+            child->getPose().setPosition(newOriginPos.moved(this2child));
+        }
+        //Move origin
+        pose.setPosition(newOriginPos);
+    }
+
     /******************************************************************************
      * @brief Rotates the body's orientation
      * 

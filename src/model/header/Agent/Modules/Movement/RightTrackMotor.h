@@ -39,7 +39,7 @@ public:
             break;
 
         case MotorDirection::COUNTER_CLOCKWISE:
-            MoveBackWards(pose);
+            MoveBackWards(this->body);
             break;
 
         default:
@@ -50,7 +50,7 @@ public:
 private:
     static Matrix<> rotation;
 
-    void MoveBackWards(Pose &pose) { pose.getPosition().move(pose.getOrientation().muledWithScalar(-1)); }
+    void MoveBackWards(Body &body) { body.moveBodyOutsideEnvironment(body.getPose().getOrientation().muledWithScalar(-1)); }
     void RotateCounterClockWise(Pose &pose) { rotation.transform(pose.getOrientation()); }
 };
 

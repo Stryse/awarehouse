@@ -43,11 +43,23 @@ public:
         {
         case MotorDirection::CLOCKWISE:
             AMotor::getBody().getEnvironment().getVolume(AMotor::getBody().getPose().getPosition())->receive(podHolder, PickupPodSignal());
+
+            // Attach Pod's body if pod is present
+            if (podHolder.getChildPod())
+                AMotor::getBody().attachBody(*podHolder.getChildPod()->getBody());
+            else
+                throw std::runtime_error("PodPickUp action invoked where it is invalid. (Tile doesn't have a pod)");
+
             break;
 
         case MotorDirection::COUNTER_CLOCKWISE:
-            break;
 
+            AMotor::getBody().detachBody(*podHolder.getChildPod()->getBody());
+            AMotor::getBody().getEnvironment().getVolume(AMotor::getBody().getPose().getPosition())->receive(podHolder.getChildPod(), PutDownPodSignal());
+
+            if (podHolder.getChildPod())
+                throw std::runtime_error("PodPutDown action invoked where it is invalid. (Tile doesn't accept pod");
+            break;
         default:
             throw std::runtime_error("Unhandled enum in RackMotor::activate()");
             break;

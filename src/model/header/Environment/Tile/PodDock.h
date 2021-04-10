@@ -50,6 +50,12 @@ public:
             carrier.push(std::move(getPodHolder().getChildPod()));
     }
 
+    void receive(OwnedPod &pod, const PutDownPodSignal &putdownSignal) override
+    {
+        if (pod && &(pod->getParentDock()) == this)
+            podHolder.push(std::move(pod));
+    }
+
     // Functionality
     /*************************************************************
      * @brief Adds an associated pod and places it on top of this

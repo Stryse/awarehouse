@@ -27,4 +27,12 @@ struct PickupPodSignal : public AgentSignal
 {
 };
 
+/*******************************************************
+ * @brief Sent when agent request to put down a pod to
+ * a pod containing entity
+ *******************************************************/
+struct PutDownPodSignal : public AgentSignal
+{
+};
+
 #endif

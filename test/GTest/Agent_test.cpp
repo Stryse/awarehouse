@@ -22,22 +22,20 @@ protected:
         for (int x = 0; x < X; ++x)
             for (int y = 0; y < Y; ++y)
                 for (int z = 0; z < Z; ++z)
-                {
-                    // Robot's tile will be podDock for additional testing
-                    if (x == 1 && y == 1 && z == 0)
-                    {
-                        std::shared_ptr<PodDock<>> podDock = std::make_shared<PodDock<>>(PodDock<>::Point{x, y, z});
-                        env->getBuffer()[env->getCoordAsIndex(x, y, z)] = podDock;
-                        podDock->addAssociatedPod(env);
-                    }
-                    else
-                        env->getBuffer()[env->getCoordAsIndex(x, y, z)] = std::make_shared<Tile>(Tile::Point{x, y, z});
-                }
+                    env->getBuffer()[env->getCoordAsIndex(x, y, z)] = std::make_shared<Tile>(Tile::Point{x, y, z});
 
+        // Replace tile with PodDocks
+        podDock = std::make_shared<PodDock<>>(PodDock<>::Point{1, 1, 0});
+        env->getBuffer()[env->getCoordAsIndex(1, 1, 0)] = podDock;
+        podDock->addAssociatedPod(env);
+
+        // Init robot
         robot = std::make_unique<DeliveryRobot<>>(env, Point<>(1, 1, 0), DirectionVector<>::UP());
     }
 
     static std::shared_ptr<ObservableNavEnvironment<>> env;
+    static std::shared_ptr<PodDock<>> podDock;
+
     static std::unique_ptr<DeliveryRobot<>> robot;
 
     using MotorAction = ::MotorAction<std::decay_t<decltype(*robot)>::Body, std::decay_t<decltype(*robot)>::Energy>;
@@ -47,6 +45,7 @@ protected:
 // #################################### SHARED VARIABLES ######################################################
 std::shared_ptr<ObservableNavEnvironment<>> AgentTest::env = nullptr;
 std::unique_ptr<DeliveryRobot<>> AgentTest::robot = nullptr;
+std::shared_ptr<PodDock<>> AgentTest::podDock = nullptr;
 
 /************************************************************************
  * @brief Perform movement without agent MCU solely with MoveMechanism
@@ -172,8 +171,58 @@ TEST_F(AgentTest, Networked_PodManagement)
     // Send Pickup Message
     adapter.send(std::make_unique<PickupPodMessage>(adapter.getAddress()), 100);
 
-    // Robot Action perform
+    // Robot Action perform (Pickup pod)
     EXPECT_EQ(robot->getPodHolder().getChildPod(), nullptr);
+    EXPECT_NE(podDock->getPodHolder().getChildPod(), nullptr);
+    EXPECT_EQ(robot->getBody()->getChildren().size(), 0);
+    EXPECT_EQ(podDock->getPodHolder().getChildPod()->getBody()->getParent(), nullptr);
     robot->tick(0);
     EXPECT_NE(robot->getPodHolder().getChildPod(), nullptr);
+    EXPECT_EQ(podDock->getPodHolder().getChildPod(), nullptr);
+    EXPECT_EQ(robot->getBody()->getChildren().size(), 1);
+    EXPECT_NE(robot->getPodHolder().getChildPod()->getBody()->getParent(), nullptr);
+    EXPECT_EQ(robot->getEnergySource()->getCharge(), 99);
+
+    // Movement With Pod
+    adapter.send(std::make_unique<MoveAgentMessage>(DirectionVector<>::UP(), adapter.getAddress()), 100);
+    bool checkPos = robot->getBody()->getPose().getPosition() == Point<>(1, 1, 0);
+    bool checkOr = robot->getBody()->getPose().getOrientation() == DirectionVector<>::UP();
+    EXPECT_TRUE(checkPos);
+    EXPECT_TRUE(checkOr);
+    robot->tick(1);
+
+    // Check Agent moved and Pod moved with agent
+    checkPos = robot->getBody()->getPose().getPosition() == Point<>(1, 2, 0);
+    checkOr = robot->getBody()->getPose().getOrientation() == DirectionVector<>::UP();
+    EXPECT_TRUE(checkPos);
+    EXPECT_TRUE(checkOr);
+    EXPECT_EQ(robot->getEnergySource()->getCharge(), 98);
+    checkPos = robot->getPodHolder().getChildPod()->getBody()->getPose().getPosition() == Point<>(1, 2, 1);
+    EXPECT_TRUE(checkPos);
+
+    // Move back with Pod
+    adapter.send(std::make_unique<MoveAgentMessage>(DirectionVector<>::DOWN(), adapter.getAddress()), 100);
+    robot->tick(2);
+    robot->tick(3);
+    robot->tick(4);
+    checkPos = robot->getBody()->getPose().getPosition() == Point<>(1, 1, 0);
+    checkOr = robot->getBody()->getPose().getOrientation() == DirectionVector<>::DOWN();
+    EXPECT_TRUE(checkPos);
+    EXPECT_TRUE(checkOr);
+    EXPECT_EQ(robot->getEnergySource()->getCharge(), 95);
+    checkPos = robot->getPodHolder().getChildPod()->getBody()->getPose().getPosition() == Point<>(1, 1, 1);
+    EXPECT_TRUE(checkPos);
+
+    // Put down pod
+    adapter.send(std::make_unique<PutDownPodMessage>(adapter.getAddress()), 100);
+    EXPECT_NE(robot->getPodHolder().getChildPod(), nullptr);
+    EXPECT_EQ(podDock->getPodHolder().getChildPod(), nullptr);
+    EXPECT_EQ(robot->getBody()->getChildren().size(), 1);
+    EXPECT_NE(robot->getPodHolder().getChildPod()->getBody()->getParent(), nullptr);
+    robot->tick(5);
+    EXPECT_EQ(robot->getPodHolder().getChildPod(), nullptr);
+    EXPECT_NE(podDock->getPodHolder().getChildPod(), nullptr);
+    EXPECT_EQ(podDock->getPodHolder().getChildPod()->getBody()->getParent(), nullptr);
+    EXPECT_EQ(robot->getBody()->getChildren().size(), 0);
+    EXPECT_EQ(robot->getEnergySource()->getCharge(), 94);
 }

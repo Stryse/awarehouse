@@ -112,6 +112,12 @@ public:
         return inventory;
     }
 
+    /************************************************************************
+     * @brief Returns the body of the pod
+     ************************************************************************/
+    const Body *getBody() const { return body.get(); }
+    Body *getBody() { return body.get(); }
+
 private:
     std::unique_ptr<Body> body;
     std::set<ItemType, pointer_element_comparator<TItemType>> inventory;
