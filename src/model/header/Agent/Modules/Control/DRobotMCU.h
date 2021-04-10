@@ -3,7 +3,6 @@
 
 #include "AMicroController.h"
 #include "AgentAction.h"
-#include "AgentSignals.h"
 #include "IDepleting.h"
 #include "IMoveMechanism.h"
 #include "LibConfig.h"
@@ -92,10 +91,12 @@ public:
 
     virtual void receive(const PickupPodMessage &message) override
     {
+        actionQueue.push(rackMotor.pickUpPodAction());
     }
 
     virtual void receive(const PutDownPodMessage &message) override
     {
+        actionQueue.push(rackMotor.putDownPodAction());
     }
 
     virtual void receive(const PutDownOrderMessage &message) override

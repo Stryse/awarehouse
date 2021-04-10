@@ -20,7 +20,6 @@ class PodHolder : public IContaining<std::unique_ptr<Pod<OrderModel, TEnvironmen
 {
 public:
     using Environment = TEnvironment;
-    using OwnedPod = std::unique_ptr<Pod<OrderModel, Environment>>;
 
 public:
     PodHolder(){};
@@ -30,7 +29,7 @@ public:
     /***************************************************************************************
      * @brief Don't use this function because unique pointer cant be reassigned without move.
      ***************************************************************************************/
-    virtual void push(const OwnedPod &) override
+    virtual void push(const std::unique_ptr<Pod<OrderModel, TEnvironment>> &) override
     {
         throw std::runtime_error("PodHolder::push(const ItemType &item) is not supported please use PodHolder::push(const ItemType &&item)");
     }
@@ -40,7 +39,7 @@ public:
      * item will be set to nullptr.
      * @throws runtime error if holder already has a pod.
      **************************************************************/
-    virtual void push(OwnedPod &&item) override
+    virtual void push(std::unique_ptr<Pod<OrderModel, TEnvironment>> &&item) override
     {
         if (pod == nullptr)
             pod.swap(item);
@@ -52,9 +51,12 @@ public:
      * @brief Removes and returns a pod if the holder has one.
      * std::nullopt returned when there's no associated pod.
      ******************************************************************/
-    virtual std::optional<OwnedPod> pop(const OwnedPod &) override
+    virtual std::optional<std::unique_ptr<Pod<OrderModel, TEnvironment>>> pop(const std::unique_ptr<Pod<OrderModel, TEnvironment>> &) override
     {
-        return std::nullopt; // TODO Implement
+        if (pod)
+            return std::make_optional<std::unique_ptr<Pod<OrderModel, TEnvironment>>>(std::move(pod));
+        else
+            return std::nullopt;
     }
 
     /**************************************************************
@@ -69,11 +71,11 @@ public:
      * @brief Returns the associated pod if the holder has one.
      * Returns nullptr if the holder has no pod.
      ***************************************************************/
-    const OwnedPod &getChildPod() const { return pod; } // TODO std optional
-    OwnedPod &getChildPod() { return pod; }
+    const std::unique_ptr<Pod<OrderModel, TEnvironment>> &getChildPod() const { return pod; } // TODO std optional
+    std::unique_ptr<Pod<OrderModel, TEnvironment>> &getChildPod() { return pod; }
 
 private:
-    OwnedPod pod;
+    std::unique_ptr<Pod<OrderModel, TEnvironment>> pod;
 };
 
 #endif /* POD_HOLDER__H */

@@ -53,12 +53,24 @@ public:
     Pod(const Point &position,
         const std::shared_ptr<Environment> &environment,
         const PodDock &parentDock)
-        : body(position, DirectionVector::ABOVE(), environment, BodyShapeFactory<Point>::onlyOrigin()), // TODO make Two blocks high again
+        : body(std::make_unique<Body>(position, DirectionVector::ABOVE(), environment, BodyShapeFactory<Point>::onlyOrigin())), // TODO make Two blocks high again*/
           parentDock(parentDock)
     {
     }
 
-    virtual ~Pod() {}
+    Pod(const Pod &other) = delete;
+    Pod &operator=(const Pod &other) = delete;
+
+    Pod(Pod &&other)
+        : body(std::move(other.body)),
+          inventory(std::move(other.inventory)),
+          parentDock(std::move(other.parentDock))
+    {
+    }
+
+    virtual ~Pod()
+    {
+    }
 
 public:
     // ##################### IContaining Interface implementation ##########################
@@ -101,7 +113,7 @@ public:
     }
 
 private:
-    Body body;
+    std::unique_ptr<Body> body;
     std::set<ItemType, pointer_element_comparator<TItemType>> inventory;
     const PodDock &parentDock;
 };

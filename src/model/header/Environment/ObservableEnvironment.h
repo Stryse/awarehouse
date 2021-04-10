@@ -64,14 +64,14 @@ public:
 
     //################################ INavigationalEnvironment implementation ##################################
 
-    virtual const VolumeType &getVolume(const Point &point) const override
+    virtual const std::shared_ptr<VolumeType> &getVolume(const Point &point) const override
     {
-        return *tileSpace[point.getPosX() + yLength * (point.getPosY() + zLength * point.getPosZ())];
+        return tileSpace[point.getPosX() + yLength * (point.getPosY() + zLength * point.getPosZ())];
     }
 
-    virtual VolumeType &getVolume(const Point &point) override
+    virtual std::shared_ptr<VolumeType> &getVolume(const Point &point) override
     {
-        return const_cast<VolumeType &>(static_cast<const ObservableNavEnvironment &>(*this).getVolume(point));
+        return const_cast<std::shared_ptr<VolumeType> &>(static_cast<const ObservableNavEnvironment &>(*this).getVolume(point));
     }
 
     virtual bool isInBounds(const Point &point) const override

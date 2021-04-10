@@ -37,6 +37,8 @@ public:
     {
     }
 
+    virtual ~PodDock() {}
+
 public:
     // IAgentSignalHandler Implementation
     /********************************************************************************
@@ -45,7 +47,7 @@ public:
     virtual void receive(IContaining<OwnedPod> &carrier, const PickupPodSignal &pickupSignal) override
     {
         if (podHolder.getChildPod() != nullptr)
-            carrier.push(std::move(podHolder.getChildPod()));
+            carrier.push(std::move(getPodHolder().getChildPod()));
     }
 
     // Functionality

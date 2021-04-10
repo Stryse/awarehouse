@@ -42,9 +42,7 @@ public:
         switch (motorDirection)
         {
         case MotorDirection::CLOCKWISE:
-            this->body.getEnvironment()
-                .getVolume(this->body.getPose().getPosition())
-                .receive(podHolder, PickupPodSignal());
+            AMotor::getBody().getEnvironment().getVolume(AMotor::getBody().getPose().getPosition())->receive(podHolder, PickupPodSignal());
             break;
 
         case MotorDirection::COUNTER_CLOCKWISE:

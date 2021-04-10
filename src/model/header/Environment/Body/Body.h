@@ -72,6 +72,10 @@ public:
         occupyV(environment->getVolume(position));
     }
 
+    Body(const Body &other) = delete;
+    Body(Body &&other) = delete;
+    Body &operator=(const Body &other) = delete;
+
     virtual ~Body()
     {
         // Destroy child record in parent
@@ -94,30 +98,30 @@ public:
      * @param originVolume Occupied volume of the body's origin point
      * @throws VolumeCollisionException thrown when any part of the body collides.
      *********************************************************************************************************/
-    virtual void occupyV(VolumeType &originVolume) override
+    virtual void occupyV(const std::shared_ptr<VolumeType> &originVolume) override
     {
         freeV();
 
         // Self origin - occupation
-        originVolume.occupyV(this);
-        containerVolume.push_back(&originVolume);
+        originVolume->occupyV(this);
+        containerVolume.push_back(originVolume);
 
         // Self bodyparts -- occupation
         for (auto &bodypart : shape)
         {
-            Point newPos = originVolume.getPosition().moved(DirectionVector(bodypart));
-            environment->getVolume(newPos).occupyV(this);
-            containerVolume.push_back(&environment->getVolume(newPos));
+            Point newPos = originVolume->getPosition().moved(DirectionVector(bodypart));
+            environment->getVolume(newPos)->occupyV(this);
+            containerVolume.push_back(environment->getVolume(newPos));
         }
 
         // All children - occupation
         for (auto &child : childBodies)
         {
             DirectionVector this2child = child->getPose().getPosition() - pose.getPosition();
-            Point newChildPos = originVolume.getPosition().moved(this2child);
+            Point newChildPos = originVolume->getPosition().moved(this2child);
             child->occupyV(environment->getVolume(newChildPos));
         }
-        pose.setPosition(originVolume.getPosition());
+        pose.setPosition(originVolume->getPosition());
     }
 
     /*******************************************************************
@@ -127,11 +131,11 @@ public:
     virtual void freeV() override
     {
         // Free children
-        for (auto child : childBodies)
+        for (auto &child : childBodies)
             child->freeV();
 
         // Free self
-        for (auto occupied : containerVolume)
+        for (auto &occupied : containerVolume)
             occupied->freeV();
 
         containerVolume.clear();
@@ -250,7 +254,7 @@ private:
      * @brief Set of volumes that the body occupies in the environment.
      * Elements point to "environment" class member.
      ***********************/
-    std::vector<VolumeType *> containerVolume;
+    std::vector<std::shared_ptr<VolumeType>> containerVolume;
 
     /***********************
      * @brief Parts of the body and it's children
