@@ -83,9 +83,14 @@ TEST_F(ObservableNavEnvironmentTest, PodTransfer)
     docks[1]->getPodHolder().getChildPod()->push(std::make_unique<OrderModel>(5));
     docks[1]->getPodHolder().getChildPod()->push(std::make_unique<OrderModel>(2));
 
+    EXPECT_NE(docks[1]->getPodHolder().getChildPod(), nullptr);
+    EXPECT_EQ(docks[1]->getPodHolder().getChildPod()->getInventory().size(), 3);
+
     DeliveryRobot<> robot(env, Point<>(0, 0, 0), DirectionVector<>::UP());
     PickupPodSignal pps;
     docks[1]->receive(robot.getPodHolder(), pps);
 
-    EXPECT_TRUE(true);
+    EXPECT_EQ(docks[1]->getPodHolder().getChildPod(), nullptr);
+    EXPECT_NE(robot.getPodHolder().getChildPod(), nullptr);
+    EXPECT_EQ(robot.getPodHolder().getChildPod()->getInventory().size(), 3);
 }
