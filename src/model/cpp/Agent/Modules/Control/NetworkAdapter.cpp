@@ -46,6 +46,7 @@ bool NetworkAdapter::connectWithAddress(const std::shared_ptr<Network> &network,
     if (network->connectWithAddress(*this, address))
     {
         this->network = network;
+        this->address = address;
         return true;
     }
     return false;
