@@ -86,7 +86,7 @@ public:
             child->parentBody = nullptr;
         childBodies.clear();
         // Leave Environment, children remain
-        freeV();
+        Body<Environment>::freeV();
     }
 
     //############################## IVolumeOccupant implementation ##########################################
