@@ -2,11 +2,13 @@
 #define RACK_MOTOR__H
 
 #include "AMotor.h"
+#include "AgentSignals.h"
 #include "IDepleting.h"
 #include "LibConfig.h"
 #include "MotorAction.h"
 #include "MotorCommand.h"
 #include "MotorDrive.h"
+#include "PodHolder.h"
 #include <memory>
 #include <stdexcept>
 #include <vector>
@@ -23,12 +25,14 @@ public:
     using MotorAction = ::MotorAction<Body, Energy>;
     using MotorCommand = ::MotorCommand<AMotor>;
     using MotorDrive = ::MotorDrive<AMotor, Energy>;
+    using PodHolder = ::PodHolder<typename Body::Environment>;
 
 public:
-    explicit RackMotor(Body &body, IDepleting &energySource)
+    explicit RackMotor(Body &body, IDepleting &energySource, PodHolder &podHolder)
         : AMotor(body),
           _pickUpPodAction(std::make_unique<MotorAction>(pickUpMotorDrive(body, *this), energySource)),
-          _putDownPodAction(std::make_unique<MotorAction>(putDownMotorDrive(body, *this), energySource))
+          _putDownPodAction(std::make_unique<MotorAction>(putDownMotorDrive(body, *this), energySource)),
+          podHolder(podHolder)
     {
     }
 
@@ -38,6 +42,9 @@ public:
         switch (motorDirection)
         {
         case MotorDirection::CLOCKWISE:
+            this->body.getEnvironment()
+                .getVolume(this->body.getPose().getPosition())
+                .receive(podHolder, PickupPodSignal());
             break;
 
         case MotorDirection::COUNTER_CLOCKWISE:
@@ -80,6 +87,7 @@ public:
 private:
     std::unique_ptr<MotorAction> _pickUpPodAction;
     std::unique_ptr<MotorAction> _putDownPodAction;
+    PodHolder &podHolder;
 
     static const Energy pickUpCost;
     static const int pickUpDuration;
