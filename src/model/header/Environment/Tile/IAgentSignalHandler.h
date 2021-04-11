@@ -3,16 +3,14 @@
 
 #include "Agent.h"
 #include "AgentSignals.h"
+#include "IContaining.h"
 #include "LibConfig.h"
+#include "OrderModel.h"
+#include "Pod.h"
 #include <memory>
 // #################### FORWARD DECLARATIONS ######################
 template <typename TEnergy>
 class IDepleting;
-template <typename TItemType>
-class IContaining;
-template <typename ItemType, typename Environment>
-class Pod;
-class OrderModel;
 // ################################################################
 
 /**************************************************************************
@@ -22,11 +20,13 @@ template <typename Environment>
 class IAgentSignalHandler
 {
 public:
-    using OwnedPod_Order = std::unique_ptr<Pod<OrderModel, Environment>>;
-
-public:
+    virtual ~IAgentSignalHandler() = default;
     virtual void receive(IDepleting<config::agent::DefaultEnergy> &resource, const ChargeSignal &chargeSignal) const {}
-    virtual void receive(IContaining<OwnedPod_Order> &carrier, const PickupPodSignal &pickupSignal) {}
+    virtual void receive(IContaining<std::unique_ptr<Pod<OrderModel, Environment>>> &carrier, const PickupPodSignal &pickupSignal) {}
+    virtual void receive(std::unique_ptr<Pod<OrderModel, Environment>> &pod, const PutDownPodSignal &putdownSignal) {}
+
+protected:
+    IAgentSignalHandler() = default;
 };
 
 #endif /* I_AGENT_SIGNAL_HANDLER__H */

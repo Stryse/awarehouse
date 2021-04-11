@@ -29,9 +29,9 @@ TEST_F(ObservableNavEnvironmentTest, getVolumeAtPoint_x_y_z)
                     std::make_shared<decltype(env)::VolumeType>(decltype(env)::VolumeType::Point{x, y, z});
 
                 // Check Point Sanity
-                EXPECT_EQ(env.getVolume(decltype(env)::Point(x, y, z)).getPosition().getPosX(), x) << "[ERROR] Wrong coordinate X";
-                EXPECT_EQ(env.getVolume(decltype(env)::Point(x, y, z)).getPosition().getPosY(), y) << "[ERROR] Wrong coordinate Y";
-                EXPECT_EQ(env.getVolume(decltype(env)::Point(x, y, z)).getPosition().getPosZ(), z) << "[ERROR] Wrong coordinate Z";
+                EXPECT_EQ(env.getVolume(decltype(env)::Point(x, y, z))->getPosition().getPosX(), x) << "[ERROR] Wrong coordinate X";
+                EXPECT_EQ(env.getVolume(decltype(env)::Point(x, y, z))->getPosition().getPosY(), y) << "[ERROR] Wrong coordinate Y";
+                EXPECT_EQ(env.getVolume(decltype(env)::Point(x, y, z))->getPosition().getPosZ(), z) << "[ERROR] Wrong coordinate Z";
             }
 }
 
@@ -57,7 +57,7 @@ TEST_F(ObservableNavEnvironmentTest, chargingStationChargeTest)
                     std::make_shared<ChargingStation<int>>(decltype(env)::VolumeType::Point{x, y, z}, 3);
 
                 //Send Charge signal
-                env.getVolume(Point<>(x, y, z)).receive(battery, chargeSignal);
+                env.getVolume(Point<>(x, y, z))->receive(battery, chargeSignal);
 
                 //Should be charged
                 EXPECT_EQ(battery.getCharge(), ++counter);
@@ -83,9 +83,14 @@ TEST_F(ObservableNavEnvironmentTest, PodTransfer)
     docks[1]->getPodHolder().getChildPod()->push(std::make_unique<OrderModel>(5));
     docks[1]->getPodHolder().getChildPod()->push(std::make_unique<OrderModel>(2));
 
+    EXPECT_NE(docks[1]->getPodHolder().getChildPod(), nullptr);
+    EXPECT_EQ(docks[1]->getPodHolder().getChildPod()->getInventory().size(), 3);
+
     DeliveryRobot<> robot(env, Point<>(0, 0, 0), DirectionVector<>::UP());
     PickupPodSignal pps;
     docks[1]->receive(robot.getPodHolder(), pps);
 
-    EXPECT_TRUE(true);
+    EXPECT_EQ(docks[1]->getPodHolder().getChildPod(), nullptr);
+    EXPECT_NE(robot.getPodHolder().getChildPod(), nullptr);
+    EXPECT_EQ(robot.getPodHolder().getChildPod()->getInventory().size(), 3);
 }

@@ -3,6 +3,7 @@
 
 #include "LibConfig.h"
 #include <cstddef>
+#include <memory>
 
 // ############################## Forward declarations ####################################
 template <typename T, std::size_t>
@@ -25,17 +26,20 @@ public:
     using VolumeType = TVolumeType;
 
 public:
+    virtual ~INavigationalEnvironment() = default;
+
+public:
     /*****************************************************************
      * @brief Returns a unit of volume based on a provided 3D point.
      * @param point Point in space of the volume unit.
      *****************************************************************/
-    virtual VolumeType &getVolume(const Point &point) = 0;
+    virtual std::shared_ptr<VolumeType> &getVolume(const Point &point) = 0;
 
     /*****************************************************************
      * @brief Returns a unit of volume based on a provided 3D point.
      * @param point Point in space of the volume unit.
      *****************************************************************/
-    virtual const VolumeType &getVolume(const Point &point) const = 0;
+    virtual const std::shared_ptr<VolumeType> &getVolume(const Point &point) const = 0;
 
     /*****************************************************************
      * @brief Returns whether provided point is in the environment.

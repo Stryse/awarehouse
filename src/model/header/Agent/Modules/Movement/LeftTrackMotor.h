@@ -4,7 +4,6 @@
 #include "AMotor.h"
 #include "Matrix.h"
 
-
 /*******************************************************
  * @brief An implementation of an Agent's left track motor.
  * It must be used with a RightTrackMotor in order to function
@@ -35,7 +34,7 @@ public:
         switch (motorDirection)
         {
         case MotorDirection::CLOCKWISE:
-            MoveForward(pose);
+            MoveForward(this->body);
             RotateClockWise(pose);
             break;
 
@@ -50,7 +49,7 @@ public:
 private:
     static Matrix<> rotation;
 
-    void MoveForward(Pose &pose) { pose.getPosition().move(pose.getOrientation()); }
+    void MoveForward(Body &body) { body.moveBodyOutsideEnvironment(body.getPose().getOrientation()); }
     void RotateClockWise(Pose &pose) { rotation.transform(pose.getOrientation()); }
 };
 

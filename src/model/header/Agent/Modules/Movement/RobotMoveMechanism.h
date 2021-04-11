@@ -42,12 +42,12 @@ public:
     // #######################################################################
 
 public:
-    explicit RobotMoveMechanism(Body &body, IDepleting &resource)
-        : IMoveMechanism<TBody, TEnergy>(body, getNewRobotMotors(body), getNewRobotMoveSet(), resource),
+    explicit RobotMoveMechanism(const std::shared_ptr<Body> &body, IDepleting &resource)
+        : IMoveMechanism<TBody, TEnergy>(body, resource, getNewRobotMotors(*body), getNewRobotMoveSet()),
 
-          ForwardMotorAction(std::make_unique<MotorAction>(forwardMotorDrive(body, this->motors), resource)),
-          LeftTurnMotorAction(std::make_unique<MotorAction>(leftTurnMotorDrive(body, this->motors), resource)),
-          RightTurnMotorAction(std::make_unique<MotorAction>(rightTurnMotorDrive(body, this->motors), resource))
+          ForwardMotorAction(std::make_unique<MotorAction>(forwardMotorDrive(*body, this->motors), resource)),
+          LeftTurnMotorAction(std::make_unique<MotorAction>(leftTurnMotorDrive(*body, this->motors), resource)),
+          RightTurnMotorAction(std::make_unique<MotorAction>(rightTurnMotorDrive(*body, this->motors), resource))
     {
     }
 
@@ -67,11 +67,11 @@ public:
     {
         std::queue<MotorAction *> motorActionQ;
         // We have to turn this much times
-        int rotationTimes = (-DirectionVector::dot(direction, this->body.getPose().getOrientation()) + 1);
+        int rotationTimes = (-DirectionVector::dot(direction, this->body->getPose().getOrientation()) + 1);
 
         // Angle of the rotation (clockwise or counterclockwise) when rotating 90 degrees
-        int rotationAngle = (this->body.getPose().getOrientation().getX() * direction.getY()) -
-                            (this->body.getPose().getOrientation().getY() * direction.getX());
+        int rotationAngle = (this->body->getPose().getOrientation().getX() * direction.getY()) -
+                            (this->body->getPose().getOrientation().getY() * direction.getX());
 
         switch (rotationTimes)
         {
@@ -114,7 +114,7 @@ public:
      *************************************************************************************************/
     virtual Energy getEnergyCost(const DirectionVector &direction) const override
     {
-        return RobotMoveMechanism<Body, Energy>::turnCost * (-DirectionVector::dot(direction, this->body.getPose().getOrientation()) + 1) +
+        return RobotMoveMechanism<Body, Energy>::turnCost * (-DirectionVector::dot(direction, this->body->getPose().getOrientation()) + 1) +
                RobotMoveMechanism<Body, Energy>::moveCost;
     }
 
@@ -123,7 +123,7 @@ public:
      *************************************************************************************************/
     virtual int getTimeCost(const DirectionVector &direction) const override
     {
-        return RobotMoveMechanism<Body, Energy>::turnDuration * (-DirectionVector::dot(direction, this->body.getPose().getOrientation()) + 1) +
+        return RobotMoveMechanism<Body, Energy>::turnDuration * (-DirectionVector::dot(direction, this->body->getPose().getOrientation()) + 1) +
                RobotMoveMechanism<Body, Energy>::moveDuration;
     }
 

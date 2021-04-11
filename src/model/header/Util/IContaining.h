@@ -11,6 +11,9 @@ public:
     virtual void push(ItemType &&item) = 0;
     virtual std::optional<ItemType> pop(const ItemType &item) = 0;
     virtual bool empty() const = 0;
+
+public:
+    virtual ~IContaining() = default;
 };
 
 #endif

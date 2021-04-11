@@ -39,7 +39,7 @@ public:
      * @param originVolume Volume instance that will be associated with
      * the occupant's origin point.
      ***************************************************************************/
-    virtual void occupyV(VolumeType &originVolume) = 0;
+    virtual void occupyV(const std::shared_ptr<VolumeType> &originVolume) = 0;
 
     /***************************************************************************
      * @brief The occupant leaves its associated parent volumes.

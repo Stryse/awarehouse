@@ -6,7 +6,7 @@
 class OrderModel
 {
 public:
-    OrderModel(int category);
+    explicit OrderModel(int category);
 
     friend inline bool operator<(const OrderModel &lhs, const OrderModel &rhs)
     {

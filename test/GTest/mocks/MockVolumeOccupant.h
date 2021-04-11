@@ -7,7 +7,7 @@
 template <typename VolumeType>
 class MockVolumeOccupant : public IVolumeOccupant<VolumeType>
 {
-    MOCK_METHOD(void, occupyV, (VolumeType &), (override));
+    MOCK_METHOD(void, occupyV, (const std::shared_ptr<VolumeType> &), (override));
     MOCK_METHOD(void, freeV, (), (override));
 };
 

@@ -37,7 +37,7 @@ public:
     const std::vector<std::shared_ptr<DeliveryRobot<>>> &getRobots() const;
 
 public:
-    void tick();
+    void tick(int timeStamp);
 
 private:
     size_t rowCount;

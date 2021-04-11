@@ -64,15 +64,14 @@ public:
 
     //################################ INavigationalEnvironment implementation ##################################
 
-    virtual const VolumeType &getVolume(const Point &point) const override
+    virtual const std::shared_ptr<VolumeType> &getVolume(const Point &point) const override
     {
-        int ind = point.getPosX() + (xLength * point.getPosY()) + (xLength * yLength * point.getPosZ());
-        return *tileSpace[ind];
+        return tileSpace[point.getPosX() + (xLength * point.getPosY()) + (xLength * yLength * point.getPosZ())];
     }
 
-    virtual VolumeType &getVolume(const Point &point) override
+    virtual std::shared_ptr<VolumeType> &getVolume(const Point &point) override
     {
-        return const_cast<VolumeType &>(static_cast<const ObservableNavEnvironment &>(*this).getVolume(point));
+        return const_cast<std::shared_ptr<VolumeType> &>(static_cast<const ObservableNavEnvironment &>(*this).getVolume(point));
     }
 
     virtual bool isInBounds(const Point &point) const override
@@ -95,7 +94,7 @@ public:
     size_t getZLength() const { return zLength; }
 
     size_t getCoordAsIndex(size_t x, size_t y, size_t z) const { return x + (xLength * y) + (xLength * yLength * z); }
-    size_t getCoordAsIndex(const Point& point) const { return getCoordAsIndex(point.getPosX(), point.getPosY(), point.getPosZ()); }
+    size_t getCoordAsIndex(const Point &point) const { return getCoordAsIndex(point.getPosX(), point.getPosY(), point.getPosZ()); }
 };
 
 #endif /* OBSERVABLE_NAV_ENVIRONMENT__H */

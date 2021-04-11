@@ -1,15 +1,17 @@
 #include "Warehouse.h"
 #include "ControllerImpl.h"
 #include "IWarehousePersistence.h"
+#include "Network.h"
 #include "SchedulerImpl.h"
 #include <iostream>
 
 Warehouse::Warehouse(std::unique_ptr<IWarehousePersistence<QString>> &&persistence)
     : timeStamp(0),
-      scheduler(new SchedulerImpl()),
-      controller(new ControllerImpl()),
+      scheduler(std::make_unique<SchedulerImpl>()),
+      controller(std::make_unique<ControllerImpl>()),
       persistence(std::move(persistence)),
-      state(nullptr)
+      state(nullptr),
+      network(std::make_shared<Network>())
 {
 }
 
@@ -18,16 +20,25 @@ Warehouse::~Warehouse() = default;
 void Warehouse::tick()
 {
     std::cerr << "Warehouse tick! Timestamp: " << timeStamp << std::endl;
-    scheduler->tick();
-    controller->tick();
-    state->tick();
+    scheduler->tick(timeStamp);
+    controller->tick(timeStamp);
+    state->tick(timeStamp);
     ++timeStamp;
 }
 
 bool Warehouse::loadState(const QString &srcPath)
 {
+    network->reset();
     state.reset(persistence->load(srcPath));
-    timeStamp = 0;
+    if (state)
+    {
+        timeStamp = 0;
+        controller->getNetworkAdapter().connectWithAddress(network, 0x1);
+        scheduler->getNetworkAdapter().connectWithAddress(network, 0x2);
+
+        for (auto &agent : state->getRobots())
+            agent->getNetworkAdapter().connect(network);
+    }
 
     return state != nullptr;
 }
