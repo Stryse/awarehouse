@@ -5,6 +5,7 @@
 #include "BodyShapeFactory.h"
 #include "IContaining.h"
 #include "LibConfig.h"
+#include "boost/signals2.hpp"
 #include <functional>
 #include <memory>
 #include <set>
@@ -50,6 +51,9 @@ public:
     using ItemType = std::unique_ptr<TItemType>;
 
 public:
+    boost::signals2::signal<void(const Body &)> onBodyMoved;
+
+public:
     Pod(const Point &position,
         const std::shared_ptr<Environment> &environment,
         const PodDock &parentDock)
@@ -59,6 +63,7 @@ public:
     }
 
     Pod(const Pod &other) = delete;
+
     Pod &operator=(const Pod &other) = delete;
 
     Pod(Pod &&other)
@@ -68,9 +73,7 @@ public:
     {
     }
 
-    virtual ~Pod()
-    {
-    }
+    virtual ~Pod(){}
 
 public:
     // ##################### IContaining Interface implementation ##########################

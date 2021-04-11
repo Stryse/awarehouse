@@ -54,6 +54,11 @@ public:
      ************************************************************/
     const int getTimeSum() const { return timeSum; }
 
+    /************************************************************
+     * @brief Returns the body associated with the motorDrive
+     ************************************************************/
+    const Body &getBody() const { return body; }
+
 private:
     Body &body;
     std::vector<MotorCommand> motorCommands;

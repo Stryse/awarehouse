@@ -29,13 +29,19 @@ public:
     }
 
 public:
+    /***********************************************************************
+     * @brief This motor drives asymmetrically in sync with the Left Track Motor.
+     * Configuration:
+     * 
+     * CLOCWISE          -> Rotates the body CounterClockwise
+     * COUNTER_CLOCKWISE -> Moves the body Backwards
+     ***********************************************************************/
     virtual void activate(const MotorDirection &motorDirection) override
     {
-        Pose &pose = this->body.getPose();
         switch (motorDirection)
         {
         case MotorDirection::CLOCKWISE:
-            RotateCounterClockWise(pose);
+            RotateCounterClockWise(this->body.getPose());
             break;
 
         case MotorDirection::COUNTER_CLOCKWISE:

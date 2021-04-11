@@ -16,13 +16,37 @@ public:
     virtual ~Network();
 
 public:
+    /**********************************************************************
+     * @brief Registers an adapter in the network and gives it an address.
+     **********************************************************************/
     int connect(NetworkAdapter &networkAdapter);
+
+    /**********************************************************************
+     * @brief Attempts to register an adapter in the network with the provided
+     * address. Succeeds if address is not already claimed.
+     **********************************************************************/
     bool connectWithAddress(NetworkAdapter &networkAdapter, int address);
+
+    /**********************************************************************
+     * @brief Removes a network adapter from the set of registered adapters
+     * thus disconnecting it from the network.
+     **********************************************************************/
     void disconnect(NetworkAdapter &networkAdapter);
+
+    /**********************************************************************************
+     * @brief Attempts to send a message to the adapter which has the provided address
+     **********************************************************************************/
     bool sendMessage(std::unique_ptr<AbstractNetworkMessage> &&message, int recipientAddress) const;
+
+    /********************************************************
+     * @brief Disconnects all adapters from the network.
+     ********************************************************/
     void reset();
 
 private:
+    /***************************************************************
+     * @brief Returns an address for a freshly connecting adapter.
+     ***************************************************************/
     int getNewAddress();
 
 private:

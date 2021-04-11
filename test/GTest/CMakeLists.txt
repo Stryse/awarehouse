@@ -16,6 +16,7 @@ Tile_test.cpp
 Body_test.cpp
 Agent_test.cpp
 ObservableNavEnvironment_test.cpp
+Signals_test.cpp
 )
 #############################################################################
 add_executable(awh-test ${T_SOURCES})
