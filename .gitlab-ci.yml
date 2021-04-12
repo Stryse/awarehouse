@@ -5,10 +5,13 @@ stages:
   - test
 
 before_script:
-  - wget -O - https://apt.kitware.com/keys/kitware-archive-latest.asc 2>/dev/null | gpg --dearmor - | sudo tee /etc/apt/trusted.gpg.d/kitware.gpg >dev/null
-  - apt-add-repository 'deb https://apt.kitware.com/ubuntu/ bionic main'
+  - wget https://github.com/Kitware/CMake/releases/download/v3.16.5/cmake-3.16.5.tar.gz
+  - tar -zxvf cmake-3.16.5.tar.gz
+  - cd cmake-3.16.5
+  - ./bootstrap
+  - make 
+  - sudo make install 
   - apt-get update -yqq
-  - apt-get install -yqq cmake --classic
   - apt-get install -yqq qt5-default
   - apt-get install -yqq doxygen
 
