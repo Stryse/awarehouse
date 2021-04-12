@@ -13,6 +13,36 @@ Item {
     property color secondaryColor
     property real  borderWidth
 
+    readonly property ListModel tileList: ListModel {
+        ListElement {
+            tileType: "Robot"
+            tileColor: "#80DEEA"
+        }
+        ListElement {
+            tileType: "Pod"
+            tileColor: "#FFAB91"
+        }
+        ListElement {
+            tileType: "Charging Station"
+            tileColor: "#CE93D8"
+        }
+        ListElement {
+            tileType: "Delivery Station"
+            tileColor: "#A5D6A7"
+        }
+
+        function getTileColor(type) {
+            for (var i = 0; i < tileList.count; ++i) {
+                var tile = tileList.get(i)
+
+                if (tile.tileType === type)
+                    return tile.tileColor
+            }
+
+            return Material.accent
+        }
+    }
+
     SplitView {
         id: horizontalSplit
 
@@ -135,49 +165,72 @@ Item {
                 }
             }
 
-            Item {
+            WarehouseMap {
                 id: warehouse
-
-                property int wareHouseRows: warehouseSettings.rowCount
-                property int wareHouseCols: warehouseSettings.columnCount
-
-                readonly property real  aspectRatio: 16/9
-
-                anchors {
-                    left: parent.left;         right:  parent.right
-                    top:  previewLabel.bottom; bottom: buttonsLayout.top
-
-                    leftMargin:   parent.width  * 0.05; rightMargin: parent.width * 0.05
-                    bottomMargin: parent.height * 0.03
-                }
-
-                Material.background: Material.primary
-                Material.elevation:  6
-
-                Grid {
-                    id: warehouseGrid
-
-                    property real cellSize: Math.min(warehouse.width  / warehouse.wareHouseCols - spacing,
-                                                     warehouse.height / warehouse.wareHouseRows - spacing)
-
-                    anchors.centerIn: parent
-
-                    rows:    warehouse.wareHouseRows
-                    columns: warehouse.wareHouseCols
-                    spacing: 1
-
-                    Repeater {
-                        model: warehouse.wareHouseRows * warehouse.wareHouseCols
-
-                        Rectangle {
-                            width:  warehouseGrid.cellSize
-                            height: warehouseGrid.cellSize
-
-                            color:  Material.accent
-                        }
-                    }
-                }
             }
+
+//            Item {
+//                id: warehouse
+
+//                property int wareHouseRows: warehouseSettings.rowCount
+//                property int wareHouseCols: warehouseSettings.columnCount
+
+//                readonly property real  aspectRatio: 16/9
+
+//                anchors {
+//                    left: parent.left;         right:  parent.right
+//                    top:  previewLabel.bottom; bottom: buttonsLayout.top
+
+//                    leftMargin:   parent.width  * 0.05; rightMargin: parent.width * 0.05
+//                    bottomMargin: parent.height * 0.03
+//                }
+
+//                Material.background: Material.primary
+//                Material.elevation:  6
+
+//                Grid {
+//                    id: warehouseGrid
+
+//                    property real cellSize: Math.min(warehouse.width  / warehouse.wareHouseCols - spacing,
+//                                                     warehouse.height / warehouse.wareHouseRows - spacing)
+
+//                    anchors.centerIn: parent
+
+//                    rows:    warehouse.wareHouseRows
+//                    columns: warehouse.wareHouseCols
+//                    spacing: 1
+
+//                    Repeater {
+//                        model: warehouse.wareHouseRows * warehouse.wareHouseCols
+
+//                        DropArea {
+//                            id: dropArea
+
+//                            property string tileColor: Material.accent
+//                            property string tileType: "Road"
+
+//                            width:  warehouseGrid.cellSize
+//                            height: warehouseGrid.cellSize
+
+//                            Rectangle {
+//                                id: dropRectangle
+
+//                                anchors.fill: parent
+
+//                                color: dropArea.tileColor
+
+//                                states: State {
+//                                    when: dropArea.containsDrag
+//                                    PropertyChanges {
+//                                        target: dropRectangle
+//                                        color: Qt.darker(dropArea.tileColor, 1.5)
+//                                    }
+//                                }
+//                            }
+//                        }
+//                    }
+//                }
+//            }
         }
     }
 }
