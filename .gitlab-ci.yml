@@ -4,7 +4,7 @@ stages:
   - build
   - test
 
-before-script:
+before_script:
   - apt-get update -yqq
   - apt-get install -yqq build-essential cmake
   - apt-get install -yqq qt5-default
