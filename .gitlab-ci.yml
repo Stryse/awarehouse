@@ -9,6 +9,7 @@ before_script:
   - apt-get install -yqq cmake
   - apt-get install -yqq build-essential
   - apt-get install -yqq qt5-default
+  - apt-get install -yqq qtdeclarative5-dev
   - apt-get install -yqq doxygen
 
 build-program:
