@@ -57,11 +57,27 @@
             },
             {
                 "RowCoord": 2,
-                "ColCoord": 3
+                "ColCoord": 3,
+                "Orders": [
+                    {
+                        "Category": 1
+                    },
+                    {
+                        "Category": 3
+                    },
+                    {
+                        "Category": 4
+                    }
+                ]
             },
             {
                 "RowCoord": 3,
-                "ColCoord": 2
+                "ColCoord": 2,
+                "Orders": [
+                    {
+                        "Category": 1
+                    }
+                ]
             },
             {
                 "RowCoord": 3,
@@ -73,11 +89,21 @@
             },
             {
                 "RowCoord": 4,
-                "ColCoord": 3
+                "ColCoord": 3,
+                "Orders": [
+                    {
+                        "Category": 1
+                    }
+                ]
             },
             {
                 "RowCoord": 5,
-                "ColCoord": 2
+                "ColCoord": 2,
+                "Orders": [
+                    {
+                        "Category": 2
+                    }
+                ]
             },
             {
                 "RowCoord": 5,
@@ -85,7 +111,12 @@
             },
             {
                 "RowCoord": 6,
-                "ColCoord": 2
+                "ColCoord": 2,
+                "Orders": [
+                    {
+                        "Category": 2
+                    }
+                ]
             },
             {
                 "RowCoord": 6,
@@ -109,7 +140,15 @@
             },
             {
                 "RowCoord": 2,
-                "ColCoord": 5
+                "ColCoord": 5,
+                "Orders": [
+                    {
+                        "Category": 2
+                    },
+                    {
+                        "Category": 4
+                    }
+                ]
             },
             {
                 "RowCoord": 2,
@@ -117,7 +156,12 @@
             },
             {
                 "RowCoord": 3,
-                "ColCoord": 5
+                "ColCoord": 5,
+                "Orders": [
+                    {
+                        "Category": 4
+                    }
+                ]
             },
             {
                 "RowCoord": 3,
@@ -157,11 +201,21 @@
             },
             {
                 "RowCoord": 1,
-                "ColCoord": 8
+                "ColCoord": 8,
+                "Orders": [
+                    {
+                        "Category": 1
+                    }
+                ]
             },
             {
                 "RowCoord": 1,
-                "ColCoord": 9
+                "ColCoord": 9,
+                "Orders": [
+                    {
+                        "Category": 3
+                    }
+                ]
             },
             {
                 "RowCoord": 2,
@@ -169,7 +223,12 @@
             },
             {
                 "RowCoord": 2,
-                "ColCoord": 9
+                "ColCoord": 9,
+                "Orders": [
+                    {
+                        "Category": 3
+                    }
+                ]
             },
             {
                 "RowCoord": 3,
@@ -177,19 +236,39 @@
             },
             {
                 "RowCoord": 3,
-                "ColCoord": 9
+                "ColCoord": 9,
+                "Orders": [
+                    {
+                        "Category": 1
+                    }
+                ]
             },
             {
                 "RowCoord": 4,
-                "ColCoord": 8
+                "ColCoord": 8,
+                "Orders": [
+                    {
+                        "Category": 4
+                    }
+                ]
             },
             {
                 "RowCoord": 4,
-                "ColCoord": 9
+                "ColCoord": 9,
+                "Orders": [
+                    {
+                        "Category": 3
+                    }
+                ]
             },
             {
                 "RowCoord": 5,
-                "ColCoord": 8
+                "ColCoord": 8,
+                "Orders": [
+                    {
+                        "Category": 4
+                    }
+                ]
             },
             {
                 "RowCoord": 5,
