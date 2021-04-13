@@ -1,18 +1,18 @@
-image: ubuntu:20.04
+image: archlinux:latest
 
 stages:
   - build
   - test
 
 before_script:
-  - apt-get update -yqq
-  - apt-get install -yqq cmake
-  - apt-get install -yqq git-all
-  - apt-get install -yqq build-essential
-  - apt-get install -yqq libgl1-mesa-dev
-  - apt-get install -yqq qtdeclarative5-dev
-  - apt-get install -yqq qtquickcontrols2-5-dev
-  - apt-get install -yqq doxygen
+  - pacman -Syu
+  - pacman -S cmake 3.20.1-1
+  - pacman -S git 2.31.1-1
+  - pacman -S base-devel
+  - pacman -S qt6-base 6.0.3-1
+  - pacman -S qt6-declarative 6.0.3-1
+  - pacman -S qt6-quickcontrols2 6.0.3-1
+  - pacman -S doxygen 1.9.1-1
 
 build-program:
   stage: build
