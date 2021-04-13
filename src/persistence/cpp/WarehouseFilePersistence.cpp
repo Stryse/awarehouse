@@ -1,5 +1,6 @@
 #include "WarehouseFilePersistence.h"
 #include "ChargingStationLoader.h"
+#include "DeliveryStationLoader.h"
 #include "PodDockLoader.h"
 #include "Point.h"
 #include "RobotLoader.h"
@@ -94,16 +95,19 @@ State *WarehouseFilePersistence::loadFromJsonObject(QJsonObject json)
         // Create Environment
         std::shared_ptr<ObservableNavEnvironment<>> env = std::make_shared<ObservableNavEnvironment<>>(rowSize, colSize, 3);
         std::vector<std::shared_ptr<ChargingStation<>>> chStations;
+        std::vector<std::shared_ptr<DeliveryStation>> deliveryStations;
         std::vector<std::shared_ptr<PodDock<>>> podDocks;
         std::vector<std::shared_ptr<DeliveryRobot<>>> robots;
 
         loadChargingStation(chStations, env, WarehouseLayoutData);
+        loadDeliveryStation(deliveryStations, env, WarehouseLayoutData);
         loadPodDock(podDocks, env, WarehouseLayoutData);
         loadRobots(robots, env, WarehouseLayoutData);
 
         // Construct State from read data
         return new State(std::move(env),
                          std::move(chStations),
+                         std::move(deliveryStations),
                          std::move(podDocks),
                          std::move(robots),
                          rowSize, colSize);
@@ -122,10 +126,29 @@ void WarehouseFilePersistence::loadChargingStation(std::vector<std::shared_ptr<C
 
         for (int i = 0; i < chargingStationsJson.size(); ++i)
         {
-            std::shared_ptr station = ChargingStationLoader::load(chargingStationsJson[i].toObject());
+            std::shared_ptr<ChargingStation<>> station = ChargingStationLoader::load(chargingStationsJson[i].toObject());
 
             env->getBuffer()[env->getCoordAsIndex(station->getPosition())] = station;
             chStations.push_back(station);
+        }
+    }
+}
+
+void WarehouseFilePersistence::loadDeliveryStation(std::vector<std::shared_ptr<DeliveryStation> > &deliveryStations,
+                                                   std::shared_ptr<ObservableNavEnvironment<> > &env,
+                                                   QJsonObject &warehouseLayoutData)
+{
+    if (warehouseLayoutData.contains("DeliveryStations") && warehouseLayoutData["DeliveryStations"].isArray())
+    {
+        QJsonArray deliveryStationsJson = warehouseLayoutData["DeliveryStations"].toArray();
+        deliveryStations.reserve(deliveryStationsJson.size());
+
+        for (int i = 0; i < deliveryStationsJson.size(); ++i)
+        {
+            std::shared_ptr<DeliveryStation> station = DeliveryStationLoader::load(deliveryStationsJson[i].toObject());
+
+            env->getBuffer()[env->getCoordAsIndex(station->getPosition())] = station;
+            deliveryStations.push_back(station);
         }
     }
 }

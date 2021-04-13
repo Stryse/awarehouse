@@ -20,6 +20,28 @@
                 "ColCoord": 0
             }
         ],
+        "DeliveryStations": [
+            {
+                "RowCoord": 11,
+                "ColCoord": 2,
+                "AcceptedOrderID": 1
+            },
+            {
+                "RowCoord": 11,
+                "ColCoord": 4,
+                "AcceptedOrderID": 2
+            },
+            {
+                "RowCoord": 11,
+                "ColCoord": 6,
+                "AcceptedOrderID": 3
+            },
+            {
+                "RowCoord": 11,
+                "ColCoord": 8,
+                "AcceptedOrderID": 4
+            }
+        ],
         "PodDocks": [
             {
                 "RowCoord": 1,

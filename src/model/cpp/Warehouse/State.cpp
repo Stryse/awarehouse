@@ -3,6 +3,7 @@
 
 State::State(const std::shared_ptr<ObservableNavEnvironment<>> &environment,
              const std::vector<std::shared_ptr<ChargingStation<>>> &chStations,
+             const std::vector<std::shared_ptr<DeliveryStation>> &deliveryStations,
              const std::vector<std::shared_ptr<PodDock<>>> &podDocks,
              const std::vector<std::shared_ptr<DeliveryRobot<>>> &robots,
              int rowCount, int colCount)
@@ -10,6 +11,7 @@ State::State(const std::shared_ptr<ObservableNavEnvironment<>> &environment,
     : rowCount(rowCount), colCount(colCount),
       environment(environment),
       chStations(chStations),
+      deliveryStations(deliveryStations),
       podDocks(podDocks),
       robots(robots)
 {
@@ -17,6 +19,7 @@ State::State(const std::shared_ptr<ObservableNavEnvironment<>> &environment,
 
 State::State(std::shared_ptr<ObservableNavEnvironment<>> &&environment,
              std::vector<std::shared_ptr<ChargingStation<>>> &&chStations,
+             std::vector<std::shared_ptr<DeliveryStation>> &&deliveryStations,
              std::vector<std::shared_ptr<PodDock<>>> &&podDocks,
              std::vector<std::shared_ptr<DeliveryRobot<>>> &&robots,
              int rowCount, int colCount)
@@ -24,6 +27,7 @@ State::State(std::shared_ptr<ObservableNavEnvironment<>> &&environment,
     : rowCount(rowCount), colCount(colCount),
       environment(std::move(environment)),
       chStations(std::move(chStations)),
+      deliveryStations(std::move(deliveryStations)),
       podDocks(std::move(podDocks)),
       robots(std::move(robots))
 {

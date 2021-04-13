@@ -97,6 +97,7 @@ model/cpp/Warehouse/State.cpp
 model/cpp/Warehouse/Pod/OrderModel.cpp
 persistence/cpp/WarehouseFilePersistence.cpp
 persistence/cpp/ChargingStationLoader.cpp
+persistence/cpp/DeliveryStationLoader.cpp
 persistence/cpp/PodDockLoader.cpp
 persistence/cpp/RobotLoader.cpp
 model/cpp/Warehouse/Controller/ControllerImpl.cpp
