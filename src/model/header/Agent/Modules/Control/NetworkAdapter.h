@@ -23,14 +23,51 @@ public:
     virtual ~NetworkAdapter();
 
 public:
+    /**********************************************************************************
+     * @brief Attemps to connect to a Network with the provided address.
+     **********************************************************************************/
     bool connectWithAddress(const std::shared_ptr<Network> &network, int address);
+
+    /**********************************************************************************
+     * @brief Attempts to connect to a Network. Address is acquired from the network.
+     **********************************************************************************/
     bool connect(const std::shared_ptr<Network> &network);
+
+    /**********************************************************************************
+     * @brief Disconnects from the network if it was connected to one.
+     **********************************************************************************/
     void disconnect();
+
+    /**********************************************************************************
+     * @brief Attempts to send a message to another NetworkAdapter with the provided
+     * address.
+     **********************************************************************************/
     bool send(std::unique_ptr<AbstractNetworkMessage> &&message, int recipientAddress);
+
+    /***********************************************************************************
+     * @brief A received message is pushed into the adapter's message queue.
+     ***********************************************************************************/
     void receive(std::unique_ptr<AbstractNetworkMessage> &&message);
+
+    /***********************************************************************************
+     * @brief Returns and removes the first Message from the message queue.
+     ***********************************************************************************/
     std::unique_ptr<AbstractNetworkMessage> poll();
+
+    /************************************************************************************
+     * @brief Returns whether the message queue has any messages.
+     ************************************************************************************/
     bool isMessageQueueEmpty() const;
+
+    /************************************************************************************
+     * @brief Returns the address of the NetworkAdapter. 
+     * If it is not connected to a Network it returns 0.
+     ************************************************************************************/
     int getAddress() const;
+
+    /************************************************************************************
+     * @brief Returns whether the Adapter is connected to a Network.
+     ************************************************************************************/
     bool isConnected() const;
 
 private:

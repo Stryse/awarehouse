@@ -5,6 +5,7 @@
 #include "DepletingAction.h"
 #include "LibConfig.h"
 #include "MotorDrive.h"
+#include "boost/signals2.hpp"
 #include <memory>
 #include <vector>
 
@@ -32,16 +33,28 @@ public:
     using MotorDrive = ::MotorDrive<Motor, Energy>;
 
 public:
-    MotorAction(std::unique_ptr<MotorDrive>&& motorDrive, IDepleting &resource)
+    MotorAction(std::unique_ptr<MotorDrive> &&motorDrive, IDepleting &resource,
+                const boost::signals2::signal<void(const Body &)> *event = nullptr)
+
         : DepletingAction<Energy>(resource, motorDrive->getEnergySum(), motorDrive->getTimeSum()),
-          motorDrive(std::move(motorDrive)) {}
+          motorDrive(std::move(motorDrive)), event_(event)
+    {
+    }
 
 protected:
-    virtual void depletingAction() override { motorDrive->executeMovement(); }
+    virtual void depletingAction() override
+    {
+        motorDrive->executeMovement();
+
+        if (event_)
+            (*event_)(motorDrive->getBody());
+    }
+    
     virtual bool canExecute() const override { return true; }
 
 private:
     std::unique_ptr<MotorDrive> motorDrive;
+    const boost::signals2::signal<void(const Body &)> *event_;
 };
 
 #endif

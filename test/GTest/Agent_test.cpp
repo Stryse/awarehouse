@@ -225,4 +225,16 @@ TEST_F(AgentTest, Networked_PodManagement)
     EXPECT_EQ(podDock->getPodHolder().getChildPod()->getBody()->getParent(), nullptr);
     EXPECT_EQ(robot->getBody()->getChildren().size(), 0);
     EXPECT_EQ(robot->getEnergySource()->getCharge(), 94);
+
+    // Move up again
+    adapter.send(std::make_unique<MoveAgentMessage>(DirectionVector<>::UP(), adapter.getAddress()), 100);
+    robot->tick(6);
+    robot->tick(7);
+    robot->tick(8);
+    checkPos = robot->getBody()->getPose().getPosition() == Point<>(1, 2, 0);
+    checkOr = robot->getBody()->getPose().getOrientation() == DirectionVector<>::UP();
+    EXPECT_TRUE(checkPos);
+    EXPECT_TRUE(checkOr);
+    checkPos = podDock->getPodHolder().getChildPod()->getBody()->getPose().getPosition() == Point<>(1, 1, 1);
+    EXPECT_TRUE(checkPos);
 }

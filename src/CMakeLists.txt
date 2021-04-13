@@ -26,8 +26,17 @@ REQUIRED)
 find_package(Qt${QT_VERSION_MAJOR} COMPONENTS 
 Core 
 Quick
-QuickControls2 
+QuickControls2
 REQUIRED)
+
+######################## Locate Boost Dependency ########################
+set(Boost_USE_STATIC_LIBS        ON)  # only find static libs
+set(Boost_USE_DEBUG_LIBS        OFF)  # ignore debug libs and
+set(Boost_USE_RELEASE_LIBS       ON)  # only find release libs
+set(Boost_USE_MULTITHREADED      ON)
+set(Boost_USE_STATIC_RUNTIME    OFF)
+find_package(Boost 1.75.0 REQUIRED)
+
 
 #########################################################################
 #
@@ -98,7 +107,7 @@ model/cpp/Agent/Modules/Control/NetworkAdapter.cpp
 ${QT_QOBJECT_FILES}
 )
 
-target_include_directories(OBJ_AWSOURCE_FILES PUBLIC ${header_dir_list})
+target_include_directories(OBJ_AWSOURCE_FILES PUBLIC ${header_dir_list} ${Boost_INCLUDE_DIRS})
 target_link_libraries(OBJ_AWSOURCE_FILES PRIVATE
 Qt${QT_VERSION_MAJOR}::Core
 Qt${QT_VERSION_MAJOR}::Quick

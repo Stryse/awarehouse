@@ -3,6 +3,7 @@
 
 #include "DirectionVector.h"
 #include "LibConfig.h"
+#include "boost/signals2.hpp"
 #include <memory>
 #include <queue>
 #include <set>
@@ -54,6 +55,9 @@ protected:
 
 public:
     virtual ~IMoveMechanism() = default;
+
+public:
+    boost::signals2::signal<void(const Body &body)> onBodyMoved;
 
 public:
     /************************************************************************

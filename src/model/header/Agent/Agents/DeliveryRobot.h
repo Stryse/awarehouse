@@ -35,6 +35,7 @@ public:
     using DRobotMCU = ::DRobotMCU<Environment, Body, Energy>;
 
 public:
+    // TODO: MIXIN TMP -vel megoldani hogy szép legyen
     explicit DeliveryRobot(const std::shared_ptr<Environment> &env, const Point &position, const DirectionVector &orientation)
         : EnergyModule<Energy>(std::make_unique<Battery<Energy>>(100)),
 

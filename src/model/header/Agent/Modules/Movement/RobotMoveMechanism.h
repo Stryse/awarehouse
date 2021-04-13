@@ -43,11 +43,16 @@ public:
 
 public:
     explicit RobotMoveMechanism(const std::shared_ptr<Body> &body, IDepleting &resource)
-        : IMoveMechanism<TBody, TEnergy>(body, resource, getNewRobotMotors(*body), getNewRobotMoveSet()),
+        : IMoveMechanism<Body, Energy>(body, resource, getNewRobotMotors(*body), getNewRobotMoveSet()),
 
-          ForwardMotorAction(std::make_unique<MotorAction>(forwardMotorDrive(*body, this->motors), resource)),
-          LeftTurnMotorAction(std::make_unique<MotorAction>(leftTurnMotorDrive(*body, this->motors), resource)),
-          RightTurnMotorAction(std::make_unique<MotorAction>(rightTurnMotorDrive(*body, this->motors), resource))
+          ForwardMotorAction(std::make_unique<MotorAction>(
+              forwardMotorDrive(*body, this->motors), resource, &(IMoveMechanism<Body, Energy>::onBodyMoved))),
+
+          LeftTurnMotorAction(std::make_unique<MotorAction>(
+              leftTurnMotorDrive(*body, this->motors), resource, &(IMoveMechanism<Body, Energy>::onBodyMoved))),
+
+          RightTurnMotorAction(std::make_unique<MotorAction>(
+              rightTurnMotorDrive(*body, this->motors), resource, &(IMoveMechanism<Body, Energy>::onBodyMoved)))
     {
     }
 
@@ -150,6 +155,10 @@ public:
         return motors;
     }
 
+    /**************************************************************
+     * @brief Returns a set of directions in which the
+     * mechanism can move to. (Reachable directions)
+     **************************************************************/
     static std::set<DirectionVector> getNewRobotMoveSet()
     {
         return std::set<DirectionVector>{{DirectionVector::UP(),

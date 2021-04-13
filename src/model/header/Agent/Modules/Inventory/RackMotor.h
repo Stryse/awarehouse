@@ -9,10 +9,18 @@
 #include "MotorCommand.h"
 #include "MotorDrive.h"
 #include "PodHolder.h"
+#include "boost/signals2.hpp"
 #include <memory>
 #include <stdexcept>
 #include <vector>
 
+/*********************************************************************************
+ * @brief A Motor that is able to PickUp order from the environment and place it
+ * in an associated PodHolder.
+ * 
+ * It can also put down a pod from the holder in the environment.
+ * It can only put down pods to tiles which accepts the pod.
+ *********************************************************************************/
 template <typename TBody, typename TEnergy = config::agent::DefaultEnergy>
 class RackMotor : public AMotor<TBody>
 {
@@ -28,15 +36,26 @@ public:
     using PodHolder = ::PodHolder<typename Body::Environment>;
 
 public:
+    boost::signals2::signal<void(const Body &)> onPodPickedUp;
+    boost::signals2::signal<void(const Body &)> onPodPutDown;
+
+public:
     explicit RackMotor(Body &body, IDepleting &energySource, PodHolder &podHolder)
         : AMotor(body),
-          _pickUpPodAction(std::make_unique<MotorAction>(pickUpMotorDrive(body, *this), energySource)),
-          _putDownPodAction(std::make_unique<MotorAction>(putDownMotorDrive(body, *this), energySource)),
+          _pickUpPodAction(std::make_unique<MotorAction>(pickUpMotorDrive(body, *this), energySource, &onPodPickedUp)),
+          _putDownPodAction(std::make_unique<MotorAction>(putDownMotorDrive(body, *this), energySource, &onPodPutDown)),
           podHolder(podHolder)
     {
     }
 
-    // AMotor implementation
+    // ################################### AMotor implementation #######################################
+    /***************************************************************************************************
+     * @brief The RackMotor's two configurations are for picking up and putting down pods.
+     * Configuration:
+     * 
+     * CLOCKWISE         -> Picks up pod from the environment.
+     * COUNTER_CLOCKWISE -> Puts down pod into the environment.
+     ***************************************************************************************************/
     virtual void activate(const MotorDirection &motorDirection) override
     {
         switch (motorDirection)
@@ -67,17 +86,27 @@ public:
     }
 
 public:
+    /************************************************************************
+     * @brief A motor action that instructs the RackMotor to pick up a pod
+     ************************************************************************/
     MotorAction *pickUpPodAction()
     {
         return _pickUpPodAction.get();
     }
 
+    /*************************************************************************
+     * @brief A motor action that instructs the RackMotor to put down the pod
+     *************************************************************************/
     MotorAction *putDownPodAction()
     {
         return _putDownPodAction.get();
     }
 
 public:
+    /**************************************************************************
+     * @brief A Motor Drive that instructs the Rackmotor to run CLOCKWISE
+     * which leads it to pick up a pod.
+     **************************************************************************/
     static std::unique_ptr<MotorDrive> pickUpMotorDrive(Body &body, RackMotor &rackMotor)
     {
         std::vector<MotorCommand> commands;
@@ -86,6 +115,10 @@ public:
         return std::make_unique<MotorDrive>(body, std::move(commands), pickUpCost, pickUpDuration);
     }
 
+    /************************************************************************************
+     * @brief A Motor Drive that instructs the Rackmotor to run COUNTER_CLOCKWISE
+     * which leads it to put down a pod.
+     ************************************************************************************/
     static std::unique_ptr<MotorDrive> putDownMotorDrive(Body &body, RackMotor &rackMotor)
     {
         std::vector<MotorCommand> commands;
