@@ -19,7 +19,7 @@ build-program:
   script:
     - mkdir cmake-build && cd cmake-build
     - cmake ..
-    - make aWareHouse
+    - make src
   artifacts:
     paths:
       - cmake-build/
