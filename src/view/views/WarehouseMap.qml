@@ -17,26 +17,6 @@ Item {
     property int mapWidth:  columns * cellSize + (columns-1) * cellSpacing
     property int mapHeight: rows    * cellSize + (rows   -1) * cellSpacing
 
-//    onRowsChanged: {
-//        if (tileModel.count === 0)
-//            return
-
-//        if (tileModel.count < rows * columns)
-//            tiles.addRow()
-//        else
-//            tiles.deleteRow()
-//    }
-
-//    onColumnsChanged: {
-//        if (tileModel.count === 0)
-//            return
-
-//        if (tileComponent.count < rows * columns)
-//            tiles.addColumn()
-//        else
-//            tiles.deleteColumn()
-//    }
-
     anchors {
         left: parent.left;         right:  parent.right
         top:  previewLabel.bottom; bottom: buttonsLayout.top
@@ -50,17 +30,21 @@ Item {
 
     ListModel {
         id: tileModel
+    }
 
-//        Repeater {
-//            id: tileModelRepeater
+    Component {
+        id: baseComponent
 
-//            ListElement {
-//                rowIdx:        1
-//                columnIdx:     1
-//                type:          "Road"
-//                rotationAngle: 0
-//            }
-//        }
+        Rectangle {
+            id: baseRectangle
+
+            Layout.alignment: Qt.AlignCenter
+
+            Layout.preferredWidth:  root.cellSize
+            Layout.preferredHeight: root.cellSize
+
+            color: Material.accent
+        }
     }
 
     Component {
@@ -77,22 +61,18 @@ Item {
         DropArea {
             id: dropArea
 
+            signal tileDropped(string tileType)
+
             readonly property int tileRowIdx:    rowIdx
             readonly property int tileColumnIdx: columnIdx
 
             property string tileType:     type
             property int    tileRotation: rotationAngle
-            property color  tileColor
+            property color  tileColor:    tileType === "Empty" ? "transparent" : editorRoot.tileList.getTileColor(tileType)
 
-            onTileTypeChanged: {
-                dropArea.tileColor = editorRoot.tileList.getTileColor(tileType)
-
-                if (rotationAngle != null)
-                    rotationAngle = 0
-            }
-
-            Binding {
-                target: model; property: "type"; value: dropArea.tileType
+            onTileDropped: {
+                type = tileType
+                dropArea.resetRotation()
             }
 
             Layout.alignment: Qt.AlignCenter
@@ -105,15 +85,22 @@ Item {
 
                 anchors.fill: parent
 
-                acceptedButtons: Qt.LeftButton
+                acceptedButtons: Qt.MiddleButton | Qt.RightButton
 
-                onDoubleClicked: {
-                    if (type === "Robot") {
-                        rotationAngle = (rotationAngle + 90) % 360
-                        console.log(rotationAngle)
+                onClicked: {
+                    if (mouse.button === Qt.RightButton) {
+                        if (type === "Robot") {
+                            dropArea.rotateActor()
+                            console.log(rotationAngle)
+                        }
+                        else if (type === "Pod") {
+                            console.log("Item list opened")
+                        }
                     }
-                    else if (type === "Pod") {
-                        console.log("Item list opened")
+                    else if (mouse.button === Qt.MiddleButton) {
+                        if (type !== "Empty") {
+                            dropArea.resetTile()
+                        }
                     }
                 }
             }
@@ -125,63 +112,42 @@ Item {
 
                 color: dropArea.tileColor
 
-                states: State {
-                    when: dropArea.containsDrag
-                    PropertyChanges {
-                        target: tileRectangle
-                        color:  Qt.darker(dropArea.tileColor, 1.5)
+                states: [
+                    State {
+                        when: dropArea.containsDrag && dropArea.tileType !== "Empty"
+                        PropertyChanges {
+                            target: tileRectangle
+                            color:  Qt.darker(dropArea.tileColor, 1.5)
+                        }
+                    },
+                    State {
+                        when: dropArea.containsDrag && dropArea.tileType === "Empty"
+                        PropertyChanges {
+                            target: tileRectangle
+                            color:  Qt.darker(Material.accent, 1.5)
+                        }
                     }
+                ]
+            }
+
+            function rotateActor() {
+                if (rotationAngle != null)
+                    rotationAngle = (rotationAngle + 90) % 360
+            }
+
+            function resetRotation() {
+                if (rotationAngle != null)
+                    rotationAngle = 0
+            }
+
+            function resetTile() {
+                if (type != null) {
+                    type = "Road"
+                    dropArea.resetRotation()
                 }
-
-//                function getTileColor(type) {
-//                    for (var i = 0; i < tileList.count; ++i) {
-//                        var tile = tileList.get(i)
-
-//                        if (tile.tileType === type)
-//                            return tile.tileColor
-//                    }
-
-//                    return Material.accent
-//                }
             }
         }
     }
-
-//    Component {
-//        id: actorComponent
-
-//        Image {
-//            id: actorImg
-
-//            x: columnIdx * (root.cellSize + root.cellSpacing)
-//            y: rowIdx    * (root.cellSize + root.cellSpacing)
-
-//            width:  root.cellSize
-//            height: root.cellSize
-
-//            source: imgSource
-
-//            rotation: rotationAngle
-//        }
-//    }
-
-//    Component {
-//        id: podComponent
-
-//        Image {
-//            id: podImg
-
-//            x: columnIdx * (root.cellSize + root.cellSpacing)
-//            y: rowIdx    * (root.cellSize + root.cellSpacing)
-
-//            width:  root.cellSize
-//            height: root.cellSize
-
-//            source: imgSource
-
-//            rotation: rotationAngle
-//        }
-//    }
 
     MouseArea {
         id: zoomArea
@@ -194,6 +160,7 @@ Item {
         anchors.fill: mapFlickable
 
         acceptedButtons: Qt.MiddleButton
+        propagateComposedEvents: true
 
         onWheel: {
             zoomScale = Math.max(zoomScale + wheel.angleDelta.y / (120*2), 1)
@@ -226,6 +193,25 @@ Item {
             height: Math.max(mapFlickable.height * 1.5, root.mapHeight * 1.1)
 
             GridLayout {
+                id: base
+
+                anchors.centerIn: parent
+
+                rows:    root.rows
+                columns: root.columns
+
+                rowSpacing:    root.cellSpacing
+                columnSpacing: root.cellSpacing
+
+                Repeater {
+                    id: baseRepeater
+
+                    model:    root.rows * root.columns
+                    delegate: baseComponent
+                }
+            }
+
+            GridLayout {
                 id: tiles
 
                 anchors.centerIn: parent
@@ -252,27 +238,10 @@ Item {
                     for (var i = 0; i < root.columns; ++i) {
                         tileModel.append({ "rowIdx":        i / root.columns,
                                            "columnIdx":     i % root.columns,
-                                           "type":          "Road",
+                                           "type":          "Empty",
                                            "rotationAngle": 0 })
                     }
                 }
-
-//                function addColumn() {
-//                    for (var i = root.rows; i > 0; --i)
-//                        tileModel.insert((root.columns-1)*i-1, { "rowIdx":        i / root.columns,
-//                                                                 "columnIdx":     i % root.columns,
-//                                                                 "type":          "Road",
-//                                                                 "rotationAngle": 0 })
-//                }
-
-//                function deleteRow() {
-//                    tileModel.remove(tileModel.count - root.columns, root.columns)
-//                }
-
-//                function deleteColumn() {
-//                    for (var i = root.rows; i > 0; --i)
-//                        tileModel.remove((root.columns+1)*i-1)
-//                }
             }
         }
     }

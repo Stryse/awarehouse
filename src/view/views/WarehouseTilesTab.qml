@@ -94,12 +94,10 @@ Item {
                         onReleased:  {
                             var dragTarget = tileDragImg.Drag.target
 
-                            if (dragTarget !== null) {
-                                dragTarget.tileType = tileType
-                            }
-                            else {
+                            if (dragTarget !== null)
+                                dragTarget.tileDropped(tileType)
+                            else
                                 parent = tileDelegate
-                            }
                         }
 
                         Rectangle {
