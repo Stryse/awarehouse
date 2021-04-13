@@ -68,8 +68,8 @@ Item {
 
                 clip: true
 
-                model: OrderOutlinerModel{
-                    orders: simpresenter.orders
+                model: TaskOutlinerModel{
+                    tasks: SimPresenter.tasks
                 }
 
                 delegate: GridLayout {
@@ -83,44 +83,34 @@ Item {
                     rowSpacing:    0
 
                     Label {
-                        id: taskName
+                        id: assignedActorLabel
 
                         Layout.alignment: Qt.AlignLeft | Qt.AlignBottom
                         Layout.row:       0
                         Layout.column:    0
 
-                        text:           model.ordername
+                        text:           model.assignedRobotName
                         font.pixelSize: taskDelegate.height * 0.3
                     }
 
+//                    Label {
+//                        id: ordersLabel
+
+//                        Layout.alignment: Qt.AlignRight | Qt.AlignBottom
+//                        Layout.row:       0
+//                        Layout.column:    1
+
+//                        text: model.orders[0]
+//                    }
+
                     Label {
-                        id: orders
-
-                        Layout.alignment: Qt.AlignRight | Qt.AlignBottom
-                        Layout.row:       0
-                        Layout.column:    1
-
-                        text: model.ordernumber
-                    }
-
-                    Label {
-                        id: position
+                        id: positionLabel
 
                         Layout.alignment: Qt.AlignLeft | Qt.AlignTop
                         Layout.row:       1
                         Layout.column:    0
 
-                        text: model.position
-                    }
-
-                    Label {
-                        id: assignedActor
-
-                        Layout.alignment: Qt.AlignRight | Qt.AlignTop
-                        Layout.row:       1
-                        Layout.column:    1
-
-                        text: model.robotname
+                        text: "X: " + model.destinationX  + " Y: " + model.destinationY
                     }
                 }
             }

@@ -2,7 +2,9 @@
 #define CHARGING_STATION_PRESENTER__H
 
 #include <QObject>
-#include <MapItemPresenter.h>
+
+//Presenter
+#include "MapItemPresenter.h"
 
 template <typename T> class ChargingStation;
 class ChargingStationPresenter : public MapItemPresenter

@@ -3,15 +3,15 @@ import QtQuick.Layouts
 import QtQuick.Controls
 import QtQuick.Controls.Material
 
-import SimulationMap 1.0
+import Simulator 1.0
 
 Item {
     id: root
 
     readonly property real  aspectRatio: 16/9
 
-    property int rows:    10
-    property int columns: 10
+    property int rows:    SimPresenter.layout.rows
+    property int columns: SimPresenter.layout.columns
 
     property int   cellSpacing: 1
     property real  cellScale:   zoomArea.zoomScale
@@ -64,15 +64,13 @@ Item {
         Image {
             id: actorImg
 
-            x: columnIdx * (root.cellSize + root.cellSpacing)
-            y: rowIdx    * (root.cellSize + root.cellSpacing)
+            x: col * (root.cellSize + root.cellSpacing)
+            y: row * (root.cellSize + root.cellSpacing)
 
             width:  root.cellSize
             height: root.cellSize
 
-            source: imgSource
-
-            rotation: rotationAngle
+            source: "qrc:/placeholder_amogus.png"
         }
     }
 
@@ -162,22 +160,22 @@ Item {
                 Repeater {
                     id: actorRepeater
 
-                    model:    placeholderModel
+                    model:    SimPresenter.layout.robots
                     delegate: actorComponent
                 }
             }
-            Item {
-                id: pods
+//            Item {
+//                id: pods
 
-                anchors.fill: tiles
+//                anchors.fill: tiles
 
-                Repeater {
-                    id: podRepeater
+//                Repeater {
+//                    id: podRepeater
 
-                    model:    placeholderModel
-                    delegate: podComponent
-                }
-            }
+//                    model:    placeholderModel
+//                    delegate: podComponent
+//                }
+//            }
         }
     }
 }

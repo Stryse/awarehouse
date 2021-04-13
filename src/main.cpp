@@ -1,14 +1,17 @@
-#include "OutlinerModel.h"
-#include "SimulationWindow_Presenter.h"
-#include "WarehouseManager.h"
 #include <QGuiApplication>
 #include <QIcon>
 #include <QQmlApplicationEngine>
 #include <QQmlContext>
 #include <QScopedPointer>
+
+//Model
 #include "Simulator.h"
-#include "OrderOutlinerModel.h"
-#include "MapTablePresenterModel.h"
+
+//Presenter
+#include "ActorOutlinerModel.h"
+#include "TaskOutlinerModel.h"
+#include "SimulationWindowPresenter.h"
+#include "WarehouseManager.h"
 
 int main(int argc, char *argv[])
 {
@@ -20,19 +23,18 @@ int main(int argc, char *argv[])
     app.setWindowIcon(QIcon(":/app_icon.png"));
 
     // Instantiate //////
-    QScopedPointer<SimulationWindowPresenter> simpresenter(new SimulationWindowPresenter());
+    QScopedPointer<SimulationWindowPresenter> simPresenter(new SimulationWindowPresenter());
     // //////////////////
 
     // Register Types ///
-    qmlRegisterType<OutlinerModel>("Outliner", 1, 0, "OutlinerModel");
-    qmlRegisterType<OrderOutlinerModel>("Outliner", 1, 0, "OrderOutlinerModel");
+    qmlRegisterType<ActorOutlinerModel>       ("Outliner",  1, 0, "ActorOutlinerModel");
+    qmlRegisterType<TaskOutlinerModel>        ("Outliner",  1, 0, "TaskOutlinerModel");
     qmlRegisterType<SimulationWindowPresenter>("Simulator", 1, 0, "TickRate");
-    qmlRegisterType<MapTablePresenterModel>("SimulationMap", 1, 0, "MapTablePresenterModel");
 
     // //////////////////
     QQmlApplicationEngine engine;
     // Register Instances
-    engine.rootContext()->setContextProperty(QStringLiteral("simpresenter"), simpresenter.get());
+    engine.rootContext()->setContextProperty(QStringLiteral("SimPresenter"), simPresenter.get());
     // //////////////////
 
     const QUrl url(QStringLiteral("qrc:/view/MainView.qml"));

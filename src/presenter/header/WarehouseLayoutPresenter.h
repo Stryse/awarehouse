@@ -1,58 +1,62 @@
 #ifndef WAREHOUSE_LAYOUT_PRESENTER__H
 #define WAREHOUSE_LAYOUT_PRESENTER__H
 
-#include "Actors.h"
-#include "ChargingStationPresenter.h"
-#include "MapItemPresenter.h"
-#include "PodDockPresenter.h"
-#include "Order.h"
 #include <QJsonObject>
 #include <QList>
 #include <QObject>
 
+//Presenter
+#include "MapItemPresenter.h"
+#include "ActorPresenter.h"
+#include "ChargingStationPresenter.h"
+#include "PodDockPresenter.h"
+#include "TaskPresenter.h"
+
 class State;
-//
 
 class WarehouseLayoutPresenter : public QObject
 {
-        Q_OBJECT
-        Q_PROPERTY(int rowCount READ rowCount WRITE setRowCount NOTIFY rowCountChanged)
-        Q_PROPERTY(int colCount READ colCount WRITE setColCount NOTIFY colCountChanged)
-        Q_PROPERTY(QList<const MapItemPresenter *>* map READ getMap CONSTANT)
+    Q_OBJECT
+
+    Q_PROPERTY( int                             rows    READ rows    WRITE    setRows    NOTIFY rowsChanged     )
+    Q_PROPERTY( int                             columns READ columns WRITE    setColumns NOTIFY columnsChanged )
+    Q_PROPERTY( QList<const MapItemPresenter*>* map     READ map     CONSTANT                                  )
+    Q_PROPERTY( QList<const ActorPresenter*>*   robots  READ actors  CONSTANT                                  )
+    Q_PROPERTY( QList<const TaskPresenter*>*    tasks   READ tasks   CONSTANT                                  )
 
 public:
-        explicit WarehouseLayoutPresenter(const State* state, QObject *parent = nullptr);
+    explicit WarehouseLayoutPresenter(const State* state, QObject* parent = nullptr);
 
 public:
-        int rowCount() const;
-        void setRowCount(int value);
+    int index(int row, int col);
 
-        int colCount() const;
-        void setColCount(int colCount);
+    int rows()    const;
+    int columns() const;
 
-        // Entity Getter
-        QList<const MapItemPresenter *>* getMap();
-        QList<const Actors*>* getActors();
-        QList<const ChargingStationPresenter*>* getChargingStations();
-        QList<const PodDockPresenter*>* getPodDocks();
-        QList<const Order*>* getOrders();
+    void setRows(int value);
+    void setColumns(int colCount);
 
-        int index(int row, int col);
+    //Entity Getter
+    QList<const MapItemPresenter*>*         map();
+    QList<const ActorPresenter*>*           actors();
+    QList<const ChargingStationPresenter*>* chargingStations();
+    QList<const PodDockPresenter*>*         podDocks();
+    QList<const TaskPresenter*>*            tasks();
+
 signals:
-        void rowCountChanged(int rowCount);
-        void colCountChanged(int colCount);
+    void rowsChanged(int rows);
+    void columnsChanged(int columns);
 
 private:
-        int m_rowCount;
-        int m_colCount;
+    int m_rows;
+    int m_columns;
 
-        // Warehouse Layout Entities
-        QList<const MapItemPresenter *> m_map;
-        QList<const Actors*> robots;
-        QList<const ChargingStationPresenter*> chargingStations;
-        QList<const PodDockPresenter*> podDocks;
-
-        // Orders
-        QList<const Order*> orders;
+    //Warehouse Layout Entities
+    QList<const MapItemPresenter*>         m_map;
+    QList<const ActorPresenter*>           m_robots;
+    QList<const ChargingStationPresenter*> m_chargingStations;
+    QList<const PodDockPresenter*>         m_podDocks;
+    QList<const TaskPresenter*>            m_tasks;
 };
+
 #endif

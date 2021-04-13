@@ -1,8 +1,10 @@
 #ifndef PODDOCKPRESENTER_H
 #define PODDOCKPRESENTER_H
 
-#include <MapItemPresenter.h>
 #include <QObject>
+
+//Presenter
+#include "MapItemPresenter.h"
 
 template <typename E> class PodDock;
 template <typename V> class ObservableNavEnvironment;

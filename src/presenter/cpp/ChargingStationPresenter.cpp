@@ -1,7 +1,7 @@
 #include "ChargingStationPresenter.h"
+
+//Model
 #include "ChargingStation.h"
-
-
 
 QString ChargingStationPresenter::imagePath = "qrc:/images/chstation.png";
 
