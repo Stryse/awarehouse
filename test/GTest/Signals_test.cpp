@@ -1,6 +1,8 @@
 #include "Battery.h"
 #include "DeliveryRobot.h"
 #include "MotorAction.h"
+#include "Network.h"
+#include "NetworkAdapter.h"
 #include "ObservableEnvironment.h"
 #include "PodDock.h"
 #include "Tile.h"
@@ -62,56 +64,104 @@ TEST_F(NotifyTest, BatterySignals)
 {
     Battery<int> battery(100);
 
-    bool signalReceived = false;
-    battery.onChargeChanged.connect([&](const int &charge) { signalReceived = true; });
+    int signalReceived = 0;
+    battery.onChargeChanged.connect([&](const int &charge) { ++signalReceived; });
 
     // CHECK DEPLETION
     battery.deplete(1);
-    EXPECT_TRUE(signalReceived);
+    EXPECT_EQ(signalReceived, 1);
 
     // CHECK CHARGE
-    signalReceived = false;
     battery.charge(1);
-    EXPECT_TRUE(signalReceived);
+    EXPECT_EQ(signalReceived, 2);
 }
 
 TEST_F(NotifyTest, AgentMovementNotify)
 {
-    bool signalReceived = false;
+    int signalReceived = 0;
 
     // Connects
     robot->getMoveMechanism()->onBodyMoved.connect([&](const Body<ObservableNavEnvironment<>> &body) {
-        signalReceived = true;
+        ++signalReceived;
     });
 
     // Move Up
     NotifyTest::moveHelper(robot->getMoveMechanism()->move(DirectionVector<>::UP()));
-    EXPECT_TRUE(signalReceived);
+    EXPECT_EQ(signalReceived, 1);
 
     // Move Down
-    signalReceived = false;
     NotifyTest::moveHelper(robot->getMoveMechanism()->move(DirectionVector<>::DOWN()));
-    EXPECT_TRUE(signalReceived);
+    EXPECT_EQ(signalReceived, 4);
 }
 
 TEST_F(NotifyTest, AgentPodPickup_PutDown)
 {
-    bool signalReceived = false;
+    int signalReceived = 0;
 
     robot->getRackMotor().onPodPickedUp.connect([&](const Body<ObservableNavEnvironment<>> &body) {
-        signalReceived = true;
+        ++signalReceived;
     });
 
     robot->getRackMotor().onPodPutDown.connect([&](const Body<ObservableNavEnvironment<>> &body) {
-        signalReceived = true;
+        ++signalReceived;
     });
 
     // Pick up Pod
     (*robot->getRackMotor().pickUpPodAction())();
-    EXPECT_TRUE(signalReceived);
+    EXPECT_EQ(signalReceived, 1);
 
     // Put down Pod
-    signalReceived = false;
     (*robot->getRackMotor().putDownPodAction())();
-    EXPECT_TRUE(signalReceived);
+    EXPECT_EQ(signalReceived, 2);
+}
+
+TEST_F(NotifyTest, AgentMovement_With_PodMovement)
+{
+    // Connect Pod Movement
+    int podMoved = 0;
+    podDock->getPodHolder().getChildPod()->onBodyMoved.connect([&](const Body<ObservableNavEnvironment<>> &body) {
+        ++podMoved;
+    });
+
+    std::shared_ptr<Network> network = std::make_shared<Network>();
+
+    // Connect Controller
+    NetworkAdapter adapter;
+    adapter.connectWithAddress(network, 0x1);
+
+    // Connect Robot
+    robot->getNetworkAdapter().connect(network);
+
+    // Send Pickup Message
+    adapter.send(std::make_unique<PickupPodMessage>(adapter.getAddress()), 100);
+
+    // Robot Action perform (Pickup pod)
+    robot->tick(0);
+
+    // Movement With Pod
+    adapter.send(std::make_unique<MoveAgentMessage>(DirectionVector<>::UP(), adapter.getAddress()), 100);
+    robot->tick(1);
+    EXPECT_EQ(podMoved, 1);
+
+    // Move back with Pod
+    adapter.send(std::make_unique<MoveAgentMessage>(DirectionVector<>::DOWN(), adapter.getAddress()), 100);
+    robot->tick(2);
+    EXPECT_EQ(podMoved, 2);
+    robot->tick(3);
+    EXPECT_EQ(podMoved, 3);
+    robot->tick(4);
+    EXPECT_EQ(podMoved, 4);
+
+    // Put down pod
+    adapter.send(std::make_unique<PutDownPodMessage>(adapter.getAddress()), 100);
+    robot->tick(5);
+
+    // Move up without Pod
+    adapter.send(std::make_unique<MoveAgentMessage>(DirectionVector<>::UP(), adapter.getAddress()), 100);
+    robot->tick(6);
+    EXPECT_EQ(podMoved, 4);
+    robot->tick(7);
+    EXPECT_EQ(podMoved, 4);
+    robot->tick(8);
+    EXPECT_EQ(podMoved, 4);
 }

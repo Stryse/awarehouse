@@ -60,11 +60,7 @@ public:
           energySource(energySource),
           environment(env)
     {
-        // TODO connect movement with pod movement
-        moveMechanism.onBodyMoved.connect([](const Body &body) {
-            // BROADCAST Pod movement when pod is picked up.
-            // UNSUBSCRIBE Pod movement when pod is put down.
-        });
+        connect_PodMovementToAgentMovement();
     }
 
     virtual ~DRobotMCU() {}
@@ -180,6 +176,21 @@ private:
         }
     }
 
+    void connect_PodMovementToAgentMovement()
+    {
+        rackMotor.onPodPickedUp.connect([&](const Body &body) {
+            // Setup Connection
+            AgentMovement2PodMovement = moveMechanism.onBodyMoved.connect([&](const Body &body) {
+                podHolder.getChildPod()->onBodyMoved(*podHolder.getChildPod()->getBody());
+            });
+        });
+
+        rackMotor.onPodPutDown.connect([&](const Body &body) {
+            // TearDown Connection
+            AgentMovement2PodMovement.disconnect();
+        });
+    }
+
 private:
     // ############ Modules ################ //
     IMoveMechanism &moveMechanism;
@@ -188,6 +199,9 @@ private:
     PodHolder &podHolder;
     IDepleting &energySource;
     Environment &environment;
+
+    // ########### Connections ############# //
+    boost::signals2::connection AgentMovement2PodMovement;
 
     // ##################################### //
     std::queue<AgentAction *> actionQueue;
