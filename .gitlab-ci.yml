@@ -6,6 +6,7 @@ stages:
 
 before_script:
   - apt-get update -yqq
+  - apt-get install -yqq git-all
   - apt-get install -yqq cmake
   - apt-get install -yqq build-essential
   - apt-get install -yqq qt5-default
