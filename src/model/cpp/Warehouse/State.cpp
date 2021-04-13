@@ -43,4 +43,5 @@ int State::getColCount() const { return colCount; }
 
 const std::vector<std::shared_ptr<ChargingStation<>>> &State::getChargingStations() const { return chStations; }
 const std::vector<std::shared_ptr<PodDock<>>> &State::getPodDocks() const { return podDocks; }
+const std::vector<std::shared_ptr<DeliveryStation>> &State::getDeliveryStations() const { return deliveryStations; }
 const std::vector<std::shared_ptr<DeliveryRobot<>>> &State::getRobots() const { return robots; }

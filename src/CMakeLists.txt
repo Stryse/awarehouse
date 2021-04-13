@@ -91,6 +91,7 @@ presenter/cpp/MapTableList.cpp
 add_library(OBJ_AWSOURCE_FILES STATIC
 # Add CPP files here - those which are !!NOT!! Q_OBJECT
 model/cpp/Tile/Tile.cpp
+model/cpp/Tile/DeliveryStation.cpp
 model/cpp/Warehouse/Warehouse.cpp
 model/cpp/Warehouse/State.cpp
 model/cpp/Warehouse/Pod/OrderModel.cpp

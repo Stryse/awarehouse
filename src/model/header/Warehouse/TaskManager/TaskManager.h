@@ -1,6 +1,7 @@
 #ifndef TASK_MANAGER__H
 #define TASK_MANAGER__H
 
+#include "DeliveryStation.h"
 #include "OrderModel.h"
 #include "Pod.h"
 #include "PodDock.h"
@@ -19,7 +20,7 @@ public:
 
 public:
     TaskManager()
-        : podDocks(nullptr) {}
+        : podDocks(nullptr), deliveryStations(nullptr) {}
 
     virtual ~TaskManager() {}
 
@@ -40,6 +41,19 @@ public:
         this->podDocks = podDocks;
     }
 
+    /*****************************************************************
+     * @brief Sets which Delivery stations are for possible delivery
+     * task targets.
+     *****************************************************************/
+    void setDeliveryStations(const std::vector<std::shared_ptr<DeliveryStation>> *deliveryStations)
+    {
+        orderIDToDeliveryStation.clear();
+        this->deliveryStations = deliveryStations;
+
+        for (const auto &deliveryStation : *(this->deliveryStations))
+            orderIDToDeliveryStation[deliveryStation->getAcceptedOrderID()] = deliveryStation;
+    }
+
     /***************************************************************
      * @brief Scans All PodDocks for Pods and creates the
      * associated DeliveryTasks.
@@ -48,7 +62,7 @@ public:
     {
         tasks.clear();
 
-        if (podDocks != nullptr)
+        if (podDocks != nullptr && deliveryStations != nullptr)
         {
             for (const auto &podDock : *podDocks)
             {
@@ -75,6 +89,9 @@ private:
 private:
     std::vector<Task> tasks;
     const std::vector<std::shared_ptr<PodDock>> *podDocks;
+
+    std::map<int, DeliveryStation *> orderIDToDeliveryStation;
+    const std::vector<std::shared_ptr<DeliveryStation>> *deliveryStations;
 };
 
 #endif
