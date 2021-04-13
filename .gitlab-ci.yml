@@ -18,7 +18,7 @@ build-program:
   stage: build
   script:
     - mkdir cmake-build && cd cmake-build
-    - cmake ..
+    - cmake .. && cmake ../src && cmake ../test/GTest
     - make src
   artifacts:
     paths:
