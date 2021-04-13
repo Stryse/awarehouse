@@ -1,0 +1,40 @@
+image: ubuntu:18.04
+
+stages:
+  - build
+  - test
+
+before_script:
+  - apt-get update -yqq
+  - sudo snap install cmake --classic
+  - apt-get install -yqq qt5-default
+  - apt-get install -yqq doxygen
+
+build-program:
+  stage: build
+  script:
+    - mkdir cmake-build && cd cmake-build
+    - cmake ..
+    - make aWareHouse
+  artifacts:
+    paths:
+      - cmake-build/
+
+doxygen:
+  stage: build
+  script:
+    - doxygen docs/doxygen.conf
+    - mv docs/html/ public/
+  artifacts:
+    paths:
+     - public
+  only:
+    - master
+
+google-test:
+  stage: test
+  script:
+    - cd cmake-build
+    - make test
+  dependencies:
+    - build-program

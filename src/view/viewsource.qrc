@@ -23,5 +23,6 @@
         <file alias="MainView.qml">views/MainView.qml</file>
         <file alias="SimulationMap.qml">views/SimulationMap.qml</file>
         <file alias="FixedGrid.qml">views/FixedGrid.qml</file>
+        <file alias="WarehouseMap.qml">views/WarehouseMap.qml</file>
     </qresource>
 </RCC>

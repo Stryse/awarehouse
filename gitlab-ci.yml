@@ -1,0 +1,41 @@
+image: ubuntu:20.04
+
+stages:
+  - build
+  - test
+
+before-script:
+  - apt-get update -yqq
+  - apt-get install -yqq build-essential cmake
+  - apt-get install -yqq qt5-default
+  - apt-get install -yqq qt6-default
+  - apt-get install -yqq doxygen
+
+build-program:
+  stage: build
+  script:
+    - mkdir cmake-build && cd cmake-build
+    - cmake ..
+    - make aWareHouse
+  artifacts:
+    paths:
+      - cmake-build/
+
+doxygen:
+  stage: build
+  script:
+    - doxygen docs/doxygen.conf
+    - mv docs/html/ public/
+  artifacts:
+    paths:
+     - public
+  only:
+    - master
+
+google-test:
+  stage: test
+  script:
+    - cd cmake-build
+    - make test
+  dependencies:
+    - build-program

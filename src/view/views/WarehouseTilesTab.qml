@@ -73,20 +73,7 @@ Item {
                 cellWidth:  cellSize
                 cellHeight: cellSize
 
-                model: ListModel {
-                    ListElement {
-                        type: "Robot"
-                    }
-                    ListElement {
-                        type: "Shelf"
-                    }
-                    ListElement {
-                        type: "Charging Station"
-                    }
-                    ListElement {
-                        type: "Delivery Station"
-                    }
-                }
+                model: tileList
 
                 delegate: ColumnLayout {
                     id: tileDelegate
@@ -96,14 +83,55 @@ Item {
 
                     spacing: 0
 
-                    Rectangle {
-                        id: tileImg
+                    MouseArea {
+                        id: dragArea
 
                         Layout.alignment:       Qt.AlignHCenter
                         Layout.preferredHeight: gridView.cellSize * (4/5)
                         Layout.preferredWidth:  Layout.preferredHeight
 
-                        color: Material.accent
+                        drag.target: tileDragImg
+                        onReleased:  {
+                            var dragTarget = tileDragImg.Drag.target
+
+                            if (dragTarget !== null)
+                                dragTarget.tileDropped(tileType)
+                            else
+                                parent = tileDelegate
+                        }
+
+                        Rectangle {
+                            id: tileImg
+
+                            width:  dragArea.width
+                            height: dragArea.height
+
+                            color: tileColor
+                        }
+
+                        Rectangle {
+                            id: tileDragImg
+
+                            anchors.centerIn: dragArea
+
+                            visible: false
+
+                            width:  warehouse.cellSize
+                            height: warehouse.cellSize
+
+                            color: tileColor
+
+                            Drag.active: dragArea.drag.active
+                            Drag.hotSpot.x: width/2
+                            Drag.hotSpot.y: width/2
+
+                            states: State {
+                                when: dragArea.drag.active
+                                PropertyChanges { target: tileDragImg; visible: true }
+                                ParentChange    { target: tileDragImg; parent: editorRoot }
+                                AnchorChanges   { target: tileDragImg; anchors.verticalCenter: undefined; anchors.horizontalCenter: undefined }
+                            }
+                        }
                     }
                     Text {
                         id: tileLabel
@@ -115,7 +143,7 @@ Item {
 
                         color:    Material.foreground
 
-                        text:     qsTr(model.type)
+                        text:     qsTr(tileType)
                         wrapMode: Text.WordWrap
                     }
                 }
