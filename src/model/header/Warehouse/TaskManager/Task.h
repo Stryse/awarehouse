@@ -28,6 +28,7 @@ protected:
 
 class DeliveryTask : public Task
 {
+public:
     // ########################## CONSTRUCTORS ########################### //
     explicit DeliveryTask(const std::vector<Point<>> &wayPoints)
         : Task(wayPoints) {}

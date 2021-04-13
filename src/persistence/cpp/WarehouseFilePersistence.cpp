@@ -69,7 +69,6 @@ bool WarehouseFilePersistence::save(const State &state, const QString &resource)
 
     warehouseLayoutData.insert("DeliveryRobots", robots);
 
-
     saveObject.insert("WarehouseLayoutData", warehouseLayoutData);
     saveFile.write(QJsonDocument(saveObject).toJson());
     return true;
@@ -134,8 +133,8 @@ void WarehouseFilePersistence::loadChargingStation(std::vector<std::shared_ptr<C
     }
 }
 
-void WarehouseFilePersistence::loadDeliveryStation(std::vector<std::shared_ptr<DeliveryStation> > &deliveryStations,
-                                                   std::shared_ptr<ObservableNavEnvironment<> > &env,
+void WarehouseFilePersistence::loadDeliveryStation(std::vector<std::shared_ptr<DeliveryStation>> &deliveryStations,
+                                                   std::shared_ptr<ObservableNavEnvironment<>> &env,
                                                    QJsonObject &warehouseLayoutData)
 {
     if (warehouseLayoutData.contains("DeliveryStations") && warehouseLayoutData["DeliveryStations"].isArray())
@@ -168,6 +167,8 @@ void WarehouseFilePersistence::loadPodDock(std::vector<std::shared_ptr<PodDock<>
 
             env->getBuffer()[env->getCoordAsIndex(podDock->getPosition())] = podDock;
             podDock->addAssociatedPod(env);
+            PodDockLoader::loadOrders(PodDocksJSon[i].toObject(), *podDock->getPodHolder().getChildPod());
+
             podDocks.push_back(podDock);
         }
     }

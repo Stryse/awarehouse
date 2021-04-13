@@ -8,10 +8,9 @@ class OrderModel
 public:
     explicit OrderModel(int category);
 
-    friend inline bool operator<(const OrderModel &lhs, const OrderModel &rhs)
-    {
-        return lhs.category < rhs.category;
-    }
+    friend bool operator<(const OrderModel &lhs, const OrderModel &rhs);
+    int getCategory() const;
+    const std::string &getOrderId() const;
 
 private:
     int category;

@@ -7,6 +7,7 @@
 #include "PodDock.h"
 #include "Task.h"
 #include <map>
+#include <memory>
 #include <vector>
 
 template <typename TEnvironment>
@@ -28,7 +29,7 @@ public:
     /***************************************************************
      * @brief Returns all tasks in the warehouse.
      ***************************************************************/
-    const std::vector<Task> &getTasks() const
+    const std::vector<std::unique_ptr<Task>> &getTasks() const
     {
         return tasks;
     }
@@ -51,12 +52,12 @@ public:
         this->deliveryStations = deliveryStations;
 
         for (const auto &deliveryStation : *(this->deliveryStations))
-            orderIDToDeliveryStation[deliveryStation->getAcceptedOrderID()] = deliveryStation;
+            orderIDToDeliveryStation[deliveryStation->getAcceptedOrderID()] = deliveryStation.get();
     }
 
     /***************************************************************
      * @brief Scans All PodDocks for Pods and creates the
-     * associated DeliveryTasks.
+     * associated DeliveryTasks if Pod dock has pod and it has orders
      ***************************************************************/
     void createDeliveryTasks()
     {
@@ -81,13 +82,39 @@ public:
 private:
     void createTask(const PodDock &podDock)
     {
-        std::vector<Point> wpoints;
-        wpoints.push_back(podDock.getPosition());
-        tasks.push_back(Task(std::move(wpoints)));
+        Pod &pod = *podDock.getPodHolder().getChildPod();
+        if (pod.getInventory().empty())
+            return;
+
+        std::vector<Point> wayPoints;
+
+        // First Waypoint is podDock position
+        wayPoints.push_back(podDock.getPosition());
+
+        for (auto &order : pod.getInventory())
+        {
+            auto it = orderIDToDeliveryStation.find(order->getCategory());
+
+            // Middle Waypoints are delivery station positions
+            if (it != orderIDToDeliveryStation.end())
+                wayPoints.push_back(it->second->getPosition());
+        }
+
+        OptimizeWayPoints(wayPoints);
+
+        // Last Waypoint is also podDock position
+        wayPoints.push_back(podDock.getPosition());
+
+        // Register Delivery Task
+        tasks.emplace_back(std::make_unique<DeliveryTask>(std::move(wayPoints)));
+    }
+
+    void OptimizeWayPoints(const std::vector<Point> &wayPoints)
+    {
     }
 
 private:
-    std::vector<Task> tasks;
+    std::vector<std::unique_ptr<Task>> tasks;
     const std::vector<std::shared_ptr<PodDock>> *podDocks;
 
     std::map<int, DeliveryStation *> orderIDToDeliveryStation;

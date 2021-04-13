@@ -62,5 +62,6 @@ void Warehouse::setupNetwork(State &state)
 void Warehouse::setupTaskManager(State &state)
 {
     taskManager.setPodDocks(&state.getPodDocks());
+    taskManager.setDeliveryStations(&state.getDeliveryStations());
     taskManager.createDeliveryTasks();
 }
