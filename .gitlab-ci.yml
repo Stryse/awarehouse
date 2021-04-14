@@ -8,6 +8,7 @@ stages:
 
 before_script:
   - pacman -Syu --noconfirm
+  - mkdir /var/lib/pacman
   - pacman -Sy git-2.31.1-1
   - pacman -Sy cmake-3.20.1-1
   - pacman -Sy base-devel
