@@ -34,6 +34,9 @@ bool Warehouse::loadState(const QString &srcPath)
         timeStamp = 0;
         setupNetwork(*state);
         setupTaskManager(*state);
+
+        // TODO REMOVE
+        controller->getNetworkAdapter().send(std::make_unique<MoveAgentMessage>(DirectionVector<>::DOWN(), 0x1), 100);
     }
 
     return state != nullptr;

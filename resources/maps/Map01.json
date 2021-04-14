@@ -266,6 +266,9 @@
                 "ColCoord": 8,
                 "Orders": [
                     {
+                        "Category": 1
+                    },
+                    {
                         "Category": 4
                     }
                 ]

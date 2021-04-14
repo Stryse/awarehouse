@@ -5,7 +5,9 @@
 #include "OrderModel.h"
 #include "Pod.h"
 #include "PodDock.h"
+#include "Point.h"
 #include "Task.h"
+#include <algorithm>
 #include <map>
 #include <memory>
 #include <vector>
@@ -93,12 +95,17 @@ private:
 
         for (auto &order : pod.getInventory())
         {
+            // Find associated delivery staion
             auto it = orderIDToDeliveryStation.find(order->getCategory());
 
             // Middle Waypoints are delivery station positions
             if (it != orderIDToDeliveryStation.end())
                 wayPoints.push_back(it->second->getPosition());
         }
+
+        // Do not create task if there are no appropriate delivery stations
+        if (wayPoints.size() < 2)
+            return;
 
         OptimizeWayPoints(wayPoints);
 
@@ -109,16 +116,26 @@ private:
         tasks.emplace_back(std::make_unique<DeliveryTask>(std::move(wayPoints)));
     }
 
-    void OptimizeWayPoints(const std::vector<Point> &wayPoints)
+    void OptimizeWayPoints(std::vector<Point> &wayPoints)
     {
+        for (int i = 1; i < wayPoints.size(); ++i)
+        {
+            int minDistance = Point::manhattanNorm(wayPoints[i - 1], wayPoints[i]);
+
+            for (int j = i + 1; j < wayPoints.size(); ++j)
+                if (Point::manhattanNorm(wayPoints[i - 1], wayPoints[j]) < minDistance)
+                    std::swap(wayPoints[i], wayPoints[j]);
+        }
     }
 
 private:
     std::vector<std::unique_ptr<Task>> tasks;
+    std::vector<std::unique_ptr<Task>> finishedTasks;
+
     const std::vector<std::shared_ptr<PodDock>> *podDocks;
+    const std::vector<std::shared_ptr<DeliveryStation>> *deliveryStations;
 
     std::map<int, DeliveryStation *> orderIDToDeliveryStation;
-    const std::vector<std::shared_ptr<DeliveryStation>> *deliveryStations;
 };
 
 #endif
