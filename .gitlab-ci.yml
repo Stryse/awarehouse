@@ -1,5 +1,5 @@
 image:
-  name: "archlinux"
+  name: "archlinux:20191105"
   entrypoint: ["/bin/sh", "-l", "-c"]
 
 stages:
