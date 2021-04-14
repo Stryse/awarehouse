@@ -15,7 +15,7 @@ before_script:
   - apt-get install -yqq libfreetype-dev
   - apt-get install -yqq libxkbcommon-x11-0
   - apt-get install -yqq libfontconfig1
-  - apt-get install -yqq libboost1.74-all-dev
+  - apt-get install -yqq libboost-all-dev
 
 build-program:
   stage: build
