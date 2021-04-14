@@ -1,4 +1,6 @@
-image: "archlinux"
+image:
+  - name: "archlinux"
+  - entrypoint: [""]
 
 stages:
   - build
