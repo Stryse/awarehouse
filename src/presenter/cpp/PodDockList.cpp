@@ -6,20 +6,20 @@ PodDockList::PodDockList(QObject* parent)
 
 QList<const PodDockPresenter*>* PodDockList::podDocks() { return &m_podDocks; }
 
-bool PodDockList::setPodDockAt(int index, const PodDockPresenter &actor)
+bool PodDockList::setPodDockAt(int index, const PodDockPresenter& podDock)
 {
     if (index < 0 ||
         index >= m_podDocks.size())
         return false;
 
-    m_podDocks[index] = &actor;
+    m_podDocks[index] = &podDock;
     return true;
 }
 
-void PodDockList::appendPodDock(const PodDockPresenter &actor)
+void PodDockList::appendPodDock(const PodDockPresenter& podDock)
 {
     emit preItemAppended();
-    m_podDocks.append(&actor);
+    m_podDocks.append(&podDock);
     emit postItemAppended();
 }
 

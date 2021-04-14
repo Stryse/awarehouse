@@ -1,5 +1,5 @@
-#ifndef PODDOCKPRESENTER_H
-#define PODDOCKPRESENTER_H
+#ifndef POD_DOCK_PRESENTER_H
+#define POD_DOCK_PRESENTER_H
 
 #include <QObject>
 
@@ -25,4 +25,4 @@ private:
     static QString m_static_imagePath;
 };
 
-#endif // PODDOCKPRESENTER_H
+#endif /* POD_DOCK_PRESENTER_H */

@@ -15,12 +15,20 @@ WarehouseLayoutPresenter::WarehouseLayoutPresenter(const State* state,
     setRows(state->getRowCount());
     setColumns(state->getColCount());
 
+    //Connect robots presenter to model
+    m_robots.actors()->reserve(state->getRobots().size());
+    for(auto& robot : state->getRobots())
+    {
+        auto acPresenter = new ActorPresenter(robot.get(),this);
+        m_robots.actors()->append(acPresenter);
+    }
+
     //Connect charging stations presenter to model
     m_chargingStations.chargingStations()->reserve(state->getChargingStations().size());
     for(auto& station : state->getChargingStations())
     {
-        auto chPresenter = new ChargingStationPresenter(station.get(),this);
-        m_chargingStations.chargingStations()->append(chPresenter);
+        auto csPresenter = new ChargingStationPresenter(station.get(),this);
+        m_chargingStations.chargingStations()->append(csPresenter);
     }
 
     //Connect pod docks presenter to model
@@ -31,12 +39,12 @@ WarehouseLayoutPresenter::WarehouseLayoutPresenter(const State* state,
         m_podDocks.podDocks()->append(pdPresenter);
     }
 
-    //Connect robots presenter to model
-    m_robots.actors()->reserve(state->getRobots().size());
-    for(auto& robot : state->getRobots())
+    //Connect charging stations presenter to model
+    m_deliveryStations.deliveryStations()->reserve(state->getDeliveryStations().size());
+    for(auto& station : state->getDeliveryStations())
     {
-        auto acPresenter = new ActorPresenter(robot.get(),this);
-        m_robots.actors()->append(acPresenter);
+        auto dsPresenter = new DeliveryStationPresenter(station.get(),this);
+        m_deliveryStations.deliveryStations()->append(dsPresenter);
     }
 }
 
@@ -57,5 +65,6 @@ void WarehouseLayoutPresenter::setColumns(int columns) { m_columns = columns;
 ActorList*           WarehouseLayoutPresenter::actors()           { return &m_robots;           }
 ChargingStationList* WarehouseLayoutPresenter::chargingStations() { return &m_chargingStations; }
 PodDockList*         WarehouseLayoutPresenter::podDocks()         { return &m_podDocks;         }
+DeliveryStationList* WarehouseLayoutPresenter::deliveryStations() { return &m_deliveryStations; }
 TaskList*            WarehouseLayoutPresenter::tasks()            { return &m_tasks;            }
 
