@@ -10,6 +10,7 @@
 #include "ActorList.h"
 #include "ChargingStationList.h"
 #include "PodDockList.h"
+#include "DeliveryStationList.h"
 #include "TaskList.h"
 
 class State;
@@ -23,6 +24,7 @@ class WarehouseLayoutPresenter : public QObject
     Q_PROPERTY(           ActorList* actors           READ actors           CONSTANT                                  )
     Q_PROPERTY( ChargingStationList* chargingStations READ chargingStations CONSTANT                                  )
     Q_PROPERTY(         PodDockList* podDocks         READ podDocks         CONSTANT                                  )
+    Q_PROPERTY( DeliveryStationList* deliveryStations READ deliveryStations CONSTANT                                  )
     Q_PROPERTY(            TaskList* tasks            READ tasks            CONSTANT                                  )
 
 public:
@@ -44,6 +46,7 @@ public:
     ActorList*           actors();
     ChargingStationList* chargingStations();
     PodDockList*         podDocks();
+    DeliveryStationList* deliveryStations();
     TaskList*            tasks();
 
 signals:
@@ -58,6 +61,7 @@ private:
     ActorList           m_robots;
     ChargingStationList m_chargingStations;
     PodDockList         m_podDocks;
+    DeliveryStationList m_deliveryStations;
     TaskList            m_tasks;
 };
 

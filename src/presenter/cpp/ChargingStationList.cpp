@@ -6,20 +6,20 @@ ChargingStationList::ChargingStationList(QObject* parent)
 
 QList<const ChargingStationPresenter*>* ChargingStationList::chargingStations() { return &m_chargingStations; }
 
-bool ChargingStationList::setChargingStationAt(int index, const ChargingStationPresenter &actor)
+bool ChargingStationList::setChargingStationAt(int index, const ChargingStationPresenter& chargingStation)
 {
     if (index < 0 ||
         index >= m_chargingStations.size())
         return false;
 
-    m_chargingStations[index] = &actor;
+    m_chargingStations[index] = &chargingStation;
     return true;
 }
 
-void ChargingStationList::appendChargingStation(const ChargingStationPresenter &actor)
+void ChargingStationList::appendChargingStation(const ChargingStationPresenter& chargingStation)
 {
     emit preItemAppended();
-    m_chargingStations.append(&actor);
+    m_chargingStations.append(&chargingStation);
     emit postItemAppended();
 }
 

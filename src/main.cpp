@@ -13,6 +13,7 @@
 #include "ActorListModel.h"
 #include "ChargingStationListModel.h"
 #include "PodDockListModel.h"
+#include "DeliveryStationListModel.h"
 #include "TaskListModel.h"
 
 int main(int argc, char *argv[])
@@ -32,6 +33,7 @@ int main(int argc, char *argv[])
     qmlRegisterType<ActorListModel>           ("ActorList",           1, 0, "ActorListModel");
     qmlRegisterType<ChargingStationListModel> ("ChargingStationList", 1, 0, "ChargingStationListModel");
     qmlRegisterType<PodDockListModel>         ("PodDockList",         1, 0, "PodDockListModel");
+    qmlRegisterType<DeliveryStationListModel> ("DeliveryStationList", 1, 0, "DeliveryStationListModel");
     qmlRegisterType<TaskListModel>            ("TaskList",            1, 0, "TaskListModel");
     qmlRegisterType<SimulationWindowPresenter>("Simulator",           1, 0, "TickRate");
 

@@ -7,6 +7,7 @@ import Simulator           1.0
 import ActorList           1.0
 import ChargingStationList 1.0
 import PodDockList         1.0
+import DeliveryStationList 1.0
 
 Item {
     id: root
@@ -98,6 +99,22 @@ Item {
 
         Image {
             id: podImg
+
+            x: model.column * (root.cellSize + root.cellSpacing)
+            y: model.row    * (root.cellSize + root.cellSpacing)
+
+            width:  root.cellSize
+            height: root.cellSize
+
+            source: model.image
+        }
+    }
+
+    Component {
+        id: deliveryStationComponent
+
+        Image {
+            id: deliveryStationImg
 
             x: model.column * (root.cellSize + root.cellSpacing)
             y: model.row    * (root.cellSize + root.cellSpacing)
@@ -209,6 +226,20 @@ Item {
                         podDocks: SimPresenter.layout.podDocks
                     }
                     delegate: podComponent
+                }
+            }
+            Item {
+                id: deliveryStations
+
+                anchors.fill: tiles
+
+                Repeater {
+                    id: deliveryStationRepeater
+
+                    model: DeliveryStationListModel {
+                        deliveryStations: SimPresenter.layout.deliveryStations
+                    }
+                    delegate: deliveryStationComponent
                 }
             }
         }

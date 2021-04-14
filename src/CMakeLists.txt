@@ -110,6 +110,15 @@ presenter/header/PodDockList.h
 
 presenter/cpp/PodDockListModel.cpp
 presenter/header/PodDockListModel.h
+
+presenter/cpp/DeliveryStationPresenter.cpp
+presenter/header/DeliveryStationPresenter.h
+
+presenter/cpp/DeliveryStationList.cpp
+presenter/header/DeliveryStationList.h
+
+presenter/cpp/DeliveryStationListModel.cpp
+presenter/header/DeliveryStationListModel.h
 )
 
 add_library(OBJ_AWSOURCE_FILES STATIC
