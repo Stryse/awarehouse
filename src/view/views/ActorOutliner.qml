@@ -3,7 +3,7 @@ import QtQuick.Layouts
 import QtQuick.Controls
 import QtQuick.Controls.Material
 
-import Outliner 1.0
+import ActorList 1.0
 
 Item {
     id: root
@@ -68,8 +68,8 @@ Item {
 
                 clip: true
 
-                model: OutlinerModel {
-                    actors: simpresenter.actors
+                model: ActorListModel {
+                    actors: SimPresenter.layout.actors
                 }
 
                 delegate: GridLayout {
@@ -105,7 +105,7 @@ Item {
                     }
 
                     Label {
-                        id: actorName
+                        id: nameLabel
 
                         Layout.alignment: Qt.AlignLeft | Qt.AlignBottom
                         Layout.row:       0
@@ -116,7 +116,7 @@ Item {
                     }
 
                     ProgressBar {
-                        id: actorBatteryProgress
+                        id: batteryProgressBar
 
                         Layout.row:        1
                         Layout.column:     1
@@ -130,17 +130,17 @@ Item {
                     }
 
                     Label {
-                        id: taskAndOrientationLabel
+                        id: taskAndRotationLabel
 
                         Layout.alignment: Qt.AlignLeft | Qt.AlignTop
                         Layout.row:       2
                         Layout.column:    1
 
-                        text: model.action + " | " + model.orientation
+                        text: model.action + " | " + model.rotation
                     }
 
                     Label {
-                        id: actorBatteryLabel
+                        id: batteryLabel
 
                         Layout.alignment: Qt.AlignRight | Qt.AlignTop
                         Layout.row:       2

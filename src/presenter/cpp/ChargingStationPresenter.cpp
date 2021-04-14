@@ -1,16 +1,15 @@
 #include "ChargingStationPresenter.h"
+
+//Model
 #include "ChargingStation.h"
 
-
-
-QString ChargingStationPresenter::imagePath = "qrc:/images/chstation.png";
-
-ChargingStationPresenter::ChargingStationPresenter(const ChargingStation<int>* model, QObject* parent)
-    : MapItemPresenter(ChargingStationPresenter::imagePath,
-                       model->getPosition().getPosY(),
+ChargingStationPresenter::ChargingStationPresenter(const ChargingStation<int>* model,
+                                                                      QObject* parent)
+    : MapItemPresenter(model->getPosition().getPosY(),
                        model->getPosition().getPosX(),
+                       ChargingStationPresenter::m_static_imagePath,
                        parent)
-    ,model(model)
-{
+    , model(model)
+{}
 
-}
+QString ChargingStationPresenter::m_static_imagePath = "qrc:/images/chstation.png";

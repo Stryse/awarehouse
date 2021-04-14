@@ -2,20 +2,26 @@
 #define CHARGING_STATION_PRESENTER__H
 
 #include <QObject>
-#include <MapItemPresenter.h>
+
+//Presenter
+#include "MapItemPresenter.h"
 
 template <typename T> class ChargingStation;
+
 class ChargingStationPresenter : public MapItemPresenter
 {
     Q_OBJECT
 
 public:
-    explicit ChargingStationPresenter(const ChargingStation<int>* model, QObject *parent = nullptr);
+    explicit ChargingStationPresenter(const ChargingStation<int>* model,
+                                                         QObject* parent = nullptr);
 
 private:
+    //Model
+    const  ChargingStation<int>* model;
 
-    const ChargingStation<int>* model;
-    static QString imagePath;
+    //Static
+    static QString m_static_imagePath;
 };
 
 #endif /* CHARGING_STATION_PRESENTER__H */

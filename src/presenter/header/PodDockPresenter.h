@@ -1,12 +1,14 @@
 #ifndef PODDOCKPRESENTER_H
 #define PODDOCKPRESENTER_H
 
-#include <MapItemPresenter.h>
 #include <QObject>
+
+//Presenter
+#include "MapItemPresenter.h"
 
 template <typename E> class PodDock;
 template <typename V> class ObservableNavEnvironment;
-class Tile;
+                      class Tile;
 
 class PodDockPresenter : public MapItemPresenter
 {
@@ -14,11 +16,13 @@ class PodDockPresenter : public MapItemPresenter
 
 public:
     explicit PodDockPresenter(const PodDock<ObservableNavEnvironment<Tile>>* model,
-                              QObject *parent=nullptr);
+                                                                    QObject* parent = nullptr);
 private:
+    //Model
+    const  PodDock<ObservableNavEnvironment<Tile>>* model;
 
-    const PodDock<ObservableNavEnvironment<Tile>>* model;
-    static QString imagePath;
+    //Static
+    static QString m_static_imagePath;
 };
 
 #endif // PODDOCKPRESENTER_H

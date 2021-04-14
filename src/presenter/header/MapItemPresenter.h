@@ -7,30 +7,36 @@
 class MapItemPresenter : public QObject
 {
     Q_OBJECT
-    Q_PROPERTY(QString image READ imagePath WRITE setImagePath NOTIFY imagePathChanged)
-    Q_PROPERTY(int row READ rowCoord WRITE setRowCoord NOTIFY rowCoordChanged)
-    Q_PROPERTY(int col READ colCoord WRITE setColCoord NOTIFY colCoordChanged)
+
+    Q_PROPERTY(     int row   READ row       WRITE setRow       NOTIFY rowChanged       )
+    Q_PROPERTY(     int col   READ column    WRITE setColumn    NOTIFY columnChanged    )
+    Q_PROPERTY( QString image READ imagePath WRITE setImagePath NOTIFY imagePathChanged )
 
 public:
+    explicit MapItemPresenter(           int row,
+                                         int column,
+                              const QString& imagePath,
+                                    QObject* parent = nullptr);
+
+    //Getter
+    int     row()       const;
+    int     column()    const;
     QString imagePath() const;
-    void setImagePath(const QString &imagePath);
 
-    int rowCoord() const;
-    void setRowCoord(int value);
+    //Setter
+    void setRow(int row);
+    void setColumn(int column);
+    void setImagePath(const QString& imagePath);
 
-    int colCoord() const;
-    void setColCoord(int value);
-
-    explicit MapItemPresenter(const QString &imagePath, int rowCoord, int colCoord, QObject *parent = nullptr);
 signals:
+    void rowChanged();
+    void columnChanged();
     void imagePathChanged();
-    void rowCoordChanged();
-    void colCoordChanged();
 
 private:
+    int     m_row;
+    int     m_column;
     QString m_imagePath;
-    int m_rowCoord;
-    int m_colCoord;
 };
 
 #endif /* MAP_ITEM__PRESENTER__H */

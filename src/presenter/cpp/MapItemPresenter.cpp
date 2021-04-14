@@ -1,39 +1,22 @@
 #include "MapItemPresenter.h"
 
-MapItemPresenter::MapItemPresenter(const QString &imagePath, int rowCoord, int colCoord, QObject *parent)
-    : QObject(parent), m_imagePath(imagePath), m_rowCoord(rowCoord), m_colCoord(colCoord)
-{
-}
+MapItemPresenter::MapItemPresenter(           int row,
+                                              int column,
+                                   const QString& imagePath,
+                                         QObject* parent)
+    : QObject(parent)
+    , m_row      (row      )
+    , m_column   (column   )
+    , m_imagePath(imagePath)
+{}
 
-QString MapItemPresenter::imagePath() const
-{
-    return m_imagePath;
-}
+int     MapItemPresenter::row()       const { return m_row;       }
+int     MapItemPresenter::column()    const { return m_column;    }
+QString MapItemPresenter::imagePath() const { return m_imagePath; }
 
-void MapItemPresenter::setImagePath(const QString &imagePath)
-{
-    m_imagePath = imagePath;
-    emit imagePathChanged();
-}
-
-int MapItemPresenter::rowCoord() const
-{
-    return m_rowCoord;
-}
-
-void MapItemPresenter::setRowCoord(int value)
-{
-    m_rowCoord = value;
-    emit rowCoordChanged();
-}
-
-int MapItemPresenter::colCoord() const
-{
-    return m_colCoord;
-}
-
-void MapItemPresenter::setColCoord(int value)
-{
-    m_colCoord = value;
-    emit colCoordChanged();
-}
+void MapItemPresenter::setRow(int row)                        { m_row       = row;
+                                                                emit rowChanged();       }
+void MapItemPresenter::setColumn(int column)                  { m_column    = column;
+                                                                emit columnChanged();    }
+void MapItemPresenter::setImagePath(const QString& imagePath) { m_imagePath = imagePath;
+                                                                emit imagePathChanged(); }

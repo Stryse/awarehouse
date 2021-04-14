@@ -3,15 +3,18 @@ import QtQuick.Layouts
 import QtQuick.Controls
 import QtQuick.Controls.Material
 
-import SimulationMap 1.0
+import Simulator           1.0
+import ActorList           1.0
+import ChargingStationList 1.0
+import PodDockList         1.0
 
 Item {
     id: root
 
     readonly property real  aspectRatio: 16/9
 
-    property int rows:    10
-    property int columns: 10
+    property int rows:    SimPresenter.layout.rows
+    property int columns: SimPresenter.layout.columns
 
     property int   cellSpacing: 1
     property real  cellScale:   zoomArea.zoomScale
@@ -64,15 +67,29 @@ Item {
         Image {
             id: actorImg
 
-            x: columnIdx * (root.cellSize + root.cellSpacing)
-            y: rowIdx    * (root.cellSize + root.cellSpacing)
+            x: model.column * (root.cellSize + root.cellSpacing)
+            y: model.row    * (root.cellSize + root.cellSpacing)
 
             width:  root.cellSize
             height: root.cellSize
 
-            source: imgSource
+            source: model.image//"qrc:/placeholder_amogus.png"
+        }
+    }
 
-            rotation: rotationAngle
+    Component {
+        id: chargingStationComponent
+
+        Image {
+            id: chargingStationImg
+
+            x: model.column * (root.cellSize + root.cellSpacing)
+            y: model.row    * (root.cellSize + root.cellSpacing)
+
+            width:  root.cellSize
+            height: root.cellSize
+
+            source: model.image
         }
     }
 
@@ -82,15 +99,13 @@ Item {
         Image {
             id: podImg
 
-            x: columnIdx * (root.cellSize + root.cellSpacing)
-            y: rowIdx    * (root.cellSize + root.cellSpacing)
+            x: model.column * (root.cellSize + root.cellSpacing)
+            y: model.row    * (root.cellSize + root.cellSpacing)
 
             width:  root.cellSize
             height: root.cellSize
 
-            source: imgSource
-
-            rotation: rotationAngle
+            source: model.image
         }
     }
 
@@ -162,8 +177,24 @@ Item {
                 Repeater {
                     id: actorRepeater
 
-                    model:    placeholderModel
+                    model: ActorListModel {
+                       actors: SimPresenter.layout.actors
+                    }
                     delegate: actorComponent
+                }
+            }
+            Item {
+                id: chargingStations
+
+                anchors.fill: tiles
+
+                Repeater {
+                    id: chargingStationRepeater
+
+                    model: ChargingStationListModel {
+                        chargingStations: SimPresenter.layout.chargingStations
+                    }
+                    delegate: chargingStationComponent
                 }
             }
             Item {
@@ -174,7 +205,9 @@ Item {
                 Repeater {
                     id: podRepeater
 
-                    model:    placeholderModel
+                    model: PodDockListModel {
+                        podDocks: SimPresenter.layout.podDocks
+                    }
                     delegate: podComponent
                 }
             }

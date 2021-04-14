@@ -41,9 +41,9 @@ Item {
 
                 onClicked: {
                     if(paused)
-                        simpresenter.simulationStart()
+                        SimPresenter.simulationStart()
                     else
-                        simpresenter.simulationStop()
+                        SimPresenter.simulationStop()
 
                     paused = !paused
                 }
@@ -79,9 +79,9 @@ Item {
 
                 onClicked: {
                     switch (speed.state) {
-                    case "normal": speed.state = "double"; simpresenter.setTickRate(TickRate.TWICE);      break
-                    case "double": speed.state = "half";   simpresenter.setTickRate(TickRate.HALF_SPEED); break
-                    case "half":   speed.state = "normal"; simpresenter.setTickRate(TickRate.NORMAL);     break
+                    case "normal": speed.state = "double"; SimPresenter.setTickRate(TickRate.TWICE);      break
+                    case "double": speed.state = "half";   SimPresenter.setTickRate(TickRate.HALF_SPEED); break
+                    case "half":   speed.state = "normal"; SimPresenter.setTickRate(TickRate.NORMAL);     break
                     }
                 }
             }
@@ -95,7 +95,7 @@ Item {
                 icon.source: "qrc:/replay_white.png"
                 //text: "Reset"
 
-                onClicked: simpresenter.reloadWarehouse();
+                onClicked: SimPresenter.reloadWarehouse();
             }
         }
     }
