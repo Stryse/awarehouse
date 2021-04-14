@@ -7,15 +7,13 @@ stages:
   - test
 
 before_script:
-  - curl -fsSL "https://repo.archlinuxcn.org/x86_64/glibc-linux4-2.33-4-x86_64.pkg.tar.zst" | bsdtar -C / -xvf -
-  - pacman -Syu --noconfirm
-  - pacman -Sy git-2.31.1-1
-  - pacman -Sy cmake-3.20.1-1
-  - pacman -Sy base-devel
-  - pacman -Sy qt6-base-6.0.3-1
-  - pacman -Sy qt6-declarative-6.0.3-1
-  - pacman -Sy qt6-quickcontrols2-6.0.3-1
-  - pacman -Sy doxygen-1.9.1-1
+  - pacman -Syu git-2.31.1-1
+  - pacman -Syu cmake-3.20.1-1
+  - pacman -Syu base-devel
+  - pacman -Syu qt6-base-6.0.3-1
+  - pacman -Syu qt6-declarative-6.0.3-1
+  - pacman -Syu qt6-quickcontrols2-6.0.3-1
+  - pacman -Syu doxygen-1.9.1-1
 
 build-program:
   stage: build
