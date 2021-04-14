@@ -6,7 +6,8 @@ stages:
 
 before_script:
   - apt-get update -yqq
-  - sudo snap install cmake --classic
+  - apt-get install snapd
+  - apt-get install cmake -yqq
   - apt-get install -yqq qt5-default
   - apt-get install -yqq doxygen
 
