@@ -78,17 +78,29 @@ presenter/header/RoadPresenter.h
 presenter/cpp/ActorList.cpp
 presenter/header/ActorList.h
 
-presenter/cpp/ActorOutlinerModel.cpp
-presenter/header/ActorOutlinerModel.h
+presenter/cpp/ActorListModel.cpp
+presenter/header/ActorListModel.h
 
 presenter/cpp/TaskList.cpp
 presenter/header/TaskList.h
 
-presenter/cpp/TaskOutlinerModel.cpp
-presenter/header/TaskOutlinerModel.h
+presenter/cpp/TaskListModel.cpp
+presenter/header/TaskListModel.h
 
 presenter/cpp/ActorListModel.cpp
 presenter/header/ActorListModel.h
+
+presenter/cpp/ChargingStationList.cpp
+presenter/header/ChargingStationList.h
+
+presenter/cpp/ChargingStationListModel.cpp
+presenter/header/ChargingStationListModel.h
+
+presenter/cpp/PodDockList.cpp
+presenter/header/PodDockList.h
+
+presenter/cpp/PodDockListModel.cpp
+presenter/header/PodDockListModel.h
 )
 
 add_library(OBJ_AWSOURCE_FILES STATIC

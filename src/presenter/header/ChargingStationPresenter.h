@@ -21,7 +21,7 @@ private:
     const  ChargingStation<int>* model;
 
     //Static
-    static QString imagePath;
+    static QString m_static_imagePath;
 };
 
 #endif /* CHARGING_STATION_PRESENTER__H */

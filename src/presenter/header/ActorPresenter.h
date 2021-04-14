@@ -18,12 +18,10 @@ class ActorPresenter : public MapItemPresenter
     Q_PROPERTY(     int battery  READ battery                NOTIFY batteryChanged  )
     Q_PROPERTY(     int rotation READ rotation               NOTIFY rotationChanged )
     Q_PROPERTY(     int moves    READ moves                  NOTIFY movesChanged    )
-    Q_PROPERTY( int     row2   READ getRow2  WRITE setRow2  NOTIFY rowCoordChanged  )
-    Q_PROPERTY( int     col2   READ getCol2  WRITE setCol2  NOTIFY colCoordChanged  )
 
 public:
     explicit ActorPresenter(const DeliveryRobot<ObservableNavEnvironment<Tile>,int>* model,
-                                                                            QObject* parent);
+                                                                            QObject* parent = nullptr);
 
     //Getter
     QString name()      const;
@@ -38,12 +36,6 @@ public:
     void setBattery(int level);
     void setRotation(int rotation);
     void movesInc();
-
-    int getRow2() const { return rowCoord(); }
-    void setRow2(int row2) {}
-
-    int getCol2() const { return 5; }
-    void setCol2(int col2) {}
 
 signals:
     void nameChanged();
@@ -63,7 +55,7 @@ private:
     const  DeliveryRobot<ObservableNavEnvironment<Tile>,int>* model;
 
     //Static
-    static QString imagePath;
+    static QString m_static_imagePath;
 };
 
 #endif // ACTOR_PRESENTER_H

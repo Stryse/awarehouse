@@ -7,9 +7,9 @@ PodDockPresenter::PodDockPresenter(const PodDock<ObservableNavEnvironment<Tile>>
                                                                          QObject* parent)
     : MapItemPresenter(model->getPosition().getPosY(),
                        model->getPosition().getPosX(),
-                       PodDockPresenter::imagePath,
+                       PodDockPresenter::m_static_imagePath,
                        parent)
     , model(model)
 {}
 
-QString PodDockPresenter::imagePath = "qrc:/images/pod.png";
+QString PodDockPresenter::m_static_imagePath = "qrc:/images/pod.png";

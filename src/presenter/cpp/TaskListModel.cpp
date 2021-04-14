@@ -1,11 +1,13 @@
-#include "TaskOutlinerModel.h"
+#include "TaskListModel.h"
 
-TaskOutlinerModel::TaskOutlinerModel(QObject *parent)
+#include "TaskPresenter.h"
+
+TaskListModel::TaskListModel(QObject *parent)
     : QAbstractListModel(parent)
     , m_tasks(nullptr)
 {}
 
-int TaskOutlinerModel::rowCount(const QModelIndex& parent) const
+int TaskListModel::rowCount(const QModelIndex& parent) const
 {
     if (parent.isValid()|| m_tasks == nullptr)
         return 0;
@@ -13,8 +15,8 @@ int TaskOutlinerModel::rowCount(const QModelIndex& parent) const
     return m_tasks->tasks()->size();
 }
 
-QVariant TaskOutlinerModel::data(const QModelIndex& index,
-                                                int role) const
+QVariant TaskListModel::data(const QModelIndex& index,
+                                            int role) const
 {
     if (!index.isValid() || m_tasks == nullptr)
        return QVariant();
@@ -35,9 +37,9 @@ QVariant TaskOutlinerModel::data(const QModelIndex& index,
     return QVariant();
 }
 
-bool TaskOutlinerModel::setData(const QModelIndex& index,
-                                const    QVariant& value,
-                                               int role)
+bool TaskListModel::setData(const QModelIndex& index,
+                            const    QVariant& value,
+                                           int role)
 {
     if (data(index, role) != value)
     {
@@ -49,7 +51,7 @@ bool TaskOutlinerModel::setData(const QModelIndex& index,
     return false;
 }
 
-Qt::ItemFlags TaskOutlinerModel::flags(const QModelIndex& index) const
+Qt::ItemFlags TaskListModel::flags(const QModelIndex& index) const
 {
     if (!index.isValid())
         return Qt::NoItemFlags;
@@ -58,7 +60,7 @@ Qt::ItemFlags TaskOutlinerModel::flags(const QModelIndex& index) const
 }
 
 
-QHash<int, QByteArray> TaskOutlinerModel::roleNames() const
+QHash<int, QByteArray> TaskListModel::roleNames() const
 {
     QHash<int, QByteArray> names;
 
@@ -70,9 +72,9 @@ QHash<int, QByteArray> TaskOutlinerModel::roleNames() const
     return names;
 }
 
-TaskList *TaskOutlinerModel::tasks() const { return m_tasks; }
+TaskList *TaskListModel::tasks() const { return m_tasks; }
 
-void TaskOutlinerModel::setTasks(TaskList* tasks)
+void TaskListModel::setTasks(TaskList* tasks)
 {
     beginResetModel();
 

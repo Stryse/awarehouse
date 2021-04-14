@@ -3,7 +3,7 @@ import QtQuick.Layouts
 import QtQuick.Controls
 import QtQuick.Controls.Material
 
-import Outliner 1.0
+import TaskList 1.0
 
 Item {
     id: root
@@ -68,8 +68,8 @@ Item {
 
                 clip: true
 
-                model: TaskOutlinerModel{
-                    tasks: SimPresenter.tasks
+                model: TaskListModel{
+                    tasks: SimPresenter.layout.tasks
                 }
 
                 delegate: GridLayout {
@@ -102,6 +102,7 @@ Item {
 
 //                        text: model.orders[0]
 //                    }
+
 
                     Label {
                         id: positionLabel

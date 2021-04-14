@@ -19,8 +19,6 @@ SimulationWindowPresenter::SimulationWindowPresenter(QObject* parent)
 
 //Getter
 WarehouseLayoutPresenter* SimulationWindowPresenter::layout() const { return m_layout;           }
-ActorList*                SimulationWindowPresenter::actors() const { return m_layout->actors(); }
-TaskList*                 SimulationWindowPresenter::tasks()  const { return m_layout->tasks();  }
 bool                      SimulationWindowPresenter::paused() const { return m_manager.getDisplayedWarehouseSimulator()->isAvailable(); }
 
 //Setter

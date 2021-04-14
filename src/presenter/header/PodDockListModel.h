@@ -1,28 +1,26 @@
-#ifndef ACTOR_OUTLINER_MODEL__H
-#define ACTOR_OUTLINER_MODEL__H
+#ifndef POD_DOCK_LIST_MODEL__H
+#define POD_DOCK_LIST_MODEL__H
 
 #include <QObject>
 #include <QAbstractListModel>
 
 //Presenter
-#include "ActorList.h"
+#include "PodDockList.h"
 
-class ActorOutlinerModel : public QAbstractListModel
+class PodDockListModel : public QAbstractListModel
 {
     Q_OBJECT
 
-    Q_PROPERTY( ActorList* actors READ actors WRITE setActors )
+    Q_PROPERTY( PodDockList* podDocks READ podDocks WRITE setPodDocks )
 
 public:
-    explicit ActorOutlinerModel(QObject* parent = nullptr);
+    explicit PodDockListModel(QObject* parent = nullptr);
 
     enum
     {
-        NameRole = Qt::UserRole,
-        ActionRole,
-        BatteryRole,
-        RotationRole,
-        MovesRole
+        RowRole = Qt::UserRole,
+        ColumnRole,
+        ImageRole
     };
 
 
@@ -40,13 +38,13 @@ public:
     QHash<int, QByteArray> roleNames()                     const override;
 
     //Getter
-    ActorList* actors() const;
+    PodDockList* podDocks() const;
 
     //Setter
-    void setActors(ActorList* actors);
+    void setPodDocks(PodDockList* podDocks);
 
 private:
-    ActorList* m_actors;
+    PodDockList* m_podDocks;
 };
 
-#endif /* ACTOR_OUTLINER_MODEL__H */
+#endif /* POD_DOCK_LIST_MODEL__H */

@@ -7,9 +7,9 @@ ChargingStationPresenter::ChargingStationPresenter(const ChargingStation<int>* m
                                                                       QObject* parent)
     : MapItemPresenter(model->getPosition().getPosY(),
                        model->getPosition().getPosX(),
-                       ChargingStationPresenter::imagePath,
+                       ChargingStationPresenter::m_static_imagePath,
                        parent)
     , model(model)
 {}
 
-QString ChargingStationPresenter::imagePath = "qrc:/images/chstation.png";
+QString ChargingStationPresenter::m_static_imagePath = "qrc:/images/chstation.png";

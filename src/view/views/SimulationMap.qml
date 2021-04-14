@@ -3,8 +3,10 @@ import QtQuick.Layouts
 import QtQuick.Controls
 import QtQuick.Controls.Material
 
-import Simulator 1.0
-import Outliner  1.0
+import Simulator           1.0
+import ActorList           1.0
+import ChargingStationList 1.0
+import PodDockList         1.0
 
 Item {
     id: root
@@ -65,21 +67,29 @@ Item {
         Image {
             id: actorImg
 
-            x: model.col2 * (root.cellSize + root.cellSpacing)
-            y: model.row2 * (root.cellSize + root.cellSpacing)
+            x: model.column * (root.cellSize + root.cellSpacing)
+            y: model.row    * (root.cellSize + root.cellSpacing)
 
             width:  root.cellSize
             height: root.cellSize
 
-            source: "qrc:/placeholder_amogus.png"
+            source: model.image//"qrc:/placeholder_amogus.png"
+        }
+    }
 
-            MouseArea {
-                anchors.fill: parent
+    Component {
+        id: chargingStationComponent
 
-                acceptedButtons: Qt.RightButton
+        Image {
+            id: chargingStationImg
 
-                onClicked: console.log(model.action)
-            }
+            x: model.column * (root.cellSize + root.cellSpacing)
+            y: model.row    * (root.cellSize + root.cellSpacing)
+
+            width:  root.cellSize
+            height: root.cellSize
+
+            source: model.image
         }
     }
 
@@ -89,15 +99,13 @@ Item {
         Image {
             id: podImg
 
-            x: columnIdx * (root.cellSize + root.cellSpacing)
-            y: rowIdx    * (root.cellSize + root.cellSpacing)
+            x: model.column * (root.cellSize + root.cellSpacing)
+            y: model.row    * (root.cellSize + root.cellSpacing)
 
             width:  root.cellSize
             height: root.cellSize
 
-            source: imgSource
-
-            rotation: rotationAngle
+            source: model.image
         }
     }
 
@@ -169,24 +177,40 @@ Item {
                 Repeater {
                     id: actorRepeater
 
-                    model: ActorOutlinerModel {
-                       actors: SimPresenter.layout.robots
+                    model: ActorListModel {
+                       actors: SimPresenter.layout.actors
                     }
                     delegate: actorComponent
                 }
             }
-//            Item {
-//                id: pods
+            Item {
+                id: chargingStations
 
-//                anchors.fill: tiles
+                anchors.fill: tiles
 
-//                Repeater {
-//                    id: podRepeater
+                Repeater {
+                    id: chargingStationRepeater
 
-//                    model:    placeholderModel
-//                    delegate: podComponent
-//                }
-//            }
+                    model: ChargingStationListModel {
+                        chargingStations: SimPresenter.layout.chargingStations
+                    }
+                    delegate: chargingStationComponent
+                }
+            }
+            Item {
+                id: pods
+
+                anchors.fill: tiles
+
+                Repeater {
+                    id: podRepeater
+
+                    model: PodDockListModel {
+                        podDocks: SimPresenter.layout.podDocks
+                    }
+                    delegate: podComponent
+                }
+            }
         }
     }
 }

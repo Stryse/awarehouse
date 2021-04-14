@@ -3,7 +3,7 @@ import QtQuick.Layouts
 import QtQuick.Controls
 import QtQuick.Controls.Material
 
-import Outliner 1.0
+import ActorList 1.0
 
 Item {
     id: root
@@ -68,8 +68,8 @@ Item {
 
                 clip: true
 
-                model: ActorOutlinerModel {
-                    actors: SimPresenter.actors
+                model: ActorListModel {
+                    actors: SimPresenter.layout.actors
                 }
 
                 delegate: GridLayout {

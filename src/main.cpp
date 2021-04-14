@@ -8,10 +8,12 @@
 #include "Simulator.h"
 
 //Presenter
-#include "ActorOutlinerModel.h"
-#include "TaskOutlinerModel.h"
 #include "SimulationWindowPresenter.h"
 #include "WarehouseManager.h"
+#include "ActorListModel.h"
+#include "ChargingStationListModel.h"
+#include "PodDockListModel.h"
+#include "TaskListModel.h"
 
 int main(int argc, char *argv[])
 {
@@ -27,9 +29,11 @@ int main(int argc, char *argv[])
     // //////////////////
 
     // Register Types ///
-    qmlRegisterType<ActorOutlinerModel>       ("Outliner",  1, 0, "ActorOutlinerModel");
-    qmlRegisterType<TaskOutlinerModel>        ("Outliner",  1, 0, "TaskOutlinerModel");
-    qmlRegisterType<SimulationWindowPresenter>("Simulator", 1, 0, "TickRate");
+    qmlRegisterType<ActorListModel>           ("ActorList",           1, 0, "ActorListModel");
+    qmlRegisterType<ChargingStationListModel> ("ChargingStationList", 1, 0, "ChargingStationListModel");
+    qmlRegisterType<PodDockListModel>         ("PodDockList",         1, 0, "PodDockListModel");
+    qmlRegisterType<TaskListModel>            ("TaskList",            1, 0, "TaskListModel");
+    qmlRegisterType<SimulationWindowPresenter>("Simulator",           1, 0, "TickRate");
 
     // //////////////////
     QQmlApplicationEngine engine;

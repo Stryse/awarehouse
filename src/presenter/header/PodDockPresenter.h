@@ -22,7 +22,7 @@ private:
     const  PodDock<ObservableNavEnvironment<Tile>>* model;
 
     //Static
-    static QString imagePath;
+    static QString m_static_imagePath;
 };
 
 #endif // PODDOCKPRESENTER_H

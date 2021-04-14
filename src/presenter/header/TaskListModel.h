@@ -1,40 +1,36 @@
-#ifndef ACTOR_LIST_MODEL__H
-#define ACTOR_LIST_MODEL__H
+#ifndef TASK_LIST_MODEL__H
+#define TASK_LIST_MODEL__H
 
 #include <QObject>
 #include <QAbstractListModel>
+#include <QList>
 
 //Presenter
-#include "ActorList.h"
+#include "TaskList.h"
 
-class ActorListModel : public QAbstractListModel
+class TaskListModel : public QAbstractListModel
 {
     Q_OBJECT
 
-    Q_PROPERTY( ActorList* actors READ actors WRITE setActors )
+    Q_PROPERTY( TaskList* tasks READ tasks WRITE setTasks )
 
 public:
-    explicit ActorListModel(QObject* parent = nullptr);
+    explicit TaskListModel(QObject* parent = nullptr);
 
     enum
     {
-        NameRole = Qt::UserRole,
-        ActionRole,
-        BatteryRole,
-        RotationRole,
-        MovesRole,
-        RowRole,
-        ColumnRole,
-        ImageRole
+        AssignedRobotNameRole = Qt::UserRole,
+        OrdersRole,
+        DestinationXRole,
+        DestinationYRole
     };
-
 
 //QAbstractItemModel interface
 public:
     int      rowCount(const QModelIndex& parent)                        const override;
     QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const override;
 
-    // Editable
+    //Editable
     bool setData(const QModelIndex& index,
                  const    QVariant& value,
                                 int role = Qt::EditRole) override;
@@ -43,13 +39,13 @@ public:
     QHash<int, QByteArray> roleNames()                     const override;
 
     //Getter
-    ActorList* actors() const;
+    TaskList* tasks() const;
 
     //Setter
-    void setActors(ActorList* actors);
+    void setTasks(TaskList* tasks);
 
 private:
-    ActorList* m_actors;
+    TaskList* m_tasks;
 };
 
-#endif /* ACTOR_LIST_MODEL__H */
+#endif /* TASK_LIST_MODEL__H */

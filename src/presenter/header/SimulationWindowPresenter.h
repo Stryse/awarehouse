@@ -10,15 +10,11 @@
 
 //Presenter
 #include "WarehouseLayoutPresenter.h"
-#include "ActorList.h"
-#include "TaskList.h"
 
 class SimulationWindowPresenter : public QObject
 {
     Q_OBJECT
 
-    Q_PROPERTY( TaskList*                 tasks  READ tasks  CONSTANT               )
-    Q_PROPERTY( ActorList*                actors READ actors CONSTANT               )
     Q_PROPERTY( WarehouseLayoutPresenter* layout READ layout CONSTANT               )
     Q_PROPERTY( bool                      paused READ paused NOTIFY   pausedChanged )
 
@@ -36,8 +32,6 @@ public:
 public:
     //Getter
     WarehouseLayoutPresenter* layout() const;
-    ActorList*                actors() const;
-    TaskList*                 tasks()  const;
     bool                      paused() const;
 
 private:
