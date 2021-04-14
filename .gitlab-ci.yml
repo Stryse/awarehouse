@@ -11,6 +11,7 @@ before_script:
   - apt-get install -yqq python3-pip
   - apt-get install -yqq doxygen
   - pip3 install aqtinstall
+  - aqt install -O qt 6.1.0 linux desktop -m quick quickcontrols2
 
 build-program:
   stage: build
