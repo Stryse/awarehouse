@@ -7,7 +7,7 @@ stages:
   - test
 
 before_script:
-  - pacman -Sy cmake 3.20.1-1
+  - pacman -Sy cmake
   - pacman -Sy git 2.31.1-1
   - pacman -Sy base-devel
   - pacman -Sy qt6-base 6.0.3-1
