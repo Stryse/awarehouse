@@ -8,8 +8,9 @@ before_script:
   - apt-get update -yqq
   - apt-get install -yqq snapd
   - apt-get install -yqq cmake
-  - pip install aqtinstall
+  - apt-get install -yqq pip
   - apt-get install -yqq doxygen
+  - pip install aqtinstall
 
 build-program:
   stage: build
