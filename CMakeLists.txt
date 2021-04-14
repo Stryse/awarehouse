@@ -11,5 +11,5 @@ add_subdirectory(src)
 enable_testing()
 include(${CMAKE_SOURCE_DIR}/dev-tools/cmake/google_test_fetch.cmake)
 add_subdirectory(test/GTest)
-#add_subdirectory(test/QtTest)
+# add_subdirectory(test/QtTest)
 ##############################################################################
