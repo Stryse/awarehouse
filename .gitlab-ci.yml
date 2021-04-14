@@ -7,7 +7,7 @@ stages:
   - test
 
 before_script:
-  - pacman -Syu --debug
+  - pacman -Syyu
   - pacman -Sy git-2.31.1-1
   - pacman -Sy cmake-3.20.1-1
   - pacman -Sy base-devel
