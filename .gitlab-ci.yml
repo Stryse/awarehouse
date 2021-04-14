@@ -1,6 +1,6 @@
 image:
   name: "archlinux"
-  entrypoint: ["/bin/sh"]
+  entrypoint: ["/bin/sh", "-l", "-c"]
 
 stages:
   - build
