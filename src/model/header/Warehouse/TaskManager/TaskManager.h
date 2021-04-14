@@ -107,25 +107,41 @@ private:
         if (wayPoints.size() < 2)
             return;
 
-        OptimizeWayPoints(wayPoints);
+        int sumDistance = OptimizeWayPoints(wayPoints);
+
+        // Update with last Waypoint
+        sumDistance += Point::manhattanNorm(wayPoints.back(), podDock.getPosition());
 
         // Last Waypoint is also podDock position
         wayPoints.push_back(podDock.getPosition());
 
         // Register Delivery Task
-        tasks.emplace_back(std::make_unique<DeliveryTask>(std::move(wayPoints)));
+        tasks.emplace_back(std::make_unique<DeliveryTask>(std::move(wayPoints), sumDistance));
     }
 
-    void OptimizeWayPoints(std::vector<Point> &wayPoints)
+    /******************************************************************************
+     * @brief Sorts the waypoints by distance so that always the closest
+     * WayPoint is followed by an another.
+     ******************************************************************************/
+    int OptimizeWayPoints(std::vector<Point> &wayPoints)
     {
+        int sumDistance = 0;
         for (int i = 1; i < wayPoints.size(); ++i)
         {
             int minDistance = Point::manhattanNorm(wayPoints[i - 1], wayPoints[i]);
 
             for (int j = i + 1; j < wayPoints.size(); ++j)
-                if (Point::manhattanNorm(wayPoints[i - 1], wayPoints[j]) < minDistance)
+            {
+                int distance = Point::manhattanNorm(wayPoints[i - 1], wayPoints[j]);
+                if (distance < minDistance)
+                {
                     std::swap(wayPoints[i], wayPoints[j]);
+                    minDistance = distance;
+                }
+            }
+            sumDistance += minDistance;
         }
+        return sumDistance;
     }
 
 private:
