@@ -10,7 +10,7 @@ before_script:
   - apt-get install -yqq cmake
   - apt-get install -yqq python3-pip
   - apt-get install -yqq doxygen
-  - pip install aqtinstall
+  - pip3 install aqtinstall
 
 build-program:
   stage: build
