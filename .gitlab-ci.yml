@@ -15,17 +15,18 @@ before_script:
   - apt-get install -yqq libfreetype-dev
   - apt-get install -yqq libxkbcommon-x11-0
   - apt-get install -yqq libfontconfig1
-  - pip3 install aqtinstall
-  - aqt install -O qt 6.1.0 linux desktop
-  - export PATH=$PWD/qt/6.1.0/gcc_64/bin/:$PATH
-  - export QT_PLUGIN_PATH=$PWD/qt/6.1.0/gcc_64/plugins/
-  - export QML_IMPORT_PATH=$PWD/qt/6.1.0/gcc_64/qml/
-  - export QML2_IMPORT_PATH=$PWD/qt/6.1.0/gcc_64/qml/
-  - export QT_DIR=$PWD/qt/6.1.0/gcc_64/
+  - apt-get install -yqq libboost1.74-all-dev
 
 build-program:
   stage: build
   script:
+    - pip3 install aqtinstall
+    - aqt install -O qt 6.1.0 linux desktop
+    - export PATH=$PWD/qt/6.1.0/gcc_64/bin/:$PATH
+    - export QT_PLUGIN_PATH=$PWD/qt/6.1.0/gcc_64/plugins/
+    - export QML_IMPORT_PATH=$PWD/qt/6.1.0/gcc_64/qml/
+    - export QML2_IMPORT_PATH=$PWD/qt/6.1.0/gcc_64/qml/
+    - export QT_DIR=$PWD/qt/6.1.0/gcc_64/
     - mkdir cmake-build && cd cmake-build
     - cmake ..
     - make
