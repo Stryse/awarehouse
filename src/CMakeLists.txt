@@ -91,18 +91,21 @@ presenter/cpp/MapTableList.cpp
 add_library(OBJ_AWSOURCE_FILES STATIC
 # Add CPP files here - those which are !!NOT!! Q_OBJECT
 model/cpp/Tile/Tile.cpp
+model/cpp/Tile/DeliveryStation.cpp
 model/cpp/Warehouse/Warehouse.cpp
 model/cpp/Warehouse/State.cpp
 model/cpp/Warehouse/Pod/OrderModel.cpp
 persistence/cpp/WarehouseFilePersistence.cpp
 persistence/cpp/ChargingStationLoader.cpp
+persistence/cpp/DeliveryStationLoader.cpp
 persistence/cpp/PodDockLoader.cpp
+persistence/cpp/OrderLoader.cpp
 persistence/cpp/RobotLoader.cpp
 model/cpp/Warehouse/Controller/ControllerImpl.cpp
 model/cpp/Warehouse/Scheduler/SchedulerImpl.cpp
-model/cpp/Warehouse/Network.cpp
-model/cpp/Warehouse/NetworkMessage.cpp
-model/cpp/Agent/Modules/Control/NetworkAdapter.cpp
+model/cpp/Warehouse/Network/Network.cpp
+model/cpp/Warehouse/Network/NetworkMessage.cpp
+model/cpp/Warehouse/Network/NetworkAdapter.cpp
 ## QOBJECT FILES ##
 ${QT_QOBJECT_FILES}
 )

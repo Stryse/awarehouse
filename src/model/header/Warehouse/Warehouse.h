@@ -3,6 +3,7 @@
 
 #include "IWarehousePersistence.h"
 #include "State.h"
+#include "TaskManager.h"
 #include <memory>
 
 // ################# FORWARD DECLARATIONS #######################
@@ -29,12 +30,30 @@ public:
     const std::unique_ptr<State> &getState() const;
 
 private:
+    /***************************************************
+     * @brief Resets the network. Then connects:
+     * - Controller with address: 1
+     * - Scheduler  with address: 2
+     * - All agents with dynamic address.
+     ***************************************************/
+    void setupNetwork(State &state);
+
+    /***************************************************
+     * @brief Provides the Task manager with
+     * task sources and creates all the tasks that
+     * can be found.
+     ***************************************************/
+    void setupTaskManager(State &state);
+
+private:
     int timeStamp;
+    TaskManager<ObservableNavEnvironment<>> taskManager;
     std::unique_ptr<AScheduler> scheduler;
     std::unique_ptr<AController> controller;
-    std::unique_ptr<IWarehousePersistence<QString>> persistence;
-    std::unique_ptr<State> state;
     std::shared_ptr<Network> network;
+    std::unique_ptr<State> state;
+
+    std::unique_ptr<IWarehousePersistence<QString>> persistence;
 };
 
 #endif /* WAREHOUSE__H */

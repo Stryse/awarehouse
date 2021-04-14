@@ -24,6 +24,7 @@ public:
     virtual void receive(IDepleting<config::agent::DefaultEnergy> &resource, const ChargeSignal &chargeSignal) const {}
     virtual void receive(IContaining<std::unique_ptr<Pod<OrderModel, Environment>>> &carrier, const PickupPodSignal &pickupSignal) {}
     virtual void receive(std::unique_ptr<Pod<OrderModel, Environment>> &pod, const PutDownPodSignal &putdownSignal) {}
+    virtual void receive(std::unique_ptr<OrderModel> &order, const PutDownOrderSignal &putdownOrderSignal) {}
 
 protected:
     IAgentSignalHandler() = default;

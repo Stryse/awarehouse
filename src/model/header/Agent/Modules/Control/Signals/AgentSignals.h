@@ -35,4 +35,12 @@ struct PutDownPodSignal : public AgentSignal
 {
 };
 
+/*******************************************************
+ * @brief Sent when agent request to put down an order
+ * into an order containing entity
+ *******************************************************/
+struct PutDownOrderSignal : public AgentSignal
+{
+};
+
 #endif

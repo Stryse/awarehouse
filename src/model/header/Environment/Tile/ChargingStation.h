@@ -25,31 +25,26 @@ public:
     virtual ~ChargingStation() {}
 
 public:
-    // IAgentSignalHandler Implementation
-    virtual void receive(IDepleting<config::agent::DefaultEnergy> &resource, const ChargeSignal &) const override
-    {
-        doCharge(resource);
-    }
-
-    // Getter|Setter
-    const Energy &getChargeRate() const { return chargeRate; }
-    void setChargeRate(const Energy &chargeRate) { this->chargeRate = chargeRate; }
-
-private:
-    /**************************************************************
+    // ############################ IAgentSignalHandler Implementation #################################
+    /***************************************************************************************************
      * @brief Charges the resource with the bottleneck chargerate.
-     **************************************************************/
-    void doCharge(IDepleting<Energy> &resource) const
+     ***************************************************************************************************/
+    virtual void receive(IDepleting<Energy> &resource, const ChargeSignal &) const override
     {
         Energy maxCharge = std::min<Energy>(chargeRate, resource.getMaxChargeRate());
         resource.charge(maxCharge);
     }
 
+    // ######################################### Getter|Setter ##########################################
+    const Energy &getChargeRate() const { return chargeRate; }
+    void setChargeRate(const Energy &chargeRate) { this->chargeRate = chargeRate; }
+    // ############################################################################################### //
+
 private:
-    /**********************************************************************
+    /****************************************************************************************************
      * @brief The amount of energy that the station is capable of charging
      * in one chargeSignal.
-     **********************************************************************/
+     ****************************************************************************************************/
     Energy chargeRate;
 };
 

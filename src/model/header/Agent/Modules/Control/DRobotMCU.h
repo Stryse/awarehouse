@@ -111,9 +111,9 @@ public:
 
     /*****************************************************************
      * @brief Called when the Agent received a PickupPodMessage
-     * on the connected network. The agent sends a PickUpPodSignal to
-     * the appropriate Tile, and if it accepts it a pod is transferred
-     * to the agent's Pod Holder;
+     * on the connected network. The agent instructs its RackMotor
+     * to return a motor action that leading to pick up a pod from
+     * the environment. The action is pushed into the actionqueue.
      *****************************************************************/
     virtual void receive(const PickupPodMessage &message) override
     {
@@ -122,9 +122,9 @@ public:
 
     /******************************************************************
      * @brief Called when the Agent received a PutDownPodMessage
-     * on the connected network. The agent sends a PutDownPodSignal to
-     * the appropriate Tile, and if it accepts it a pod is transferred
-     * from the Agent's Pod Holder to the Tile.
+     * on the connected network. The agent instructs its RackMotor
+     * to return a motor action that leading to put down a pod in
+     * the environment. The action is pushed into the actionqueue.
      ******************************************************************/
     virtual void receive(const PutDownPodMessage &message) override
     {

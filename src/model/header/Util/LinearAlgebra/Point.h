@@ -120,6 +120,15 @@ public:
 
         return DirectionVector(std::move(buffer));
     }
+
+    static int manhattanNorm(const Point<CoordinateType, N> &first, const Point<CoordinateType, N> &second)
+    {
+        int norm = 0;
+        for (int i = 0; i < first.getSize(); ++i)
+            norm += std::abs(first.coordinates[i] - second.coordinates[i]);
+
+        return norm;
+    }
 };
 
 #endif /* POINT__H */
