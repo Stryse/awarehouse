@@ -1,26 +1,21 @@
-image:
-  name: "archlinux:20200705"
-  entrypoint: ["/bin/sh", "-l", "-c"]
+image: ubuntu:20.04
 
 stages:
   - build
   - test
 
 before_script:
-  - pacman -Syu git-2.31.1-1
-  - pacman -Syu cmake-3.20.1-1
-  - pacman -Syu base-devel
-  - pacman -Syu qt6-base-6.0.3-1
-  - pacman -Syu qt6-declarative-6.0.3-1
-  - pacman -Syu qt6-quickcontrols2-6.0.3-1
-  - pacman -Syu doxygen-1.9.1-1
+  - apt-get update -yqq
+  - sudo snap install cmake --classic
+  - pip install aqtinstall
+  - apt-get install -yqq doxygen
 
 build-program:
   stage: build
   script:
     - mkdir cmake-build && cd cmake-build
     - cmake ..
-    - make
+    - make aWareHouse
   artifacts:
     paths:
       - cmake-build/
