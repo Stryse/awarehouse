@@ -9,16 +9,17 @@ class TaskPresenter : public QObject
 {
     Q_OBJECT
 
-    Q_PROPERTY( QString      assignedRobotName READ assignedRobotName NOTIFY assignedRobotNameChanged )
+    Q_PROPERTY(      QString assignedRobotName READ assignedRobotName NOTIFY assignedRobotNameChanged )
     Q_PROPERTY( QVector<int> orders            READ orders            NOTIFY ordersChanged            )
-    Q_PROPERTY( int          destinationX      READ destinationX      NOTIFY destinationXChanged      )
-    Q_PROPERTY( int          destinationY      READ destinationY      NOTIFY destinationYChanged      )
+    Q_PROPERTY(          int destinationX      READ destinationX      NOTIFY destinationXChanged      )
+    Q_PROPERTY(          int destinationY      READ destinationY      NOTIFY destinationYChanged      )
 
 public:
-    explicit TaskPresenter(QString      assignedRobotName = "N/A",
+    explicit TaskPresenter(     QString assignedRobotName = "N/A",
                            QVector<int> orders            = QVector<int>(),
-                           int          destinationX      = 0,
-                           int          destinationY      = 0);
+                                    int destinationX      = 0,
+                                    int destinationY      = 0,
+                               QObject* parent            = nullptr);
     explicit TaskPresenter(const TaskPresenter& task);
 
     TaskPresenter& operator=(const TaskPresenter& other);

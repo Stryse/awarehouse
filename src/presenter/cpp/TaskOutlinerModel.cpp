@@ -7,18 +7,19 @@ TaskOutlinerModel::TaskOutlinerModel(QObject *parent)
 
 int TaskOutlinerModel::rowCount(const QModelIndex& parent) const
 {
-    if(parent.isValid()|| m_tasks == nullptr)
+    if (parent.isValid()|| m_tasks == nullptr)
         return 0;
 
-    return m_tasks->tasks().size();
+    return m_tasks->tasks()->size();
 }
 
-QVariant TaskOutlinerModel::data(const QModelIndex& index, int role) const
+QVariant TaskOutlinerModel::data(const QModelIndex& index,
+                                                int role) const
 {
     if (!index.isValid() || m_tasks == nullptr)
        return QVariant();
 
-    const TaskPresenter& task = *m_tasks->tasks().at(index.row());
+    const TaskPresenter& task = *m_tasks->tasks()->at(index.row());
 
     switch(role) {
         case AssignedRobotNameRole:
@@ -34,7 +35,9 @@ QVariant TaskOutlinerModel::data(const QModelIndex& index, int role) const
     return QVariant();
 }
 
-bool TaskOutlinerModel::setData(const QModelIndex& index, const QVariant& value, int role)
+bool TaskOutlinerModel::setData(const QModelIndex& index,
+                                const    QVariant& value,
+                                               int role)
 {
     if (data(index, role) != value)
     {
@@ -48,7 +51,7 @@ bool TaskOutlinerModel::setData(const QModelIndex& index, const QVariant& value,
 
 Qt::ItemFlags TaskOutlinerModel::flags(const QModelIndex& index) const
 {
-    if(!index.isValid())
+    if (!index.isValid())
         return Qt::NoItemFlags;
 
     return Qt::ItemIsEditable;
@@ -78,11 +81,11 @@ void TaskOutlinerModel::setTasks(TaskList* tasks)
 
     m_tasks = tasks;
 
-    if(m_tasks)
+    if (m_tasks)
     {
         connect(m_tasks, &TaskList::preItemAppended,  this, [=]()
         {
-            const int index = m_tasks->tasks().size();
+            const int index = m_tasks->tasks()->size();
             beginInsertRows(QModelIndex(), index, index);
         });
 

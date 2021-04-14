@@ -8,28 +8,22 @@
 //Model
 #include "Warehouse.h"
 
-SimulationWindowPresenter::SimulationWindowPresenter(QObject *parent)
+SimulationWindowPresenter::SimulationWindowPresenter(QObject* parent)
     : QObject(parent)
-    , m_layout   (nullptr)
-    , m_actorList(nullptr)
-    , m_taskList (nullptr)
+    , m_layout(nullptr)
 {
     loadWarehouse(":/maps/Map01.json");
 
-    m_layout    = new WarehouseLayoutPresenter(m_manager.getDisplayedWarehouse()->getState().get());
-    m_actorList = new ActorList               (m_layout->actors(), this);
-    m_taskList  = new TaskList                (m_layout->tasks(), this);
+    m_layout = new WarehouseLayoutPresenter(m_manager.getDisplayedWarehouse()->getState().get());
 }
 
 //Getter
-WarehouseLayoutPresenter* SimulationWindowPresenter::layout() const { return m_layout;    }
-ActorList*                SimulationWindowPresenter::actors() const { return m_actorList; }
-TaskList*                 SimulationWindowPresenter::tasks()  const { return m_taskList;  }
+WarehouseLayoutPresenter* SimulationWindowPresenter::layout() const { return m_layout;           }
+ActorList*                SimulationWindowPresenter::actors() const { return m_layout->actors(); }
+TaskList*                 SimulationWindowPresenter::tasks()  const { return m_layout->tasks();  }
 bool                      SimulationWindowPresenter::paused() const { return m_manager.getDisplayedWarehouseSimulator()->isAvailable(); }
 
 //Setter
-void SimulationWindowPresenter::setActors(ActorList *actors) { m_actorList = actors; }
-void SimulationWindowPresenter::setTasks(TaskList *orders)   { m_taskList = orders; }
 void SimulationWindowPresenter::setPaused(bool paused)       { m_paused    = paused;
                                                                emit pausedChanged(); }
 

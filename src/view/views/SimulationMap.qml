@@ -4,6 +4,7 @@ import QtQuick.Controls
 import QtQuick.Controls.Material
 
 import Simulator 1.0
+import Outliner  1.0
 
 Item {
     id: root
@@ -64,13 +65,21 @@ Item {
         Image {
             id: actorImg
 
-            x: col * (root.cellSize + root.cellSpacing)
-            y: row * (root.cellSize + root.cellSpacing)
+            x: model.col2 * (root.cellSize + root.cellSpacing)
+            y: model.row2 * (root.cellSize + root.cellSpacing)
 
             width:  root.cellSize
             height: root.cellSize
 
             source: "qrc:/placeholder_amogus.png"
+
+            MouseArea {
+                anchors.fill: parent
+
+                acceptedButtons: Qt.RightButton
+
+                onClicked: console.log(model.action)
+            }
         }
     }
 
@@ -160,7 +169,9 @@ Item {
                 Repeater {
                     id: actorRepeater
 
-                    model:    SimPresenter.layout.robots
+                    model: ActorOutlinerModel {
+                       actors: SimPresenter.layout.robots
+                    }
                     delegate: actorComponent
                 }
             }

@@ -7,18 +7,19 @@ ActorOutlinerModel::ActorOutlinerModel(QObject* parent)
 
 int ActorOutlinerModel::rowCount(const QModelIndex& parent) const
 {
-    if(parent.isValid() || m_actors == nullptr)
+    if (parent.isValid() || m_actors == nullptr)
         return 0;
 
-    return m_actors->actors().size();
+    return m_actors->actors()->size();
 }
 
-QVariant ActorOutlinerModel::data(const QModelIndex& index, int role) const
+QVariant ActorOutlinerModel::data(const QModelIndex& index,
+                                                 int role) const
 {
     if (!index.isValid() || m_actors == nullptr)
        return QVariant();
 
-    const ActorPresenter& actor = *m_actors->actors().at(index.row());
+    const ActorPresenter& actor = *m_actors->actors()->at(index.row());
 
     switch(role)
     {
@@ -37,7 +38,9 @@ QVariant ActorOutlinerModel::data(const QModelIndex& index, int role) const
     return QVariant();
 }
 
-bool ActorOutlinerModel::setData(const QModelIndex& index, const QVariant& value, int role)
+bool ActorOutlinerModel::setData(const QModelIndex& index,
+                                 const    QVariant& value,
+                                                int role)
 {
     if (data(index, role) != value)
     {
@@ -51,7 +54,7 @@ bool ActorOutlinerModel::setData(const QModelIndex& index, const QVariant& value
 
 Qt::ItemFlags ActorOutlinerModel::flags(const QModelIndex& index) const
 {
-    if(!index.isValid())
+    if (!index.isValid())
         return Qt::NoItemFlags;
 
     return Qt::ItemIsEditable;
@@ -85,7 +88,7 @@ void ActorOutlinerModel::setActors(ActorList* actors)
     {
         connect(m_actors, &ActorList::preItemAppended,  this, [=]()
         {
-            const int index = m_actors->actors().size();
+            const int index = m_actors->actors()->size();
             beginInsertRows(QModelIndex(),index,index);
         });
 

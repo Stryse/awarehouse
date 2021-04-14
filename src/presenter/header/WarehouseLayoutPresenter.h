@@ -7,10 +7,10 @@
 
 //Presenter
 #include "MapItemPresenter.h"
-#include "ActorPresenter.h"
+#include "ActorList.h"
+#include "TaskList.h"
 #include "ChargingStationPresenter.h"
 #include "PodDockPresenter.h"
-#include "TaskPresenter.h"
 
 class State;
 
@@ -18,30 +18,31 @@ class WarehouseLayoutPresenter : public QObject
 {
     Q_OBJECT
 
-    Q_PROPERTY( int                             rows    READ rows    WRITE    setRows    NOTIFY rowsChanged     )
-    Q_PROPERTY( int                             columns READ columns WRITE    setColumns NOTIFY columnsChanged )
-    Q_PROPERTY( QList<const MapItemPresenter*>* map     READ map     CONSTANT                                  )
-    Q_PROPERTY( QList<const ActorPresenter*>*   robots  READ actors  CONSTANT                                  )
-    Q_PROPERTY( QList<const TaskPresenter*>*    tasks   READ tasks   CONSTANT                                  )
+    Q_PROPERTY(        int rows    READ rows    WRITE    setRows    NOTIFY rowsChanged    )
+    Q_PROPERTY(        int columns READ columns WRITE    setColumns NOTIFY columnsChanged )
+    Q_PROPERTY( ActorList* robots  READ actors  CONSTANT                                  )
+    Q_PROPERTY(  TaskList* tasks   READ tasks   CONSTANT                                  )
 
 public:
-    explicit WarehouseLayoutPresenter(const State* state, QObject* parent = nullptr);
+    explicit WarehouseLayoutPresenter(const   State* state,
+                                            QObject* parent = nullptr);
 
 public:
+    //Getter
     int index(int row, int col);
 
     int rows()    const;
     int columns() const;
 
+    //Setter
     void setRows(int value);
     void setColumns(int colCount);
 
     //Entity Getter
-    QList<const MapItemPresenter*>*         map();
-    QList<const ActorPresenter*>*           actors();
+    ActorList*                              actors();
     QList<const ChargingStationPresenter*>* chargingStations();
     QList<const PodDockPresenter*>*         podDocks();
-    QList<const TaskPresenter*>*            tasks();
+    TaskList*                               tasks();
 
 signals:
     void rowsChanged(int rows);
@@ -52,11 +53,10 @@ private:
     int m_columns;
 
     //Warehouse Layout Entities
-    QList<const MapItemPresenter*>         m_map;
-    QList<const ActorPresenter*>           m_robots;
+    ActorList                              m_robots;
     QList<const ChargingStationPresenter*> m_chargingStations;
     QList<const PodDockPresenter*>         m_podDocks;
-    QList<const TaskPresenter*>            m_tasks;
+    TaskList                               m_tasks;
 };
 
 #endif

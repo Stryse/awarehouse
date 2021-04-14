@@ -12,9 +12,9 @@ class ActorList : public QObject
     Q_OBJECT
 
 public:
-    explicit ActorList(QList<const ActorPresenter*>* actors, QObject* parent = nullptr);
+    explicit ActorList(QObject* parent = nullptr);
 
-    QList<const ActorPresenter*> actors() const;
+    QList<const ActorPresenter*>* actors();
 
     bool setActorAt(int index, const ActorPresenter& actor);
 
@@ -32,7 +32,7 @@ public slots:
     void clear();
 
 public:
-    QList<const ActorPresenter*>* m_actors;
+    QList<const ActorPresenter*> m_actors;
 };
 
 #endif /* ACTOR_LIST__H */

@@ -23,7 +23,7 @@ class SimulationWindowPresenter : public QObject
     Q_PROPERTY( bool                      paused READ paused NOTIFY   pausedChanged )
 
 public:
-    explicit SimulationWindowPresenter(QObject *parent = nullptr);
+    explicit SimulationWindowPresenter(QObject* parent = nullptr);
 
     enum TickRate
     {
@@ -39,10 +39,6 @@ public:
     ActorList*                actors() const;
     TaskList*                 tasks()  const;
     bool                      paused() const;
-
-    //Setter
-    void setActors(ActorList* actors);
-    void setTasks(TaskList* tasks);
 
 private:
     void setPaused(bool paused);
@@ -63,9 +59,6 @@ private:
     WarehouseManager          m_manager;
     WarehouseLayoutPresenter* m_layout;
     QString                   m_loadedWarehousePath;
-
-    ActorList* m_actorList;
-    TaskList*  m_taskList;
 
     bool m_paused;
 };

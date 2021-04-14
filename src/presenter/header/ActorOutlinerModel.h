@@ -33,8 +33,8 @@ public:
 
     // Editable
     bool setData(const QModelIndex& index,
-                 const QVariant&    value,
-                       int          role = Qt::EditRole) override;
+                 const    QVariant& value,
+                                int role = Qt::EditRole) override;
 
     Qt::ItemFlags          flags(const QModelIndex& index) const override;
     QHash<int, QByteArray> roleNames()                     const override;
@@ -46,7 +46,7 @@ public:
     void setActors(ActorList* actors);
 
 private:
-    ActorList *m_actors;
+    ActorList* m_actors;
 };
 
 #endif /* ACTOR_OUTLINER_MODEL__H */

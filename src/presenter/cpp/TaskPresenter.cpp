@@ -1,10 +1,12 @@
 #include "TaskPresenter.h"
 
-TaskPresenter::TaskPresenter(QString      assignedRobotName,
+TaskPresenter::TaskPresenter(     QString assignedRobotName,
                              QVector<int> orders,
-                             int          destinationX,
-                             int          destinationY)
-    : m_assignedRobotName(assignedRobotName)
+                                      int destinationX,
+                                      int destinationY,
+                                 QObject* parent)
+    : QObject(parent)
+    , m_assignedRobotName(assignedRobotName)
     , m_orders           (orders           )
     , m_destinationX     (destinationX     )
     , m_destinationY     (destinationY     )
@@ -26,7 +28,8 @@ TaskPresenter& TaskPresenter::operator=(const TaskPresenter& other)
     return *this;
 }
 
-bool operator==(TaskPresenter* const lhs, const TaskPresenter rhs)
+bool operator==(TaskPresenter* const lhs,
+                const  TaskPresenter rhs)
 {
     return lhs->m_assignedRobotName    == rhs.m_assignedRobotName &&
                    lhs->m_orders       == rhs.m_orders            &&

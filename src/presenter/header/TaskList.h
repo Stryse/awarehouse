@@ -12,9 +12,9 @@ class TaskList : public QObject
     Q_OBJECT
 
 public:
-    explicit TaskList(QList<const TaskPresenter*>* tasks, QObject* parent = nullptr);
+    explicit TaskList(QObject* parent = nullptr);
 
-    QList<const TaskPresenter*> tasks() const;
+    QList<const TaskPresenter*>* tasks();
 
     bool setTaskAt(int index, const TaskPresenter& task);
 
@@ -32,7 +32,7 @@ public slots:
     void clear();
 
 public:
-    QList<const TaskPresenter*>* m_tasks;
+    QList<const TaskPresenter*> m_tasks;
 };
 
 #endif /* TASK_LIST__H */

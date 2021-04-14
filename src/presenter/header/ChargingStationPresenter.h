@@ -7,16 +7,20 @@
 #include "MapItemPresenter.h"
 
 template <typename T> class ChargingStation;
+
 class ChargingStationPresenter : public MapItemPresenter
 {
     Q_OBJECT
 
 public:
-    explicit ChargingStationPresenter(const ChargingStation<int>* model, QObject *parent = nullptr);
+    explicit ChargingStationPresenter(const ChargingStation<int>* model,
+                                                         QObject* parent = nullptr);
 
 private:
+    //Model
+    const  ChargingStation<int>* model;
 
-    const ChargingStation<int>* model;
+    //Static
     static QString imagePath;
 };
 
