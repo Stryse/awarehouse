@@ -6,8 +6,8 @@ stages:
 
 before_script:
   - apt-get update -yqq
-  - apt-get install -qq snapd
-  - snap install cmake --classic
+  - apt-get install -yqq snapd
+  - apt-get install -yqq cmake
   - pip install aqtinstall
   - apt-get install -yqq doxygen
 
