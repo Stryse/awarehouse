@@ -48,6 +48,13 @@ WarehouseLayoutPresenter::WarehouseLayoutPresenter(const State* state,
     }
 }
 
+WarehouseLayoutPresenter::WarehouseLayoutPresenter(QObject* parent)
+    : QObject(parent)
+    , m_rows   (10)
+    , m_columns(10)
+    //Other?
+{}
+
 //Getter
 int  WarehouseLayoutPresenter::index(int row,
                                      int col)  { return row * m_rows + col; }
@@ -67,4 +74,10 @@ ChargingStationList* WarehouseLayoutPresenter::chargingStations() { return &m_ch
 PodDockList*         WarehouseLayoutPresenter::podDocks()         { return &m_podDocks;         }
 DeliveryStationList* WarehouseLayoutPresenter::deliveryStations() { return &m_deliveryStations; }
 TaskList*            WarehouseLayoutPresenter::tasks()            { return &m_tasks;            }
+
+const ActorList*           WarehouseLayoutPresenter::actors()           const { return &m_robots;           }
+const ChargingStationList* WarehouseLayoutPresenter::chargingStations() const { return &m_chargingStations; }
+const PodDockList*         WarehouseLayoutPresenter::podDocks()         const { return &m_podDocks;         }
+const DeliveryStationList* WarehouseLayoutPresenter::deliveryStations() const { return &m_deliveryStations; }
+const TaskList*            WarehouseLayoutPresenter::tasks()            const { return &m_tasks;            }
 

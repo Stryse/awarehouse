@@ -3,6 +3,8 @@ import QtQuick.Layouts
 import QtQuick.Controls
 import QtQuick.Controls.Material
 
+import Editor 1.0
+
 Item {
     id: editorRoot
 
@@ -15,20 +17,24 @@ Item {
 
     readonly property ListModel tileList: ListModel {
         ListElement {
-            tileType: "Robot"
-            tileColor: "#80DEEA"
+            tileType:     TileType.ACTOR
+            tileTypeName: "Actor"
+            tileColor:    "#80DEEA"
         }
         ListElement {
-            tileType: "Pod"
-            tileColor: "#FFAB91"
+            tileType:     TileType.POD_DOCK
+            tileTypeName: "Pod"
+            tileColor:    "#FFAB91"
         }
         ListElement {
-            tileType: "Charging Station"
-            tileColor: "#CE93D8"
+            tileType:     TileType.CHARGING_STATION
+            tileTypeName: "Charging Station"
+            tileColor:    "#CE93D8"
         }
         ListElement {
-            tileType: "Delivery Station"
-            tileColor: "#A5D6A7"
+            tileType:     TileType.DELIVERY_STATION
+            tileTypeName: "Delivery Station"
+            tileColor:    "#A5D6A7"
         }
 
         function getTileColor(type) {

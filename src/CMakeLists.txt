@@ -119,6 +119,9 @@ presenter/header/DeliveryStationList.h
 
 presenter/cpp/DeliveryStationListModel.cpp
 presenter/header/DeliveryStationListModel.h
+
+presenter/cpp/WarehouseEditorPresenter.cpp
+presenter/header/WarehouseEditorPresenter.h
 )
 
 add_library(OBJ_AWSOURCE_FILES STATIC

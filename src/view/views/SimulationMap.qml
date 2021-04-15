@@ -3,7 +3,6 @@ import QtQuick.Layouts
 import QtQuick.Controls
 import QtQuick.Controls.Material
 
-import Simulator           1.0
 import ActorList           1.0
 import ChargingStationList 1.0
 import PodDockList         1.0
@@ -14,8 +13,8 @@ Item {
 
     readonly property real  aspectRatio: 16/9
 
-    property int rows:    SimPresenter.layout.rows
-    property int columns: SimPresenter.layout.columns
+    readonly property int rows:    SimPresenter.layout.rows
+    readonly property int columns: SimPresenter.layout.columns
 
     property int   cellSpacing: 1
     property real  cellScale:   zoomArea.zoomScale
@@ -40,7 +39,7 @@ Item {
     }
 
     Component {
-        id: tileComponent
+        id: baseComponent
 
 //        Image {
 //            id: tileImg
@@ -51,7 +50,7 @@ Item {
 //            source: imgSource //EDIT
 //        }
         Rectangle {
-            id: tilePlaceholder
+            id: baseRectangle
 
             Layout.alignment: Qt.AlignCenter
 
@@ -74,7 +73,9 @@ Item {
             width:  root.cellSize
             height: root.cellSize
 
-            source: model.image//"qrc:/placeholder_amogus.png"
+            source: model.image
+
+            rotation: model.rotation
         }
     }
 
@@ -169,7 +170,7 @@ Item {
             height: Math.max(mapFlickable.height * 1.5, root.mapHeight * 1.1)
 
             GridLayout {
-                id: tiles
+                id: base
 
                 anchors.centerIn: parent
 
@@ -180,16 +181,16 @@ Item {
                 columnSpacing: root.cellSpacing
 
                 Repeater {
-                    id: tileRepeater
+                    id: baseRepeater
 
                     model:    root.rows * root.columns
-                    delegate: tileComponent
+                    delegate: baseComponent
                 }
             }
             Item {
                 id: actors
 
-                anchors.fill: tiles
+                anchors.fill: base
 
                 Repeater {
                     id: actorRepeater
@@ -203,7 +204,7 @@ Item {
             Item {
                 id: chargingStations
 
-                anchors.fill: tiles
+                anchors.fill: base
 
                 Repeater {
                     id: chargingStationRepeater
@@ -217,7 +218,7 @@ Item {
             Item {
                 id: pods
 
-                anchors.fill: tiles
+                anchors.fill: base
 
                 Repeater {
                     id: podRepeater
@@ -231,7 +232,7 @@ Item {
             Item {
                 id: deliveryStations
 
-                anchors.fill: tiles
+                anchors.fill: base
 
                 Repeater {
                     id: deliveryStationRepeater

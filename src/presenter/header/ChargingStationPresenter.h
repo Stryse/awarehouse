@@ -15,6 +15,7 @@ class ChargingStationPresenter : public MapItemPresenter
 public:
     explicit ChargingStationPresenter(const ChargingStation<int>* model,
                                                          QObject* parent = nullptr);
+    explicit ChargingStationPresenter(QObject* parent = nullptr);
 
 private:
     //Model

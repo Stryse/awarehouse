@@ -9,6 +9,7 @@
 
 //Presenter
 #include "SimulationWindowPresenter.h"
+#include "WarehouseEditorPresenter.h"
 #include "WarehouseManager.h"
 #include "ActorListModel.h"
 #include "ChargingStationListModel.h"
@@ -27,6 +28,7 @@ int main(int argc, char *argv[])
 
     // Instantiate //////
     QScopedPointer<SimulationWindowPresenter> simPresenter(new SimulationWindowPresenter());
+    QScopedPointer<WarehouseEditorPresenter>  editorPresenter(new WarehouseEditorPresenter());
     // //////////////////
 
     // Register Types ///
@@ -36,11 +38,13 @@ int main(int argc, char *argv[])
     qmlRegisterType<DeliveryStationListModel> ("DeliveryStationList", 1, 0, "DeliveryStationListModel");
     qmlRegisterType<TaskListModel>            ("TaskList",            1, 0, "TaskListModel");
     qmlRegisterType<SimulationWindowPresenter>("Simulator",           1, 0, "TickRate");
+    qmlRegisterType<WarehouseEditorPresenter> ("Editor",              1, 0, "TileType");
 
     // //////////////////
     QQmlApplicationEngine engine;
     // Register Instances
-    engine.rootContext()->setContextProperty(QStringLiteral("SimPresenter"), simPresenter.get());
+    engine.rootContext()->setContextProperty(QStringLiteral("SimPresenter"),    simPresenter.get());
+    engine.rootContext()->setContextProperty(QStringLiteral("EditorPresenter"), editorPresenter.get());
     // //////////////////
 
     const QUrl url(QStringLiteral("qrc:/view/MainView.qml"));

@@ -17,7 +17,7 @@ int DeliveryStationListModel::rowCount(const QModelIndex& parent) const
 }
 
 QVariant DeliveryStationListModel::data(const QModelIndex& index,
-                                             int role) const
+                                                       int role) const
 {
     if (!index.isValid() || m_deliveryStations == nullptr)
        return QVariant();
@@ -38,12 +38,26 @@ QVariant DeliveryStationListModel::data(const QModelIndex& index,
 }
 
 bool DeliveryStationListModel::setData(const QModelIndex& index,
-                             const    QVariant& value,
-                                            int role)
+                                       const    QVariant& value,
+                                                      int role)
 {
     if (data(index, role) != value)
     {
-        // TODO IMPLEMENT
+        DeliveryStationPresenter& deliveryStation = *m_deliveryStations->deliveryStations()->at(index.row());
+
+        switch(role)
+        {
+            case RowRole:
+                deliveryStation.setRow      (value.toInt());
+                break;
+            case ColumnRole:
+                deliveryStation.setColumn   (value.toInt());
+                break;
+            case ImageRole:
+                deliveryStation.setImagePath(value.toString());
+                break;
+        }
+
         emit dataChanged(index, index, QVector<int>() << role);
         return true;
     }
@@ -63,9 +77,9 @@ QHash<int, QByteArray> DeliveryStationListModel::roleNames() const
 {
     QHash<int, QByteArray> names;
 
-    names[RowRole]      = "row";
-    names[ColumnRole]   = "column";
-    names[ImageRole]    = "image";
+    names[RowRole]    = "row";
+    names[ColumnRole] = "column";
+    names[ImageRole]  = "image";
 
     return names;
 }

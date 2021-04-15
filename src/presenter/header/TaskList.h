@@ -14,9 +14,9 @@ class TaskList : public QObject
 public:
     explicit TaskList(QObject* parent = nullptr);
 
-    QList<const TaskPresenter*>* tasks();
+    QList<TaskPresenter*>* tasks();
 
-    bool setTaskAt(int index, const TaskPresenter& task);
+    bool setTaskAt(int index, TaskPresenter& task);
 
 signals:
     void preItemAppended();
@@ -26,13 +26,13 @@ signals:
     void postItemRemoved();
 
 public slots:
-    void appendOrder(const TaskPresenter& task);
+    void appendOrder(TaskPresenter& task);
     void removeOrder(int index);
 
     void clear();
 
 public:
-    QList<const TaskPresenter*> m_tasks;
+    QList<TaskPresenter*> m_tasks;
 };
 
 #endif /* TASK_LIST__H */

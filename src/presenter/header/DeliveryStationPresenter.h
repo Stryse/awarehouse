@@ -15,6 +15,8 @@ class DeliveryStationPresenter : public MapItemPresenter
 public:
     explicit DeliveryStationPresenter(const DeliveryStation* model,
                                                     QObject* parent = nullptr);
+    explicit DeliveryStationPresenter(QObject* parent);
+
 private:
     //Model
     const  DeliveryStation* model;

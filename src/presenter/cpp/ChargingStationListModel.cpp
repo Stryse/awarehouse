@@ -17,7 +17,7 @@ int ChargingStationListModel::rowCount(const QModelIndex& parent) const
 }
 
 QVariant ChargingStationListModel::data(const QModelIndex& index,
-                                             int role) const
+                                                       int role) const
 {
     if (!index.isValid() || m_chargingStations == nullptr)
        return QVariant();
@@ -38,12 +38,26 @@ QVariant ChargingStationListModel::data(const QModelIndex& index,
 }
 
 bool ChargingStationListModel::setData(const QModelIndex& index,
-                             const    QVariant& value,
-                                            int role)
+                                       const    QVariant& value,
+                                                      int role)
 {
     if (data(index, role) != value)
     {
-        // TODO IMPLEMENT
+        ChargingStationPresenter& chargingStation = *m_chargingStations->chargingStations()->at(index.row());
+
+        switch(role)
+        {
+            case RowRole:
+                chargingStation.setRow      (value.toInt());
+                break;
+            case ColumnRole:
+                chargingStation.setColumn   (value.toInt());
+                break;
+            case ImageRole:
+                chargingStation.setImagePath(value.toString());
+                break;
+        }
+
         emit dataChanged(index, index, QVector<int>() << role);
         return true;
     }
@@ -63,9 +77,9 @@ QHash<int, QByteArray> ChargingStationListModel::roleNames() const
 {
     QHash<int, QByteArray> names;
 
-    names[RowRole]      = "row";
-    names[ColumnRole]   = "column";
-    names[ImageRole]    = "image";
+    names[RowRole]    = "row";
+    names[ColumnRole] = "column";
+    names[ImageRole]  = "image";
 
     return names;
 }

@@ -53,7 +53,36 @@ bool ActorListModel::setData(const QModelIndex& index,
 {
     if (data(index, role) != value)
     {
-        // TODO IMPLEMENT
+        ActorPresenter& actor = *m_actors->actors()->at(index.row());
+
+        switch(role)
+        {
+            case NameRole:
+                actor.setName     (value.toString());
+                break;
+            case ActionRole:
+                actor.setAction   (value.toString());
+                break;
+            case BatteryRole:
+                actor.setBattery  (value.toInt());
+                break;
+            case RotationRole:
+                actor.setRotation (value.toInt());
+                break;
+            case MovesRole:
+                actor.setMoves    (value.toInt());
+                break;
+            case RowRole:
+                actor.setRow      (value.toInt());
+                break;
+            case ColumnRole:
+                actor.setColumn   (value.toInt());
+                break;
+            case ImageRole:
+                actor.setImagePath(value.toString());
+                break;
+        }
+
         emit dataChanged(index, index, QVector<int>() << role);
         return true;
     }
@@ -101,7 +130,7 @@ void ActorListModel::setActors(ActorList* actors)
         connect(m_actors, &ActorList::preItemAppended,  this, [=]()
         {
             const int index = m_actors->actors()->size();
-            beginInsertRows(QModelIndex(),index,index);
+            beginInsertRows(QModelIndex(), index, index);
         });
 
         connect(m_actors, &ActorList::postItemAppended, this, [=]()
@@ -111,7 +140,7 @@ void ActorListModel::setActors(ActorList* actors)
 
         connect(m_actors, &ActorList::preItemRemoved,   this, [=](int index)
         {
-            beginRemoveRows(QModelIndex(),index, index);
+            beginRemoveRows(QModelIndex(), index, index);
         });
 
         connect(m_actors, &ActorList::postItemRemoved,  this, [=]()

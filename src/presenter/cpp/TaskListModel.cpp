@@ -44,7 +44,31 @@ bool TaskListModel::setData(const QModelIndex& index,
 {
     if (data(index, role) != value)
     {
-        // TODO IMPLEMENT
+        TaskPresenter& task = *m_tasks->tasks()->at(index.row());
+
+        switch(role) {
+            case AssignedRobotNameRole:
+                task.setAssignedRobotName(value.toString());
+                break;
+            case OrdersRole:
+                {
+                    QList<QVariant> tempList = value.toList();
+                    QVector<int>    orders   = QVector<int>(tempList.size());
+
+                    for (int i = 0; i < orders.size(); ++i)
+                        orders[i] = tempList[i].toInt();
+
+                    task.setOrders(orders);
+                    break;
+                }
+            case DestinationXRole:
+                task.setDestinationX     (value.toInt());
+                break;
+            case DestinationYRole:
+                task.setDestinationY     (value.toInt());
+                break;
+        }
+
         emit dataChanged(index, index, QVector<int>() << role);
         return true;
     }

@@ -10,12 +10,24 @@ ActorPresenter::ActorPresenter(const DeliveryRobot<ObservableNavEnvironment<Tile
                        model->getBody()->getPose().getPosition().getPosX(),
                        ActorPresenter::m_static_imagePath,
                        parent)
-    , m_name(QString::fromStdString(model->getId()))
-    , m_action("\xc2\xaf\x5c\x5f\x28\xe3\x83\x84\x29\x5f\x2f\xc2\xaf")
-    , m_battery(model->getEnergySource()->getCharge())
+    , m_name    (QString::fromStdString(model->getId()))
+    , m_action  ("\xc2\xaf\x5c\x5f\x28\xe3\x83\x84\x29\x5f\x2f\xc2\xaf")
+    , m_battery (model->getEnergySource()->getCharge())
     , m_rotation(0)
-    , m_moves(0)
-    , model(model)
+    , m_moves   (0)
+    , model     (model)
+{}
+
+ActorPresenter::ActorPresenter(int row, int column, QObject* parent)
+    : MapItemPresenter(row,
+                       column,
+                       ActorPresenter::m_static_imagePath,
+                       parent)
+    , m_name    ("Jojo")
+    , m_action  ("\xc2\xaf\x5c\x5f\x28\xe3\x83\x84\x29\x5f\x2f\xc2\xaf")
+    , m_battery (100)
+    , m_rotation(0)
+    , m_moves   (0)
 {}
 
 QString ActorPresenter::m_static_imagePath = "qrc:/images/robot.png";
@@ -64,8 +76,11 @@ void ActorPresenter::setRotation(int rotation)
     emit rotationChanged();
 }
 
-void ActorPresenter::movesInc()
+void ActorPresenter::setMoves(int moves)
 {
-    ++m_moves;
+    if (m_moves == moves)
+        return;
+
+    m_moves = moves;
     emit movesChanged();
 }

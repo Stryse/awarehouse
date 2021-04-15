@@ -14,9 +14,9 @@ class PodDockList : public QObject
 public:
     explicit PodDockList(QObject* parent = nullptr);
 
-    QList<const PodDockPresenter*>* podDocks();
+    QList<PodDockPresenter*>* podDocks();
 
-    bool setPodDockAt(int index, const PodDockPresenter& podDock);
+    bool setPodDockAt(int index, PodDockPresenter& podDock);
 
 signals:
     void preItemAppended();
@@ -26,13 +26,14 @@ signals:
     void postItemRemoved();
 
 public slots:
-    void appendPodDock(const PodDockPresenter& podDock);
+    void appendPodDock(PodDockPresenter& podDock);
     void removePodDock(int index);
+    void removePodDock(int row, int column);
 
     void clear();
 
 public:
-    QList<const PodDockPresenter*> m_podDocks;
+    QList<PodDockPresenter*> m_podDocks;
 };
 
 #endif /* POD_DOCK_LIST__H */

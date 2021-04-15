@@ -14,9 +14,9 @@ class ChargingStationList : public QObject
 public:
     explicit ChargingStationList(QObject* parent = nullptr);
 
-    QList<const ChargingStationPresenter*>* chargingStations();
+    QList<ChargingStationPresenter*>* chargingStations();
 
-    bool setChargingStationAt(int index, const ChargingStationPresenter& chargingStation);
+    bool setChargingStationAt(int index, ChargingStationPresenter& chargingStation);
 
 signals:
     void preItemAppended();
@@ -26,13 +26,14 @@ signals:
     void postItemRemoved();
 
 public slots:
-    void appendChargingStation(const ChargingStationPresenter& chargingStation);
+    void appendChargingStation(ChargingStationPresenter& chargingStation);
     void removeChargingStation(int index);
+    void removeChargingStation(int row, int column);
 
     void clear();
 
 public:
-    QList<const ChargingStationPresenter*> m_chargingStations;
+    QList<ChargingStationPresenter*> m_chargingStations;
 };
 
 #endif /* CHARGING_STATION_LIST__H */
