@@ -15,7 +15,8 @@
 #include "RackMotorModule.h"
 #include "RobotMoveMechanism.h"
 
-template <typename TEnvironment = config::navigation::DefaultEnvironment,
+class ObservableNavEnvironment;
+template <typename TEnvironment = ObservableNavEnvironment,
           typename TEnergy = config::agent::DefaultEnergy>
 
 class DeliveryRobot : public EnergyModule<TEnergy>,

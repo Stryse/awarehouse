@@ -15,7 +15,7 @@ public:
     static std::shared_ptr<PodDock<>> load(const QJsonObject &podDockObj);
 
     static void loadOrders(const QJsonObject &podDockObj,
-                           Pod<OrderModel, ObservableNavEnvironment<>> &pod);
+                           Pod<OrderModel, ObservableNavEnvironment> &pod);
 
     static QJsonObject save(const PodDock<> &podDock);
 };

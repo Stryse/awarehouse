@@ -14,6 +14,7 @@
 // ################### Forward Declarations ######################
 template <typename TEnvironment>
 class PodDock;
+class ObservableNavEnvironment;
 // ###############################################################
 
 // Ensuring set has unique elements inside unique_ptr ////////////
@@ -38,7 +39,7 @@ struct pointer_element_comparator
  * resides.
  **************************************************************************/
 template <typename TItemType,
-          typename TEnvironment = config::navigation::DefaultEnvironment>
+          typename TEnvironment = ObservableNavEnvironment>
 
 class Pod : public IContaining<std::unique_ptr<TItemType>>
 {

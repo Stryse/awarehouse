@@ -4,7 +4,7 @@
 #include "DeliveryRobot.h"
 #include "ObservableEnvironment.h"
 
-ActorPresenter::ActorPresenter(const DeliveryRobot<ObservableNavEnvironment<Tile>, int>* model,
+ActorPresenter::ActorPresenter(const DeliveryRobot<ObservableNavEnvironment, int>* model,
                                                                                 QObject* parent)
     : MapItemPresenter(model->getBody()->getPose().getPosition().getPosY(),
                        model->getBody()->getPose().getPosition().getPosX(),

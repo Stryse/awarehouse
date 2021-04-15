@@ -14,7 +14,7 @@ protected:
         const size_t X = 6;
         const size_t Y = 6;
         const size_t Z = 6;
-        env = std::make_shared<ObservableNavEnvironment<>>(X, Y, Z);
+        env = std::make_shared<ObservableNavEnvironment>(X, Y, Z);
         for (int x = 0; x < X; ++x)
             for (int y = 0; y < Y; ++y)
                 for (int z = 0; z < Z; ++z)
@@ -35,13 +35,13 @@ protected:
             BodyShapeFactory<>::onlyOrigin());
     }
 
-    static std::shared_ptr<ObservableNavEnvironment<>> env;
+    static std::shared_ptr<ObservableNavEnvironment> env;
     static std::unique_ptr<Body<>> largeBody;
     static std::unique_ptr<Body<>> tinyBody;
 };
 
 // #################################### SHARED VARIABLES ######################################################
-std::shared_ptr<ObservableNavEnvironment<>> BodyTest::env = nullptr;
+std::shared_ptr<ObservableNavEnvironment> BodyTest::env = nullptr;
 std::unique_ptr<Body<>> BodyTest::largeBody = nullptr;
 std::unique_ptr<Body<>> BodyTest::tinyBody = nullptr;
 // ####################################### TESTS ##############################################################

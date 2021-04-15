@@ -1,7 +1,7 @@
 #include "State.h"
 #include <iostream>
 
-State::State(const std::shared_ptr<ObservableNavEnvironment<>> &environment,
+State::State(const std::shared_ptr<ObservableNavEnvironment> &environment,
              const std::vector<std::shared_ptr<ChargingStation<>>> &chStations,
              const std::vector<std::shared_ptr<DeliveryStation>> &deliveryStations,
              const std::vector<std::shared_ptr<PodDock<>>> &podDocks,
@@ -17,7 +17,7 @@ State::State(const std::shared_ptr<ObservableNavEnvironment<>> &environment,
 {
 }
 
-State::State(std::shared_ptr<ObservableNavEnvironment<>> &&environment,
+State::State(std::shared_ptr<ObservableNavEnvironment> &&environment,
              std::vector<std::shared_ptr<ChargingStation<>>> &&chStations,
              std::vector<std::shared_ptr<DeliveryStation>> &&deliveryStations,
              std::vector<std::shared_ptr<PodDock<>>> &&podDocks,

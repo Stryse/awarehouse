@@ -3,8 +3,6 @@
 
 // FWD Declarations
 class Tile;
-template <typename T>
-class ObservableNavEnvironment;
 //
 
 /*******************************************************
@@ -15,7 +13,6 @@ namespace config
     namespace navigation
     {
         using DefaultVolumeType = Tile;
-        using DefaultEnvironment = ObservableNavEnvironment<DefaultVolumeType>;
     };
     namespace agent
     {

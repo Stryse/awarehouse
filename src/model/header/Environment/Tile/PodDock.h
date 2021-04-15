@@ -12,6 +12,7 @@
 template <typename TItemType, typename TEnvironment>
 class Pod;
 class OrderModel;
+class ObservableNavEnvironment;
 // #########################################################################
 
 /***********************************************************************************
@@ -21,7 +22,7 @@ class OrderModel;
  * @code void addAssociatedPod(std::shared_ptr<Environment> &env) @endcode
  * and it automatically sets this Dock as the freshly created pod's parent.
  ***********************************************************************************/
-template <typename TEnvironment = config::navigation::DefaultEnvironment>
+template <typename TEnvironment = ObservableNavEnvironment>
 class PodDock : public Tile
 {
 public:

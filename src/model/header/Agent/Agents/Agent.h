@@ -9,6 +9,7 @@
 
 // ######################## Forward Declarations #########################
 class AMicroController;
+class ObservableNavEnvironment;
 // #######################################################################
 namespace agent_util
 {
@@ -23,7 +24,7 @@ namespace agent_util
  * 
  * @tparam TEnvironment Type of environment.
  *********************************************************************************/
-template <typename TEnvironment = config::navigation::DefaultEnvironment>
+template <typename TEnvironment = ObservableNavEnvironment>
 class Agent
 {
 public:

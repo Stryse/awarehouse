@@ -9,6 +9,7 @@
 // ######################### FORWARD DECLARATIONS ##############################
 template <typename VolumeType>
 class IVolumeOccupant;
+class ObservableNavEnvironment;
 // #############################################################################
 
 /*******************************************************************************
@@ -17,7 +18,7 @@ class IVolumeOccupant;
  * Can accept occupants of that derive from IVolumeOccupant<Tile>
  *******************************************************************************/
 class Tile : public INavigationVolume<IVolumeOccupant<Tile> *>,
-             public IAgentSignalHandler<config::navigation::DefaultEnvironment>
+             public IAgentSignalHandler<ObservableNavEnvironment>
 {
 public:
     /*****************************************************

@@ -19,7 +19,7 @@ protected:
         const size_t X = 6;
         const size_t Y = 6;
         const size_t Z = 6;
-        env = std::make_shared<ObservableNavEnvironment<>>(X, Y, Z);
+        env = std::make_shared<ObservableNavEnvironment>(X, Y, Z);
         for (int x = 0; x < X; ++x)
             for (int y = 0; y < Y; ++y)
                 for (int z = 0; z < Z; ++z)
@@ -34,7 +34,7 @@ protected:
         robot = std::make_unique<DeliveryRobot<>>(env, Point<>(1, 1, 0), DirectionVector<>::UP());
     }
 
-    static std::shared_ptr<ObservableNavEnvironment<>> env;
+    static std::shared_ptr<ObservableNavEnvironment> env;
     static std::shared_ptr<PodDock<>> podDock;
     static std::unique_ptr<DeliveryRobot<>> robot;
 
@@ -42,7 +42,7 @@ protected:
     static void moveHelper(std::queue<MotorAction *> moveActionQueue);
 };
 
-std::shared_ptr<ObservableNavEnvironment<>> NotifyTest::env = nullptr;
+std::shared_ptr<ObservableNavEnvironment> NotifyTest::env = nullptr;
 std::unique_ptr<DeliveryRobot<>> NotifyTest::robot = nullptr;
 std::shared_ptr<PodDock<>> NotifyTest::podDock = nullptr;
 
@@ -81,7 +81,7 @@ TEST_F(NotifyTest, AgentMovementNotify)
     int signalReceived = 0;
 
     // Connects
-    robot->getMoveMechanism()->onBodyMoved.connect([&](const Body<ObservableNavEnvironment<>> &body) {
+    robot->getMoveMechanism()->onBodyMoved.connect([&](const Body<ObservableNavEnvironment> &body) {
         ++signalReceived;
     });
 
@@ -98,11 +98,11 @@ TEST_F(NotifyTest, AgentPodPickup_PutDown)
 {
     int signalReceived = 0;
 
-    robot->getRackMotor().onPodPickedUp.connect([&](const Body<ObservableNavEnvironment<>> &body) {
+    robot->getRackMotor().onPodPickedUp.connect([&](const Body<ObservableNavEnvironment> &body) {
         ++signalReceived;
     });
 
-    robot->getRackMotor().onPodPutDown.connect([&](const Body<ObservableNavEnvironment<>> &body) {
+    robot->getRackMotor().onPodPutDown.connect([&](const Body<ObservableNavEnvironment> &body) {
         ++signalReceived;
     });
 
@@ -119,7 +119,7 @@ TEST_F(NotifyTest, AgentMovement_With_PodMovement)
 {
     // Connect Pod Movement
     int podMoved = 0;
-    podDock->getPodHolder().getChildPod()->onBodyMoved.connect([&](const Body<ObservableNavEnvironment<>> &body) {
+    podDock->getPodHolder().getChildPod()->onBodyMoved.connect([&](const Body<ObservableNavEnvironment> &body) {
         ++podMoved;
     });
 

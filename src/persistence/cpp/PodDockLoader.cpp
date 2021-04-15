@@ -18,7 +18,7 @@ std::shared_ptr<PodDock<>> PodDockLoader::load(const QJsonObject &podDockObj)
 }
 
 void PodDockLoader::loadOrders(const QJsonObject &podDockObj,
-                               Pod<OrderModel, ObservableNavEnvironment<>> &pod)
+                               Pod<OrderModel, ObservableNavEnvironment> &pod)
 {
     if (podDockObj.contains("Orders") && podDockObj["Orders"].isArray())
     {

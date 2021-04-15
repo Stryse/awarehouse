@@ -11,10 +11,8 @@ class IDepleting;
 template <typename TBody, typename TEnergy>
 class IMoveMechanism;
 
-template <typename TVolumeType>
 class ObservableNavEnvironment;
 
-class Tile;
 // ###################################################################### //
 
 /***************************************************************
@@ -130,7 +128,7 @@ public:
  **********************************************************************/
 struct AgentControlData
 {
-    using Body = ::Body<ObservableNavEnvironment<Tile>>;
+    using Body = ::Body<ObservableNavEnvironment>;
     using Energy = int;
     using IDepleting = ::IDepleting<Energy>;
     using IMoveMechanism = ::IMoveMechanism<Body, Energy>;

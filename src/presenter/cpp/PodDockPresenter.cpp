@@ -3,7 +3,7 @@
 //Model
 #include "PodDock.h"
 
-PodDockPresenter::PodDockPresenter(const PodDock<ObservableNavEnvironment<Tile>>* model,
+PodDockPresenter::PodDockPresenter(const PodDock<ObservableNavEnvironment>* model,
                                                                          QObject* parent)
     : MapItemPresenter(model->getPosition().getPosY(),
                        model->getPosition().getPosX(),

@@ -15,7 +15,7 @@
  * eg. delivery robot has this module so it can pick up and
  * transfer pods and then put them down.
  ******************************************************************************/
-template <typename TEnvironment = config::navigation::DefaultEnvironment>
+template <typename TEnvironment = ObservableNavEnvironment>
 class PodHolder : public IContaining<std::unique_ptr<Pod<OrderModel, TEnvironment>>>
 {
 public:
