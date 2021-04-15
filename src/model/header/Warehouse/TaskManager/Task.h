@@ -22,6 +22,8 @@ public:
 
     virtual ~Task() {}
 
+    friend inline bool operator>(const Task &lhs, const Task &rhs) { return lhs.sumDistance > rhs.sumDistance; }
+
 protected:
     std::vector<Point<>> wayPoints;
     int sumDistance;

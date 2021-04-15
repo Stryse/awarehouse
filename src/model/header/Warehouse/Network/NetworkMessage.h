@@ -4,6 +4,19 @@
 #include "DirectionVector.h"
 #include "NetworkMessageHandler.h"
 
+// ####################### FORWARD DECLARATIONS ######################### //
+template <typename TEnergy>
+class IDepleting;
+
+template <typename TBody, typename TEnergy>
+class IMoveMechanism;
+
+template <typename TVolumeType>
+class ObservableNavEnvironment;
+
+class Tile;
+// ###################################################################### //
+
 /***************************************************************
  * @brief Message that can be transferred in a network.
  * The massage can be dispatched to an appropriate handler
@@ -71,7 +84,7 @@ class ChargeAgentMessage : public NetworkMessage<ChargeAgentMessage>
 {
 public:
     explicit ChargeAgentMessage(int senderAddress)
-        : NetworkMessage(senderAddress) {}
+        : NetworkMessage<ChargeAgentMessage>(senderAddress) {}
 
     virtual ~ChargeAgentMessage() = default;
 };
@@ -83,7 +96,7 @@ class PickupPodMessage : public NetworkMessage<PickupPodMessage>
 {
 public:
     explicit PickupPodMessage(int senderAddress)
-        : NetworkMessage(senderAddress) {}
+        : NetworkMessage<PickupPodMessage>(senderAddress) {}
 
     virtual ~PickupPodMessage() = default;
 };
@@ -95,7 +108,7 @@ class PutDownPodMessage : public NetworkMessage<PutDownPodMessage>
 {
 public:
     explicit PutDownPodMessage(int senderAddress)
-        : NetworkMessage(senderAddress) {}
+        : NetworkMessage<PutDownPodMessage>(senderAddress) {}
 
     virtual ~PutDownPodMessage() = default;
 };
@@ -107,21 +120,57 @@ class PutDownOrderMessage : public NetworkMessage<PutDownOrderMessage>
 {
 public:
     explicit PutDownOrderMessage(int senderAddress)
-        : NetworkMessage(senderAddress) {}
+        : NetworkMessage<PutDownOrderMessage>(senderAddress) {}
 
     virtual ~PutDownOrderMessage() = default;
 };
 
-/*********************************************************************
- * @brief Message from an agent signalling it has finished charging.
- *********************************************************************/
-class RechargedMessage : public NetworkMessage<RechargedMessage>
+/**********************************************************************
+ * @brief Containing the neccessary data to Agent Control
+ **********************************************************************/
+struct AgentControlData
 {
-public:
-    explicit RechargedMessage(int senderAddress)
-        : NetworkMessage(senderAddress) {}
+    using Body = ::Body<ObservableNavEnvironment<Tile>>;
+    using Energy = int;
+    using IDepleting = ::IDepleting<Energy>;
+    using IMoveMechanism = ::IMoveMechanism<Body, Energy>;
 
-    virtual ~RechargedMessage() = default;
+    AgentControlData(const IDepleting &energySource,
+                     const IMoveMechanism &moveMechanism)
+        : energySource(energySource),
+          moveMechanism(moveMechanism) {}
+
+    const IDepleting &energySource;
+    const IMoveMechanism &moveMechanism;
 };
 
+/*********************************************************************
+ * @brief Message from an agent requesting control from an Agent
+ * controlling entity.
+ *********************************************************************/
+class AgentControlRequestMessage : public NetworkMessage<AgentControlRequestMessage>
+{
+public:
+    explicit AgentControlRequestMessage(AgentControlData controlData, int senderAddress)
+        : NetworkMessage<AgentControlRequestMessage>(senderAddress),
+          controlData(controlData)
+    {
+    }
+    virtual ~AgentControlRequestMessage() = default;
+
+    AgentControlData controlData;
+};
+
+/*********************************************************************
+ * @brief Message from an agent controlling entity signalling
+ * it has taken control of the Agent
+ *********************************************************************/
+class AgentControlGrantedMessage : public NetworkMessage<AgentControlGrantedMessage>
+{
+public:
+    explicit AgentControlGrantedMessage(int senderAddress)
+        : NetworkMessage<AgentControlGrantedMessage>(senderAddress) {}
+
+    virtual ~AgentControlGrantedMessage() = default;
+};
 #endif /* NETWORK_MESSAGE__H */

@@ -3,11 +3,23 @@
 
 #include "AScheduler.h"
 #include "NetworkAdapter.h"
+#include "NetworkMessageHandler.h"
+#include <queue>
 
-class SchedulerImpl : public AScheduler
+// ############################ FORWARD DECLARATIONS ############################## //
+template <typename TEnvironment>
+class TaskManager;
+
+template <typename TVolumeType>
+class ObservableNavEnvironment;
+
+class Tile;
+// ################################################################################ //
+
+class SchedulerImpl : public AScheduler, NetworkMessageHandler
 {
 public:
-    SchedulerImpl();
+    explicit SchedulerImpl(TaskManager<ObservableNavEnvironment<Tile>> &taskManager);
     virtual ~SchedulerImpl();
 
 public:
@@ -16,8 +28,20 @@ public:
     virtual const NetworkAdapter &getNetworkAdapter() const override;
     virtual NetworkAdapter &getNetworkAdapter() override;
 
+public:
+    // ############## NetworkMessageHandler Implementation ###############
+    virtual void receive(const AgentControlRequestMessage &message) override;
+
+public:
+    /*******************************************************************
+     * @brief Poll and dispatch all messages from the NetworkAdapters 
+     * messageQueue to the appropriate NetworkMessagehandler.
+     *******************************************************************/
+    void processMessages();
+
 private:
     NetworkAdapter networkAdapter;
+    TaskManager<ObservableNavEnvironment<Tile>> &taskManager;
 };
 
 #endif /* SCHEDULER_IMPL__H */

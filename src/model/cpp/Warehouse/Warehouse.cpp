@@ -7,7 +7,7 @@
 
 Warehouse::Warehouse(std::unique_ptr<IWarehousePersistence<QString>> &&persistence)
     : timeStamp(0),
-      scheduler(std::make_unique<SchedulerImpl>()),
+      scheduler(std::make_unique<SchedulerImpl>(taskManager)),
       controller(std::make_unique<ControllerImpl>()),
       network(std::make_shared<Network>()),
       state(nullptr),
@@ -20,9 +20,11 @@ Warehouse::~Warehouse() = default;
 void Warehouse::tick()
 {
     std::cerr << "Warehouse tick! Timestamp: " << timeStamp << std::endl;
+
+    state->tick(timeStamp);
     scheduler->tick(timeStamp);
     controller->tick(timeStamp);
-    state->tick(timeStamp);
+
     ++timeStamp;
 }
 
@@ -55,8 +57,8 @@ const std::unique_ptr<State> &Warehouse::getState() const
 void Warehouse::setupNetwork(State &state)
 {
     network->reset();
-    controller->getNetworkAdapter().connectWithAddress(network, 0x1);
-    scheduler->getNetworkAdapter().connectWithAddress(network, 0x2);
+    scheduler->getNetworkAdapter().connectWithAddress(network, 0x1);
+    controller->getNetworkAdapter().connectWithAddress(network, 0x2);
 
     for (auto &agent : state.getRobots())
         agent->getNetworkAdapter().connect(network);

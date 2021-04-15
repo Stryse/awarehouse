@@ -10,6 +10,7 @@
 #include <algorithm>
 #include <map>
 #include <memory>
+#include <queue>
 #include <vector>
 
 template <typename TEnvironment>
@@ -117,6 +118,7 @@ private:
 
         // Register Delivery Task
         tasks.emplace_back(std::make_unique<DeliveryTask>(std::move(wayPoints), sumDistance));
+        sortedTasks.push(tasks.back().get());
     }
 
     /******************************************************************************
@@ -144,9 +146,24 @@ private:
         return sumDistance;
     }
 
+    /*****************************************************************************
+     * @brief Comparator for priority queue.
+     *****************************************************************************/
+    struct task_pointer_element_comparator
+    {
+        bool operator()(const Task *lhs,
+                        const Task *rhs) const
+        {
+            if (!lhs || !rhs)
+                return true;
+            return *lhs > *rhs;
+        }
+    };
+
 private:
     std::vector<std::unique_ptr<Task>> tasks;
     std::vector<std::unique_ptr<Task>> finishedTasks;
+    std::priority_queue<Task *, std::vector<Task *>, task_pointer_element_comparator> sortedTasks;
 
     const std::vector<std::shared_ptr<PodDock>> *podDocks;
     const std::vector<std::shared_ptr<DeliveryStation>> *deliveryStations;
