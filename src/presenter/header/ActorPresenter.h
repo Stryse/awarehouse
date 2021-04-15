@@ -5,7 +5,7 @@
 #include "MapItemPresenter.h"
 
 template <typename E, typename EN> class DeliveryRobot;
-template <typename E>              class PodDock;
+                                   class PodDock;
                                    class ObservableNavEnvironment;
                                    class Tile;
 

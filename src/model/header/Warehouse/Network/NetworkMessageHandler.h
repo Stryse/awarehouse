@@ -11,9 +11,6 @@ class PutDownOrderMessage;
 class AgentControlGrantedMessage;
 class AgentControlRequestMessage;
 
-template <typename TEnvironment>
-class Body;
-
 class ObservableNavEnvironment;
 // ########################################################################
 

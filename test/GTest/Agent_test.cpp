@@ -25,7 +25,7 @@ protected:
                     env->getBuffer()[env->getCoordAsIndex(x, y, z)] = std::make_shared<Tile>(Tile::Point{x, y, z});
 
         // Replace tile with PodDocks
-        podDock = std::make_shared<PodDock<>>(PodDock<>::Point{1, 1, 0});
+        podDock = std::make_shared<PodDock>(PodDock::Point{1, 1, 0});
         env->getBuffer()[env->getCoordAsIndex(1, 1, 0)] = podDock;
         podDock->addAssociatedPod(env);
 
@@ -34,18 +34,18 @@ protected:
     }
 
     static std::shared_ptr<ObservableNavEnvironment> env;
-    static std::shared_ptr<PodDock<>> podDock;
+    static std::shared_ptr<PodDock> podDock;
 
     static std::unique_ptr<DeliveryRobot<>> robot;
 
-    using MotorAction = ::MotorAction<std::decay_t<decltype(*robot)>::Body, std::decay_t<decltype(*robot)>::Energy>;
+    using MotorAction = ::MotorAction<std::decay_t<decltype(*robot)>::Energy>;
     static void moveHelper(std::queue<MotorAction *> moveActionQueue);
 };
 
 // #################################### SHARED VARIABLES ######################################################
 std::shared_ptr<ObservableNavEnvironment> AgentTest::env = nullptr;
 std::unique_ptr<DeliveryRobot<>> AgentTest::robot = nullptr;
-std::shared_ptr<PodDock<>> AgentTest::podDock = nullptr;
+std::shared_ptr<PodDock> AgentTest::podDock = nullptr;
 
 /************************************************************************
  * @brief Perform movement without agent MCU solely with MoveMechanism

@@ -26,7 +26,7 @@ protected:
                     env->getBuffer()[env->getCoordAsIndex(x, y, z)] = std::make_shared<Tile>(Tile::Point{x, y, z});
 
         // Replace tile with PodDocks
-        podDock = std::make_shared<PodDock<>>(PodDock<>::Point{1, 1, 0});
+        podDock = std::make_shared<PodDock>(PodDock::Point{1, 1, 0});
         env->getBuffer()[env->getCoordAsIndex(1, 1, 0)] = podDock;
         podDock->addAssociatedPod(env);
 
@@ -35,16 +35,16 @@ protected:
     }
 
     static std::shared_ptr<ObservableNavEnvironment> env;
-    static std::shared_ptr<PodDock<>> podDock;
+    static std::shared_ptr<PodDock> podDock;
     static std::unique_ptr<DeliveryRobot<>> robot;
 
-    using MotorAction = ::MotorAction<std::decay_t<decltype(*robot)>::Body, std::decay_t<decltype(*robot)>::Energy>;
+    using MotorAction = ::MotorAction<std::decay_t<decltype(*robot)>::Energy>;
     static void moveHelper(std::queue<MotorAction *> moveActionQueue);
 };
 
 std::shared_ptr<ObservableNavEnvironment> NotifyTest::env = nullptr;
 std::unique_ptr<DeliveryRobot<>> NotifyTest::robot = nullptr;
-std::shared_ptr<PodDock<>> NotifyTest::podDock = nullptr;
+std::shared_ptr<PodDock> NotifyTest::podDock = nullptr;
 
 void NotifyTest::moveHelper(std::queue<NotifyTest::MotorAction *> moveActionQueue)
 {
@@ -81,7 +81,7 @@ TEST_F(NotifyTest, AgentMovementNotify)
     int signalReceived = 0;
 
     // Connects
-    robot->getMoveMechanism()->onBodyMoved.connect([&](const Body<ObservableNavEnvironment> &body) {
+    robot->getMoveMechanism()->onBodyMoved.connect([&](const Body &body) {
         ++signalReceived;
     });
 
@@ -98,11 +98,11 @@ TEST_F(NotifyTest, AgentPodPickup_PutDown)
 {
     int signalReceived = 0;
 
-    robot->getRackMotor().onPodPickedUp.connect([&](const Body<ObservableNavEnvironment> &body) {
+    robot->getRackMotor().onPodPickedUp.connect([&](const Body &body) {
         ++signalReceived;
     });
 
-    robot->getRackMotor().onPodPutDown.connect([&](const Body<ObservableNavEnvironment> &body) {
+    robot->getRackMotor().onPodPutDown.connect([&](const Body &body) {
         ++signalReceived;
     });
 
@@ -119,7 +119,7 @@ TEST_F(NotifyTest, AgentMovement_With_PodMovement)
 {
     // Connect Pod Movement
     int podMoved = 0;
-    podDock->getPodHolder().getChildPod()->onBodyMoved.connect([&](const Body<ObservableNavEnvironment> &body) {
+    podDock->getPodHolder().getChildPod()->onBodyMoved.connect([&](const Body &body) {
         ++podMoved;
     });
 

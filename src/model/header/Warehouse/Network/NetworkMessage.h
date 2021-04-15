@@ -8,7 +8,7 @@
 template <typename TEnergy>
 class IDepleting;
 
-template <typename TBody, typename TEnergy>
+template <typename TEnergy>
 class IMoveMechanism;
 
 class ObservableNavEnvironment;
@@ -128,10 +128,9 @@ public:
  **********************************************************************/
 struct AgentControlData
 {
-    using Body = ::Body<ObservableNavEnvironment>;
     using Energy = int;
     using IDepleting = ::IDepleting<Energy>;
-    using IMoveMechanism = ::IMoveMechanism<Body, Energy>;
+    using IMoveMechanism = ::IMoveMechanism<Energy>;
 
     AgentControlData(const IDepleting &energySource,
                      const IMoveMechanism &moveMechanism)

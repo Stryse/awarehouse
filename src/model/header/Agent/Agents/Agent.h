@@ -49,7 +49,7 @@ public:
      *********************************************************/
     explicit Agent(const std::string &id_category,
                    const std::shared_ptr<Environment> &environment,
-                   const std::shared_ptr<Body<Environment>> &body,
+                   const std::shared_ptr<Body> &body,
                    std::unique_ptr<AMicroController> &&mcu)
 
         : environment(environment),
@@ -80,7 +80,7 @@ public:
     /*********************************************************
      * @brief Returns the agent's body
      *********************************************************/
-    const std::shared_ptr<Body<Environment>> &getBody() const { return body; }
+    const std::shared_ptr<Body> &getBody() const { return body; }
 
 private:
     /*********************************************************
@@ -111,7 +111,7 @@ protected:
      * @brief The agent's physical body,
      * has position,orientation,shape etc.
      ******************************************************/
-    std::shared_ptr<Body<Environment>> body;
+    std::shared_ptr<Body> body;
 
     /******************************************************
      * @brief A mechanism controlling the agent's modules,

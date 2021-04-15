@@ -3,6 +3,7 @@
 
 #include "AMotor.h"
 #include "AgentSignals.h"
+#include "Body.h"
 #include "IDepleting.h"
 #include "LibConfig.h"
 #include "MotorAction.h"
@@ -21,19 +22,15 @@
  * It can also put down a pod from the holder in the environment.
  * It can only put down pods to tiles which accepts the pod.
  *********************************************************************************/
-template <typename TBody, typename TEnergy = config::agent::DefaultEnergy>
-class RackMotor : public AMotor<TBody>
+template <typename TEnergy = config::agent::DefaultEnergy>
+class RackMotor : public AMotor
 {
 public:
-    using Body = TBody;
     using Energy = TEnergy;
     using IDepleting = ::IDepleting<Energy>;
-    using AMotor = ::AMotor<Body>;
-    using MotorDirection = typename AMotor::MotorDirection;
-    using MotorAction = ::MotorAction<Body, Energy>;
-    using MotorCommand = ::MotorCommand<AMotor>;
-    using MotorDrive = ::MotorDrive<AMotor, Energy>;
-    using PodHolder = ::PodHolder<typename Body::Environment>;
+    using MotorDirection = AMotor::MotorDirection;
+    using MotorAction = ::MotorAction<Energy>;
+    using MotorDrive = ::MotorDrive<Energy>;
 
 public:
     boost::signals2::signal<void(const Body &)> onPodPickedUp;
@@ -140,17 +137,17 @@ private:
 };
 
 /********************* Settings ***************************/
-template <typename TBody, typename TEnergy>
-const TEnergy RackMotor<TBody, TEnergy>::pickUpCost = 1;
+template <typename TEnergy>
+const TEnergy RackMotor<TEnergy>::pickUpCost = 1;
 
-template <typename TBody, typename TEnergy>
-const int RackMotor<TBody, TEnergy>::pickUpDuration = 1;
+template <typename TEnergy>
+const int RackMotor<TEnergy>::pickUpDuration = 1;
 
-template <typename TBody, typename TEnergy>
-const TEnergy RackMotor<TBody, TEnergy>::putDownCost = 1;
+template <typename TEnergy>
+const TEnergy RackMotor<TEnergy>::putDownCost = 1;
 
-template <typename TBody, typename TEnergy>
-const int RackMotor<TBody, TEnergy>::putDownDuration = 1;
+template <typename TEnergy>
+const int RackMotor<TEnergy>::putDownDuration = 1;
 /**********************************************************/
 
 #endif /* RACK_MOTOR__H */

@@ -2,19 +2,20 @@
 #define RACK_MOTOR__MODULE__H
 
 #include "IDepleting.h"
-#include "LibConfig.h"
-#include "PodHolder.h"
 #include "RackMotor.h"
 
-template <typename TBody, typename TEnergy = config::agent::DefaultEnergy>
+// #################### FORWARD DECLARATIONS ######################
+class PodHolder;
+class Body;
+// ################################################################
+
+template <typename TEnergy = config::agent::DefaultEnergy>
 class RackMotorModule
 {
 public:
-    using Body = TBody;
     using Energy = TEnergy;
     using IDepleting = ::IDepleting<Energy>;
-    using RackMotor = ::RackMotor<Body, Energy>;
-    using PodHolder = ::PodHolder<typename Body::Environment>;
+    using RackMotor = ::RackMotor<Energy>;
 
 public:
     explicit RackMotorModule(Body &body, IDepleting &energySource, PodHolder &podHolder)

@@ -1,6 +1,7 @@
 #include "WarehouseFilePersistence.h"
 #include "ChargingStationLoader.h"
 #include "DeliveryStationLoader.h"
+#include "Pod.h"
 #include "PodDockLoader.h"
 #include "Point.h"
 #include "RobotLoader.h"
@@ -95,7 +96,7 @@ State *WarehouseFilePersistence::loadFromJsonObject(QJsonObject json)
         std::shared_ptr<ObservableNavEnvironment> env = std::make_shared<ObservableNavEnvironment>(rowSize, colSize, 3);
         std::vector<std::shared_ptr<ChargingStation<>>> chStations;
         std::vector<std::shared_ptr<DeliveryStation>> deliveryStations;
-        std::vector<std::shared_ptr<PodDock<>>> podDocks;
+        std::vector<std::shared_ptr<PodDock>> podDocks;
         std::vector<std::shared_ptr<DeliveryRobot<>>> robots;
 
         loadChargingStation(chStations, env, WarehouseLayoutData);
@@ -152,7 +153,7 @@ void WarehouseFilePersistence::loadDeliveryStation(std::vector<std::shared_ptr<D
     }
 }
 
-void WarehouseFilePersistence::loadPodDock(std::vector<std::shared_ptr<PodDock<>>> &podDocks,
+void WarehouseFilePersistence::loadPodDock(std::vector<std::shared_ptr<PodDock>> &podDocks,
                                            std::shared_ptr<ObservableNavEnvironment> &env,
                                            QJsonObject &warehouseLayoutData)
 {
@@ -163,7 +164,7 @@ void WarehouseFilePersistence::loadPodDock(std::vector<std::shared_ptr<PodDock<>
 
         for (int i = 0; i < PodDocksJSon.size(); ++i)
         {
-            std::shared_ptr<PodDock<>> podDock = PodDockLoader::load(PodDocksJSon[i].toObject());
+            std::shared_ptr<PodDock> podDock = PodDockLoader::load(PodDocksJSon[i].toObject());
 
             env->getBuffer()[env->getCoordAsIndex(podDock->getPosition())] = podDock;
             podDock->addAssociatedPod(env);

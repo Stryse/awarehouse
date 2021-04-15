@@ -15,14 +15,6 @@
 #include <queue>
 #include <stdexcept>
 
-// ####################### FORWARD DECLARATIONS ############################ //
-template <typename Body, typename Energy>
-class IMoveMechanism;
-template <typename Environment>
-class PodHolder;
-class NetworkAdapter;
-// ######################################################################### //
-
 /**********************************************************************************
  * @brief Micro Controller Unit of a DeliveryRobot.
  * This module is responsible for the DeliveryRobot's decision making.
@@ -41,12 +33,11 @@ class DRobotMCU : public AMicroController,
 public:
     using Body = TBody;
     using Energy = TEnergy;
-    using IMoveMechanism = ::IMoveMechanism<Body, Energy>;
+    using IMoveMechanism = ::IMoveMechanism<Energy>;
     using IDepleting = ::IDepleting<Energy>;
     using Environment = TEnvironment;
-    using RackMotor = ::RackMotor<Body, Energy>;
-    using PodHolder = ::PodHolder<Environment>;
-    using MotorAction = ::MotorAction<Body, Energy>;
+    using RackMotor = ::RackMotor<Energy>;
+    using MotorAction = ::MotorAction<Energy>;
 
     /*******************************************************
      * @brief Delivery Robot makes decisions based on status

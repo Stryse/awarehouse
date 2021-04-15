@@ -2,8 +2,17 @@
 #include "IVolumeOccupant.h"
 
 Tile::Tile(const Point &pos) : position(pos), occupant(nullptr)
-{
-}
+    {}
+
+Tile::Tile(const Tile  &other)
+    : position(other.position),
+      occupant(other.occupant)
+    {}
+
+Tile::Tile(      Tile  &&other)
+    : position(std::move(other.position)),
+      occupant(std::move(other.occupant))
+    {}
 
 Tile::~Tile() = default;
 

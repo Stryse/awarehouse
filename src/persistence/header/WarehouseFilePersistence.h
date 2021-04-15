@@ -29,7 +29,7 @@ private:
                              std::shared_ptr<ObservableNavEnvironment> &env,
                              QJsonObject &warehouseLayoutData);
 
-    void loadPodDock(std::vector<std::shared_ptr<PodDock<>>> &podDocks,
+    void loadPodDock(std::vector<std::shared_ptr<PodDock>> &podDocks,
                      std::shared_ptr<ObservableNavEnvironment> &env,
                      QJsonObject &warehouseLayoutData);
 

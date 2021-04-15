@@ -20,15 +20,14 @@ template <typename TEnvironment = ObservableNavEnvironment,
           typename TEnergy = config::agent::DefaultEnergy>
 
 class DeliveryRobot : public EnergyModule<TEnergy>,
-                      public MovementModule<Body<TEnvironment>, TEnergy>,
+                      public MovementModule<TEnergy>,
                       public NetworkModule,
-                      public PodHolderModule<TEnvironment>,
-                      public RackMotorModule<Body<TEnvironment>, TEnergy>,
+                      public PodHolderModule,
+                      public RackMotorModule<TEnergy>,
                       public Agent<TEnvironment>
 {
 public:
     using Environment = TEnvironment;
-    using Body = ::Body<Environment>;
     using Energy = TEnergy;
     using IDepleting = ::IDepleting<Energy>;
     using Point = typename Body::Point;
@@ -40,20 +39,20 @@ public:
     explicit DeliveryRobot(const std::shared_ptr<Environment> &env, const Point &position, const DirectionVector &orientation)
         : EnergyModule<Energy>(std::make_unique<Battery<Energy>>(100)),
 
-          MovementModule<Body, Energy>(getNewRobotMovement(getNewRobotBody(position, orientation, env),
-                                                           *EnergyModule<Energy>::getEnergySource())),
+          MovementModule<Energy>(getNewRobotMovement(getNewRobotBody(position, orientation, env),
+                                                     *EnergyModule<Energy>::getEnergySource())),
 
-          RackMotorModule<Body, Energy>(*(*MovementModule<Body, Energy>::getMoveMechanism()).getBody(),
-                                        *EnergyModule<Energy>::getEnergySource(),
-                                        PodHolderModule<Environment>::getPodHolder()),
+          RackMotorModule<Energy>(*(*MovementModule<Energy>::getMoveMechanism()).getBody(),
+                                  *EnergyModule<Energy>::getEnergySource(),
+                                  PodHolderModule::getPodHolder()),
 
           Agent<Environment>("DELIVERY_ROBOT",
                              env,
-                             MovementModule<Body, Energy>::getMoveMechanism()->getBody(),
-                             getNewRobotMCU(*MovementModule<Body, Energy>::getMoveMechanism(),
+                             MovementModule<Energy>::getMoveMechanism()->getBody(),
+                             getNewRobotMCU(*MovementModule<Energy>::getMoveMechanism(),
                                             NetworkModule::getNetworkAdapter(),
-                                            RackMotorModule<Body, Energy>::getRackMotor(),
-                                            PodHolderModule<TEnvironment>::getPodHolder(),
+                                            RackMotorModule<Energy>::getRackMotor(),
+                                            PodHolderModule::getPodHolder(),
                                             *EnergyModule<Energy>::getEnergySource(),
                                             *env))
     {
@@ -77,10 +76,10 @@ private:
     /************************************************************************
      * @brief Returns a new Robot Micro Controller Unit
      ************************************************************************/
-    static std::unique_ptr<DRobotMCU> getNewRobotMCU(IMoveMechanism<Body, Energy> &moveMechanism,
+    static std::unique_ptr<DRobotMCU> getNewRobotMCU(IMoveMechanism<Energy> &moveMechanism,
                                                      NetworkAdapter &networkAdapter,
-                                                     RackMotor<Body, Energy> &rackMotor,
-                                                     PodHolder<Environment> &podHolder,
+                                                     RackMotor<Energy> &rackMotor,
+                                                     PodHolder &podHolder,
                                                      IDepleting &energySource,
                                                      Environment &env)
     {
@@ -90,10 +89,10 @@ private:
     /************************************************************************
      * @brief Returns a new Robot Movement Mechanism
      ************************************************************************/
-    static std::unique_ptr<RobotMoveMechanism<Body, Energy>> getNewRobotMovement(
+    static std::unique_ptr<RobotMoveMechanism<Energy>> getNewRobotMovement(
         const std::shared_ptr<Body> &body, IDepleting &resource)
     {
-        return std::make_unique<RobotMoveMechanism<Body, Energy>>(body, resource);
+        return std::make_unique<RobotMoveMechanism<Energy>>(body, resource);
     }
 };
 

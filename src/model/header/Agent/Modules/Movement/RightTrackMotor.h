@@ -12,14 +12,11 @@
  * need to use floating point transformations, but integers.
  *
  *******************************************************/
-template <typename TBody>
-class RightTrackMotor : public AMotor<TBody>
+class RightTrackMotor : public AMotor
 {
 public:
-    using Body = TBody;
     using Pose = typename Body::Pose;
-    using AMotor = ::AMotor<Body>;
-    using MotorDirection = typename AMotor::MotorDirection;
+    using MotorDirection = AMotor::MotorDirection;
     using DirectionVector = typename Body::DirectionVector;
 
 public:
@@ -60,6 +57,5 @@ private:
     void RotateCounterClockWise(Pose &pose) { rotation.transform(pose.getOrientation()); }
 };
 
-template <typename TBody>
-Matrix<> RightTrackMotor<TBody>::rotation = Matrix<>::ROTATE_Z_90_COUNTERCLOCKWISE();
+Matrix<> RightTrackMotor::rotation = Matrix<>::ROTATE_Z_90_COUNTERCLOCKWISE();
 #endif /* RIGHT_TRACK_MOTOR__H */

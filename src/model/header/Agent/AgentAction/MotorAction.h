@@ -19,18 +19,14 @@
  * provided direction with a sum of energy and time cost.
  *
  **********************************************************************************/
-template <typename TBody, typename TEnergy = config::agent::DefaultEnergy>
+template <typename TEnergy = config::agent::DefaultEnergy>
 class MotorAction : public DepletingAction<TEnergy>
 {
 public:
-    //Body related
-    using Body = TBody;
-    using Motor = AMotor<Body>;
-
     //Energy related
     using Energy = TEnergy;
     using IDepleting = ::IDepleting<Energy>;
-    using MotorDrive = ::MotorDrive<Motor, Energy>;
+    using MotorDrive = ::MotorDrive<Energy>;
 
 public:
     MotorAction(std::unique_ptr<MotorDrive> &&motorDrive, IDepleting &resource,
@@ -49,7 +45,7 @@ protected:
         if (event_)
             (*event_)(motorDrive->getBody());
     }
-    
+
     virtual bool canExecute() const override { return true; }
 
 private:

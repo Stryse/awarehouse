@@ -2,14 +2,13 @@
 #define POD_DOCK__H
 
 #include "IContaining.h"
-#include "LibConfig.h"
 #include "PodHolder.h"
 #include "Tile.h"
 #include <memory>
 #include <stdexcept>
 
 // ######################### Forward Declarations ##########################
-template <typename TItemType, typename TEnvironment>
+template <typename TItemType>
 class Pod;
 class OrderModel;
 class ObservableNavEnvironment;
@@ -22,60 +21,45 @@ class ObservableNavEnvironment;
  * @code void addAssociatedPod(std::shared_ptr<Environment> &env) @endcode
  * and it automatically sets this Dock as the freshly created pod's parent.
  ***********************************************************************************/
-template <typename TEnvironment = ObservableNavEnvironment>
 class PodDock : public Tile
 {
 public:
-    using Environment = TEnvironment;
     using Point = Tile::Point;
     using OccupantType = Tile::OccupantType;
-    using Pod_Order = Pod<OrderModel, Environment>;
+    using Pod_Order = Pod<OrderModel>;
     using OwnedPod = std::unique_ptr<Pod_Order>;
 
 public:
-    explicit PodDock(const Point &pos)
-        : Tile(pos)
-    {
-    }
-
-    virtual ~PodDock() {}
+    explicit PodDock(const Point &pos);
+    explicit PodDock(PodDock &&other);
+    explicit PodDock(const PodDock &other) = delete;
+    virtual ~PodDock();
+    PodDock &operator=(const PodDock &other) = delete;
 
 public:
-    // IAgentSignalHandler Implementation
+    // ################## IAgentSignalHandler Implementation ########################
     /********************************************************************************
      * @brief The PodDock releases its child pod and gives it to another pod carrier.
      ********************************************************************************/
-    virtual void receive(IContaining<OwnedPod> &carrier, const PickupPodSignal &pickupSignal) override
-    {
-        if (podHolder.getChildPod() != nullptr)
-            carrier.push(std::move(getPodHolder().getChildPod()));
-    }
+    virtual void receive(IContaining<OwnedPod> &carrier,
+                         const PickupPodSignal &pickupSignal) override;
 
-    void receive(OwnedPod &pod, const PutDownPodSignal &putdownSignal) override
-    {
-        if (pod && &(pod->getParentDock()) == this)
-            podHolder.push(std::move(pod));
-    }
+    virtual void receive(OwnedPod &pod, const PutDownPodSignal &putdownSignal) override;
 
-    // Functionality
-    /*************************************************************
+    // ############################## Functionality ##################################
+    /*********************************************************************************
      * @brief Adds an associated pod and places it on top of this
      * podDock in the environment in which the dock resides.
-     *************************************************************/
-    void addAssociatedPod(std::shared_ptr<Environment> &env)
-    {
-        if (podHolder.getChildPod() == nullptr)
-            podHolder.getChildPod() = std::make_unique<Pod_Order>(this->getPosition().moved(DirectionVector<>(0, 0, 1)), env, *this);
-        else
-            throw std::runtime_error("Dock already has associated pod");
-    }
+     *********************************************************************************/
+    void addAssociatedPod(std::shared_ptr<ObservableNavEnvironment> &env);
 
 public:
-    const PodHolder<Environment> &getPodHolder() const { return podHolder; }
-    PodHolder<Environment> &getPodHolder() { return podHolder; }
+    // ################################# Getter ######################################/
+    const PodHolder &getPodHolder() const;
+    PodHolder &getPodHolder();
 
 private:
-    PodHolder<Environment> podHolder;
+    PodHolder podHolder;
 };
 
 #endif

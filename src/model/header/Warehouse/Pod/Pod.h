@@ -5,6 +5,8 @@
 #include "BodyShapeFactory.h"
 #include "IContaining.h"
 #include "LibConfig.h"
+#include "ObservableEnvironment.h"
+#include "Tile.h"
 #include "boost/signals2.hpp"
 #include <functional>
 #include <memory>
@@ -12,8 +14,8 @@
 #include <stdexcept>
 
 // ################### Forward Declarations ######################
-template <typename TEnvironment>
 class PodDock;
+class Body;
 class ObservableNavEnvironment;
 // ###############################################################
 
@@ -38,17 +40,12 @@ struct pointer_element_comparator
  * @tparam TEnvironment The type of environment in which the Pod's body
  * resides.
  **************************************************************************/
-template <typename TItemType,
-          typename TEnvironment = ObservableNavEnvironment>
-
+template <typename TItemType>
 class Pod : public IContaining<std::unique_ptr<TItemType>>
 {
 public:
-    using Environment = TEnvironment;
-    using Body = ::Body<Environment>;
-    using Point = typename Body::Point;
-    using DirectionVector = typename Body::DirectionVector;
-    using PodDock = ::PodDock<Environment>;
+    using Point = Body::Point;
+    using DirectionVector = Body::DirectionVector;
     using ItemType = std::unique_ptr<TItemType>;
 
 public:
@@ -56,7 +53,7 @@ public:
 
 public:
     Pod(const Point &position,
-        const std::shared_ptr<Environment> &environment,
+        const std::shared_ptr<ObservableNavEnvironment> &environment,
         const PodDock &parentDock)
         : body(std::make_unique<Body>(position, DirectionVector::ABOVE(), environment, BodyShapeFactory<Point>::onlyOrigin())), // TODO make Two blocks high again*/
           parentDock(parentDock)
@@ -74,7 +71,7 @@ public:
     {
     }
 
-    virtual ~Pod(){}
+    virtual ~Pod() {}
 
 public:
     // ##################### IContaining Interface implementation ##########################

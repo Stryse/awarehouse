@@ -6,20 +6,20 @@
 //Presenter
 #include "MapItemPresenter.h"
 
-template <typename E> class PodDock;
-                      class ObservableNavEnvironment;
-                      class Tile;
+class PodDock;
+class ObservableNavEnvironment;
+class Tile;
 
 class PodDockPresenter : public MapItemPresenter
 {
     Q_OBJECT
 
 public:
-    explicit PodDockPresenter(const PodDock<ObservableNavEnvironment>* model,
-                                                                    QObject* parent = nullptr);
+    explicit PodDockPresenter(const PodDock* model,
+                                    QObject* parent = nullptr);
 private:
     //Model
-    const  PodDock<ObservableNavEnvironment>* model;
+    const  PodDock* model;
 
     //Static
     static QString m_static_imagePath;

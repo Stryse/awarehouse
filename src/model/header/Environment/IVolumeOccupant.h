@@ -16,7 +16,7 @@ class INavigationVolume;
  * 
  * @tparam TVolumeType Type of volume the occupant can occupy.
  *****************************************************************************/
-template <typename TVolumeType = config::navigation::DefaultVolumeType>
+template <typename TVolumeType>
 class IVolumeOccupant
 {
 public:

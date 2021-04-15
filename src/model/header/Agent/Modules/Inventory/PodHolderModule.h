@@ -3,14 +3,8 @@
 
 #include "PodHolder.h"
 
-class ObservableNavEnvironment;
-template <typename TEnvironment = ObservableNavEnvironment>
 class PodHolderModule
 {
-public:
-    using Environment = TEnvironment;
-    using PodHolder = ::PodHolder<Environment>;
-
 public:
     // Getter
     const PodHolder &getPodHolder() const { return podHolder; }

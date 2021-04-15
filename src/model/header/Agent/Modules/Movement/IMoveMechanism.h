@@ -1,6 +1,7 @@
 #ifndef I_MOVE_MECHANISM__H
 #define I_MOVE_MECHANISM__H
 
+#include "Body.h"
 #include "DirectionVector.h"
 #include "LibConfig.h"
 #include "boost/signals2.hpp"
@@ -10,9 +11,8 @@
 #include <vector>
 
 // ########################## Forward Declarations ########################
-template <typename TBody>
 class AMotor;
-template <typename TBody, typename TEnergy>
+template <typename TEnergy>
 class MotorAction;
 template <class TEnergy>
 class IDepleting;
@@ -28,19 +28,17 @@ class IDepleting;
  * It also needs to provide a sequence of motor actions which lead to the accessible
  * directions with the associated costs.
  ***********************************************************************************/
-template <typename TBody, typename TEnergy = config::agent::DefaultEnergy>
+template <typename TEnergy = config::agent::DefaultEnergy>
 class IMoveMechanism
 {
 public:
     // ######################### Body Related #############################
-    using Body = TBody;
-    using DirectionVector = typename Body::DirectionVector;
-    using AMotor = ::AMotor<Body>;
+    using DirectionVector = Body::DirectionVector;
 
     //######################### Energy related ############################
     using Energy = TEnergy;
     using IDepleting = ::IDepleting<Energy>;
-    using MotorAction = ::MotorAction<Body, Energy>;
+    using MotorAction = ::MotorAction<Energy>;
     // ####################################################################
 
 protected:

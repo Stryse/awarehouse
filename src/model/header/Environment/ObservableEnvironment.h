@@ -8,6 +8,11 @@
 #include <memory>
 #include <vector>
 
+
+// ####################### FORWARD DECLARATIONS ######################## //
+class Tile;
+// ##################################################################### //
+
 /*******************************************************************
  * @brief A 3D navigateable and observable environment.
  * Volume units can be queried and occupied, also it can provide

@@ -11,13 +11,10 @@
  * need to use floating point transformations, but integers.
  *
  *******************************************************/
-template <typename TBody>
-class LeftTrackMotor : public AMotor<TBody>
+class LeftTrackMotor : public AMotor
 {
 public:
-    using Body = TBody;
     using Pose = typename Body::Pose;
-    using AMotor = ::AMotor<Body>;
     using MotorDirection = typename AMotor::MotorDirection;
     using DirectionVector = typename Body::DirectionVector;
 
@@ -53,6 +50,5 @@ private:
     void RotateClockWise(Pose &pose) { rotation.transform(pose.getOrientation()); }
 };
 
-template <typename TBody>
-Matrix<> LeftTrackMotor<TBody>::rotation = Matrix<>::ROTATE_Z_90_CLOCKWISE();
+Matrix<> LeftTrackMotor::rotation = Matrix<>::ROTATE_Z_90_CLOCKWISE();
 #endif /* LEFT_TRACK_MOTOR__H */

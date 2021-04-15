@@ -68,13 +68,13 @@ TEST_F(ObservableNavEnvironmentTest, chargingStationChargeTest)
 
 TEST_F(ObservableNavEnvironmentTest, PodTransfer)
 {
-    std::vector<std::shared_ptr<PodDock<>>> docks;
+    std::vector<std::shared_ptr<PodDock>> docks;
     std::shared_ptr<ObservableNavEnvironment> env = std::make_shared<ObservableNavEnvironment>(3, 3, 3);
     for (int x = 0; x < 3; ++x)
         for (int y = 0; y < 3; ++y)
             for (int z = 0; z < 3; ++z)
             {
-                docks.push_back(std::make_shared<PodDock<>>(Point<>(x, y, z)));
+                docks.push_back(std::make_shared<PodDock>(Point<>(x, y, z)));
                 env->getBuffer()[env->getCoordAsIndex(x, y, z)] = docks[docks.size() - 1];
             }
     docks[1]->addAssociatedPod(env);
