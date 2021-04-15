@@ -4,6 +4,19 @@
 #include "DirectionVector.h"
 #include "NetworkMessageHandler.h"
 
+// ####################### FORWARD DECLARATIONS ######################### //
+template <typename TEnergy>
+class IDepleting;
+
+template <typename TBody, typename TEnergy>
+class IMoveMechanism;
+
+template <typename TVolumeType>
+class ObservableNavEnvironment;
+
+class Tile;
+// ###################################################################### //
+
 /***************************************************************
  * @brief Message that can be transferred in a network.
  * The massage can be dispatched to an appropriate handler
@@ -71,7 +84,7 @@ class ChargeAgentMessage : public NetworkMessage<ChargeAgentMessage>
 {
 public:
     explicit ChargeAgentMessage(int senderAddress)
-        : NetworkMessage(senderAddress) {}
+        : NetworkMessage<ChargeAgentMessage>(senderAddress) {}
 
     virtual ~ChargeAgentMessage() = default;
 };
@@ -83,7 +96,7 @@ class PickupPodMessage : public NetworkMessage<PickupPodMessage>
 {
 public:
     explicit PickupPodMessage(int senderAddress)
-        : NetworkMessage(senderAddress) {}
+        : NetworkMessage<PickupPodMessage>(senderAddress) {}
 
     virtual ~PickupPodMessage() = default;
 };
@@ -95,7 +108,7 @@ class PutDownPodMessage : public NetworkMessage<PutDownPodMessage>
 {
 public:
     explicit PutDownPodMessage(int senderAddress)
-        : NetworkMessage(senderAddress) {}
+        : NetworkMessage<PutDownPodMessage>(senderAddress) {}
 
     virtual ~PutDownPodMessage() = default;
 };
@@ -107,9 +120,28 @@ class PutDownOrderMessage : public NetworkMessage<PutDownOrderMessage>
 {
 public:
     explicit PutDownOrderMessage(int senderAddress)
-        : NetworkMessage(senderAddress) {}
+        : NetworkMessage<PutDownOrderMessage>(senderAddress) {}
 
     virtual ~PutDownOrderMessage() = default;
+};
+
+/**********************************************************************
+ * @brief Containing the neccessary data to Agent Control
+ **********************************************************************/
+struct AgentControlData
+{
+    using Body = ::Body<ObservableNavEnvironment<Tile>>;
+    using Energy = int;
+    using IDepleting = ::IDepleting<Energy>;
+    using IMoveMechanism = ::IMoveMechanism<Body, Energy>;
+
+    AgentControlData(const IDepleting &energySource,
+                     const IMoveMechanism &moveMechanism)
+        : energySource(energySource),
+          moveMechanism(moveMechanism) {}
+
+    const IDepleting &energySource;
+    const IMoveMechanism &moveMechanism;
 };
 
 /*********************************************************************
@@ -119,10 +151,14 @@ public:
 class AgentControlRequestMessage : public NetworkMessage<AgentControlRequestMessage>
 {
 public:
-    explicit AgentControlRequestMessage(int senderAddress)
-        : NetworkMessage(senderAddress) {}
-
+    explicit AgentControlRequestMessage(AgentControlData controlData, int senderAddress)
+        : NetworkMessage<AgentControlRequestMessage>(senderAddress),
+          controlData(controlData)
+    {
+    }
     virtual ~AgentControlRequestMessage() = default;
+
+    AgentControlData controlData;
 };
 
 /*********************************************************************
@@ -133,7 +169,7 @@ class AgentControlGrantedMessage : public NetworkMessage<AgentControlGrantedMess
 {
 public:
     explicit AgentControlGrantedMessage(int senderAddress)
-        : NetworkMessage(senderAddress) {}
+        : NetworkMessage<AgentControlGrantedMessage>(senderAddress) {}
 
     virtual ~AgentControlGrantedMessage() = default;
 };

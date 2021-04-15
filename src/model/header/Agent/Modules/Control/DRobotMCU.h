@@ -9,6 +9,7 @@
 #include "LibConfig.h"
 #include "MotorAction.h"
 #include "NetworkAdapter.h"
+#include "NetworkMessage.h"
 #include "NetworkMessageHandler.h"
 #include "RackMotor.h"
 #include <queue>
@@ -192,7 +193,11 @@ private:
      *************************************************************************/
     void requestControl()
     {
-        networkAdapter.send(std::make_unique<AgentControlRequestMessage>(networkAdapter.getAddress()), 0x1);
+        networkAdapter.send(std::make_unique<AgentControlRequestMessage>(
+                                AgentControlData(energySource,
+                                                 moveMechanism),
+                                networkAdapter.getAddress()),
+                            0x1);
     }
 
     /*******************************************************************
@@ -267,7 +272,6 @@ private:
 
 private:
     Status status;
-
     // ############ Modules ################ //
     IMoveMechanism &moveMechanism;
     NetworkAdapter &networkAdapter;
