@@ -133,6 +133,9 @@ TEST_F(AgentTest, Networked_Movement)
     EXPECT_EQ(robot->getNetworkAdapter().getAddress(), 100);
     EXPECT_TRUE(robot->getNetworkAdapter().isConnected());
 
+    // Send AgentControlGranted message
+    adapter.send(std::make_unique<AgentControlGrantedMessage>(adapter.getAddress()), 100);
+    robot->tick(0);
     // Send Movement message
     adapter.send(std::make_unique<MoveAgentMessage>(DirectionVector<>::LEFT(), adapter.getAddress()), 100);
 
@@ -168,6 +171,8 @@ TEST_F(AgentTest, Networked_PodManagement)
     EXPECT_EQ(robot->getNetworkAdapter().getAddress(), 100);
     EXPECT_TRUE(robot->getNetworkAdapter().isConnected());
 
+    // Send AgentControlGranted message
+    adapter.send(std::make_unique<AgentControlGrantedMessage>(adapter.getAddress()), 100);
     // Send Pickup Message
     adapter.send(std::make_unique<PickupPodMessage>(adapter.getAddress()), 100);
 

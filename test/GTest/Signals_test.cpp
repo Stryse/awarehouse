@@ -132,6 +132,9 @@ TEST_F(NotifyTest, AgentMovement_With_PodMovement)
     // Connect Robot
     robot->getNetworkAdapter().connect(network);
 
+    // Send AgentControlGranted message
+    adapter.send(std::make_unique<AgentControlGrantedMessage>(adapter.getAddress()), 100);
+    robot->tick(0);
     // Send Pickup Message
     adapter.send(std::make_unique<PickupPodMessage>(adapter.getAddress()), 100);
 

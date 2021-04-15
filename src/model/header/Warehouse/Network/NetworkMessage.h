@@ -113,15 +113,28 @@ public:
 };
 
 /*********************************************************************
- * @brief Message from an agent signalling it has finished charging.
+ * @brief Message from an agent requesting control from an Agent
+ * controlling entity.
  *********************************************************************/
-class RechargedMessage : public NetworkMessage<RechargedMessage>
+class AgentControlRequestMessage : public NetworkMessage<AgentControlRequestMessage>
 {
 public:
-    explicit RechargedMessage(int senderAddress)
+    explicit AgentControlRequestMessage(int senderAddress)
         : NetworkMessage(senderAddress) {}
 
-    virtual ~RechargedMessage() = default;
+    virtual ~AgentControlRequestMessage() = default;
 };
 
+/*********************************************************************
+ * @brief Message from an agent controlling entity signalling
+ * it has taken control of the Agent
+ *********************************************************************/
+class AgentControlGrantedMessage : public NetworkMessage<AgentControlGrantedMessage>
+{
+public:
+    explicit AgentControlGrantedMessage(int senderAddress)
+        : NetworkMessage(senderAddress) {}
+
+    virtual ~AgentControlGrantedMessage() = default;
+};
 #endif /* NETWORK_MESSAGE__H */
