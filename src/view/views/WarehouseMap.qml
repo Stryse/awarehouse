@@ -143,21 +143,14 @@ Item {
 
             source: model.image
 
-            function rotateActor() {
-                if (rotationAngle != null)
-                    rotationAngle = (rotationAngle + 90) % 360
-            }
+            MouseArea {
+                id: chargingStationMouseArea
 
-            function resetRotation() {
-                if (rotationAngle != null)
-                    rotationAngle = 0
-            }
+                anchors.fill: parent
 
-            function resetTile() {
-                if (type != null) {
-                    type = TileType.ROAD
-                    dropArea.resetRotation()
-                }
+                acceptedButtons: Qt.MiddleButton
+
+                onClicked: EditorPresenter.removeTile(model.row, model.column)
             }
         }
     }
@@ -175,6 +168,22 @@ Item {
             height: root.cellSize
 
             source: model.image
+
+            MouseArea {
+                id: actorMouseArea
+
+                anchors.fill: parent
+
+                acceptedButtons: Qt.MiddleButton | Qt.RightButton
+
+                onClicked: {
+                    if (mouse.button === Qt.RightButton) {
+                        console.log("Opened Pod")
+                    }
+                    else if (mouse.button === Qt.MiddleButton)
+                        EditorPresenter.removeTile(model.row, model.column)
+                }
+            }
         }
     }
 
@@ -191,6 +200,16 @@ Item {
             height: root.cellSize
 
             source: model.image
+
+            MouseArea {
+                id: actorMouseArea
+
+                anchors.fill: parent
+
+                acceptedButtons: Qt.MiddleButton
+
+                onClicked: EditorPresenter.removeTile(model.row, model.column)
+            }
         }
     }
 

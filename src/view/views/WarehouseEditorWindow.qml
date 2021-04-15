@@ -71,6 +71,9 @@ Item {
             WarehouseSettingsTab {
                 id: warehouseSettings
 
+//                rowCount:    EditorPresenter.layout.rows
+//                columnCount: EditorPresenter.layout.columns
+
                 SplitView.preferredHeight: parent.height * verticalSplit.tabRatio
                 SplitView.minimumHeight:   parent.height * verticalSplit.tabRatio
 

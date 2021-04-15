@@ -57,7 +57,7 @@ WarehouseLayoutPresenter::WarehouseLayoutPresenter(QObject* parent)
 
 //Getter
 int  WarehouseLayoutPresenter::index(int row,
-                                     int col)  { return row * m_rows + col; }
+                                     int col)  { return row * m_rows + col;    }
 
 int  WarehouseLayoutPresenter::rows()    const { return m_rows;                }
 int  WarehouseLayoutPresenter::columns() const { return m_columns;             }

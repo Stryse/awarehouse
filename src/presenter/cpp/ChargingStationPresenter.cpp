@@ -12,9 +12,9 @@ ChargingStationPresenter::ChargingStationPresenter(const ChargingStation<int>* m
     , model(model)
 {}
 
-ChargingStationPresenter::ChargingStationPresenter(QObject* parent)
-    : MapItemPresenter(model->getPosition().getPosY(),
-                       model->getPosition().getPosX(),
+ChargingStationPresenter::ChargingStationPresenter(int row, int column, QObject* parent)
+    : MapItemPresenter(row,
+                       column,
                        ChargingStationPresenter::m_static_imagePath,
                        parent)
 {}

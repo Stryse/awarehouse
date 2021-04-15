@@ -12,9 +12,9 @@ DeliveryStationPresenter::DeliveryStationPresenter(const DeliveryStation* model,
     , model(model)
 {}
 
-DeliveryStationPresenter::DeliveryStationPresenter(QObject* parent)
-    : MapItemPresenter(model->getPosition().getPosY(),
-                       model->getPosition().getPosX(),
+DeliveryStationPresenter::DeliveryStationPresenter(int row, int column, QObject* parent)
+    : MapItemPresenter(row,
+                       column,
                        DeliveryStationPresenter::m_static_imagePath,
                        parent)
 {}

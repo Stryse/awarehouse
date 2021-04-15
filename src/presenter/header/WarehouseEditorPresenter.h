@@ -27,13 +27,20 @@ public:
     };
     Q_ENUM(TileType);
 
+public:
+    //Getter
+    WarehouseLayoutPresenter* layout() const;
+
+private:
+    void updateRowsInTable(int newRows);
+    void updateColumnsInTable(int newColumns);
+
 public slots:
     void setTile(int row, int column, TileType type);
     void removeTile(int row, int column);
 
 public:
-    //Getter
-    WarehouseLayoutPresenter* layout() const;
+    static TileType m_baseTile;
 
 private:
     WarehouseLayoutPresenter*  m_layout;

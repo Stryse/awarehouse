@@ -6,8 +6,8 @@ import QtQuick.Controls.Material
 Item {
     id: root
 
-    readonly property alias rowCount:    rowsSpinBox.value
-    readonly property alias columnCount: columnsSpinBox.value
+    property alias rowCount:    rowsSpinBox.value
+    property alias columnCount: columnsSpinBox.value
 
     property alias titleBarHeight: titleBar.height
     property alias borderWidth:    border.width
@@ -103,9 +103,15 @@ Item {
 
                     from:  3
                     to:    100
-                    value: 10
+                    value: EditorPresenter.layout.rows
 
                     editable: true
+
+                    Binding {
+                        target:EditorPresenter.layout
+                        property: "rows"
+                        value: rowsSpinBox.value
+                    }
                 }
                 Label {
                     id: columnsLabel
@@ -122,9 +128,15 @@ Item {
 
                     from:  3
                     to:    100
-                    value: 10
+                    value: EditorPresenter.layout.columns
 
                     editable: true
+
+                    Binding {
+                        target:EditorPresenter.layout
+                        property: "columns"
+                        value: columnsSpinBox.value
+                    }
                 }
             }
         }

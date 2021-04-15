@@ -17,7 +17,7 @@ class PodDockPresenter : public MapItemPresenter
 public:
     explicit PodDockPresenter(const PodDock<ObservableNavEnvironment<Tile>>* model,
                                                                     QObject* parent = nullptr);
-    explicit PodDockPresenter(QObject* parent);
+    explicit PodDockPresenter(int row, int column, QObject* parent);
 
 private:
     //Model
