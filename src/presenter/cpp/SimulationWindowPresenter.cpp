@@ -18,12 +18,12 @@ SimulationWindowPresenter::SimulationWindowPresenter(QObject* parent)
 }
 
 //Getter
-WarehouseLayoutPresenter* SimulationWindowPresenter::layout() const { return m_layout;           }
+WarehouseLayoutPresenter* SimulationWindowPresenter::layout() const { return m_layout;      }
 bool                      SimulationWindowPresenter::paused() const { return m_manager.getDisplayedWarehouseSimulator()->isAvailable(); }
 
 //Setter
-void SimulationWindowPresenter::setPaused(bool paused)       { m_paused    = paused;
-                                                               emit pausedChanged(); }
+void SimulationWindowPresenter::setPaused(bool paused)              { m_paused    = paused;
+                                                                      emit pausedChanged(); }
 
 void SimulationWindowPresenter::simulationStart()
 {

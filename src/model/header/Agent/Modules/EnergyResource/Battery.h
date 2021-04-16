@@ -2,7 +2,6 @@
 #define BATTERY__H
 
 #include "IDepleting.h"
-#include "boost/signals2.hpp"
 
 class Battery : public IDepleting
 {

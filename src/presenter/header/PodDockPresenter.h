@@ -17,6 +17,10 @@ class PodDockPresenter : public MapItemPresenter
 public:
     explicit PodDockPresenter(const PodDock* model,
                                     QObject* parent = nullptr);
+    explicit PodDockPresenter(int row, int column, QObject* parent);
+
+    bool operator==(const PodDockPresenter& other) const;
+
 private:
     //Model
     const  PodDock* model;

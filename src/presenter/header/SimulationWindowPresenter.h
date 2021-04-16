@@ -57,4 +57,4 @@ private:
     bool m_paused;
 };
 
-#endif
+#endif /* SIMULATION_WINDOW_PRESENTER__H */

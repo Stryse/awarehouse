@@ -3,6 +3,12 @@ import QtQuick.Layouts
 import QtQuick.Controls
 import QtQuick.Controls.Material
 
+import Editor 1.0
+import ActorList           1.0
+import ChargingStationList 1.0
+import PodDockList         1.0
+import DeliveryStationList 1.0
+
 Item {
     id: root
 
@@ -28,51 +34,20 @@ Item {
     Material.background: Material.primary
     Material.elevation:  6
 
-    ListModel {
-        id: tileModel
-    }
-
     Component {
         id: baseComponent
 
-        Rectangle {
-            id: baseRectangle
-
-            Layout.alignment: Qt.AlignCenter
-
-            Layout.preferredWidth:  root.cellSize
-            Layout.preferredHeight: root.cellSize
-
-            color: Material.accent
-        }
-    }
-
-    Component {
-        id: tileComponent
-
-//        Image {
-//            id: tileImg
-
-//            Layout.preferredHeight: root.cellSize
-//            Layout.preferredWidth:  root.cellSize
-
-//            source: imgSource //EDIT
-//        }
         DropArea {
             id: dropArea
 
-            signal tileDropped(string tileType)
+            signal tileDropped(int tileType)
 
-            readonly property int tileRowIdx:    rowIdx
-            readonly property int tileColumnIdx: columnIdx
-
-            property string tileType:     type
-            property int    tileRotation: rotationAngle
-            property color  tileColor:    tileType === "Empty" ? "transparent" : editorRoot.tileList.getTileColor(tileType)
+            readonly property int row: index / root.columns
+            readonly property int col: index % root.columns
 
             onTileDropped: {
-                type = tileType
-                dropArea.resetRotation()
+                console.log(tileType)
+                EditorPresenter.setTile(row, col, tileType)
             }
 
             Layout.alignment: Qt.AlignCenter
@@ -80,8 +55,59 @@ Item {
             Layout.preferredWidth:  root.cellSize
             Layout.preferredHeight: root.cellSize
 
+            Rectangle {
+                id: baseRectangle
+
+                anchors.fill: parent
+
+                color: !dropArea.containsDrag ? Material.accent : Qt.darker(Material.accent, 1.5)
+
+//                MouseArea {
+//                    id: tileMouseArea
+
+//                    anchors.fill: parent
+
+//                    acceptedButtons: Qt.MiddleButton | Qt.RightButton
+
+//                    onClicked: {
+//                        if (mouse.button === Qt.RightButton) {
+//                            if (type === "Robot") {
+//                                dropArea.rotateActor()
+//                                console.log(rotationAngle)
+//                            }
+//                            else if (type === "Pod") {
+//                                console.log("Item list opened")
+//                            }
+//                        }
+//                        else if (mouse.button === Qt.MiddleButton) {
+//                            if (type !== "Empty") {
+//                                dropArea.resetTile()
+//                            }
+//                        }
+//                    }
+//                }
+            }
+        }
+    }
+
+    Component {
+        id: actorComponent
+
+        Image {
+            id: actorImg
+
+            x: model.column * (root.cellSize + root.cellSpacing)
+            y: model.row    * (root.cellSize + root.cellSpacing)
+
+            width:  root.cellSize
+            height: root.cellSize
+
+            source: model.image
+
+            rotation: model.rotation
+
             MouseArea {
-                id: tileMouseArea
+                id: actorMouseArea
 
                 anchors.fill: parent
 
@@ -89,65 +115,207 @@ Item {
 
                 onClicked: {
                     if (mouse.button === Qt.RightButton) {
-                        if (type === "Robot") {
-                            dropArea.rotateActor()
-                            console.log(rotationAngle)
-                        }
-                        else if (type === "Pod") {
-                            console.log("Item list opened")
-                        }
+                        rotateActor()
+                        console.log(model.rotation)
                     }
-                    else if (mouse.button === Qt.MiddleButton) {
-                        if (type !== "Empty") {
-                            dropArea.resetTile()
-                        }
-                    }
+                    else if (mouse.button === Qt.MiddleButton)
+                        EditorPresenter.removeTile(model.row, model.column)
                 }
-            }
 
-            Rectangle {
-                id: tileRectangle
-
-                anchors.fill: parent
-
-                color: dropArea.tileColor
-
-                states: [
-                    State {
-                        when: dropArea.containsDrag && dropArea.tileType !== "Empty"
-                        PropertyChanges {
-                            target: tileRectangle
-                            color:  Qt.darker(dropArea.tileColor, 1.5)
-                        }
-                    },
-                    State {
-                        when: dropArea.containsDrag && dropArea.tileType === "Empty"
-                        PropertyChanges {
-                            target: tileRectangle
-                            color:  Qt.darker(Material.accent, 1.5)
-                        }
-                    }
-                ]
-            }
-
-            function rotateActor() {
-                if (rotationAngle != null)
-                    rotationAngle = (rotationAngle + 90) % 360
-            }
-
-            function resetRotation() {
-                if (rotationAngle != null)
-                    rotationAngle = 0
-            }
-
-            function resetTile() {
-                if (type != null) {
-                    type = "Road"
-                    dropArea.resetRotation()
+                function rotateActor() {
+                    model.rotation = (model.rotation + 90) % 360
                 }
             }
         }
     }
+
+    Component {
+        id: chargingStationComponent
+
+        Image {
+            id: chargingStationImg
+
+            x: model.column * (root.cellSize + root.cellSpacing)
+            y: model.row    * (root.cellSize + root.cellSpacing)
+
+            width:  root.cellSize
+            height: root.cellSize
+
+            source: model.image
+
+            MouseArea {
+                id: chargingStationMouseArea
+
+                anchors.fill: parent
+
+                acceptedButtons: Qt.MiddleButton
+
+                onClicked: EditorPresenter.removeTile(model.row, model.column)
+            }
+        }
+    }
+
+    Component {
+        id: podComponent
+
+        Image {
+            id: podImg
+
+            x: model.column * (root.cellSize + root.cellSpacing)
+            y: model.row    * (root.cellSize + root.cellSpacing)
+
+            width:  root.cellSize
+            height: root.cellSize
+
+            source: model.image
+
+            MouseArea {
+                id: actorMouseArea
+
+                anchors.fill: parent
+
+                acceptedButtons: Qt.MiddleButton | Qt.RightButton
+
+                onClicked: {
+                    if (mouse.button === Qt.RightButton) {
+                        console.log("Opened Pod")
+                    }
+                    else if (mouse.button === Qt.MiddleButton)
+                        EditorPresenter.removeTile(model.row, model.column)
+                }
+            }
+        }
+    }
+
+    Component {
+        id: deliveryStationComponent
+
+        Image {
+            id: deliveryStationImg
+
+            x: model.column * (root.cellSize + root.cellSpacing)
+            y: model.row    * (root.cellSize + root.cellSpacing)
+
+            width:  root.cellSize
+            height: root.cellSize
+
+            source: model.image
+
+            MouseArea {
+                id: actorMouseArea
+
+                anchors.fill: parent
+
+                acceptedButtons: Qt.MiddleButton
+
+                onClicked: EditorPresenter.removeTile(model.row, model.column)
+            }
+        }
+    }
+
+//    Component {
+//        id: tileComponent
+
+////        Image {
+////            id: tileImg
+
+////            Layout.preferredHeight: root.cellSize
+////            Layout.preferredWidth:  root.cellSize
+
+////            source: imgSource //EDIT
+////        }
+//        DropArea {
+//            id: dropArea
+
+//            signal tileDropped(int tileType)
+
+//            readonly property int tileRowIdx:    rowIdx
+//            readonly property int tileColumnIdx: columnIdx
+
+//            property variant tileType:     type
+//            property int     tileRotation: rotationAngle
+//            property color   tileColor:    tileType === TileType.ROAD ? "transparent" : editorRoot.tileList.getTileColor(tileType)
+
+//            onTileDropped: {
+//                type = tileType
+//                dropArea.resetRotation()
+//                console.log(tileType)
+//                EditorPresenter.setTile(rowIdx, columnIdx, tileType)
+//            }
+
+//            Layout.alignment: Qt.AlignCenter
+
+//            Layout.preferredWidth:  root.cellSize
+//            Layout.preferredHeight: root.cellSize
+
+//            MouseArea {
+//                id: tileMouseArea
+
+//                anchors.fill: parent
+
+//                acceptedButtons: Qt.MiddleButton | Qt.RightButton
+
+//                onClicked: {
+////                    if (mouse.button === Qt.RightButton) {
+////                        if (type === "Robot") {
+////                            dropArea.rotateActor()
+////                            console.log(rotationAngle)
+////                        }
+////                        else if (type === "Pod") {
+////                            console.log("Item list opened")
+////                        }
+////                    }
+////                    else if (mouse.button === Qt.MiddleButton) {
+////                        if (type !== "Empty") {
+////                            dropArea.resetTile()
+////                        }
+////                    }
+//                }
+//            }
+
+//            Rectangle {
+//                id: tileRectangle
+
+//                anchors.fill: parent
+
+//                color: dropArea.tileColor
+
+//                states: [
+//                    State {
+//                        when: dropArea.containsDrag && dropArea.tileType !== TileType.ROAD
+//                        PropertyChanges {
+//                            target: tileRectangle
+//                            color:  Qt.darker(dropArea.tileColor, 1.5)
+//                        }
+//                    },
+//                    State {
+//                        when: dropArea.containsDrag && dropArea.tileType === TileType.ROAD
+//                        PropertyChanges {
+//                            target: tileRectangle
+//                            color:  Qt.darker(Material.accent, 1.5)
+//                        }
+//                    }
+//                ]
+//            }
+
+//            function rotateActor() {
+//                if (rotationAngle != null)
+//                    rotationAngle = (rotationAngle + 90) % 360
+//            }
+
+//            function resetRotation() {
+//                if (rotationAngle != null)
+//                    rotationAngle = 0
+//            }
+
+//            function resetTile() {
+//                if (type != null) {
+//                    type = TileType.ROAD
+//                    dropArea.resetRotation()
+//                }
+//            }
+//        }
+//    }
 
     MouseArea {
         id: zoomArea
@@ -210,37 +378,60 @@ Item {
                     delegate: baseComponent
                 }
             }
+            Item {
+                id: actors
 
-            GridLayout {
-                id: tiles
-
-                anchors.centerIn: parent
-
-                rows:    root.rows
-                columns: root.columns
-
-                rowSpacing:    root.cellSpacing
-                columnSpacing: root.cellSpacing
+                anchors.fill: base
 
                 Repeater {
-                    id: tileRepeater
+                    id: actorRepeater
 
-                    model:    tileModel
-                    delegate: tileComponent
-                }
-
-                Component.onCompleted: {
-                    for (var i = 0; i < root.rows; ++i)
-                        addRow()
-                }
-
-                function addRow() {
-                    for (var i = 0; i < root.columns; ++i) {
-                        tileModel.append({ "rowIdx":        i / root.columns,
-                                           "columnIdx":     i % root.columns,
-                                           "type":          "Empty",
-                                           "rotationAngle": 0 })
+                    model: ActorListModel {
+                       actors: EditorPresenter.layout.actors
                     }
+                    delegate: actorComponent
+                }
+            }
+            Item {
+                id: chargingStations
+
+                anchors.fill: base
+
+                Repeater {
+                    id: chargingStationRepeater
+
+                    model: ChargingStationListModel {
+                        chargingStations: EditorPresenter.layout.chargingStations
+                    }
+                    delegate: chargingStationComponent
+                }
+            }
+            Item {
+                id: pods
+
+                anchors.fill: base
+
+                Repeater {
+                    id: podRepeater
+
+                    model: PodDockListModel {
+                        podDocks: EditorPresenter.layout.podDocks
+                    }
+                    delegate: podComponent
+                }
+            }
+            Item {
+                id: deliveryStations
+
+                anchors.fill: base
+
+                Repeater {
+                    id: deliveryStationRepeater
+
+                    model: DeliveryStationListModel {
+                        deliveryStations: EditorPresenter.layout.deliveryStations
+                    }
+                    delegate: deliveryStationComponent
                 }
             }
         }

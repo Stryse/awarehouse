@@ -3,6 +3,10 @@
 //Presenter
 #include "PodDockPresenter.h"
 
+QVector<int> PodDockListModel::m_roles = { RowRole,
+                                           ColumnRole,
+                                           ImageRole };
+
 PodDockListModel::PodDockListModel(QObject* parent)
     : QAbstractListModel(parent)
     , m_podDocks(nullptr)
@@ -17,37 +21,53 @@ int PodDockListModel::rowCount(const QModelIndex& parent) const
 }
 
 QVariant PodDockListModel::data(const QModelIndex& index,
-                                             int role) const
+                                               int role) const
 {
     if (!index.isValid() || m_podDocks == nullptr)
        return QVariant();
 
-    const PodDockPresenter& actor = *m_podDocks->podDocks()->at(index.row());
+    const PodDockPresenter& podDock = *m_podDocks->podDocks()->at(index.row());
 
     switch(role)
     {
         case RowRole:
-            return QVariant(actor.row());
+            return QVariant(podDock.row());
         case ColumnRole:
-            return QVariant(actor.column());
+            return QVariant(podDock.column());
         case ImageRole:
-            return QVariant(actor.imagePath());
+            return QVariant(podDock.imagePath());
     }
 
     return QVariant();
 }
 
 bool PodDockListModel::setData(const QModelIndex& index,
-                             const    QVariant& value,
-                                            int role)
+                               const    QVariant& value,
+                                              int role)
 {
-    if (data(index, role) != value)
+    if (m_podDocks == nullptr)
+        return false;
+
+    PodDockPresenter& podDock = *m_podDocks->podDocks()->at(index.row());
+
+    switch(role)
     {
-        // TODO IMPLEMENT
+        case RowRole:
+            podDock.setRow      (value.toInt());
+            break;
+        case ColumnRole:
+            podDock.setColumn   (value.toInt());
+            break;
+        case ImageRole:
+            podDock.setImagePath(value.toString());
+            break;
+    }
+
+    if (m_podDocks->setPodDockAt(index.row(), podDock))
+    {
         emit dataChanged(index, index, QVector<int>() << role);
         return true;
     }
-
     return false;
 }
 
@@ -63,23 +83,23 @@ QHash<int, QByteArray> PodDockListModel::roleNames() const
 {
     QHash<int, QByteArray> names;
 
-    names[RowRole]      = "row";
-    names[ColumnRole]   = "column";
-    names[ImageRole]    = "image";
+    names[RowRole]    = "row";
+    names[ColumnRole] = "column";
+    names[ImageRole]  = "image";
 
     return names;
 }
 
 PodDockList* PodDockListModel::podDocks() const { return m_podDocks; }
 
-void PodDockListModel::setPodDocks(PodDockList* actors)
+void PodDockListModel::setPodDocks(PodDockList* podDocks)
 {
     beginResetModel();
 
     if (m_podDocks)
         m_podDocks->disconnect(this);
 
-    m_podDocks = actors;
+    m_podDocks = podDocks;
 
     if (m_podDocks)
     {
@@ -102,6 +122,11 @@ void PodDockListModel::setPodDocks(PodDockList* actors)
         connect(m_podDocks, &PodDockList::postItemRemoved,  this, [=]()
         {
             endRemoveRows();
+        });
+
+        connect(m_podDocks, &PodDockList::dataChanged,      this, [=](int index)
+        {
+            emit dataChanged(QAbstractListModel::index(index), QAbstractListModel::index(index), m_roles);
         });
     }
 

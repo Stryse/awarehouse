@@ -30,6 +30,7 @@ class WarehouseLayoutPresenter : public QObject
 public:
     explicit WarehouseLayoutPresenter(const   State* state,
                                             QObject* parent = nullptr);
+    explicit WarehouseLayoutPresenter(QObject* parent = nullptr);
 
 public:
     //Getter
@@ -48,6 +49,12 @@ public:
     PodDockList*         podDocks();
     DeliveryStationList* deliveryStations();
     TaskList*            tasks();
+
+    const ActorList*           actors()           const;
+    const ChargingStationList* chargingStations() const;
+    const PodDockList*         podDocks()         const;
+    const DeliveryStationList* deliveryStations() const;
+    const TaskList*            tasks()            const;
 
 signals:
     void rowsChanged(int rows);

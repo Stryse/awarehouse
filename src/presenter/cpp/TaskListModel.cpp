@@ -3,6 +3,11 @@
 //Presenter
 #include "TaskPresenter.h"
 
+QVector<int> TaskListModel::m_roles = { AssignedRobotNameRole,
+                                        OrdersRole,
+                                        DestinationXRole,
+                                        DestinationYRole };
+
 TaskListModel::TaskListModel(QObject *parent)
     : QAbstractListModel(parent)
     , m_tasks(nullptr)
@@ -42,13 +47,39 @@ bool TaskListModel::setData(const QModelIndex& index,
                             const    QVariant& value,
                                            int role)
 {
-    if (data(index, role) != value)
+    if (m_tasks == nullptr)
+        return false;
+
+    TaskPresenter& task = *m_tasks->tasks()->at(index.row());
+
+    switch(role) {
+        case AssignedRobotNameRole:
+            task.setAssignedRobotName(value.toString());
+            break;
+        case OrdersRole:
+            {
+                QList<QVariant> tempList = value.toList();
+                QVector<int>    orders   = QVector<int>(tempList.size());
+
+                for (int i = 0; i < orders.size(); ++i)
+                    orders[i] = tempList[i].toInt();
+
+                task.setOrders(orders);
+                break;
+            }
+        case DestinationXRole:
+            task.setDestinationX     (value.toInt());
+            break;
+        case DestinationYRole:
+            task.setDestinationY     (value.toInt());
+            break;
+    }
+
+    if (m_tasks->setTaskAt(index.row(), task))
     {
-        // TODO IMPLEMENT
         emit dataChanged(index, index, QVector<int>() << role);
         return true;
     }
-
     return false;
 }
 
@@ -105,6 +136,11 @@ void TaskListModel::setTasks(TaskList* tasks)
         connect(m_tasks, &TaskList::postItemRemoved,  this, [=]()
         {
             endRemoveRows();
+        });
+
+        connect(m_tasks, &TaskList::dataChanged,      this, [=](int index)
+        {
+            emit dataChanged(QAbstractListModel::index(index), QAbstractListModel::index(index), m_roles);
         });
     }
 

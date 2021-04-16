@@ -13,15 +13,18 @@ class ActorPresenter : public MapItemPresenter
 {
     Q_OBJECT
 
-    Q_PROPERTY( QString name     READ name     WRITE setName NOTIFY nameChanged     )
-    Q_PROPERTY( QString action   READ action                 NOTIFY actionChanged   )
-    Q_PROPERTY(     int battery  READ battery                NOTIFY batteryChanged  )
-    Q_PROPERTY(     int rotation READ rotation               NOTIFY rotationChanged )
-    Q_PROPERTY(     int moves    READ moves                  NOTIFY movesChanged    )
+    Q_PROPERTY( QString name     READ name     WRITE setName     NOTIFY nameChanged     )
+    Q_PROPERTY( QString action   READ action   WRITE setAction   NOTIFY actionChanged   )
+    Q_PROPERTY(     int battery  READ battery  WRITE setBattery  NOTIFY batteryChanged  )
+    Q_PROPERTY(     int rotation READ rotation WRITE setRotation NOTIFY rotationChanged )
+    Q_PROPERTY(     int moves    READ moves    WRITE setMoves    NOTIFY movesChanged    )
 
 public:
     explicit ActorPresenter(const DeliveryRobot* model,
-                                  QObject* parent = nullptr);
+                                        QObject* parent = nullptr);
+    explicit ActorPresenter(int row, int column, QObject* parent = nullptr);
+
+    bool operator==(const ActorPresenter& other) const;
 
     //Getter
     QString name()      const;
@@ -35,7 +38,7 @@ public:
     void setAction(const QString& action);
     void setBattery(int level);
     void setRotation(int rotation);
-    void movesInc();
+    void setMoves(int moves);
 
 signals:
     void nameChanged();

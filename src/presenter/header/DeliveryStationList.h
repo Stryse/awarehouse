@@ -14,9 +14,9 @@ class DeliveryStationList : public QObject
 public:
     explicit DeliveryStationList(QObject* parent = nullptr);
 
-    QList<const DeliveryStationPresenter*>* deliveryStations();
+    QList<DeliveryStationPresenter*>* deliveryStations();
 
-    bool setDeliveryStationAt(int index, const DeliveryStationPresenter& deliveryStation);
+    bool setDeliveryStationAt(int index, DeliveryStationPresenter& deliveryStation);
 
 signals:
     void preItemAppended();
@@ -25,14 +25,17 @@ signals:
     void preItemRemoved(int index);
     void postItemRemoved();
 
+    void dataChanged(int index);
+
 public slots:
-    void appendDeliveryStation(const DeliveryStationPresenter& deliveryStation);
+    void appendDeliveryStation(DeliveryStationPresenter& deliveryStation);
     void removeDeliveryStation(int index);
+    void removeDeliveryStation(int row, int column);
 
     void clear();
 
 public:
-    QList<const DeliveryStationPresenter*> m_deliveryStations;
+    QList<DeliveryStationPresenter*> m_deliveryStations;
 };
 
 #endif /* DELIVERY_STATION_LIST__H */

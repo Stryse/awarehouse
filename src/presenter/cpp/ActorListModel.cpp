@@ -3,6 +3,15 @@
 //Presenter
 #include "ActorPresenter.h"
 
+QVector<int> ActorListModel::m_roles = { NameRole,
+                                         ActionRole,
+                                         BatteryRole,
+                                         RotationRole,
+                                         MovesRole,
+                                         RowRole,
+                                         ColumnRole,
+                                         ImageRole };
+
 ActorListModel::ActorListModel(QObject* parent)
     : QAbstractListModel(parent)
     , m_actors(nullptr)
@@ -51,13 +60,44 @@ bool ActorListModel::setData(const QModelIndex& index,
                              const    QVariant& value,
                                             int role)
 {
-    if (data(index, role) != value)
+    if (m_actors == nullptr)
+        return false;
+
+    ActorPresenter& actor = *m_actors->actors()->at(index.row());
+
+    switch(role)
     {
-        // TODO IMPLEMENT
+        case NameRole:
+            actor.setName     (value.toString());
+            break;
+        case ActionRole:
+            actor.setAction   (value.toString());
+            break;
+        case BatteryRole:
+            actor.setBattery  (value.toInt());
+            break;
+        case RotationRole:
+            actor.setRotation (value.toInt());
+            break;
+        case MovesRole:
+            actor.setMoves    (value.toInt());
+            break;
+        case RowRole:
+            actor.setRow      (value.toInt());
+            break;
+        case ColumnRole:
+            actor.setColumn   (value.toInt());
+            break;
+        case ImageRole:
+            actor.setImagePath(value.toString());
+            break;
+    }
+
+    if (m_actors->setActorAt(index.row(), actor))
+    {
         emit dataChanged(index, index, QVector<int>() << role);
         return true;
     }
-
     return false;
 }
 
@@ -101,7 +141,7 @@ void ActorListModel::setActors(ActorList* actors)
         connect(m_actors, &ActorList::preItemAppended,  this, [=]()
         {
             const int index = m_actors->actors()->size();
-            beginInsertRows(QModelIndex(),index,index);
+            beginInsertRows(QModelIndex(), index, index);
         });
 
         connect(m_actors, &ActorList::postItemAppended, this, [=]()
@@ -111,12 +151,17 @@ void ActorListModel::setActors(ActorList* actors)
 
         connect(m_actors, &ActorList::preItemRemoved,   this, [=](int index)
         {
-            beginRemoveRows(QModelIndex(),index, index);
+            beginRemoveRows(QModelIndex(), index, index);
         });
 
         connect(m_actors, &ActorList::postItemRemoved,  this, [=]()
         {
             endRemoveRows();
+        });
+
+        connect(m_actors, &ActorList::dataChanged,      this, [=](int index)
+        {
+            emit dataChanged(QAbstractListModel::index(index), QAbstractListModel::index(index), m_roles);
         });
     }
 

@@ -3,6 +3,10 @@
 //Presenter
 #include "DeliveryStationPresenter.h"
 
+QVector<int> DeliveryStationListModel::m_roles = { RowRole,
+                                                   ColumnRole,
+                                                   ImageRole };
+
 DeliveryStationListModel::DeliveryStationListModel(QObject* parent)
     : QAbstractListModel(parent)
     , m_deliveryStations(nullptr)
@@ -17,7 +21,7 @@ int DeliveryStationListModel::rowCount(const QModelIndex& parent) const
 }
 
 QVariant DeliveryStationListModel::data(const QModelIndex& index,
-                                             int role) const
+                                                       int role) const
 {
     if (!index.isValid() || m_deliveryStations == nullptr)
        return QVariant();
@@ -38,16 +42,32 @@ QVariant DeliveryStationListModel::data(const QModelIndex& index,
 }
 
 bool DeliveryStationListModel::setData(const QModelIndex& index,
-                             const    QVariant& value,
-                                            int role)
+                                       const    QVariant& value,
+                                                      int role)
 {
-    if (data(index, role) != value)
+    if (m_deliveryStations == nullptr)
+        return false;
+
+    DeliveryStationPresenter& deliveryStation = *m_deliveryStations->deliveryStations()->at(index.row());
+
+    switch(role)
     {
-        // TODO IMPLEMENT
+        case RowRole:
+            deliveryStation.setRow      (value.toInt());
+            break;
+        case ColumnRole:
+            deliveryStation.setColumn   (value.toInt());
+            break;
+        case ImageRole:
+            deliveryStation.setImagePath(value.toString());
+            break;
+    }
+
+    if (m_deliveryStations->setDeliveryStationAt(index.row(), deliveryStation))
+    {
         emit dataChanged(index, index, QVector<int>() << role);
         return true;
     }
-
     return false;
 }
 
@@ -63,9 +83,9 @@ QHash<int, QByteArray> DeliveryStationListModel::roleNames() const
 {
     QHash<int, QByteArray> names;
 
-    names[RowRole]      = "row";
-    names[ColumnRole]   = "column";
-    names[ImageRole]    = "image";
+    names[RowRole]    = "row";
+    names[ColumnRole] = "column";
+    names[ImageRole]  = "image";
 
     return names;
 }
@@ -102,6 +122,11 @@ void DeliveryStationListModel::setDeliveryStations(DeliveryStationList* delivery
         connect(m_deliveryStations, &DeliveryStationList::postItemRemoved,  this, [=]()
         {
             endRemoveRows();
+        });
+
+        connect(m_deliveryStations, &DeliveryStationList::dataChanged,      this, [=](int index)
+        {
+            emit dataChanged(QAbstractListModel::index(index), QAbstractListModel::index(index), m_roles);
         });
     }
 

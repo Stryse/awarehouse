@@ -28,13 +28,12 @@ TaskPresenter& TaskPresenter::operator=(const TaskPresenter& other)
     return *this;
 }
 
-bool operator==(TaskPresenter* const lhs,
-                const  TaskPresenter rhs)
+bool TaskPresenter::operator==(const TaskPresenter& other) const
 {
-    return lhs->m_assignedRobotName    == rhs.m_assignedRobotName &&
-                   lhs->m_orders       == rhs.m_orders            &&
-                   lhs->m_destinationX == rhs.m_destinationX      &&
-                   lhs->m_destinationY == rhs.m_destinationY;
+    return this->m_assignedRobotName == other.m_assignedRobotName &&
+           this->m_orders            == other.m_orders            &&
+           this->m_destinationX      == other.m_destinationX      &&
+           this->m_destinationY      == other.m_destinationY;
 }
 
 //Getter
@@ -51,6 +50,7 @@ void TaskPresenter::setAssignedRobotName(const QString& robotName)
 
     m_assignedRobotName = robotName;
     emit assignedRobotNameChanged();
+    emit taskChanged();
 }
 
 void TaskPresenter::setOrders(const QVector<int>& orders)
@@ -60,6 +60,7 @@ void TaskPresenter::setOrders(const QVector<int>& orders)
 
     m_orders = orders;
     emit ordersChanged();
+    emit taskChanged();
 }
 
 void TaskPresenter::setDestinationX(int destinationX)
@@ -69,6 +70,7 @@ void TaskPresenter::setDestinationX(int destinationX)
 
     m_destinationX = destinationX;
     emit destinationXChanged();
+    emit taskChanged();
 }
 
 void TaskPresenter::setDestinationY(int destinationY)
@@ -78,4 +80,5 @@ void TaskPresenter::setDestinationY(int destinationY)
 
     m_destinationY = destinationY;
     emit destinationYChanged();
+    emit taskChanged();
 }

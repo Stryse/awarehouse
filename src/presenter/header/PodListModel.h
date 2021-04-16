@@ -1,36 +1,36 @@
-#ifndef TASK_LIST_MODEL__H
-#define TASK_LIST_MODEL__H
+#ifndef POD_LIST_MODEL__H
+#define POD_LIST_MODEL__H
 
 #include <QObject>
 #include <QAbstractListModel>
-#include <QList>
 
 //Presenter
-#include "TaskList.h"
+#include "PodList.h"
 
-class TaskListModel : public QAbstractListModel
+class PodListModel : public QAbstractListModel
 {
     Q_OBJECT
 
-    Q_PROPERTY( TaskList* tasks READ tasks WRITE setTasks )
+    Q_PROPERTY( PodList* pods READ pods WRITE setPods )
 
 public:
-    explicit TaskListModel(QObject* parent = nullptr);
+    explicit PodListModel(QObject* parent = nullptr);
 
     enum
     {
-        AssignedRobotNameRole = Qt::UserRole,
-        OrdersRole,
-        DestinationXRole,
-        DestinationYRole
+        RowRole = Qt::UserRole,
+        ColumnRole,
+        RotationRole,
+        ImageRole
     };
+
 
 //QAbstractItemModel interface
 public:
     int      rowCount(const QModelIndex& parent)                        const override;
     QVariant data(const QModelIndex& index, int role = Qt::DisplayRole) const override;
 
-    //Editable
+    // Editable
     bool setData(const QModelIndex& index,
                  const    QVariant& value,
                                 int role = Qt::EditRole) override;
@@ -39,15 +39,13 @@ public:
     QHash<int, QByteArray> roleNames()                     const override;
 
     //Getter
-    TaskList* tasks() const;
+    PodList* pods() const;
 
     //Setter
-    void setTasks(TaskList* tasks);
+    void setPods(PodList* pods);
 
 private:
-    TaskList* m_tasks;
-
-    static QVector<int> m_roles;
+    PodList* m_pods;
 };
 
-#endif /* TASK_LIST_MODEL__H */
+#endif /* POD_LIST_MODEL__H */

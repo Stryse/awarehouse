@@ -3,6 +3,10 @@
 //Presenter
 #include "ChargingStationPresenter.h"
 
+QVector<int> ChargingStationListModel::m_roles = { RowRole,
+                                                   ColumnRole,
+                                                   ImageRole };
+
 ChargingStationListModel::ChargingStationListModel(QObject* parent)
     : QAbstractListModel(parent)
     , m_chargingStations(nullptr)
@@ -17,7 +21,7 @@ int ChargingStationListModel::rowCount(const QModelIndex& parent) const
 }
 
 QVariant ChargingStationListModel::data(const QModelIndex& index,
-                                             int role) const
+                                                       int role) const
 {
     if (!index.isValid() || m_chargingStations == nullptr)
        return QVariant();
@@ -38,16 +42,32 @@ QVariant ChargingStationListModel::data(const QModelIndex& index,
 }
 
 bool ChargingStationListModel::setData(const QModelIndex& index,
-                             const    QVariant& value,
-                                            int role)
+                                       const    QVariant& value,
+                                                      int role)
 {
-    if (data(index, role) != value)
+    if (m_chargingStations == nullptr)
+        return false;
+
+    ChargingStationPresenter& chargingStation = *m_chargingStations->chargingStations()->at(index.row());
+
+    switch(role)
     {
-        // TODO IMPLEMENT
+        case RowRole:
+            chargingStation.setRow      (value.toInt());
+            break;
+        case ColumnRole:
+            chargingStation.setColumn   (value.toInt());
+            break;
+        case ImageRole:
+            chargingStation.setImagePath(value.toString());
+            break;
+    }
+
+    if (m_chargingStations->setChargingStationAt(index.row(), chargingStation))
+    {
         emit dataChanged(index, index, QVector<int>() << role);
         return true;
     }
-
     return false;
 }
 
@@ -63,9 +83,9 @@ QHash<int, QByteArray> ChargingStationListModel::roleNames() const
 {
     QHash<int, QByteArray> names;
 
-    names[RowRole]      = "row";
-    names[ColumnRole]   = "column";
-    names[ImageRole]    = "image";
+    names[RowRole]    = "row";
+    names[ColumnRole] = "column";
+    names[ImageRole]  = "image";
 
     return names;
 }
@@ -102,6 +122,11 @@ void ChargingStationListModel::setChargingStations(ChargingStationList* actors)
         connect(m_chargingStations, &ChargingStationList::postItemRemoved,  this, [=]()
         {
             endRemoveRows();
+        });
+
+        connect(m_chargingStations, &ChargingStationList::dataChanged,      this, [=](int index)
+        {
+            emit dataChanged(QAbstractListModel::index(index), QAbstractListModel::index(index), m_roles);
         });
     }
 

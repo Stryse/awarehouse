@@ -50,6 +50,8 @@ public:
 
 private:
     ActorList* m_actors;
+
+    static QVector<int> m_roles;
 };
 
 #endif /* ACTOR_LIST_MODEL__H */

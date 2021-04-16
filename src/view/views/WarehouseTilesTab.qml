@@ -3,6 +3,8 @@ import QtQuick.Layouts
 import QtQuick.Controls
 import QtQuick.Controls.Material
 
+import Editor 1.0
+
 Item {
     id: root
 
@@ -94,8 +96,10 @@ Item {
                         onReleased:  {
                             var dragTarget = tileDragImg.Drag.target
 
-                            if (dragTarget !== null)
-                                dragTarget.tileDropped(tileType)
+                            if (dragTarget !== null) {
+                                console.log("dragType: " + model.tileType)
+                                dragTarget.tileDropped(model.tileType)
+                            }
                             else
                                 parent = tileDelegate
                         }
@@ -106,7 +110,7 @@ Item {
                             width:  dragArea.width
                             height: dragArea.height
 
-                            color: tileColor
+                            color: model.tileColor
                         }
 
                         Rectangle {
@@ -119,7 +123,7 @@ Item {
                             width:  warehouse.cellSize
                             height: warehouse.cellSize
 
-                            color: tileColor
+                            color: model.tileColor
 
                             Drag.active: dragArea.drag.active
                             Drag.hotSpot.x: width/2
@@ -143,7 +147,7 @@ Item {
 
                         color:    Material.foreground
 
-                        text:     qsTr(tileType)
+                        text:     qsTr(model.tileTypeName)
                         wrapMode: Text.WordWrap
                     }
                 }

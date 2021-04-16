@@ -8,19 +8,23 @@ TaskList::TaskList(QObject* parent)
     m_tasks.append(new TaskPresenter("lajos", {2,4}, 2, 7, this));
 }
 
-QList<const TaskPresenter*>* TaskList::tasks() { return &m_tasks; }
+QList<TaskPresenter*>* TaskList::tasks() { return &m_tasks; }
 
-bool TaskList::setTaskAt(int index, const TaskPresenter& task)
+bool TaskList::setTaskAt(int index, TaskPresenter& task)
 {
     if (index < 0 ||
         index >= m_tasks.size())
+        return false;
+
+    const TaskPresenter* oldTask = m_tasks.at(index);
+    if (task == *oldTask)
         return false;
 
     m_tasks[index] = &task;
     return true;
 }
 
-void TaskList::appendOrder(const TaskPresenter& task)
+void TaskList::appendOrder(TaskPresenter& task)
 {
     emit preItemAppended();
     m_tasks.append(&task);

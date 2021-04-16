@@ -23,7 +23,7 @@ public:
     explicit TaskPresenter(const TaskPresenter& task);
 
     TaskPresenter& operator=(const TaskPresenter& other);
-    friend bool    operator==(TaskPresenter* const lhs, const TaskPresenter rhs);
+    bool operator==(const TaskPresenter& other) const;
 
     //Getter
     QString      assignedRobotName() const;
@@ -42,6 +42,8 @@ signals:
     void ordersChanged();
     void destinationXChanged();
     void destinationYChanged();
+
+    void taskChanged();
 
 private:
     QString      m_assignedRobotName;

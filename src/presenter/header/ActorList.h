@@ -14,9 +14,9 @@ class ActorList : public QObject
 public:
     explicit ActorList(QObject* parent = nullptr);
 
-    QList<const ActorPresenter*>* actors();
+    QList<ActorPresenter*>* actors();
 
-    bool setActorAt(int index, const ActorPresenter& actor);
+    bool setActorAt(int index, ActorPresenter& actor);
 
 signals:
     void preItemAppended();
@@ -25,14 +25,17 @@ signals:
     void preItemRemoved(int index);
     void postItemRemoved();
 
+    void dataChanged(int index);
+
 public slots:
-    void appendActor(const ActorPresenter& actor);
+    void appendActor(ActorPresenter& actor);
     void removeActor(int index);
+    void removeActor(int row, int column);
 
     void clear();
 
 public:
-    QList<const ActorPresenter*> m_actors;
+    QList<ActorPresenter*> m_actors;
 };
 
 #endif /* ACTOR_LIST__H */

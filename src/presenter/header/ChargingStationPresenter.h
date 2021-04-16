@@ -15,6 +15,9 @@ class ChargingStationPresenter : public MapItemPresenter
 public:
     explicit ChargingStationPresenter(const ChargingStation* model,
                                                          QObject* parent = nullptr);
+    explicit ChargingStationPresenter(int row, int column, QObject* parent = nullptr);
+
+    bool operator==(const ChargingStationPresenter& other) const;
 
 private:
     //Model
