@@ -38,6 +38,7 @@ bool Warehouse::loadState(const QString &srcPath)
         setupTaskManager(*state);
 
         // TODO REMOVE
+        controller->getNetworkAdapter().send(std::make_unique<AgentControlGrantedMessage>(0x1), 100);
         controller->getNetworkAdapter().send(std::make_unique<MoveAgentMessage>(DirectionVector<>::DOWN(), 0x1), 100);
     }
 

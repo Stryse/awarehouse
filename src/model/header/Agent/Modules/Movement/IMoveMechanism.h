@@ -57,7 +57,7 @@ public:
     virtual ~IMoveMechanism() = default;
 
 public:
-    boost::signals2::signal<void(const Body &body)> onBodyMoved;
+    mutable boost::signals2::signal<void(const Body &body)> onBodyMoved;
 
 public:
     /************************************************************************

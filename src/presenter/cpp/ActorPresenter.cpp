@@ -3,6 +3,11 @@
 //Model
 #include "DeliveryRobot.h"
 #include "ObservableEnvironment.h"
+#include "Body.h"
+#include "ObservableEnvironment.h"
+#include "Tile.h"
+#include <cmath>
+#include <QDebug>
 
 ActorPresenter::ActorPresenter(const DeliveryRobot<ObservableNavEnvironment<Tile>, int>* model,
                                                                                 QObject* parent)
@@ -16,7 +21,23 @@ ActorPresenter::ActorPresenter(const DeliveryRobot<ObservableNavEnvironment<Tile
     , m_rotation(0)
     , m_moves(0)
     , model(model)
-{}
+{
+    model->getMoveMechanism()->onBodyMoved.connect([=](const Body<ObservableNavEnvironment<Tile>>& body){
+        int row = body.getPose().getPosition().getPosY();
+        int column = body.getPose().getPosition().getPosX();
+        //TODO
+        int rotateY = body.getPose().getOrientation().getY();
+        int rotateX = body.getPose().getOrientation().getX();
+        int rotation = (((std::atan2(rotateY, rotateX)*180)/M_PI));
+        setRow(row);
+        setColumn(column);
+        setRotation(rotation);
+    });
+
+    model->getEnergySource()->onChargeChanged.connect([=](const int& energy){
+        setBattery(energy);
+    });
+}
 
 QString ActorPresenter::m_static_imagePath = "qrc:/images/robot.png";
 
