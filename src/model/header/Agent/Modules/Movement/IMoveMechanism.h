@@ -3,7 +3,6 @@
 
 #include "Body.h"
 #include "DirectionVector.h"
-#include "LibConfig.h"
 #include "boost/signals2.hpp"
 #include <memory>
 #include <queue>
@@ -12,9 +11,7 @@
 
 // ########################## Forward Declarations ########################
 class AMotor;
-template <typename TEnergy>
 class MotorAction;
-template <class TEnergy>
 class IDepleting;
 // ########################################################################
 
@@ -28,18 +25,11 @@ class IDepleting;
  * It also needs to provide a sequence of motor actions which lead to the accessible
  * directions with the associated costs.
  ***********************************************************************************/
-template <typename TEnergy = config::agent::DefaultEnergy>
 class IMoveMechanism
 {
 public:
     // ######################### Body Related #############################
     using DirectionVector = Body::DirectionVector;
-
-    //######################### Energy related ############################
-    using Energy = TEnergy;
-    using IDepleting = ::IDepleting<Energy>;
-    using MotorAction = ::MotorAction<Energy>;
-    // ####################################################################
 
 protected:
     explicit IMoveMechanism(const std::shared_ptr<Body> &body,
@@ -75,7 +65,7 @@ public:
      * @brief Returns the amount of energy needed to reach the
      * provided direction.
      **************************************************************************/
-    virtual Energy getEnergyCost(const DirectionVector &direction) const = 0;
+    virtual int getEnergyCost(const DirectionVector &direction) const = 0;
 
     /**************************************************************************
      * @brief Returns the amount of time needed to reach the
@@ -97,7 +87,7 @@ public:
     /***************************************************************************
      * @brief Returns the move mechanism's associated body
      ***************************************************************************/
-    const std::shared_ptr<const Body> &getBody() const { return body; }
+    const std::shared_ptr<Body> &getBody() const { return body; }
     const std::shared_ptr<Body> &getBody() { return body; }
 
 protected:

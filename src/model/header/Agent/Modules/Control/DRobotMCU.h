@@ -6,11 +6,11 @@
 #include "AgentSignals.h"
 #include "IDepleting.h"
 #include "IMoveMechanism.h"
-#include "LibConfig.h"
 #include "MotorAction.h"
 #include "NetworkAdapter.h"
 #include "NetworkMessage.h"
 #include "NetworkMessageHandler.h"
+#include "ObservableEnvironment.h"
 #include "RackMotor.h"
 #include <queue>
 #include <stdexcept>
@@ -25,20 +25,9 @@
  * - Performs the polled action(s).
  *
  **********************************************************************************/
-template <typename TEnvironment, typename TBody, typename TEnergy = config::agent::DefaultEnergy>
-
 class DRobotMCU : public AMicroController,
                   public NetworkMessageHandler
 {
-public:
-    using Body = TBody;
-    using Energy = TEnergy;
-    using IMoveMechanism = ::IMoveMechanism<Energy>;
-    using IDepleting = ::IDepleting<Energy>;
-    using Environment = TEnvironment;
-    using RackMotor = ::RackMotor<Energy>;
-    using MotorAction = ::MotorAction<Energy>;
-
     /*******************************************************
      * @brief Delivery Robot makes decisions based on status
      *******************************************************/
@@ -56,7 +45,7 @@ public:
               RackMotor &rackMotor,
               PodHolder &podHolder,
               IDepleting &energySource,
-              Environment &env)
+              ObservableNavEnvironment &env)
 
         : status(Status::IDLE),
           moveMechanism(moveMechanism),
@@ -269,7 +258,7 @@ private:
     RackMotor &rackMotor;
     PodHolder &podHolder;
     IDepleting &energySource;
-    Environment &environment;
+    ObservableNavEnvironment &environment;
 
     // ########### Connections ############# //
     boost::signals2::connection AgentMovement2PodMovement;

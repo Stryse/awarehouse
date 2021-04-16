@@ -4,10 +4,10 @@
 //Presenter
 #include "MapItemPresenter.h"
 
-template <typename E, typename EN> class DeliveryRobot;
-                                   class PodDock;
-                                   class ObservableNavEnvironment;
-                                   class Tile;
+class DeliveryRobot;
+class PodDock;
+class ObservableNavEnvironment;
+class Tile;
 
 class ActorPresenter : public MapItemPresenter
 {
@@ -20,8 +20,8 @@ class ActorPresenter : public MapItemPresenter
     Q_PROPERTY(     int moves    READ moves                  NOTIFY movesChanged    )
 
 public:
-    explicit ActorPresenter(const DeliveryRobot<ObservableNavEnvironment,int>* model,
-                                                                         QObject* parent = nullptr);
+    explicit ActorPresenter(const DeliveryRobot* model,
+                                  QObject* parent = nullptr);
 
     //Getter
     QString name()      const;
@@ -52,7 +52,7 @@ private:
     int     m_moves;
 
     //Model
-    const  DeliveryRobot<ObservableNavEnvironment,int>* model;
+    const  DeliveryRobot* model;
 
     //Static
     static QString m_static_imagePath;

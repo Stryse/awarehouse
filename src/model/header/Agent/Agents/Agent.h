@@ -3,7 +3,6 @@
 
 #include "AMicroController.h"
 #include "Body.h"
-#include "LibConfig.h"
 #include <memory>
 #include <string>
 
@@ -24,16 +23,10 @@ namespace agent_util
  * 
  * @tparam TEnvironment Type of environment.
  *********************************************************************************/
-template <typename TEnvironment = ObservableNavEnvironment>
 class Agent
 {
 public:
     using Configuration = agent_util::Configuration;
-
-    /*********************************************************
-     * @brief Type of the environment in which the agent acts
-     *********************************************************/
-    using Environment = TEnvironment;
 
 public:
     /*********************************************************
@@ -48,7 +41,7 @@ public:
      * @param mcu A subclass of AMicroController.
      *********************************************************/
     explicit Agent(const std::string &id_category,
-                   const std::shared_ptr<Environment> &environment,
+                   const std::shared_ptr<ObservableNavEnvironment> &environment,
                    const std::shared_ptr<Body> &body,
                    std::unique_ptr<AMicroController> &&mcu)
 
@@ -87,7 +80,7 @@ private:
      * @brief Used to acquire a serial number each time an
      * agent is constructed.
      *********************************************************/
-    static int getNewSerialNumber() { return Agent<Environment>::newSerialNumber++; }
+    static int getNewSerialNumber() { return Agent::newSerialNumber++; }
 
     /*********************************************************
      * @brief Used to acquire a new agent ID based on category
@@ -98,14 +91,14 @@ private:
         return std::string("[AGENT]{") +
                std::string(id_category) +
                std::string("}_") +
-               std::to_string(Agent<Environment>::newSerialNumber);
+               std::to_string(Agent::newSerialNumber);
     }
 
 protected:
     /******************************************************
      * @brief Environment in which the agent acts.
      ******************************************************/
-    std::shared_ptr<Environment> environment;
+    std::shared_ptr<ObservableNavEnvironment> environment;
 
     /******************************************************
      * @brief The agent's physical body,
@@ -140,6 +133,5 @@ private:
     static int newSerialNumber;
 };
 
-template <typename Environment>
-int Agent<Environment>::newSerialNumber = 0x0;
+int Agent::newSerialNumber = 0x0;
 #endif /* AGENT__H */

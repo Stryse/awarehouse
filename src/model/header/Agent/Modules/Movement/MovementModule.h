@@ -4,13 +4,8 @@
 #include "IMoveMechanism.h"
 #include <memory>
 
-template <typename TEnergy = config::agent::DefaultEnergy>
 class MovementModule
 {
-public:
-    using Energy = TEnergy;
-    using IMoveMechanism = ::IMoveMechanism<Energy>;
-
 public:
     explicit MovementModule(std::unique_ptr<IMoveMechanism> &&moveMechanism)
         : moveMechanism(std::move(moveMechanism))

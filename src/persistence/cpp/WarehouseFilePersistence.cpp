@@ -94,10 +94,10 @@ State *WarehouseFilePersistence::loadFromJsonObject(QJsonObject json)
 
         // Create Environment
         std::shared_ptr<ObservableNavEnvironment> env = std::make_shared<ObservableNavEnvironment>(rowSize, colSize, 3);
-        std::vector<std::shared_ptr<ChargingStation<>>> chStations;
+        std::vector<std::shared_ptr<ChargingStation>> chStations;
         std::vector<std::shared_ptr<DeliveryStation>> deliveryStations;
         std::vector<std::shared_ptr<PodDock>> podDocks;
-        std::vector<std::shared_ptr<DeliveryRobot<>>> robots;
+        std::vector<std::shared_ptr<DeliveryRobot>> robots;
 
         loadChargingStation(chStations, env, WarehouseLayoutData);
         loadDeliveryStation(deliveryStations, env, WarehouseLayoutData);
@@ -115,7 +115,7 @@ State *WarehouseFilePersistence::loadFromJsonObject(QJsonObject json)
     return nullptr;
 }
 
-void WarehouseFilePersistence::loadChargingStation(std::vector<std::shared_ptr<ChargingStation<>>> &chStations,
+void WarehouseFilePersistence::loadChargingStation(std::vector<std::shared_ptr<ChargingStation>> &chStations,
                                                    std::shared_ptr<ObservableNavEnvironment> &env,
                                                    QJsonObject &warehouseLayoutData)
 {
@@ -126,7 +126,7 @@ void WarehouseFilePersistence::loadChargingStation(std::vector<std::shared_ptr<C
 
         for (int i = 0; i < chargingStationsJson.size(); ++i)
         {
-            std::shared_ptr<ChargingStation<>> station = ChargingStationLoader::load(chargingStationsJson[i].toObject());
+            std::shared_ptr<ChargingStation> station = ChargingStationLoader::load(chargingStationsJson[i].toObject());
 
             env->getBuffer()[env->getCoordAsIndex(station->getPosition())] = station;
             chStations.push_back(station);
@@ -175,7 +175,7 @@ void WarehouseFilePersistence::loadPodDock(std::vector<std::shared_ptr<PodDock>>
     }
 }
 
-void WarehouseFilePersistence::loadRobots(std::vector<std::shared_ptr<DeliveryRobot<>>> &robots,
+void WarehouseFilePersistence::loadRobots(std::vector<std::shared_ptr<DeliveryRobot>> &robots,
                                           std::shared_ptr<ObservableNavEnvironment> &env,
                                           QJsonObject &warehouseLayoutData)
 {

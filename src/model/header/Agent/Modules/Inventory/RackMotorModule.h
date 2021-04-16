@@ -9,14 +9,8 @@ class PodHolder;
 class Body;
 // ################################################################
 
-template <typename TEnergy = config::agent::DefaultEnergy>
 class RackMotorModule
 {
-public:
-    using Energy = TEnergy;
-    using IDepleting = ::IDepleting<Energy>;
-    using RackMotor = ::RackMotor<Energy>;
-
 public:
     explicit RackMotorModule(Body &body, IDepleting &energySource, PodHolder &podHolder)
         : rackMotor(body, energySource, podHolder) {}

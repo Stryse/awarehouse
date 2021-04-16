@@ -1,7 +1,6 @@
 #ifndef INAVIGATIONAL_ENVIRONMENT__H
 #define INAVIGATIONAL_ENVIRONMENT__H
 
-#include "LibConfig.h"
 #include <cstddef>
 #include <memory>
 

@@ -5,7 +5,6 @@
 #include "AgentSignals.h"
 #include "Body.h"
 #include "IDepleting.h"
-#include "LibConfig.h"
 #include "MotorAction.h"
 #include "MotorCommand.h"
 #include "MotorDrive.h"
@@ -22,15 +21,10 @@
  * It can also put down a pod from the holder in the environment.
  * It can only put down pods to tiles which accepts the pod.
  *********************************************************************************/
-template <typename TEnergy = config::agent::DefaultEnergy>
 class RackMotor : public AMotor
 {
 public:
-    using Energy = TEnergy;
-    using IDepleting = ::IDepleting<Energy>;
     using MotorDirection = AMotor::MotorDirection;
-    using MotorAction = ::MotorAction<Energy>;
-    using MotorDrive = ::MotorDrive<Energy>;
 
 public:
     boost::signals2::signal<void(const Body &)> onPodPickedUp;
@@ -129,25 +123,18 @@ private:
     std::unique_ptr<MotorAction> _putDownPodAction;
     PodHolder &podHolder;
 
-    static const Energy pickUpCost;
+    static const int pickUpCost;
     static const int pickUpDuration;
 
-    static const Energy putDownCost;
+    static const int putDownCost;
     static const int putDownDuration;
 };
 
 /********************* Settings ***************************/
-template <typename TEnergy>
-const TEnergy RackMotor<TEnergy>::pickUpCost = 1;
-
-template <typename TEnergy>
-const int RackMotor<TEnergy>::pickUpDuration = 1;
-
-template <typename TEnergy>
-const TEnergy RackMotor<TEnergy>::putDownCost = 1;
-
-template <typename TEnergy>
-const int RackMotor<TEnergy>::putDownDuration = 1;
+const int RackMotor::pickUpCost = 1;
+const int RackMotor::pickUpDuration = 1;
+const int RackMotor::putDownCost = 1;
+const int RackMotor::putDownDuration = 1;
 /**********************************************************/
 
 #endif /* RACK_MOTOR__H */

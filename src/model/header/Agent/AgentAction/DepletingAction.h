@@ -3,7 +3,6 @@
 
 #include "AgentAction.h"
 #include "IDepleting.h"
-#include "LibConfig.h"
 
 /********************************************************************************
  * @brief A kind of Agent Action that needs energy to be performed.
@@ -11,16 +10,13 @@
  * consume the amount of energy needed.
  *
  ********************************************************************************/
-template <typename TEnergy = config::agent::DefaultEnergy>
 class DepletingAction : public AgentAction
 {
 public:
-    using Energy = TEnergy;
-    using IDepleting = ::IDepleting<Energy>;
     using EnergyDepletedException = typename IDepleting::EnergyDepletedException;
 
 public:
-    DepletingAction(IDepleting &resource, const Energy &energyCost, int duration)
+    DepletingAction(IDepleting &resource, const int &energyCost, int duration)
         : AgentAction(duration), resource(resource), energyCost(energyCost) {}
 
 protected:
@@ -42,7 +38,7 @@ protected:
 
 private:
     IDepleting &resource;
-    Energy energyCost;
+    int energyCost;
 };
 
 #endif /* DEPLETING_ACTION__H */

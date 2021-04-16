@@ -3,7 +3,6 @@
 
 #include "AMotor.h"
 #include "DepletingAction.h"
-#include "LibConfig.h"
 #include "MotorDrive.h"
 #include "boost/signals2.hpp"
 #include <memory>
@@ -19,20 +18,13 @@
  * provided direction with a sum of energy and time cost.
  *
  **********************************************************************************/
-template <typename TEnergy = config::agent::DefaultEnergy>
-class MotorAction : public DepletingAction<TEnergy>
+class MotorAction : public DepletingAction
 {
-public:
-    //Energy related
-    using Energy = TEnergy;
-    using IDepleting = ::IDepleting<Energy>;
-    using MotorDrive = ::MotorDrive<Energy>;
-
 public:
     MotorAction(std::unique_ptr<MotorDrive> &&motorDrive, IDepleting &resource,
                 const boost::signals2::signal<void(const Body &)> *event = nullptr)
 
-        : DepletingAction<Energy>(resource, motorDrive->getEnergySum(), motorDrive->getTimeSum()),
+        : DepletingAction(resource, motorDrive->getEnergySum(), motorDrive->getTimeSum()),
           motorDrive(std::move(motorDrive)), event_(event)
     {
     }

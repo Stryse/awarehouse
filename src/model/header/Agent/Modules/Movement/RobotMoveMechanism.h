@@ -4,7 +4,6 @@
 #include "Body.h"
 #include "IMoveMechanism.h"
 #include "LeftTrackMotor.h"
-#include "LibConfig.h"
 #include "MotorAction.h"
 #include "MotorCommand.h"
 #include "MotorDrive.h"
@@ -22,33 +21,25 @@
  * - Rotate 90 degrees clockwise/counterclockwise (1 Energy 1 Time unit)
  *
  ****************************************************************************/
-template <typename TEnergy = config::agent::DefaultEnergy>
-class RobotMoveMechanism : public IMoveMechanism<TEnergy>
+class RobotMoveMechanism : public IMoveMechanism
 {
 public:
     // ########################## Body Related ###############################
     using DirectionVector = typename Body::DirectionVector;
     using MotorDirection = typename AMotor::MotorDirection;
 
-    // ######################### Energy related ##############################
-    using Energy = TEnergy;
-    using IDepleting = ::IDepleting<Energy>;
-    using MotorAction = ::MotorAction<Energy>;
-    using MotorDrive = ::MotorDrive<Energy>;
-    // #######################################################################
-
 public:
     explicit RobotMoveMechanism(const std::shared_ptr<Body> &body, IDepleting &resource)
-        : IMoveMechanism<Energy>(body, resource, getNewRobotMotors(*body), getNewRobotMoveSet()),
+        : IMoveMechanism(body, resource, getNewRobotMotors(*body), getNewRobotMoveSet()),
 
           ForwardMotorAction(std::make_unique<MotorAction>(
-              forwardMotorDrive(*body, this->motors), resource, &(IMoveMechanism<Energy>::onBodyMoved))),
+              forwardMotorDrive(*body, this->motors), resource, &(IMoveMechanism::onBodyMoved))),
 
           LeftTurnMotorAction(std::make_unique<MotorAction>(
-              leftTurnMotorDrive(*body, this->motors), resource, &(IMoveMechanism<Energy>::onBodyMoved))),
+              leftTurnMotorDrive(*body, this->motors), resource, &(IMoveMechanism::onBodyMoved))),
 
           RightTurnMotorAction(std::make_unique<MotorAction>(
-              rightTurnMotorDrive(*body, this->motors), resource, &(IMoveMechanism<Energy>::onBodyMoved)))
+              rightTurnMotorDrive(*body, this->motors), resource, &(IMoveMechanism::onBodyMoved)))
     {
     }
 
@@ -113,10 +104,10 @@ public:
     /*************************************************************************************************
      * @brief Sum of energy cost of a motorAction that leads to the provided (reachable!) direction.
      *************************************************************************************************/
-    virtual Energy getEnergyCost(const DirectionVector &direction) const override
+    virtual int getEnergyCost(const DirectionVector &direction) const override
     {
-        return RobotMoveMechanism<Energy>::turnCost * (-DirectionVector::dot(direction, this->body->getPose().getOrientation()) + 1) +
-               RobotMoveMechanism<Energy>::moveCost;
+        return RobotMoveMechanism::turnCost * (-DirectionVector::dot(direction, this->body->getPose().getOrientation()) + 1) +
+               RobotMoveMechanism::moveCost;
     }
 
     /*************************************************************************************************
@@ -124,8 +115,8 @@ public:
      *************************************************************************************************/
     virtual int getTimeCost(const DirectionVector &direction) const override
     {
-        return RobotMoveMechanism<Energy>::turnDuration * (-DirectionVector::dot(direction, this->body->getPose().getOrientation()) + 1) +
-               RobotMoveMechanism<Energy>::moveDuration;
+        return RobotMoveMechanism::turnDuration * (-DirectionVector::dot(direction, this->body->getPose().getOrientation()) + 1) +
+               RobotMoveMechanism::moveDuration;
     }
 
 private:
@@ -133,9 +124,9 @@ private:
     std::unique_ptr<MotorAction> LeftTurnMotorAction;
     std::unique_ptr<MotorAction> RightTurnMotorAction;
     static const int turnDuration;
-    static const Energy turnCost;
+    static const int turnCost;
     static const int moveDuration;
-    static const Energy moveCost;
+    static const int moveCost;
 
 public:
     /*************************************************************
@@ -176,8 +167,8 @@ public:
         commands.emplace_back(*motors[1], MotorDirection::CLOCKWISE);
         return std::move(std::make_unique<MotorDrive>(body,
                                                       std::move(commands),
-                                                      RobotMoveMechanism<Energy>::moveCost,
-                                                      RobotMoveMechanism<Energy>::moveDuration));
+                                                      RobotMoveMechanism::moveCost,
+                                                      RobotMoveMechanism::moveDuration));
     }
 
     /****************************************************************
@@ -194,8 +185,8 @@ public:
         commands.emplace_back(*motors[0], MotorDirection::CLOCKWISE);
         return std::move(std::make_unique<MotorDrive>(body,
                                                       std::move(commands),
-                                                      RobotMoveMechanism<Energy>::turnCost,
-                                                      RobotMoveMechanism<Energy>::turnDuration));
+                                                      RobotMoveMechanism::turnCost,
+                                                      RobotMoveMechanism::turnDuration));
     }
 
     /****************************************************************
@@ -212,23 +203,16 @@ public:
         commands.emplace_back(*motors[1], MotorDirection::CLOCKWISE);
         return std::move(std::make_unique<MotorDrive>(body,
                                                       std::move(commands),
-                                                      RobotMoveMechanism<Energy>::turnCost,
-                                                      RobotMoveMechanism<Energy>::turnDuration));
+                                                      RobotMoveMechanism::turnCost,
+                                                      RobotMoveMechanism::turnDuration));
     }
 };
 
 /************************* Settings ***************************/
-template <typename TEnergy>
-const int RobotMoveMechanism<TEnergy>::moveDuration = 1;
-
-template <typename TEnergy>
-const TEnergy RobotMoveMechanism<TEnergy>::moveCost = 1;
-
-template <typename TEnergy>
-const int RobotMoveMechanism<TEnergy>::turnDuration = 1;
-
-template <typename TEnergy>
-const TEnergy RobotMoveMechanism<TEnergy>::turnCost = 1;
+const int RobotMoveMechanism::moveDuration = 1;
+const int RobotMoveMechanism::moveCost = 1;
+const int RobotMoveMechanism::turnDuration = 1;
+const int RobotMoveMechanism::turnCost = 1;
 /************************ Settings *****************************/
 
 #endif /* ROBOT_MOVE_MECHANISM__H */

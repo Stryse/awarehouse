@@ -2,7 +2,6 @@
 #define POD_HOLDER__H
 
 #include "IContaining.h"
-#include "LibConfig.h"
 #include "OrderModel.h"
 #include "Pod.h"
 #include <memory>

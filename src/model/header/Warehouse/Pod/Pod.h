@@ -4,7 +4,6 @@
 #include "Body.h"
 #include "BodyShapeFactory.h"
 #include "IContaining.h"
-#include "LibConfig.h"
 #include "ObservableEnvironment.h"
 #include "Tile.h"
 #include "boost/signals2.hpp"

@@ -21,20 +21,18 @@ namespace idepleting_util
  * @brief Interface of a depleting energy resource.
  *
  *********************************************************/
-template <typename TEnergy>
 class IDepleting
 {
 public:
-    using Energy = TEnergy;
     using EnergyDepletedException = idepleting_util::EnergyDepletedException;
 
 public:
-    virtual void charge(const Energy &energy) = 0;
-    virtual void deplete(const Energy &energy) = 0;
+    virtual void charge(int energy) = 0;
+    virtual void deplete(int energy) = 0;
     virtual double degrade(int timesUsed) const = 0;
-    virtual const Energy &getCharge() const = 0;
-    virtual const Energy &getMaxCharge() const = 0;
-    virtual const Energy &getMaxChargeRate() const = 0;
+    virtual int getCharge() const = 0;
+    virtual int getMaxCharge() const = 0;
+    virtual int getMaxChargeRate() const = 0;
     virtual int getTimesUsed() const = 0;
     virtual double getCondition() const = 0;
     virtual bool isDepleted() const { return getCharge() < 1e-8f; }

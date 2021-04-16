@@ -21,7 +21,7 @@ public:
 private:
     State *loadFromJsonObject(QJsonObject json);
 
-    void loadChargingStation(std::vector<std::shared_ptr<ChargingStation<>>> &chStations,
+    void loadChargingStation(std::vector<std::shared_ptr<ChargingStation>> &chStations,
                              std::shared_ptr<ObservableNavEnvironment> &env,
                              QJsonObject &warehouseLayoutData);
 
@@ -33,7 +33,7 @@ private:
                      std::shared_ptr<ObservableNavEnvironment> &env,
                      QJsonObject &warehouseLayoutData);
 
-    void loadRobots(std::vector<std::shared_ptr<DeliveryRobot<>>> &robots,
+    void loadRobots(std::vector<std::shared_ptr<DeliveryRobot>> &robots,
                     std::shared_ptr<ObservableNavEnvironment> &env,
                     QJsonObject &warehouseLayoutData);
 };

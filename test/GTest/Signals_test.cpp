@@ -31,22 +31,21 @@ protected:
         podDock->addAssociatedPod(env);
 
         // Init robot
-        robot = std::make_unique<DeliveryRobot<>>(env, Point<>(1, 1, 0), DirectionVector<>::UP());
+        robot = std::make_unique<DeliveryRobot>(env, Point<>(1, 1, 0), DirectionVector<>::UP());
     }
 
     static std::shared_ptr<ObservableNavEnvironment> env;
     static std::shared_ptr<PodDock> podDock;
-    static std::unique_ptr<DeliveryRobot<>> robot;
+    static std::unique_ptr<DeliveryRobot> robot;
 
-    using MotorAction = ::MotorAction<std::decay_t<decltype(*robot)>::Energy>;
     static void moveHelper(std::queue<MotorAction *> moveActionQueue);
 };
 
 std::shared_ptr<ObservableNavEnvironment> NotifyTest::env = nullptr;
-std::unique_ptr<DeliveryRobot<>> NotifyTest::robot = nullptr;
+std::unique_ptr<DeliveryRobot> NotifyTest::robot = nullptr;
 std::shared_ptr<PodDock> NotifyTest::podDock = nullptr;
 
-void NotifyTest::moveHelper(std::queue<NotifyTest::MotorAction *> moveActionQueue)
+void NotifyTest::moveHelper(std::queue<MotorAction *> moveActionQueue)
 {
     if (moveActionQueue.empty())
         return;
@@ -62,7 +61,7 @@ void NotifyTest::moveHelper(std::queue<NotifyTest::MotorAction *> moveActionQueu
 
 TEST_F(NotifyTest, BatterySignals)
 {
-    Battery<int> battery(100);
+    Battery battery(100);
 
     int signalReceived = 0;
     battery.onChargeChanged.connect([&](const int &charge) { ++signalReceived; });

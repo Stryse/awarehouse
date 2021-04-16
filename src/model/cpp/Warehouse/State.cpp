@@ -2,10 +2,10 @@
 #include <iostream>
 
 State::State(const std::shared_ptr<ObservableNavEnvironment> &environment,
-             const std::vector<std::shared_ptr<ChargingStation<>>> &chStations,
+             const std::vector<std::shared_ptr<ChargingStation>> &chStations,
              const std::vector<std::shared_ptr<DeliveryStation>> &deliveryStations,
              const std::vector<std::shared_ptr<PodDock>> &podDocks,
-             const std::vector<std::shared_ptr<DeliveryRobot<>>> &robots,
+             const std::vector<std::shared_ptr<DeliveryRobot>> &robots,
              int rowCount, int colCount)
 
     : rowCount(rowCount), colCount(colCount),
@@ -18,10 +18,10 @@ State::State(const std::shared_ptr<ObservableNavEnvironment> &environment,
 }
 
 State::State(std::shared_ptr<ObservableNavEnvironment> &&environment,
-             std::vector<std::shared_ptr<ChargingStation<>>> &&chStations,
+             std::vector<std::shared_ptr<ChargingStation>> &&chStations,
              std::vector<std::shared_ptr<DeliveryStation>> &&deliveryStations,
              std::vector<std::shared_ptr<PodDock>> &&podDocks,
-             std::vector<std::shared_ptr<DeliveryRobot<>>> &&robots,
+             std::vector<std::shared_ptr<DeliveryRobot>> &&robots,
              int rowCount, int colCount)
 
     : rowCount(rowCount), colCount(colCount),
@@ -45,7 +45,7 @@ void State::tick(int timeStamp)
 int State::getRowCount() const { return rowCount; }
 int State::getColCount() const { return colCount; }
 
-const std::vector<std::shared_ptr<ChargingStation<>>> &State::getChargingStations() const { return chStations; }
+const std::vector<std::shared_ptr<ChargingStation>> &State::getChargingStations() const { return chStations; }
 const std::vector<std::shared_ptr<PodDock>> &State::getPodDocks() const { return podDocks; }
 const std::vector<std::shared_ptr<DeliveryStation>> &State::getDeliveryStations() const { return deliveryStations; }
-const std::vector<std::shared_ptr<DeliveryRobot<>>> &State::getRobots() const { return robots; }
+const std::vector<std::shared_ptr<DeliveryRobot>> &State::getRobots() const { return robots; }

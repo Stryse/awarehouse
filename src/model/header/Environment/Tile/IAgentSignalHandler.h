@@ -7,7 +7,6 @@
 template <typename TItemType>
 class IContaining;
 
-template <typename TEnergy>
 class IDepleting;
 
 template <typename TItemType>
@@ -27,7 +26,7 @@ public:
 
 public:
     virtual ~IAgentSignalHandler() = default;
-    virtual void receive(IDepleting<int> &resource, const ChargeSignal &chargeSignal) const {}
+    virtual void receive(IDepleting &resource, const ChargeSignal &chargeSignal) const {}
     virtual void receive(IContaining<OwnedPod> &carrier, const PickupPodSignal &pickupSignal) {}
     virtual void receive(OwnedPod &pod, const PutDownPodSignal &putdownSignal) {}
     virtual void receive(OwnedOrder &order, const PutDownOrderSignal &putdownOrderSignal) {}

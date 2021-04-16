@@ -7,7 +7,6 @@
 #include "BodyShapeFactory.h"
 #include "DRobotMCU.h"
 #include "EnergyModule.h"
-#include "LibConfig.h"
 #include "MovementModule.h"
 #include "NetworkModule.h"
 #include "PodHolder.h"
@@ -16,45 +15,39 @@
 #include "RobotMoveMechanism.h"
 
 class ObservableNavEnvironment;
-template <typename TEnvironment = ObservableNavEnvironment,
-          typename TEnergy = config::agent::DefaultEnergy>
 
-class DeliveryRobot : public EnergyModule<TEnergy>,
-                      public MovementModule<TEnergy>,
+class DeliveryRobot : public EnergyModule,
+                      public MovementModule,
                       public NetworkModule,
                       public PodHolderModule,
-                      public RackMotorModule<TEnergy>,
-                      public Agent<TEnvironment>
+                      public RackMotorModule,
+                      public Agent
 {
 public:
-    using Environment = TEnvironment;
-    using Energy = TEnergy;
-    using IDepleting = ::IDepleting<Energy>;
     using Point = typename Body::Point;
     using DirectionVector = typename Body::DirectionVector;
-    using DRobotMCU = ::DRobotMCU<Environment, Body, Energy>;
 
 public:
     // TODO: MIXIN TMP -vel megoldani hogy szép legyen
-    explicit DeliveryRobot(const std::shared_ptr<Environment> &env, const Point &position, const DirectionVector &orientation)
-        : EnergyModule<Energy>(std::make_unique<Battery<Energy>>(100)),
+    explicit DeliveryRobot(const std::shared_ptr<ObservableNavEnvironment> &env, const Point &position, const DirectionVector &orientation)
+        : EnergyModule(std::make_unique<Battery>(100)),
 
-          MovementModule<Energy>(getNewRobotMovement(getNewRobotBody(position, orientation, env),
-                                                     *EnergyModule<Energy>::getEnergySource())),
+          MovementModule(getNewRobotMovement(getNewRobotBody(position, orientation, env),
+                                             *EnergyModule::getEnergySource())),
 
-          RackMotorModule<Energy>(*(*MovementModule<Energy>::getMoveMechanism()).getBody(),
-                                  *EnergyModule<Energy>::getEnergySource(),
-                                  PodHolderModule::getPodHolder()),
+          RackMotorModule(*(*MovementModule::getMoveMechanism()).getBody(),
+                          *EnergyModule::getEnergySource(),
+                          PodHolderModule::getPodHolder()),
 
-          Agent<Environment>("DELIVERY_ROBOT",
-                             env,
-                             MovementModule<Energy>::getMoveMechanism()->getBody(),
-                             getNewRobotMCU(*MovementModule<Energy>::getMoveMechanism(),
-                                            NetworkModule::getNetworkAdapter(),
-                                            RackMotorModule<Energy>::getRackMotor(),
-                                            PodHolderModule::getPodHolder(),
-                                            *EnergyModule<Energy>::getEnergySource(),
-                                            *env))
+          Agent("DELIVERY_ROBOT",
+                env,
+                MovementModule::getMoveMechanism()->getBody(),
+                getNewRobotMCU(*MovementModule::getMoveMechanism(),
+                               NetworkModule::getNetworkAdapter(),
+                               RackMotorModule::getRackMotor(),
+                               PodHolderModule::getPodHolder(),
+                               *EnergyModule::getEnergySource(),
+                               *env))
     {
     }
 
@@ -65,7 +58,7 @@ private:
      ************************************************************************/
     static std::shared_ptr<Body> getNewRobotBody(const Point &position,
                                                  const DirectionVector &orientation,
-                                                 const std::shared_ptr<Environment> &environment)
+                                                 const std::shared_ptr<ObservableNavEnvironment> &environment)
     {
         return std::make_shared<Body>(position,
                                       orientation,
@@ -76,12 +69,12 @@ private:
     /************************************************************************
      * @brief Returns a new Robot Micro Controller Unit
      ************************************************************************/
-    static std::unique_ptr<DRobotMCU> getNewRobotMCU(IMoveMechanism<Energy> &moveMechanism,
+    static std::unique_ptr<DRobotMCU> getNewRobotMCU(IMoveMechanism &moveMechanism,
                                                      NetworkAdapter &networkAdapter,
-                                                     RackMotor<Energy> &rackMotor,
+                                                     RackMotor &rackMotor,
                                                      PodHolder &podHolder,
                                                      IDepleting &energySource,
-                                                     Environment &env)
+                                                     ObservableNavEnvironment &env)
     {
         return std::make_unique<DRobotMCU>(moveMechanism, networkAdapter, rackMotor, podHolder, energySource, env);
     }
@@ -89,10 +82,10 @@ private:
     /************************************************************************
      * @brief Returns a new Robot Movement Mechanism
      ************************************************************************/
-    static std::unique_ptr<RobotMoveMechanism<Energy>> getNewRobotMovement(
+    static std::unique_ptr<RobotMoveMechanism> getNewRobotMovement(
         const std::shared_ptr<Body> &body, IDepleting &resource)
     {
-        return std::make_unique<RobotMoveMechanism<Energy>>(body, resource);
+        return std::make_unique<RobotMoveMechanism>(body, resource);
     }
 };
 

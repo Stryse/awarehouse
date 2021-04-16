@@ -1,7 +1,6 @@
 #ifndef IVOLUMEOCCUPANT__H
 #define IVOLUMEOCCUPANT__H
 
-#include "LibConfig.h"
 #include <memory>
 #include <vector>
 

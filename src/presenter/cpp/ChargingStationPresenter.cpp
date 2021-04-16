@@ -3,7 +3,7 @@
 //Model
 #include "ChargingStation.h"
 
-ChargingStationPresenter::ChargingStationPresenter(const ChargingStation<int>* model,
+ChargingStationPresenter::ChargingStationPresenter(const ChargingStation* model,
                                                                       QObject* parent)
     : MapItemPresenter(model->getPosition().getPosY(),
                        model->getPosition().getPosX(),
