@@ -32,7 +32,7 @@ public:
     /***********************************************************
      * @brief Notifies currentCharge value changes
      ***********************************************************/
-    mutable boost::signals2::signal<void(const Energy &)> onChargeChanged;
+    mutable boost::signals2::signal<void(int)> onChargeChanged;
 
 public:
     virtual void charge(int energy) = 0;

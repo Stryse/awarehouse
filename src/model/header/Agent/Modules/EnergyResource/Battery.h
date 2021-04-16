@@ -5,13 +5,6 @@
 
 class Battery : public IDepleting
 {
-public:
-    // ###################### SIGNALS ###########################
-    /***********************************************************
-     * @brief Notifies currentCharge value changes
-     ***********************************************************/
-    boost::signals2::signal<void(int)> onChargeChanged;
-
 private:
     /**************************************************************
      * @brief Maximum amount of energy that the resource can store.

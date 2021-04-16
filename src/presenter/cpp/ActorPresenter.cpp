@@ -25,7 +25,7 @@ ActorPresenter::ActorPresenter(const DeliveryRobot* model,
     , m_moves(0)
     , model(model)
 {
-    model->getMoveMechanism()->onBodyMoved.connect([=](const Body<ObservableNavEnvironment<Tile>>& body){
+    model->getMoveMechanism()->onBodyMoved.connect([=](const Body& body){
         int row      = body.getPose().getPosition().getPosY();
         int column   = body.getPose().getPosition().getPosX();
         //TODO
@@ -38,7 +38,7 @@ ActorPresenter::ActorPresenter(const DeliveryRobot* model,
         setRotation(rotation);
     });
 
-    model->getEnergySource()->onChargeChanged.connect([=](const int& energy){
+    model->getEnergySource()->onChargeChanged.connect([=](int energy){
         setBattery(energy);
     });
 }

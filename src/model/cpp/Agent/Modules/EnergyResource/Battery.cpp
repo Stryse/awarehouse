@@ -18,12 +18,12 @@ void Battery::charge(int energy)
     if (currentCharge + energy >= maxCharge)
     {
         currentCharge = maxCharge;
-        onChargeChanged(currentCharge);
+        IDepleting::onChargeChanged(currentCharge);
     }
     else
     {
         currentCharge += energy;
-        onChargeChanged(currentCharge);
+        IDepleting::onChargeChanged(currentCharge);
     }
 
     condition = degrade(++timesUsed);
@@ -35,13 +35,13 @@ void Battery::deplete(int energy)
     if (currentCharge - energy < 0)
     {
         currentCharge = 0;
-        onChargeChanged(currentCharge);
+        IDepleting::onChargeChanged(currentCharge);
         throw typename IDepleting::EnergyDepletedException("No energy left in battery.");
     }
     else
     {
         currentCharge -= energy;
-        onChargeChanged(currentCharge);
+        IDepleting::onChargeChanged(currentCharge);
     }
 
     condition = degrade(++timesUsed);
