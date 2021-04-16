@@ -12,6 +12,10 @@ bool PodDockList::setPodDockAt(int index, PodDockPresenter& podDock)
         index >= m_podDocks.size())
         return false;
 
+    const PodDockPresenter* oldPodDock = m_podDocks.at(index);
+    if (podDock == *oldPodDock)
+        return false;
+
     m_podDocks[index] = &podDock;
     return true;
 }

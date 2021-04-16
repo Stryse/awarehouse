@@ -17,6 +17,8 @@ public:
                                                          QObject* parent = nullptr);
     explicit ChargingStationPresenter(int row, int column, QObject* parent = nullptr);
 
+    bool operator==(const ChargingStationPresenter& other) const;
+
 private:
     //Model
     const  ChargingStation<int>* model;

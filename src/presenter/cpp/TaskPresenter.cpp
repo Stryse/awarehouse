@@ -28,13 +28,12 @@ TaskPresenter& TaskPresenter::operator=(const TaskPresenter& other)
     return *this;
 }
 
-bool operator==(TaskPresenter* const lhs,
-                const  TaskPresenter rhs)
+bool TaskPresenter::operator==(const TaskPresenter& other) const
 {
-    return lhs->m_assignedRobotName    == rhs.m_assignedRobotName &&
-                   lhs->m_orders       == rhs.m_orders            &&
-                   lhs->m_destinationX == rhs.m_destinationX      &&
-                   lhs->m_destinationY == rhs.m_destinationY;
+    return this->m_assignedRobotName == other.m_assignedRobotName &&
+           this->m_orders            == other.m_orders            &&
+           this->m_destinationX      == other.m_destinationX      &&
+           this->m_destinationY      == other.m_destinationY;
 }
 
 //Getter

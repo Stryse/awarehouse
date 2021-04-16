@@ -51,42 +51,44 @@ bool ActorListModel::setData(const QModelIndex& index,
                              const    QVariant& value,
                                             int role)
 {
-    if (data(index, role) != value)
+    if (m_actors == nullptr)
+        return false;
+
+    ActorPresenter& actor = *m_actors->actors()->at(index.row());
+
+    switch(role)
     {
-        ActorPresenter& actor = *m_actors->actors()->at(index.row());
+        case NameRole:
+            actor.setName     (value.toString());
+            break;
+        case ActionRole:
+            actor.setAction   (value.toString());
+            break;
+        case BatteryRole:
+            actor.setBattery  (value.toInt());
+            break;
+        case RotationRole:
+            actor.setRotation (value.toInt());
+            break;
+        case MovesRole:
+            actor.setMoves    (value.toInt());
+            break;
+        case RowRole:
+            actor.setRow      (value.toInt());
+            break;
+        case ColumnRole:
+            actor.setColumn   (value.toInt());
+            break;
+        case ImageRole:
+            actor.setImagePath(value.toString());
+            break;
+    }
 
-        switch(role)
-        {
-            case NameRole:
-                actor.setName     (value.toString());
-                break;
-            case ActionRole:
-                actor.setAction   (value.toString());
-                break;
-            case BatteryRole:
-                actor.setBattery  (value.toInt());
-                break;
-            case RotationRole:
-                actor.setRotation (value.toInt());
-                break;
-            case MovesRole:
-                actor.setMoves    (value.toInt());
-                break;
-            case RowRole:
-                actor.setRow      (value.toInt());
-                break;
-            case ColumnRole:
-                actor.setColumn   (value.toInt());
-                break;
-            case ImageRole:
-                actor.setImagePath(value.toString());
-                break;
-        }
-
+    if (m_actors->setActorAt(index.row(), actor))
+    {
         emit dataChanged(index, index, QVector<int>() << role);
         return true;
     }
-
     return false;
 }
 

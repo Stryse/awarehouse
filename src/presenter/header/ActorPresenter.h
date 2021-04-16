@@ -24,6 +24,8 @@ public:
                                                                             QObject* parent = nullptr);
     explicit ActorPresenter(int row, int column, QObject* parent = nullptr);
 
+    bool operator==(const ActorPresenter& other) const;
+
     //Getter
     QString name()      const;
     QString action()    const;

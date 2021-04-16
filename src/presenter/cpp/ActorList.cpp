@@ -6,17 +6,21 @@ ActorList::ActorList(QObject* parent)
 
 QList<ActorPresenter*>* ActorList::actors() { return &m_actors; }
 
-bool ActorList::setActorAt(int index, ActorPresenter &actor)
+bool ActorList::setActorAt(int index, ActorPresenter& actor)
 {
     if (index < 0 ||
         index >= m_actors.size())
+        return false;
+
+    const ActorPresenter* oldActor = m_actors.at(index);
+    if (actor == *oldActor)
         return false;
 
     m_actors[index] = &actor;
     return true;
 }
 
-void ActorList::appendActor(ActorPresenter &actor)
+void ActorList::appendActor(ActorPresenter& actor)
 {
     emit preItemAppended();
     m_actors.append(&actor);

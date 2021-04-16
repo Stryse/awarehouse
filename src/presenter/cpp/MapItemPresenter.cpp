@@ -10,6 +10,13 @@ MapItemPresenter::MapItemPresenter(           int row,
     , m_imagePath(imagePath)
 {}
 
+bool MapItemPresenter::operator==(const MapItemPresenter& other) const
+{
+    return this->row()       == other.row()       &&
+           this->column()    == other.column()    &&
+           this->imagePath() == other.imagePath();
+}
+
 int     MapItemPresenter::row()       const { return m_row;       }
 int     MapItemPresenter::column()    const { return m_column;    }
 QString MapItemPresenter::imagePath() const { return m_imagePath; }

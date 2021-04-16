@@ -12,6 +12,10 @@ bool ChargingStationList::setChargingStationAt(int index, ChargingStationPresent
         index >= m_chargingStations.size())
         return false;
 
+    const ChargingStationPresenter* oldchargingStation = m_chargingStations.at(index);
+    if (chargingStation == *oldchargingStation)
+        return false;
+
     m_chargingStations[index] = &chargingStation;
     return true;
 }

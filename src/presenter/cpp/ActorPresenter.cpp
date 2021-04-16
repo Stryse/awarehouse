@@ -1,13 +1,16 @@
 #include "ActorPresenter.h"
 
+#include <cmath>
+#include <QDebug>
+
 //Model
 #include "DeliveryRobot.h"
 #include "ObservableEnvironment.h"
 #include "Body.h"
 #include "ObservableEnvironment.h"
 #include "Tile.h"
-#include <cmath>
-#include <QDebug>
+
+QString ActorPresenter::m_static_imagePath = "qrc:/images/robot.png";
 
 ActorPresenter::ActorPresenter(const DeliveryRobot<ObservableNavEnvironment<Tile>, int>* model,
                                                                                 QObject* parent)
@@ -51,7 +54,15 @@ ActorPresenter::ActorPresenter(int row, int column, QObject* parent)
     , m_moves   (0)
 {}
 
-QString ActorPresenter::m_static_imagePath = "qrc:/images/robot.png";
+bool ActorPresenter::operator==(const ActorPresenter& other) const
+{
+    return MapItemPresenter::operator==(other)    &&
+           this->name()      == other.name()      &&
+           this->action()    == other.action()    &&
+           this->battery()   == other.battery()   &&
+           this->rotation()  == other.rotation()  &&
+           this->moves()     == other.moves();
+}
 
 //Getter
 QString ActorPresenter::name()     const { return m_name;     }

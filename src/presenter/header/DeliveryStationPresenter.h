@@ -17,6 +17,8 @@ public:
                                                     QObject* parent = nullptr);
     explicit DeliveryStationPresenter(int row, int column, QObject* parent);
 
+    bool operator==(const DeliveryStationPresenter& other) const;
+
 private:
     //Model
     const  DeliveryStation* model;

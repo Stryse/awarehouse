@@ -41,27 +41,29 @@ bool DeliveryStationListModel::setData(const QModelIndex& index,
                                        const    QVariant& value,
                                                       int role)
 {
-    if (data(index, role) != value)
+    if (m_deliveryStations == nullptr)
+        return false;
+
+    DeliveryStationPresenter& deliveryStation = *m_deliveryStations->deliveryStations()->at(index.row());
+
+    switch(role)
     {
-        DeliveryStationPresenter& deliveryStation = *m_deliveryStations->deliveryStations()->at(index.row());
+        case RowRole:
+            deliveryStation.setRow      (value.toInt());
+            break;
+        case ColumnRole:
+            deliveryStation.setColumn   (value.toInt());
+            break;
+        case ImageRole:
+            deliveryStation.setImagePath(value.toString());
+            break;
+    }
 
-        switch(role)
-        {
-            case RowRole:
-                deliveryStation.setRow      (value.toInt());
-                break;
-            case ColumnRole:
-                deliveryStation.setColumn   (value.toInt());
-                break;
-            case ImageRole:
-                deliveryStation.setImagePath(value.toString());
-                break;
-        }
-
+    if (m_deliveryStations->setDeliveryStationAt(index.row(), deliveryStation))
+    {
         emit dataChanged(index, index, QVector<int>() << role);
         return true;
     }
-
     return false;
 }
 

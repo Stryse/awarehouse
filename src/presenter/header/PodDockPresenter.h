@@ -19,6 +19,8 @@ public:
                                                                     QObject* parent = nullptr);
     explicit PodDockPresenter(int row, int column, QObject* parent);
 
+    bool operator==(const PodDockPresenter& other) const;
+
 private:
     //Model
     const  PodDock<ObservableNavEnvironment<Tile>>* model;

@@ -16,6 +16,10 @@ bool TaskList::setTaskAt(int index, TaskPresenter& task)
         index >= m_tasks.size())
         return false;
 
+    const TaskPresenter* oldTask = m_tasks.at(index);
+    if (task == *oldTask)
+        return false;
+
     m_tasks[index] = &task;
     return true;
 }

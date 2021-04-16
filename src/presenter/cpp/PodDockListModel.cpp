@@ -41,27 +41,29 @@ bool PodDockListModel::setData(const QModelIndex& index,
                                const    QVariant& value,
                                               int role)
 {
-    if (data(index, role) != value)
+    if (m_podDocks == nullptr)
+        return false;
+
+    PodDockPresenter& podDock = *m_podDocks->podDocks()->at(index.row());
+
+    switch(role)
     {
-        PodDockPresenter& podDock = *m_podDocks->podDocks()->at(index.row());
+        case RowRole:
+            podDock.setRow      (value.toInt());
+            break;
+        case ColumnRole:
+            podDock.setColumn   (value.toInt());
+            break;
+        case ImageRole:
+            podDock.setImagePath(value.toString());
+            break;
+    }
 
-        switch(role)
-        {
-            case RowRole:
-                podDock.setRow      (value.toInt());
-                break;
-            case ColumnRole:
-                podDock.setColumn   (value.toInt());
-                break;
-            case ImageRole:
-                podDock.setImagePath(value.toString());
-                break;
-        }
-
+    if (m_podDocks->setPodDockAt(index.row(), podDock))
+    {
         emit dataChanged(index, index, QVector<int>() << role);
         return true;
     }
-
     return false;
 }
 

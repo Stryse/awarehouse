@@ -12,6 +12,10 @@ bool DeliveryStationList::setDeliveryStationAt(int index, DeliveryStationPresent
         index >= m_deliveryStations.size())
         return false;
 
+    const DeliveryStationPresenter* oldDeliveryStation = m_deliveryStations.at(index);
+    if (deliveryStation == *oldDeliveryStation)
+        return false;
+
     m_deliveryStations[index] = &deliveryStation;
     return true;
 }

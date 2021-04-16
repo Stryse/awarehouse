@@ -18,6 +18,8 @@ public:
                               const QString& imagePath,
                                     QObject* parent = nullptr);
 
+    bool operator==(const MapItemPresenter& other) const;
+
     //Getter
     int     row()       const;
     int     column()    const;

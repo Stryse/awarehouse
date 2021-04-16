@@ -17,6 +17,8 @@
 #include "DeliveryStationListModel.h"
 #include "TaskListModel.h"
 
+#include "ActorList.h"
+
 int main(int argc, char *argv[])
 {
 #if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
@@ -32,11 +34,18 @@ int main(int argc, char *argv[])
     // //////////////////
 
     // Register Types ///
-    qmlRegisterType<ActorListModel>           ("ActorList",           1, 0, "ActorListModel");
-    qmlRegisterType<ChargingStationListModel> ("ChargingStationList", 1, 0, "ChargingStationListModel");
-    qmlRegisterType<PodDockListModel>         ("PodDockList",         1, 0, "PodDockListModel");
-    qmlRegisterType<DeliveryStationListModel> ("DeliveryStationList", 1, 0, "DeliveryStationListModel");
-    qmlRegisterType<TaskListModel>            ("TaskList",            1, 0, "TaskListModel");
+    qmlRegisterType<ActorListModel>          ("ActorList",           1, 0, "ActorListModel");
+    qmlRegisterType<ChargingStationListModel>("ChargingStationList", 1, 0, "ChargingStationListModel");
+    qmlRegisterType<PodDockListModel>        ("PodDockList",         1, 0, "PodDockListModel");
+    qmlRegisterType<DeliveryStationListModel>("DeliveryStationList", 1, 0, "DeliveryStationListModel");
+    qmlRegisterType<TaskListModel>           ("TaskList",            1, 0, "TaskListModel");
+
+    qmlRegisterUncreatableType<ActorList>          ("ActorList",           1, 0, "ActorList",           QStringLiteral("Unable to create ActorList!"));
+    qmlRegisterUncreatableType<ChargingStationList>("ChargingStationList", 1, 0, "ChargingStationList", QStringLiteral("Unable to create ChargingStationList!"));
+    qmlRegisterUncreatableType<PodDockList>        ("PodDockList",         1, 0, "PodDockList",         QStringLiteral("Unable to create PodDockList!"));
+    qmlRegisterUncreatableType<DeliveryStationList>("DeliveryStationList", 1, 0, "DeliveryStationList", QStringLiteral("Unable to create DeliveryStationList!"));
+    qmlRegisterUncreatableType<TaskList>           ("TaskList",            1, 0, "TaskList",            QStringLiteral("Unable to create TaskList!"));
+
     qmlRegisterType<SimulationWindowPresenter>("Simulator",           1, 0, "TickRate");
     qmlRegisterType<WarehouseEditorPresenter> ("Editor",              1, 0, "TileType");
 

@@ -3,6 +3,8 @@
 //Model
 #include "PodDock.h"
 
+QString PodDockPresenter::m_static_imagePath = "qrc:/images/pod.png";
+
 PodDockPresenter::PodDockPresenter(const PodDock<ObservableNavEnvironment<Tile>>* model,
                                                                          QObject* parent)
     : MapItemPresenter(model->getPosition().getPosY(),
@@ -19,4 +21,7 @@ PodDockPresenter::PodDockPresenter(int row, int column, QObject* parent)
                        parent)
 {}
 
-QString PodDockPresenter::m_static_imagePath = "qrc:/images/pod.png";
+bool PodDockPresenter::operator==(const PodDockPresenter& other) const
+{
+    return MapItemPresenter::operator==(other);
+}

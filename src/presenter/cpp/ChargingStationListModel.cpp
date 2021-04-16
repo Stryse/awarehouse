@@ -41,27 +41,29 @@ bool ChargingStationListModel::setData(const QModelIndex& index,
                                        const    QVariant& value,
                                                       int role)
 {
-    if (data(index, role) != value)
+    if (m_chargingStations == nullptr)
+        return false;
+
+    ChargingStationPresenter& chargingStation = *m_chargingStations->chargingStations()->at(index.row());
+
+    switch(role)
     {
-        ChargingStationPresenter& chargingStation = *m_chargingStations->chargingStations()->at(index.row());
+        case RowRole:
+            chargingStation.setRow      (value.toInt());
+            break;
+        case ColumnRole:
+            chargingStation.setColumn   (value.toInt());
+            break;
+        case ImageRole:
+            chargingStation.setImagePath(value.toString());
+            break;
+    }
 
-        switch(role)
-        {
-            case RowRole:
-                chargingStation.setRow      (value.toInt());
-                break;
-            case ColumnRole:
-                chargingStation.setColumn   (value.toInt());
-                break;
-            case ImageRole:
-                chargingStation.setImagePath(value.toString());
-                break;
-        }
-
+    if (m_chargingStations->setChargingStationAt(index.row(), chargingStation))
+    {
         emit dataChanged(index, index, QVector<int>() << role);
         return true;
     }
-
     return false;
 }
 
