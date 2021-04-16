@@ -32,6 +32,8 @@ DeliveryRobot::DeliveryRobot(const std::shared_ptr<ObservableNavEnvironment> &en
 {
 }
 
+DeliveryRobot::~DeliveryRobot() {}
+
 std::shared_ptr<Body> DeliveryRobot::getNewRobotBody(const Point &position,
                                                      const DirectionVector &orientation,
                                                      const std::shared_ptr<ObservableNavEnvironment> &environment)

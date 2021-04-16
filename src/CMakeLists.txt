@@ -136,6 +136,8 @@ model/cpp/Agent/AgentAction/AgentAction.cpp
 model/cpp/Agent/AgentAction/DepletingAction.cpp
 model/cpp/Agent/AgentAction/MotorAction.cpp
 
+model/cpp/Agent/Modules/Control/DRobotMCU.cpp
+
 model/cpp/Agent/Modules/Movement/LeftTrackMotor.cpp
 model/cpp/Agent/Modules/Movement/RightTrackMotor.cpp
 
