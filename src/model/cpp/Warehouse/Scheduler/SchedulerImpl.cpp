@@ -1,6 +1,8 @@
 #include "SchedulerImpl.h"
+#include "TaskManager.h"
 
-SchedulerImpl::SchedulerImpl()
+SchedulerImpl::SchedulerImpl(TaskManager<ObservableNavEnvironment<Tile>> &taskManager)
+    : taskManager(taskManager)
 {
 }
 
@@ -11,18 +13,26 @@ SchedulerImpl::~SchedulerImpl()
 
 void SchedulerImpl::tick(int timeStamp)
 {
+    processMessages();
+    doTaskAssignment();
 }
 
 void SchedulerImpl::doTaskAssignment()
 {
 }
 
-const NetworkAdapter &SchedulerImpl::getNetworkAdapter() const
+void SchedulerImpl::processMessages()
 {
-    return networkAdapter;
+    while (!networkAdapter.isMessageQueueEmpty())
+    {
+        std::unique_ptr<AbstractNetworkMessage> message = networkAdapter.poll();
+        message->dispatch(*this);
+    }
 }
 
-NetworkAdapter &SchedulerImpl::getNetworkAdapter()
+void SchedulerImpl::receive(const AgentControlRequestMessage &message)
 {
-    return networkAdapter;
 }
+
+const NetworkAdapter &SchedulerImpl::getNetworkAdapter() const { return networkAdapter; }
+NetworkAdapter &SchedulerImpl::getNetworkAdapter() { return networkAdapter; }

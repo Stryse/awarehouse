@@ -2,20 +2,12 @@
 #define BATTERY__H
 
 #include "IDepleting.h"
-#include "boost/signals2.hpp"
 
 template <typename TEnergy = int>
 class Battery : public IDepleting<TEnergy>
 {
 public:
     using Energy = TEnergy;
-
-public:
-    // ###################### SIGNALS ###########################
-    /***********************************************************
-     * @brief Notifies currentCharge value changes
-     ***********************************************************/
-    boost::signals2::signal<void(const Energy &)> onChargeChanged;
 
 private:
     /**************************************************************
@@ -86,12 +78,12 @@ public:
         if (currentCharge + energy >= maxCharge)
         {
             currentCharge = maxCharge;
-            onChargeChanged(currentCharge);
+            IDepleting<TEnergy>::onChargeChanged(currentCharge);
         }
         else
         {
             currentCharge += energy;
-            onChargeChanged(currentCharge);
+            IDepleting<TEnergy>::onChargeChanged(currentCharge);
         }
 
         condition = degrade(++timesUsed);
@@ -112,13 +104,13 @@ public:
         if (currentCharge - energy < 0)
         {
             currentCharge = 0;
-            onChargeChanged(currentCharge);
+            IDepleting<TEnergy>::onChargeChanged(currentCharge);
             throw typename IDepleting<Energy>::EnergyDepletedException("No energy left in battery.");
         }
         else
         {
             currentCharge -= energy;
-            onChargeChanged(currentCharge);
+            IDepleting<TEnergy>::onChargeChanged(currentCharge);
         }
 
         condition = degrade(++timesUsed);

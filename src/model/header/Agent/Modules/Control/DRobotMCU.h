@@ -3,14 +3,17 @@
 
 #include "AMicroController.h"
 #include "AgentAction.h"
+#include "AgentSignals.h"
 #include "IDepleting.h"
 #include "IMoveMechanism.h"
 #include "LibConfig.h"
 #include "MotorAction.h"
 #include "NetworkAdapter.h"
+#include "NetworkMessage.h"
 #include "NetworkMessageHandler.h"
 #include "RackMotor.h"
 #include <queue>
+#include <stdexcept>
 
 // ####################### FORWARD DECLARATIONS ############################ //
 template <typename Body, typename Energy>
@@ -45,6 +48,17 @@ public:
     using PodHolder = ::PodHolder<Environment>;
     using MotorAction = ::MotorAction<Body, Energy>;
 
+    /*******************************************************
+     * @brief Delivery Robot makes decisions based on status
+     *******************************************************/
+    enum class Status
+    {
+        IDLE,
+        RUNNING,
+        CHARGING,
+        ERROR
+    };
+
 public:
     DRobotMCU(IMoveMechanism &moveMechanism,
               NetworkAdapter &networkAdapter,
@@ -53,7 +67,8 @@ public:
               IDepleting &energySource,
               Environment &env)
 
-        : moveMechanism(moveMechanism),
+        : status(Status::IDLE),
+          moveMechanism(moveMechanism),
           networkAdapter(networkAdapter),
           rackMotor(rackMotor),
           podHolder(podHolder),
@@ -73,8 +88,27 @@ public:
      *****************************************************************************/
     virtual void tick(int time) override
     {
-        processMessages();
-        doActions();
+        switch (status)
+        {
+        case Status::IDLE:
+            requestControl();
+            processMessages();
+            break;
+
+        case Status::RUNNING:
+            processMessages();
+            doActions();
+            break;
+
+        case Status::CHARGING:
+            doFullCharge();
+            break;
+
+        case Status::ERROR:
+        default:
+            throw std::runtime_error("Delivery robot has been set to ERROR STATUS");
+            break;
+        }
     }
 
 public:
@@ -101,12 +135,15 @@ public:
 
     /****************************************************************
      * @brief Called when the Agent received a ChargeAgentMessage
-     * on the connected network. With the pushed action the agent sends
-     * a ChargeSignal to the appropriate Tile, and if it's a Charger 
-     * entity it charges the Agent with some Energy.
+     * on the connected network. The agent clears its action queue and
+     * goes into CHARGING status so all control is suspended until
+     * a full recharge.
      ****************************************************************/
     virtual void receive(const ChargeAgentMessage &message) override
     {
+        std::queue<AgentAction *>().swap(actionQueue);
+        status = Status::CHARGING;
+        tick(0); // Begin Charging immediately;
     }
 
     /*****************************************************************
@@ -141,8 +178,28 @@ public:
     {
     }
 
+    virtual void receive(const AgentControlGrantedMessage &message)
+    {
+        status = Status::RUNNING;
+        tick(0); // Begin Performing Actions immediately
+    }
+
     // #####################################################################################################
 private:
+    /*************************************************************************
+     * @brief The agent sends a AgentControlRequestMessage message in the
+     * network to an Agent Controlling entity and if it responds positively
+     * it goes into running status, thus performing received actions.
+     *************************************************************************/
+    void requestControl()
+    {
+        networkAdapter.send(std::make_unique<AgentControlRequestMessage>(
+                                AgentControlData(energySource,
+                                                 moveMechanism),
+                                networkAdapter.getAddress()),
+                            0x1);
+    }
+
     /*******************************************************************
      * @brief Poll and dispatch all messages from the NetworkAdapters 
      * messageQueue to the appropriate NetworkMessagehandler.
@@ -176,6 +233,28 @@ private:
         }
     }
 
+    /************************************************************************
+     * @brief The agent keeps sending charge signals to the environment
+     * until it has been fully recharged. Then Status is changed to IDLE
+     ************************************************************************/
+    void doFullCharge()
+    {
+        if (energySource.getCharge() < energySource.getMaxCharge())
+        {
+            environment.getVolume(moveMechanism.getBody()->getPose().getPosition())
+                ->receive(energySource, ChargeSignal());
+        }
+        else
+        {
+            status = Status::IDLE;
+            tick(0); // Request control immediately
+        }
+    }
+
+    /************************************************************************
+     * @brief When pod is picked up connect pod movement to agent movement,
+     * and broadcast both agent and pod movement as different events.
+     ************************************************************************/
     void connect_PodMovementToAgentMovement()
     {
         rackMotor.onPodPickedUp.connect([&](const Body &body) {
@@ -192,6 +271,7 @@ private:
     }
 
 private:
+    Status status;
     // ############ Modules ################ //
     IMoveMechanism &moveMechanism;
     NetworkAdapter &networkAdapter;

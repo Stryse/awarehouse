@@ -8,6 +8,16 @@ class ChargeAgentMessage;
 class PickupPodMessage;
 class PutDownPodMessage;
 class PutDownOrderMessage;
+class AgentControlGrantedMessage;
+class AgentControlRequestMessage;
+
+template <typename TEnvironment>
+class Body;
+
+template <typename TVolumeType>
+class ObservableNavEnvironment;
+
+class Tile;
 // ########################################################################
 
 class NetworkMessageHandler
@@ -19,6 +29,8 @@ public:
     virtual void receive(const PickupPodMessage &message) {}
     virtual void receive(const PutDownPodMessage &message) {}
     virtual void receive(const PutDownOrderMessage &message) {}
+    virtual void receive(const AgentControlRequestMessage &message) {}
+    virtual void receive(const AgentControlGrantedMessage &message) {}
 
 protected:
     NetworkMessageHandler() = default;

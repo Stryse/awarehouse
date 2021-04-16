@@ -2,6 +2,7 @@
 #define I_DEPLETING__H
 
 #include <stdexcept>
+#include "boost/signals2.hpp"
 
 namespace idepleting_util
 {
@@ -27,6 +28,13 @@ class IDepleting
 public:
     using Energy = TEnergy;
     using EnergyDepletedException = idepleting_util::EnergyDepletedException;
+
+public:
+    // ###################### SIGNALS ###########################
+    /***********************************************************
+     * @brief Notifies currentCharge value changes
+     ***********************************************************/
+    mutable boost::signals2::signal<void(const Energy &)> onChargeChanged;
 
 public:
     virtual void charge(const Energy &energy) = 0;
