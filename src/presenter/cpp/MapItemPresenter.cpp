@@ -28,6 +28,7 @@ void MapItemPresenter::setRow(int row)
 
     m_row = row;
     emit rowChanged();
+    emit mapItemChanged();
 }
 
 void MapItemPresenter::setColumn(int column)
@@ -37,6 +38,7 @@ void MapItemPresenter::setColumn(int column)
 
     m_column    = column;
     emit columnChanged();
+    emit mapItemChanged();
 }
 
 void MapItemPresenter::setImagePath(const QString& imagePath)
@@ -46,4 +48,5 @@ void MapItemPresenter::setImagePath(const QString& imagePath)
 
     m_imagePath = imagePath;
     emit imagePathChanged();
+    emit mapItemChanged();
 }

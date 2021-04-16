@@ -3,6 +3,10 @@
 //Presenter
 #include "DeliveryStationPresenter.h"
 
+QVector<int> DeliveryStationListModel::m_roles = { RowRole,
+                                                   ColumnRole,
+                                                   ImageRole };
+
 DeliveryStationListModel::DeliveryStationListModel(QObject* parent)
     : QAbstractListModel(parent)
     , m_deliveryStations(nullptr)
@@ -118,6 +122,11 @@ void DeliveryStationListModel::setDeliveryStations(DeliveryStationList* delivery
         connect(m_deliveryStations, &DeliveryStationList::postItemRemoved,  this, [=]()
         {
             endRemoveRows();
+        });
+
+        connect(m_deliveryStations, &DeliveryStationList::dataChanged,      this, [=](int index)
+        {
+            emit dataChanged(QAbstractListModel::index(index), QAbstractListModel::index(index), m_roles);
         });
     }
 

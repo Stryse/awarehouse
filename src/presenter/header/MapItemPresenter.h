@@ -35,6 +35,8 @@ signals:
     void columnChanged();
     void imagePathChanged();
 
+    void mapItemChanged();
+
 private:
     int     m_row;
     int     m_column;

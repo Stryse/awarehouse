@@ -46,6 +46,8 @@ public:
 
 private:
     TaskList* m_tasks;
+
+    static QVector<int> m_roles;
 };
 
 #endif /* TASK_LIST_MODEL__H */

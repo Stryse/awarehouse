@@ -67,10 +67,8 @@ Item {
         Image {
             id: actorImg
 
-            property int row: model.row
-
             x: model.column * (root.cellSize + root.cellSpacing)
-            y: row    * (root.cellSize + root.cellSpacing)
+            y: model.row    * (root.cellSize + root.cellSpacing)
 
             width:  root.cellSize
             height: root.cellSize

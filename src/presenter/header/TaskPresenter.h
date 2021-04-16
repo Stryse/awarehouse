@@ -43,6 +43,8 @@ signals:
     void destinationXChanged();
     void destinationYChanged();
 
+    void taskChanged();
+
 private:
     QString      m_assignedRobotName;
     QVector<int> m_orders;

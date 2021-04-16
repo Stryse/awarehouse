@@ -45,6 +45,8 @@ public:
 
 private:
     PodDockList* m_podDocks;
+
+    static QVector<int> m_roles;
 };
 
 #endif /* POD_DOCK_LIST_MODEL__H */

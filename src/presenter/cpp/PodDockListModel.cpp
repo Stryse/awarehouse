@@ -3,6 +3,10 @@
 //Presenter
 #include "PodDockPresenter.h"
 
+QVector<int> PodDockListModel::m_roles = { RowRole,
+                                           ColumnRole,
+                                           ImageRole };
+
 PodDockListModel::PodDockListModel(QObject* parent)
     : QAbstractListModel(parent)
     , m_podDocks(nullptr)
@@ -118,6 +122,11 @@ void PodDockListModel::setPodDocks(PodDockList* podDocks)
         connect(m_podDocks, &PodDockList::postItemRemoved,  this, [=]()
         {
             endRemoveRows();
+        });
+
+        connect(m_podDocks, &PodDockList::dataChanged,      this, [=](int index)
+        {
+            emit dataChanged(QAbstractListModel::index(index), QAbstractListModel::index(index), m_roles);
         });
     }
 

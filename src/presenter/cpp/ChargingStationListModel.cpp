@@ -3,6 +3,10 @@
 //Presenter
 #include "ChargingStationPresenter.h"
 
+QVector<int> ChargingStationListModel::m_roles = { RowRole,
+                                                   ColumnRole,
+                                                   ImageRole };
+
 ChargingStationListModel::ChargingStationListModel(QObject* parent)
     : QAbstractListModel(parent)
     , m_chargingStations(nullptr)
@@ -118,6 +122,11 @@ void ChargingStationListModel::setChargingStations(ChargingStationList* actors)
         connect(m_chargingStations, &ChargingStationList::postItemRemoved,  this, [=]()
         {
             endRemoveRows();
+        });
+
+        connect(m_chargingStations, &ChargingStationList::dataChanged,      this, [=](int index)
+        {
+            emit dataChanged(QAbstractListModel::index(index), QAbstractListModel::index(index), m_roles);
         });
     }
 

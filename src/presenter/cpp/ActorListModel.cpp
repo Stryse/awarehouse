@@ -3,6 +3,15 @@
 //Presenter
 #include "ActorPresenter.h"
 
+QVector<int> ActorListModel::m_roles = { NameRole,
+                                         ActionRole,
+                                         BatteryRole,
+                                         RotationRole,
+                                         MovesRole,
+                                         RowRole,
+                                         ColumnRole,
+                                         ImageRole };
+
 ActorListModel::ActorListModel(QObject* parent)
     : QAbstractListModel(parent)
     , m_actors(nullptr)
@@ -150,9 +159,9 @@ void ActorListModel::setActors(ActorList* actors)
             endRemoveRows();
         });
 
-        connect(m_actors, &ActorList::dataChanged,  this, [=](int index)
+        connect(m_actors, &ActorList::dataChanged,      this, [=](int index)
         {
-            emit dataChanged(QAbstractListModel::index(index), QAbstractListModel::index(index), QVector<int>() << RowRole);
+            emit dataChanged(QAbstractListModel::index(index), QAbstractListModel::index(index), m_roles);
         });
     }
 

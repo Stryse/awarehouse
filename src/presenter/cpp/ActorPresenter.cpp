@@ -10,7 +10,7 @@
 #include "ObservableEnvironment.h"
 #include "Tile.h"
 
-QString ActorPresenter::m_static_imagePath = "qrc:/images/robot.png";
+QString ActorPresenter::m_static_imagePath = /*"qrc:/images/robot.png"*/"qrc:/placeholder_amogus.png";
 
 ActorPresenter::ActorPresenter(const DeliveryRobot<ObservableNavEnvironment<Tile>, int>* model,
                                                                                 QObject* parent)
@@ -26,12 +26,13 @@ ActorPresenter::ActorPresenter(const DeliveryRobot<ObservableNavEnvironment<Tile
     , model(model)
 {
     model->getMoveMechanism()->onBodyMoved.connect([=](const Body<ObservableNavEnvironment<Tile>>& body){
-        int row = body.getPose().getPosition().getPosY();
-        int column = body.getPose().getPosition().getPosX();
+        int row      = body.getPose().getPosition().getPosY();
+        int column   = body.getPose().getPosition().getPosX();
         //TODO
-        int rotateY = body.getPose().getOrientation().getY();
-        int rotateX = body.getPose().getOrientation().getX();
-        int rotation = (((std::atan2(rotateY, rotateX)*180)/M_PI));
+        int rotateY  = body.getPose().getOrientation().getY();
+        int rotateX  = body.getPose().getOrientation().getX();
+        int rotation = std::atan2(rotateY, rotateX)*180/M_PI;
+
         setRow(row);
         setColumn(column);
         setRotation(rotation);
@@ -47,7 +48,7 @@ ActorPresenter::ActorPresenter(int row, int column, QObject* parent)
                        column,
                        ActorPresenter::m_static_imagePath,
                        parent)
-    , m_name    ("Jojo")
+    , m_name    ("Anon")
     , m_action  ("\xc2\xaf\x5c\x5f\x28\xe3\x83\x84\x29\x5f\x2f\xc2\xaf")
     , m_battery (100)
     , m_rotation(0)
@@ -79,6 +80,7 @@ void ActorPresenter::setName(const QString& name)
 
     m_name = name;
     emit nameChanged();
+    emit mapItemChanged();
 }
 
 void ActorPresenter::setAction(const QString& action)
@@ -88,6 +90,7 @@ void ActorPresenter::setAction(const QString& action)
 
     m_action = action;
     emit actionChanged();
+    emit mapItemChanged();;
 }
 
 void ActorPresenter::setBattery(int level)
@@ -97,6 +100,7 @@ void ActorPresenter::setBattery(int level)
 
     m_battery = level;
     emit batteryChanged();
+    emit mapItemChanged();
 }
 
 void ActorPresenter::setRotation(int rotation)
@@ -106,6 +110,7 @@ void ActorPresenter::setRotation(int rotation)
 
     m_rotation = rotation;
     emit rotationChanged();
+    emit mapItemChanged();
 }
 
 void ActorPresenter::setMoves(int moves)
@@ -115,4 +120,5 @@ void ActorPresenter::setMoves(int moves)
 
     m_moves = moves;
     emit movesChanged();
+    emit mapItemChanged();
 }

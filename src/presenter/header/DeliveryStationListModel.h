@@ -45,6 +45,8 @@ public:
 
 private:
     DeliveryStationList* m_deliveryStations;
+
+    static QVector<int> m_roles;
 };
 
 #endif /* DELIVERY_STATION_LIST_MODEL__H */

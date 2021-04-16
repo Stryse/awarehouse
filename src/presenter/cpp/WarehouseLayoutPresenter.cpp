@@ -17,38 +17,54 @@ WarehouseLayoutPresenter::WarehouseLayoutPresenter(const State* state,
 
     //Connect robots presenter to model
     m_robots.actors()->reserve(state->getRobots().size());
-    for(auto& robot : state->getRobots())
+    auto actors = state->getRobots();
+    for (size_t i = 0; i < actors.size(); ++i)
     {
-        auto acPresenter = new ActorPresenter(robot.get(),this);
+        auto acPresenter = new ActorPresenter(actors[i].get(), this);
         m_robots.actors()->append(acPresenter);
-        connect(acPresenter, &ActorPresenter::rowChanged, this, [=]()
+        connect(acPresenter, &ActorPresenter::mapItemChanged, this, [=]()
         {
-            emit m_robots.dataChanged(m_robots.actors()->size() - 1);
+            emit m_robots.dataChanged(i);
         });
     }
 
     //Connect charging stations presenter to model
     m_chargingStations.chargingStations()->reserve(state->getChargingStations().size());
-    for(auto& station : state->getChargingStations())
+    auto chargingStations = state->getChargingStations();
+    for (size_t i = 0; i < chargingStations.size(); ++i)
     {
-        auto csPresenter = new ChargingStationPresenter(station.get(),this);
+        auto csPresenter = new ChargingStationPresenter(chargingStations[i].get(), this);
         m_chargingStations.chargingStations()->append(csPresenter);
+        connect(csPresenter, &ChargingStationPresenter::mapItemChanged, this, [=]()
+        {
+            emit m_chargingStations.dataChanged(i);
+        });
     }
 
     //Connect pod docks presenter to model
     m_podDocks.podDocks()->reserve(state->getPodDocks().size());
-    for(auto& podDock : state->getPodDocks())
+    auto podDocks = state->getPodDocks();
+    for (size_t i = 0; i < podDocks.size(); ++i)
     {
-        auto pdPresenter = new PodDockPresenter(podDock.get(),this);
+        auto pdPresenter = new PodDockPresenter(podDocks[i].get(), this);
         m_podDocks.podDocks()->append(pdPresenter);
+        connect(pdPresenter, &PodDockPresenter::mapItemChanged, this, [=]()
+        {
+            emit m_podDocks.dataChanged(i);
+        });
     }
 
     //Connect charging stations presenter to model
     m_deliveryStations.deliveryStations()->reserve(state->getDeliveryStations().size());
-    for(auto& station : state->getDeliveryStations())
+    auto deliveryStations = state->getDeliveryStations();
+    for (size_t i = 0; i < deliveryStations.size(); ++i)
     {
-        auto dsPresenter = new DeliveryStationPresenter(station.get(),this);
+        auto dsPresenter = new DeliveryStationPresenter(deliveryStations[i].get(),this);
         m_deliveryStations.deliveryStations()->append(dsPresenter);
+        connect(dsPresenter, &DeliveryStationPresenter::mapItemChanged, this, [=]()
+        {
+            emit m_deliveryStations.dataChanged(i);
+        });
     }
 }
 

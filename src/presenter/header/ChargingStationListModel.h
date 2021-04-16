@@ -45,6 +45,8 @@ public:
 
 private:
     ChargingStationList* m_chargingStations;
+
+    static QVector<int> m_roles;
 };
 
 #endif /* CHARGING_STATION_LIST_MODEL__H */

@@ -25,6 +25,8 @@ signals:
     void preItemRemoved(int index);
     void postItemRemoved();
 
+    void dataChanged(int index);
+
 public slots:
     void appendPodDock(PodDockPresenter& podDock);
     void removePodDock(int index);

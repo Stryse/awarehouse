@@ -3,6 +3,11 @@
 //Presenter
 #include "TaskPresenter.h"
 
+QVector<int> TaskListModel::m_roles = { AssignedRobotNameRole,
+                                        OrdersRole,
+                                        DestinationXRole,
+                                        DestinationYRole };
+
 TaskListModel::TaskListModel(QObject *parent)
     : QAbstractListModel(parent)
     , m_tasks(nullptr)
@@ -131,6 +136,11 @@ void TaskListModel::setTasks(TaskList* tasks)
         connect(m_tasks, &TaskList::postItemRemoved,  this, [=]()
         {
             endRemoveRows();
+        });
+
+        connect(m_tasks, &TaskList::dataChanged,      this, [=](int index)
+        {
+            emit dataChanged(QAbstractListModel::index(index), QAbstractListModel::index(index), m_roles);
         });
     }
 
