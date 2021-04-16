@@ -6,19 +6,18 @@ stages:
 
 before_script:
   - apt-get update -yqq
-  - apt-get install -yqq snapd
-  - apt-get install -yqq git
   - apt-get install -yqq cmake
-  - apt-get install -yqq python3-pip
-  - apt-get install -yqq libgl1-mesa-dev
-  - apt-get install -yqq libfreetype-dev
-  - apt-get install -yqq libxkbcommon-x11-0
-  - apt-get install -yqq libfontconfig1
-  - apt-get install -yqq libboost-all-dev
 
 build-program:
   stage: build
   script:
+    - apt-get install -yqq git
+    - apt-get install -yqq python3-pip
+    - apt-get install -yqq libgl1-mesa-dev
+    - apt-get install -yqq libfreetype-dev
+    - apt-get install -yqq libxkbcommon-x11-0
+    - apt-get install -yqq libfontconfig1
+    - apt-get install -yqq libboost-all-dev
     - pip3 install aqtinstall
     - aqt install -O qt 6.1.0 linux desktop
     - export PATH=$PWD/qt/6.1.0/gcc_64/bin/:$PATH
