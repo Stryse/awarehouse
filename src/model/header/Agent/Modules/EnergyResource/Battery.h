@@ -56,18 +56,11 @@ public:
      * @param timesUsed The times the battery was used. (default = brand new)
      *
      ************************************************************************/
-    explicit Battery(int maxCharge, int maxChargeRate = 1, int timesUsed = 0)
-        : maxCharge(maxCharge),
-          maxChargeRate(maxChargeRate),
-          currentCharge(maxCharge),
-          timesUsed(timesUsed)
-    {
-        if (maxCharge < 0)
-            this->maxCharge = 0;
-
-        condition = 1; // TODO FIX WITH FACTORY
-        this->maxCharge *= condition;
-    }
+    explicit Battery(int maxCharge, int maxChargeRate = 1, int timesUsed = 0);
+    explicit Battery(const Battery &other) = default;
+    explicit Battery(Battery &&other) = default;
+    Battery &operator=(const Battery &other) = default;
+    virtual ~Battery() = default;
 
     /*********************************************************
      * @brief The resource is refilled by the provided amount
@@ -77,22 +70,7 @@ public:
      * battery if the battery has degradation policy.
      *
      ********************************************************/
-    virtual void charge(int energy) override
-    {
-        if (currentCharge + energy >= maxCharge)
-        {
-            currentCharge = maxCharge;
-            onChargeChanged(currentCharge);
-        }
-        else
-        {
-            currentCharge += energy;
-            onChargeChanged(currentCharge);
-        }
-
-        condition = degrade(++timesUsed);
-        maxCharge *= condition;
-    }
+    virtual void charge(int energy) override;
 
     /*****************************************************
      * @brief The resource is depleted due to usage.
@@ -103,39 +81,20 @@ public:
      * there's not enough energy in the battery.
      *
      *****************************************************/
-    virtual void deplete(int energy) override
-    {
-        if (currentCharge - energy < 0)
-        {
-            currentCharge = 0;
-            onChargeChanged(currentCharge);
-            throw typename IDepleting::EnergyDepletedException("No energy left in battery.");
-        }
-        else
-        {
-            currentCharge -= energy;
-            onChargeChanged(currentCharge);
-        }
-
-        condition = degrade(++timesUsed);
-        maxCharge *= condition;
-    }
+    virtual void deplete(int energy) override;
 
     /*******************************************************
      * @brief This Battery has no degradation.
      *
      *******************************************************/
-    virtual double degrade(int timesUsed) const override
-    {
-        return IDepleting::NoDegradation;
-    }
+    virtual double degrade(int timesUsed) const override;
 
     // ############################### GETTER ####################################
-    virtual int getCharge() const override { return currentCharge; }
-    virtual int getMaxCharge() const override { return maxCharge; }
-    virtual int getTimesUsed() const override { return timesUsed; }
-    virtual double getCondition() const override { return condition; }
-    virtual int getMaxChargeRate() const override { return maxChargeRate; }
+    virtual int getCharge() const override;
+    virtual int getMaxCharge() const override;
+    virtual int getTimesUsed() const override;
+    virtual double getCondition() const override;
+    virtual int getMaxChargeRate() const override;
     // ###########################################################################
 };
 #endif /* BATTERY__H */

@@ -5,6 +5,7 @@
 #include "BodyShapeFactory.h"
 #include "IContaining.h"
 #include "ObservableEnvironment.h"
+#include "OrderModel.h"
 #include "Tile.h"
 #include "boost/signals2.hpp"
 #include <functional>

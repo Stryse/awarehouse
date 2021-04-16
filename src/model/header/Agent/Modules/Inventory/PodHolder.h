@@ -7,7 +7,6 @@
 #include <memory>
 
 // ####################### FORWARD DECLARATIONS ########################
-class ObservableNavEnvironment;
 // #####################################################################
 
 /******************************************************************************
@@ -18,62 +17,43 @@ class ObservableNavEnvironment;
 class PodHolder : public IContaining<std::unique_ptr<Pod<OrderModel>>>
 {
 public:
-    PodHolder(){};
-    PodHolder(PodHolder &&other)
-        : pod(std::move(other.pod))
-    {
-    }
+    PodHolder() = default;
+    PodHolder(PodHolder &&other) = default;
+    virtual ~PodHolder() = default;
 
-    ~PodHolder(){};
+    PodHolder(const PodHolder &other) = delete;
+    PodHolder &operator=(const PodHolder &other) = delete;
 
 public:
     /***************************************************************************************
      * @brief Don't use this function because unique pointer cant be reassigned without move.
      ***************************************************************************************/
-    virtual void push(const std::unique_ptr<Pod<OrderModel>> &) override
-    {
-        throw std::runtime_error("PodHolder::push(const ItemType &item) is not supported please use PodHolder::push(const ItemType &&item)");
-    }
+    virtual void push(const std::unique_ptr<Pod<OrderModel>> &) override;
 
     /**************************************************************
      * @brief The PodHolder acquires the provided pod
      * item will be set to nullptr.
      * @throws runtime error if holder already has a pod.
      **************************************************************/
-    virtual void push(std::unique_ptr<Pod<OrderModel>> &&item) override
-    {
-        if (pod == nullptr)
-            pod.swap(item);
-        else
-            throw std::runtime_error("PodHolder should only have one pod");
-    }
+    virtual void push(std::unique_ptr<Pod<OrderModel>> &&item) override;
 
     /******************************************************************
      * @brief Removes and returns a pod if the holder has one.
      * std::nullopt returned when there's no associated pod.
      ******************************************************************/
-    virtual std::optional<std::unique_ptr<Pod<OrderModel>>> pop(const std::unique_ptr<Pod<OrderModel>> &) override
-    {
-        if (pod)
-            return std::make_optional<std::unique_ptr<Pod<OrderModel>>>(std::move(pod));
-        else
-            return std::nullopt;
-    }
+    virtual std::optional<std::unique_ptr<Pod<OrderModel>>> pop(const std::unique_ptr<Pod<OrderModel>> &) override;
 
     /**************************************************************
      * @brief Returns whether the PodHolder has an associated pod
      **************************************************************/
-    virtual bool empty() const override
-    {
-        return pod == nullptr;
-    }
+    virtual bool empty() const override;
 
     /***************************************************************
      * @brief Returns the associated pod if the holder has one.
      * Returns nullptr if the holder has no pod.
      ***************************************************************/
-    const std::unique_ptr<Pod<OrderModel>> &getChildPod() const { return pod; } // TODO std optional
-    std::unique_ptr<Pod<OrderModel>> &getChildPod() { return pod; }
+    const std::unique_ptr<Pod<OrderModel>> &getChildPod() const;
+    std::unique_ptr<Pod<OrderModel>> &getChildPod();
 
 private:
     std::unique_ptr<Pod<OrderModel>> pod;

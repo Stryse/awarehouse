@@ -1,4 +1,5 @@
 #include "PodDock.h"
+#include "Pod.h"
 
 PodDock::PodDock(const PodDock::Point &pos)
     : Tile(pos)

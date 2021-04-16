@@ -138,6 +138,11 @@ model/cpp/Agent/AgentAction/MotorAction.cpp
 
 model/cpp/Agent/Modules/Control/DRobotMCU.cpp
 
+model/cpp/Agent/Modules/EnergyResource/Battery.cpp
+
+model/cpp/Agent/Modules/Inventory/PodHolder.cpp
+model/cpp/Agent/Modules/Inventory/RackMotor.cpp
+
 model/cpp/Agent/Modules/Movement/LeftTrackMotor.cpp
 model/cpp/Agent/Modules/Movement/RightTrackMotor.cpp
 

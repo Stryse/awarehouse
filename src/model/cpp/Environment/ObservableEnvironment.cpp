@@ -2,10 +2,8 @@
 #include "Tile.h"
 
 ObservableNavEnvironment::ObservableNavEnvironment(size_t xLength, size_t yLength, size_t zLength)
-    : xLength(xLength), yLength(yLength), zLength(zLength)
+    : tileSpace(xLength * yLength * zLength), xLength(xLength), yLength(yLength), zLength(zLength)
 {
-    tileSpace.reserve(xLength * yLength * zLength);
-
     // Fill with defaults
     for (size_t x = 0; x < xLength; ++x)
         for (size_t y = 0; y < yLength; ++y)

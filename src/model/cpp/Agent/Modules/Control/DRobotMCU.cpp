@@ -5,6 +5,8 @@
 #include "MotorAction.h"
 #include "NetworkAdapter.h"
 #include "ObservableEnvironment.h"
+#include "Pod.h"
+#include "PodHolder.h"
 #include "RackMotor.h"
 
 DRobotMCU::DRobotMCU(IMoveMechanism &moveMechanism,
