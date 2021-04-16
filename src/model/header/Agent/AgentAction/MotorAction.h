@@ -1,14 +1,14 @@
 #ifndef MOTOR_ACTION__H
 #define MOTOR_ACTION__H
 
-#include "AMotor.h"
 #include "DepletingAction.h"
-#include "MotorDrive.h"
 #include "boost/signals2.hpp"
 #include <memory>
 #include <vector>
 
 // ############################ Forward Declarations ###############################
+class MotorDrive;
+class Body;
 // #################################################################################
 /***********************************************************************************
  * @brief A kind of Action which includes the use of motors.
@@ -22,23 +22,16 @@ class MotorAction : public DepletingAction
 {
 public:
     MotorAction(std::unique_ptr<MotorDrive> &&motorDrive, IDepleting &resource,
-                const boost::signals2::signal<void(const Body &)> *event = nullptr)
+                const boost::signals2::signal<void(const Body &)> *event = nullptr);
 
-        : DepletingAction(resource, motorDrive->getEnergySum(), motorDrive->getTimeSum()),
-          motorDrive(std::move(motorDrive)), event_(event)
-    {
-    }
+    MotorAction(const MotorAction &other) = delete;
+    MotorAction(MotorAction &&other) = delete;
+    MotorAction &operator=(const MotorAction &other) = delete;
+    virtual ~MotorAction();
 
 protected:
-    virtual void depletingAction() override
-    {
-        motorDrive->executeMovement();
-
-        if (event_)
-            (*event_)(motorDrive->getBody());
-    }
-
-    virtual bool canExecute() const override { return true; }
+    virtual void depletingAction() override;
+    virtual bool canExecute() const override;
 
 private:
     std::unique_ptr<MotorDrive> motorDrive;

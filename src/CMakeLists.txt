@@ -129,6 +129,13 @@ model/cpp/Environment/Tile/DeliveryStation.cpp
 model/cpp/Environment/ObservableEnvironment.cpp
 model/cpp/Environment/Body/Body.cpp
 
+model/cpp/Agent/Agents/Agent.cpp
+model/cpp/Agent/Agents/DeliveryRobot.cpp
+
+model/cpp/Agent/AgentAction/AgentAction.cpp
+model/cpp/Agent/AgentAction/DepletingAction.cpp
+model/cpp/Agent/AgentAction/MotorAction.cpp
+
 model/cpp/Agent/Modules/Movement/LeftTrackMotor.cpp
 model/cpp/Agent/Modules/Movement/RightTrackMotor.cpp
 
