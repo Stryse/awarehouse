@@ -20,8 +20,8 @@ class ActorPresenter : public MapItemPresenter
     Q_PROPERTY(     int moves    READ moves    WRITE setMoves    NOTIFY movesChanged    )
 
 public:
-    explicit ActorPresenter(const DeliveryRobot<ObservableNavEnvironment<Tile>,int>* model,
-                                                                            QObject* parent = nullptr);
+    explicit ActorPresenter(const DeliveryRobot* model,
+                                        QObject* parent = nullptr);
     explicit ActorPresenter(int row, int column, QObject* parent = nullptr);
 
     bool operator==(const ActorPresenter& other) const;

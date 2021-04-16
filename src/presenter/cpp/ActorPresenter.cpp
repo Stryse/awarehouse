@@ -7,13 +7,13 @@
 #include "DeliveryRobot.h"
 #include "ObservableEnvironment.h"
 #include "Body.h"
-#include "ObservableEnvironment.h"
 #include "Tile.h"
 
 QString ActorPresenter::m_static_imagePath = /*"qrc:/images/robot.png"*/"qrc:/placeholder_amogus.png";
 
-ActorPresenter::ActorPresenter(const DeliveryRobot<ObservableNavEnvironment<Tile>, int>* model,
-                                                                                QObject* parent)
+ActorPresenter::ActorPresenter(const DeliveryRobot* model,
+                                           QObject* parent)
+                                     
     : MapItemPresenter(model->getBody()->getPose().getPosition().getPosY(),
                        model->getBody()->getPose().getPosition().getPosX(),
                        ActorPresenter::m_static_imagePath,
