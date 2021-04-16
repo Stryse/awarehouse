@@ -21,6 +21,10 @@ WarehouseLayoutPresenter::WarehouseLayoutPresenter(const State* state,
     {
         auto acPresenter = new ActorPresenter(robot.get(),this);
         m_robots.actors()->append(acPresenter);
+        connect(acPresenter, &ActorPresenter::rowChanged, this, [=]()
+        {
+            emit m_robots.dataChanged(m_robots.actors()->size() - 1);
+        });
     }
 
     //Connect charging stations presenter to model

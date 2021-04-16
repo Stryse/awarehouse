@@ -149,6 +149,11 @@ void ActorListModel::setActors(ActorList* actors)
         {
             endRemoveRows();
         });
+
+        connect(m_actors, &ActorList::dataChanged,  this, [=](int index)
+        {
+            emit dataChanged(QAbstractListModel::index(index), QAbstractListModel::index(index), QVector<int>() << RowRole);
+        });
     }
 
     endResetModel();
