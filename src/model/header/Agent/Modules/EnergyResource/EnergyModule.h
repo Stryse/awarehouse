@@ -2,15 +2,10 @@
 #define ENERGY_MODULE__H
 
 #include "IDepleting.h"
-#include "LibConfig.h"
 #include <memory>
 
-template <typename TEnergy = config::agent::DefaultEnergy>
-class EnergyModule // TODO: EventBroadcaster, TODO: BatteryEventHandler
+class EnergyModule
 {
-public:
-    using Energy = TEnergy;
-    using IDepleting = ::IDepleting<Energy>;
 
 public:
     explicit EnergyModule(std::unique_ptr<IDepleting> &&energySource)

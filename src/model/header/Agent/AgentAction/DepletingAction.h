@@ -3,7 +3,7 @@
 
 #include "AgentAction.h"
 #include "IDepleting.h"
-#include "LibConfig.h"
+#include <functional>
 
 /********************************************************************************
  * @brief A kind of Agent Action that needs energy to be performed.
@@ -11,38 +11,26 @@
  * consume the amount of energy needed.
  *
  ********************************************************************************/
-template <typename TEnergy = config::agent::DefaultEnergy>
 class DepletingAction : public AgentAction
 {
 public:
-    using Energy = TEnergy;
-    using IDepleting = ::IDepleting<Energy>;
     using EnergyDepletedException = typename IDepleting::EnergyDepletedException;
 
 public:
-    DepletingAction(IDepleting &resource, const Energy &energyCost, int duration)
-        : AgentAction(duration), resource(resource), energyCost(energyCost) {}
+    DepletingAction(IDepleting &resource, const int &energyCost, int duration);
+    virtual ~DepletingAction();
+    explicit DepletingAction(const DepletingAction &other) = delete;
+    explicit DepletingAction(DepletingAction &&other) = delete;
+    DepletingAction &operator=(const DepletingAction &other) = delete;
 
 protected:
-    virtual void action() override
-    {
-        try
-        {
-            resource.deplete(energyCost);
-            depletingAction();
-        }
-        catch (const EnergyDepletedException &excpt)
-        {
-            throw AgentAction::ActionFailedException("Action failed due to not enough energy in resource");
-        }
-    }
-
+    virtual void action() override;
     virtual bool canExecute() const override = 0;
     virtual void depletingAction() = 0;
 
-private:
-    IDepleting &resource;
-    Energy energyCost;
+protected:
+    std::reference_wrapper<IDepleting> resource;
+    int energyCost;
 };
 
 #endif /* DEPLETING_ACTION__H */

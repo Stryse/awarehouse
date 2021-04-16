@@ -1,6 +1,12 @@
 #ifndef AMOTOR__H
 #define AMOTOR__H
 
+#include <functional>
+
+// ########################### FORWARD DECLRATIONS ######################
+class Body;
+// ######################################################################
+
 namespace motor_util
 {
     /***********************************************************************
@@ -19,11 +25,9 @@ namespace motor_util
  * @brief A motor is an entity which can transform an associated body.
  * It can be driven in two directions. (CLOCKWISE,COUNTERCLOCKWISE)
  **********************************************************************/
-template <typename TBody>
 class AMotor
 {
 public:
-    using Body = TBody;
     using MotorDirection = motor_util::MotorDirection;
 
 public:
@@ -36,7 +40,7 @@ public:
     Body &getBody() { return body; }
 
 protected:
-    Body &body;
+    std::reference_wrapper<Body> body;
 };
 
 #endif /* A_MOTOR */

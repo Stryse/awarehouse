@@ -5,16 +5,9 @@
 #include "NetworkMessageHandler.h"
 
 // ####################### FORWARD DECLARATIONS ######################### //
-template <typename TEnergy>
 class IDepleting;
-
-template <typename TBody, typename TEnergy>
 class IMoveMechanism;
-
-template <typename TVolumeType>
 class ObservableNavEnvironment;
-
-class Tile;
 // ###################################################################### //
 
 /***************************************************************
@@ -130,10 +123,7 @@ public:
  **********************************************************************/
 struct AgentControlData
 {
-    using Body = ::Body<ObservableNavEnvironment<Tile>>;
-    using Energy = int;
-    using IDepleting = ::IDepleting<Energy>;
-    using IMoveMechanism = ::IMoveMechanism<Body, Energy>;
+    using IMoveMechanism = ::IMoveMechanism;
 
     AgentControlData(const IDepleting &energySource,
                      const IMoveMechanism &moveMechanism)

@@ -3,7 +3,9 @@
 
 #include "INavigationalEnvironment.h"
 #include "IVolumeOccupant.h"
+#include "ObservableEnvironment.h"
 #include "Pose.h"
+#include "Tile.h"
 #include <memory>
 #include <set>
 #include <vector>
@@ -16,40 +18,26 @@
  * INavigationalEnvironment. The Environment must have a member type defined as
  * @code VolumeType @endcode which must derive from @code INavigationVolume @endcode
  *************************************************************************************************************/
-template <typename TEnvironment = INavigationalEnvironment<>>
-class Body : public IVolumeOccupant<typename TEnvironment::VolumeType>
+class Body : public IVolumeOccupant<Tile>
 {
 public:
-    /****************** TYPES ******************************
-     * @brief Type of environment in which the body resides.
-     *
-     *******************************************************/
-    using Environment = TEnvironment;
-
-    /*******************************************************
-     * @brief The type of the environment's volume.
-     * Must be derived from @code INavigationVolume @endcode
-     *
-     *******************************************************/
-    using VolumeType = typename Environment::VolumeType;
-
     /*******************************************************
      * @brief The Type of the environment's point unit.
      *
      *******************************************************/
-    using Point = typename Environment::Point;
+    using Point = typename ObservableNavEnvironment::Point;
 
     /*************************************************************
      * @brief Directions are the same type as environment's points
      *
      *************************************************************/
-    using DirectionVector = ::DirectionVector<typename Environment::Point::CoordinateType>;
+    using DirectionVector = ::DirectionVector<ObservableNavEnvironment::Point::CoordinateType>;
 
     /*****************************************
      * @brief Position and direction aggregate
      *
      *****************************************/
-    using Pose = ::Pose<typename Environment::Point::CoordinateType, typename Environment::Point::CoordinateType>;
+    using Pose = ::Pose<ObservableNavEnvironment::Point::CoordinateType, ObservableNavEnvironment::Point::CoordinateType>;
 
 public:
     /*************************************** Constructors ****************************************************
@@ -63,31 +51,13 @@ public:
      *********************************************************************************************************/
     Body(const Point &position,
          const DirectionVector &orientation,
-         const std::shared_ptr<Environment> &environment,
-         std::vector<Point> &&bodyShape = {})
-
-        : pose(position, orientation), shape(std::move(bodyShape)), parentBody(nullptr), environment(environment)
-    {
-        //Place body in environment on creation.
-        occupyV(environment->getVolume(position));
-    }
+         const std::shared_ptr<ObservableNavEnvironment> &environment,
+         std::vector<Point> &&bodyShape = {});
 
     Body(const Body &other) = delete;
     Body(Body &&other) = delete;
     Body &operator=(const Body &other) = delete;
-
-    virtual ~Body()
-    {
-        // Destroy child record in parent
-        if (parentBody != nullptr)
-            parentBody->detachBody(*this);
-        // Destroy parent record in child
-        for (auto &child : childBodies)
-            child->parentBody = nullptr;
-        childBodies.clear();
-        // Leave Environment, children remain
-        Body<Environment>::freeV();
-    }
+    virtual ~Body();
 
     //############################## IVolumeOccupant implementation ##########################################
     /*********************************************************************************************************
@@ -98,48 +68,13 @@ public:
      * @param originVolume Occupied volume of the body's origin point
      * @throws VolumeCollisionException thrown when any part of the body collides.
      *********************************************************************************************************/
-    virtual void occupyV(const std::shared_ptr<VolumeType> &originVolume) override
-    {
-        freeV();
-
-        // Self origin - occupation
-        originVolume->occupyV(this);
-        containerVolume.push_back(originVolume);
-
-        // Self bodyparts -- occupation
-        for (auto &bodypart : shape)
-        {
-            Point newPos = originVolume->getPosition().moved(DirectionVector(bodypart));
-            environment->getVolume(newPos)->occupyV(this);
-            containerVolume.push_back(environment->getVolume(newPos));
-        }
-
-        // All children - occupation
-        for (auto &child : childBodies)
-        {
-            DirectionVector this2child = child->getPose().getPosition() - pose.getPosition();
-            Point newChildPos = originVolume->getPosition().moved(this2child);
-            child->occupyV(environment->getVolume(newChildPos));
-        }
-        pose.setPosition(originVolume->getPosition());
-    }
+    virtual void occupyV(const std::shared_ptr<Tile> &originVolume) override;
 
     /*******************************************************************
      * @brief The body and all of its child bodies leave the environment
      * making it possible for other entities to occupy that space.
      *******************************************************************/
-    virtual void freeV() override
-    {
-        // Free children
-        for (auto &child : childBodies)
-            child->freeV();
-
-        // Free self
-        for (auto &occupied : containerVolume)
-            occupied->freeV();
-
-        containerVolume.clear();
-    }
+    virtual void freeV() override;
 
     //##################################### Public own Methods #################################################
     /******************************************************************************
@@ -149,39 +84,21 @@ public:
      * @param direction Direction of the movement
      * @throws BodyCollisionException thrown when any part of the body collides.
      ******************************************************************************/
-    void moveBody(const DirectionVector &direction)
-    {
-        occupyV(environment->getVolume(pose.getPosition().moved(direction)));
-    }
+    void moveBody(const DirectionVector &direction);
 
     /*****************************************************************************
      * @brief Moves the body outside the environment without occupying volumes
      *
      * @param direction Direction of the movement
      * ***************************************************************************/
-    void moveBodyOutsideEnvironment(const DirectionVector &direction)
-    {
-        Point newOriginPos = pose.getPosition().moved(direction);
-
-        //Move children
-        for (auto &child : childBodies)
-        {
-            DirectionVector this2child = child->getPose().getPosition() - pose.getPosition();
-            child->getPose().setPosition(newOriginPos.moved(this2child));
-        }
-        //Move origin
-        pose.setPosition(newOriginPos);
-    }
+    void moveBodyOutsideEnvironment(const DirectionVector &direction);
 
     /******************************************************************************
      * @brief Rotates the body's orientation
      * 
      * TODO: Rotate shaped bodies properly
      ******************************************************************************/
-    void rotate(const DirectionVector &targetOrientation)
-    {
-        pose.setOrientation(targetOrientation);
-    }
+    void rotate(const DirectionVector &targetOrientation);
 
     /******************************************************************************
      * @brief Attaches another body as child body.
@@ -191,14 +108,7 @@ public:
      * independently if operation is called on child body reference directly.
      * @param body Child body to attach.
      ******************************************************************************/
-    void attachBody(Body<Environment> &body)
-    {
-        if (&body == this || body.getParent() != nullptr)
-            return;
-
-        childBodies.insert(&body);
-        body.parentBody = this;
-    }
+    void attachBody(Body &body);
 
     /******************************************************************************
      * @brief Detaches the provided body 
@@ -206,41 +116,37 @@ public:
      * 
      * @param body The child body to detach.
      ******************************************************************************/
-    void detachBody(Body<Environment> &body)
-    {
-        childBodies.erase(&body);
-        body.parentBody = nullptr;
-    }
+    void detachBody(Body &body);
 
     //################################# Getter #####################################
     /*******************************************************************************
      * @brief Returns the position and orientation of the body's origin point
      *******************************************************************************/
-    const Pose &getPose() const { return pose; }
-    Pose &getPose() { return pose; }
+    const Pose &getPose() const;
+    Pose &getPose();
 
     /*******************************************************************************
      * @brief Returns the body's children.
      *******************************************************************************/
-    const std::set<Body<Environment> *> &getChildren() const { return childBodies; }
-    std::set<Body<Environment> *> &getChildren() { return childBodies; }
+    const std::set<Body *> &getChildren() const;
+    std::set<Body *> &getChildren();
 
     /*******************************************************************************
      * @brief Returns the body's parent body if exist. Nullptr if no parent.
      *******************************************************************************/
-    const Body<Environment> *getParent() const { return parentBody; }
-    Body<Environment> *getParent() { return parentBody; }
+    const Body *getParent() const;
+    Body *getParent();
 
     /*******************************************************************************
      * @brief Returns the Volumes that the body (except its children) occupies
      *******************************************************************************/
-    const std::vector<VolumeType *> &getContainerVolume() const { return containerVolume; }
+    const std::vector<std::shared_ptr<Tile>> &getContainerVolume() const;
 
     /*******************************************************************************
      * @brief Returns the environment in which the body resides.
      *******************************************************************************/
-    const Environment &getEnvironment() const { return *environment; }
-    Environment &getEnvironment() { return *environment; }
+    const ObservableNavEnvironment &getEnvironment() const;
+    ObservableNavEnvironment &getEnvironment();
 
 private:
     //####################################### Private Members ###############################################
@@ -262,30 +168,30 @@ private:
     /**********************
      * @brief Associated other body instance that controls this body and its children.
      **********************/
-    Body<Environment> *parentBody;
+    Body *parentBody;
 
     /**********************
      * @brief Associated other body instances that can behave (eg. move) with this body.
      **********************/
-    std::set<Body<Environment> *> childBodies;
+    std::set<Body *> childBodies;
 
     /***********************
      * @brief Set of volumes that the body occupies in the environment.
      * Elements point to "environment" class member.
      ***********************/
-    std::vector<std::shared_ptr<VolumeType>> containerVolume;
+    std::vector<std::shared_ptr<Tile>> containerVolume;
 
     /***********************
      * @brief Parts of the body and it's children
      * which are collided with the last operation.
      ***********************/
 
-    // std::vector<VolumeType *> collidedBuffer; TODO IMPLEMENT
+    // std::vector<Tile *> collidedBuffer; TODO IMPLEMENT
 
     /***********************
      * @brief Reference to the 3D environment in which the body resides.
      * Owner of parentVolume's elements.
      ***********************/
-    std::shared_ptr<Environment> environment;
+    std::shared_ptr<ObservableNavEnvironment> environment;
 };
 #endif /* BODY__H */

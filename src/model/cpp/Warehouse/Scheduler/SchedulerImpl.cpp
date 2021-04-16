@@ -1,7 +1,7 @@
 #include "SchedulerImpl.h"
 #include "TaskManager.h"
 
-SchedulerImpl::SchedulerImpl(TaskManager<ObservableNavEnvironment<Tile>> &taskManager)
+SchedulerImpl::SchedulerImpl(TaskManager<ObservableNavEnvironment> &taskManager)
     : taskManager(taskManager)
 {
 }

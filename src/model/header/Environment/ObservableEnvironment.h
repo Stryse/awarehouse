@@ -4,33 +4,30 @@
 #include "IInfoProvider.h"
 #include "INavigationalEnvironment.h"
 #include "IObservableEnvironment.h"
-#include "LibConfig.h"
 #include "Point.h"
 #include <memory>
 #include <vector>
+
+
+// ####################### FORWARD DECLARATIONS ######################## //
+class Tile;
+// ##################################################################### //
 
 /*******************************************************************
  * @brief A 3D navigateable and observable environment.
  * Volume units can be queried and occupied, also it can provide
  * different kinds of informations with different methods.
- *
  *******************************************************************/
-template <typename TVolumeType = config::navigation::DefaultVolumeType>
-class ObservableNavEnvironment : public INavigationalEnvironment<TVolumeType>
+class ObservableNavEnvironment : public INavigationalEnvironment<Tile>
 {
 public:
-    /****************
-     * @brief Type of Volume that can be queried in the environment.
-     ****************/
-    using VolumeType = TVolumeType;
-
-    /****************
+    /************************************************************
      * @brief Type of Point in the environment.
-     ****************/
-    using Point = typename INavigationalEnvironment<VolumeType>::Point;
+     ************************************************************/
+    using Point = typename INavigationalEnvironment<Tile>::Point;
 
 private:
-    std::vector<std::shared_ptr<TVolumeType>> tileSpace;
+    std::vector<std::shared_ptr<Tile>> tileSpace;
     size_t xLength;
     size_t yLength;
     size_t zLength;
@@ -43,58 +40,29 @@ public:
      * @param yLength Y (Height) -- Navplane
      * @param zLength Z (Depth)  -- Air -- Default is 1 meaning it's a plane
      **********************************************************************************************************/
-    ObservableNavEnvironment(size_t xLength, size_t yLength, size_t zLength = 1)
-        : tileSpace(xLength * yLength * zLength), xLength(xLength), yLength(yLength), zLength(zLength)
-    {
-        // Fill with defaults
-        for (size_t x = 0; x < xLength; ++x)
-            for (size_t y = 0; y < yLength; ++y)
-                for (size_t z = 0; z < zLength; ++z)
-                    tileSpace[getCoordAsIndex(x, y, z)] = std::make_shared<TVolumeType>(Point(x, y, z));
-    }
-
-    ObservableNavEnvironment(const ObservableNavEnvironment &other)
-        : tileSpace(other.tileSpace), xLength(other.xLength), yLength(other.yLength), zLength(other.zLength)
-    {
-    }
-
-    virtual ~ObservableNavEnvironment() = default;
+    ObservableNavEnvironment(size_t xLength, size_t yLength, size_t zLength = 1);
+    ObservableNavEnvironment(const ObservableNavEnvironment &other);
+    virtual ~ObservableNavEnvironment();
 
     //#############################  IObservableEnvironment implementation ######################################
+    // TODO: Implement
 
     //################################ INavigationalEnvironment implementation ##################################
-
-    virtual const std::shared_ptr<VolumeType> &getVolume(const Point &point) const override
-    {
-        return tileSpace[point.getPosX() + (xLength * point.getPosY()) + (xLength * yLength * point.getPosZ())];
-    }
-
-    virtual std::shared_ptr<VolumeType> &getVolume(const Point &point) override
-    {
-        return const_cast<std::shared_ptr<VolumeType> &>(static_cast<const ObservableNavEnvironment &>(*this).getVolume(point));
-    }
-
-    virtual bool isInBounds(const Point &point) const override
-    {
-        return point.getPosX() >= 0 && point.getPosX() < xLength &&
-               point.getPosY() >= 0 && point.getPosY() < yLength &&
-               point.getPosZ() >= 0 && point.getPosZ() < zLength;
-    }
+    virtual const std::shared_ptr<Tile> &getVolume(const Point &point) const override;
+    virtual std::shared_ptr<Tile> &getVolume(const Point &point) override;
+    virtual bool isInBounds(const Point &point) const override;
 
     //############################################## Own Getter ####################################################
 
-    const std::vector<std::shared_ptr<VolumeType>> &getBuffer() const { return tileSpace; }
+    const std::vector<std::shared_ptr<Tile>> &getBuffer() const;
+    std::vector<std::shared_ptr<Tile>> &getBuffer();
 
-    std::vector<std::shared_ptr<VolumeType>> &getBuffer() { return tileSpace; }
+    size_t getXLength() const;
+    size_t getYLength() const;
+    size_t getZLength() const;
 
-    size_t getXLength() const { return xLength; }
-
-    size_t getYLength() const { return yLength; }
-
-    size_t getZLength() const { return zLength; }
-
-    size_t getCoordAsIndex(size_t x, size_t y, size_t z) const { return x + (xLength * y) + (xLength * yLength * z); }
-    size_t getCoordAsIndex(const Point &point) const { return getCoordAsIndex(point.getPosX(), point.getPosY(), point.getPosZ()); }
+    size_t getCoordAsIndex(size_t x, size_t y, size_t z) const;
+    size_t getCoordAsIndex(const Point &point) const;
 };
 
 #endif /* OBSERVABLE_NAV_ENVIRONMENT__H */

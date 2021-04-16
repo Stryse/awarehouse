@@ -1,9 +1,10 @@
 #include "PodDockLoader.h"
 #include "OrderLoader.h"
+#include "Pod.h"
 #include "Point.h"
 #include <QJsonArray>
 
-std::shared_ptr<PodDock<>> PodDockLoader::load(const QJsonObject &podDockObj)
+std::shared_ptr<PodDock> PodDockLoader::load(const QJsonObject &podDockObj)
 {
     if (podDockObj.contains("RowCoord") && podDockObj["RowCoord"].isDouble() &&
         podDockObj.contains("ColCoord") && podDockObj["ColCoord"].isDouble())
@@ -12,13 +13,13 @@ std::shared_ptr<PodDock<>> PodDockLoader::load(const QJsonObject &podDockObj)
                          podDockObj["RowCoord"].toInt(),
                          0);
 
-        return std::make_shared<PodDock<>>(position);
+        return std::make_shared<PodDock>(position);
     }
     return nullptr;
 }
 
 void PodDockLoader::loadOrders(const QJsonObject &podDockObj,
-                               Pod<OrderModel, ObservableNavEnvironment<>> &pod)
+                               Pod<OrderModel> &pod)
 {
     if (podDockObj.contains("Orders") && podDockObj["Orders"].isArray())
     {
@@ -28,7 +29,7 @@ void PodDockLoader::loadOrders(const QJsonObject &podDockObj,
     }
 }
 
-QJsonObject PodDockLoader::save(const PodDock<> &podDock)
+QJsonObject PodDockLoader::save(const PodDock &podDock)
 {
     QJsonObject podDockObject;
     podDockObject.insert("RowCoord", podDock.getPosition().getPosY());

@@ -3,7 +3,6 @@
 
 #include "IAgentSignalHandler.h"
 #include "INavigationVolume.h"
-#include "LibConfig.h"
 #include "Point.h"
 
 // ######################### FORWARD DECLARATIONS ##############################
@@ -17,7 +16,7 @@ class IVolumeOccupant;
  * Can accept occupants of that derive from IVolumeOccupant<Tile>
  *******************************************************************************/
 class Tile : public INavigationVolume<IVolumeOccupant<Tile> *>,
-             public IAgentSignalHandler<config::navigation::DefaultEnvironment>
+             public IAgentSignalHandler
 {
 public:
     /*****************************************************
@@ -50,6 +49,8 @@ public:
      * @param pos Point in 3D space, should be unique per tile
      *************/
     explicit Tile(const Point &pos);
+    explicit Tile(const Tile &other);
+    explicit Tile(Tile &&other);
     virtual ~Tile();
 
     // INavigationVolumeInterface implementation

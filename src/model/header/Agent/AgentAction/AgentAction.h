@@ -32,26 +32,17 @@ public:
     using ActionFailedException = agent_action_util::ActionFailedException;
 
 protected:
-    explicit AgentAction(int duration)
-        : duration(duration), progress(0)
-    {
-    }
+    explicit AgentAction(int duration);
+    virtual ~AgentAction();
+    explicit AgentAction(const AgentAction &other) = delete;
+    explicit AgentAction(AgentAction &&other) = delete;
+    AgentAction &operator=(const AgentAction &other) = delete;
 
 public:
-    void operator()()
-    {
-        if (!canExecute())
-            throw ActionFailedException("Agent action failed");
+    void operator()();
 
-        if (progress < duration)
-            ++progress;
-
-        if (progress >= duration)
-            action();
-    }
-
-    int getProgress() const { return progress; }
-    int getDuration() const { return duration; }
+    int getProgress() const;
+    int getDuration() const;
 
 protected:
     virtual bool canExecute() const = 0;

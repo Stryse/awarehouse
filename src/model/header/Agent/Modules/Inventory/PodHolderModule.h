@@ -3,13 +3,8 @@
 
 #include "PodHolder.h"
 
-template <typename TEnvironment>
 class PodHolderModule
 {
-public:
-    using Environment = TEnvironment;
-    using PodHolder = ::PodHolder<Environment>;
-
 public:
     // Getter
     const PodHolder &getPodHolder() const { return podHolder; }

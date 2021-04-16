@@ -47,7 +47,7 @@ private:
 
 private:
     int timeStamp;
-    TaskManager<ObservableNavEnvironment<>> taskManager;
+    TaskManager<ObservableNavEnvironment> taskManager;
     std::unique_ptr<AScheduler> scheduler;
     std::unique_ptr<AController> controller;
     std::shared_ptr<Network> network;

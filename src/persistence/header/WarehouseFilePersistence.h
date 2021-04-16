@@ -21,20 +21,20 @@ public:
 private:
     State *loadFromJsonObject(QJsonObject json);
 
-    void loadChargingStation(std::vector<std::shared_ptr<ChargingStation<>>> &chStations,
-                             std::shared_ptr<ObservableNavEnvironment<>> &env,
+    void loadChargingStation(std::vector<std::shared_ptr<ChargingStation>> &chStations,
+                             std::shared_ptr<ObservableNavEnvironment> &env,
                              QJsonObject &warehouseLayoutData);
 
     void loadDeliveryStation(std::vector<std::shared_ptr<DeliveryStation>> &deliveryStations,
-                             std::shared_ptr<ObservableNavEnvironment<>> &env,
+                             std::shared_ptr<ObservableNavEnvironment> &env,
                              QJsonObject &warehouseLayoutData);
 
-    void loadPodDock(std::vector<std::shared_ptr<PodDock<>>> &podDocks,
-                     std::shared_ptr<ObservableNavEnvironment<>> &env,
+    void loadPodDock(std::vector<std::shared_ptr<PodDock>> &podDocks,
+                     std::shared_ptr<ObservableNavEnvironment> &env,
                      QJsonObject &warehouseLayoutData);
 
-    void loadRobots(std::vector<std::shared_ptr<DeliveryRobot<>>> &robots,
-                    std::shared_ptr<ObservableNavEnvironment<>> &env,
+    void loadRobots(std::vector<std::shared_ptr<DeliveryRobot>> &robots,
+                    std::shared_ptr<ObservableNavEnvironment> &env,
                     QJsonObject &warehouseLayoutData);
 };
 

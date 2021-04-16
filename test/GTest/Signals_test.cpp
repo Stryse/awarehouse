@@ -19,34 +19,33 @@ protected:
         const size_t X = 6;
         const size_t Y = 6;
         const size_t Z = 6;
-        env = std::make_shared<ObservableNavEnvironment<>>(X, Y, Z);
+        env = std::make_shared<ObservableNavEnvironment>(X, Y, Z);
         for (int x = 0; x < X; ++x)
             for (int y = 0; y < Y; ++y)
                 for (int z = 0; z < Z; ++z)
                     env->getBuffer()[env->getCoordAsIndex(x, y, z)] = std::make_shared<Tile>(Tile::Point{x, y, z});
 
         // Replace tile with PodDocks
-        podDock = std::make_shared<PodDock<>>(PodDock<>::Point{1, 1, 0});
+        podDock = std::make_shared<PodDock>(PodDock::Point{1, 1, 0});
         env->getBuffer()[env->getCoordAsIndex(1, 1, 0)] = podDock;
         podDock->addAssociatedPod(env);
 
         // Init robot
-        robot = std::make_unique<DeliveryRobot<>>(env, Point<>(1, 1, 0), DirectionVector<>::UP());
+        robot = std::make_unique<DeliveryRobot>(env, Point<>(1, 1, 0), DirectionVector<>::UP());
     }
 
-    static std::shared_ptr<ObservableNavEnvironment<>> env;
-    static std::shared_ptr<PodDock<>> podDock;
-    static std::unique_ptr<DeliveryRobot<>> robot;
+    static std::shared_ptr<ObservableNavEnvironment> env;
+    static std::shared_ptr<PodDock> podDock;
+    static std::unique_ptr<DeliveryRobot> robot;
 
-    using MotorAction = ::MotorAction<std::decay_t<decltype(*robot)>::Body, std::decay_t<decltype(*robot)>::Energy>;
     static void moveHelper(std::queue<MotorAction *> moveActionQueue);
 };
 
-std::shared_ptr<ObservableNavEnvironment<>> NotifyTest::env = nullptr;
-std::unique_ptr<DeliveryRobot<>> NotifyTest::robot = nullptr;
-std::shared_ptr<PodDock<>> NotifyTest::podDock = nullptr;
+std::shared_ptr<ObservableNavEnvironment> NotifyTest::env = nullptr;
+std::unique_ptr<DeliveryRobot> NotifyTest::robot = nullptr;
+std::shared_ptr<PodDock> NotifyTest::podDock = nullptr;
 
-void NotifyTest::moveHelper(std::queue<NotifyTest::MotorAction *> moveActionQueue)
+void NotifyTest::moveHelper(std::queue<MotorAction *> moveActionQueue)
 {
     if (moveActionQueue.empty())
         return;
@@ -62,7 +61,7 @@ void NotifyTest::moveHelper(std::queue<NotifyTest::MotorAction *> moveActionQueu
 
 TEST_F(NotifyTest, BatterySignals)
 {
-    Battery<int> battery(100);
+    Battery battery(100);
 
     int signalReceived = 0;
     battery.onChargeChanged.connect([&](const int &charge) { ++signalReceived; });
@@ -81,7 +80,7 @@ TEST_F(NotifyTest, AgentMovementNotify)
     int signalReceived = 0;
 
     // Connects
-    robot->getMoveMechanism()->onBodyMoved.connect([&](const Body<ObservableNavEnvironment<>> &body) {
+    robot->getMoveMechanism()->onBodyMoved.connect([&](const Body &body) {
         ++signalReceived;
     });
 
@@ -98,11 +97,11 @@ TEST_F(NotifyTest, AgentPodPickup_PutDown)
 {
     int signalReceived = 0;
 
-    robot->getRackMotor().onPodPickedUp.connect([&](const Body<ObservableNavEnvironment<>> &body) {
+    robot->getRackMotor().onPodPickedUp.connect([&](const Body &body) {
         ++signalReceived;
     });
 
-    robot->getRackMotor().onPodPutDown.connect([&](const Body<ObservableNavEnvironment<>> &body) {
+    robot->getRackMotor().onPodPutDown.connect([&](const Body &body) {
         ++signalReceived;
     });
 
@@ -119,7 +118,7 @@ TEST_F(NotifyTest, AgentMovement_With_PodMovement)
 {
     // Connect Pod Movement
     int podMoved = 0;
-    podDock->getPodHolder().getChildPod()->onBodyMoved.connect([&](const Body<ObservableNavEnvironment<>> &body) {
+    podDock->getPodHolder().getChildPod()->onBodyMoved.connect([&](const Body &body) {
         ++podMoved;
     });
 

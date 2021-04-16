@@ -11,13 +11,7 @@ class PutDownOrderMessage;
 class AgentControlGrantedMessage;
 class AgentControlRequestMessage;
 
-template <typename TEnvironment>
-class Body;
-
-template <typename TVolumeType>
 class ObservableNavEnvironment;
-
-class Tile;
 // ########################################################################
 
 class NetworkMessageHandler

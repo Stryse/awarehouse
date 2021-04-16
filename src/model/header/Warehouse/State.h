@@ -15,19 +15,19 @@ class State
 {
 public:
     //Construct With Copy
-    State(const std::shared_ptr<ObservableNavEnvironment<>> &environment,
-          const std::vector<std::shared_ptr<ChargingStation<>>> &chStations,
+    State(const std::shared_ptr<ObservableNavEnvironment> &environment,
+          const std::vector<std::shared_ptr<ChargingStation>> &chStations,
           const std::vector<std::shared_ptr<DeliveryStation>> &deliveryStations,
-          const std::vector<std::shared_ptr<PodDock<>>> &podDocks,
-          const std::vector<std::shared_ptr<DeliveryRobot<>>> &robots,
+          const std::vector<std::shared_ptr<PodDock>> &podDocks,
+          const std::vector<std::shared_ptr<DeliveryRobot>> &robots,
           int rowCount, int colCount);
 
     //Construct With Move (preferred)
-    State(std::shared_ptr<ObservableNavEnvironment<>> &&environment,
-          std::vector<std::shared_ptr<ChargingStation<>>> &&chStations,
+    State(std::shared_ptr<ObservableNavEnvironment> &&environment,
+          std::vector<std::shared_ptr<ChargingStation>> &&chStations,
           std::vector<std::shared_ptr<DeliveryStation>> &&deliveryStations,
-          std::vector<std::shared_ptr<PodDock<>>> &&podDocks,
-          std::vector<std::shared_ptr<DeliveryRobot<>>> &&robots,
+          std::vector<std::shared_ptr<PodDock>> &&podDocks,
+          std::vector<std::shared_ptr<DeliveryRobot>> &&robots,
           int rowCount, int colCount);
 
     virtual ~State();
@@ -35,10 +35,10 @@ public:
 public:
     int getRowCount() const;
     int getColCount() const;
-    const std::vector<std::shared_ptr<ChargingStation<>>> &getChargingStations() const;
-    const std::vector<std::shared_ptr<PodDock<>>> &getPodDocks() const;
+    const std::vector<std::shared_ptr<ChargingStation>> &getChargingStations() const;
+    const std::vector<std::shared_ptr<PodDock>> &getPodDocks() const;
     const std::vector<std::shared_ptr<DeliveryStation>> &getDeliveryStations() const;
-    const std::vector<std::shared_ptr<DeliveryRobot<>>> &getRobots() const;
+    const std::vector<std::shared_ptr<DeliveryRobot>> &getRobots() const;
 
 public:
     void tick(int timeStamp);
@@ -47,11 +47,11 @@ private:
     size_t rowCount;
     size_t colCount;
 
-    std::shared_ptr<ObservableNavEnvironment<>> environment;
-    std::vector<std::shared_ptr<ChargingStation<>>> chStations;
-    std::vector<std::shared_ptr<PodDock<>>> podDocks;
+    std::shared_ptr<ObservableNavEnvironment> environment;
+    std::vector<std::shared_ptr<ChargingStation>> chStations;
+    std::vector<std::shared_ptr<PodDock>> podDocks;
     std::vector<std::shared_ptr<DeliveryStation>> deliveryStations;
-    std::vector<std::shared_ptr<DeliveryRobot<>>> robots;
+    std::vector<std::shared_ptr<DeliveryRobot>> robots;
 };
 
 #endif /* STATE__H */

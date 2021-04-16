@@ -123,22 +123,46 @@ presenter/header/DeliveryStationListModel.h
 
 add_library(OBJ_AWSOURCE_FILES STATIC
 # Add CPP files here - those which are !!NOT!! Q_OBJECT
-model/cpp/Tile/Tile.cpp
-model/cpp/Tile/DeliveryStation.cpp
+model/cpp/Environment/Tile/Tile.cpp
+model/cpp/Environment/Tile/PodDock.cpp
+model/cpp/Environment/Tile/DeliveryStation.cpp
+model/cpp/Environment/ObservableEnvironment.cpp
+model/cpp/Environment/Body/Body.cpp
+
+model/cpp/Agent/Agents/Agent.cpp
+model/cpp/Agent/Agents/DeliveryRobot.cpp
+
+model/cpp/Agent/AgentAction/AgentAction.cpp
+model/cpp/Agent/AgentAction/DepletingAction.cpp
+model/cpp/Agent/AgentAction/MotorAction.cpp
+
+model/cpp/Agent/Modules/Control/DRobotMCU.cpp
+
+model/cpp/Agent/Modules/EnergyResource/Battery.cpp
+
+model/cpp/Agent/Modules/Inventory/PodHolder.cpp
+model/cpp/Agent/Modules/Inventory/RackMotor.cpp
+
+model/cpp/Agent/Modules/Movement/LeftTrackMotor.cpp
+model/cpp/Agent/Modules/Movement/RightTrackMotor.cpp
+
 model/cpp/Warehouse/Warehouse.cpp
 model/cpp/Warehouse/State.cpp
 model/cpp/Warehouse/Pod/OrderModel.cpp
+
+model/cpp/Warehouse/Controller/ControllerImpl.cpp
+model/cpp/Warehouse/Scheduler/SchedulerImpl.cpp
+model/cpp/Warehouse/Network/Network.cpp
+model/cpp/Warehouse/Network/NetworkMessage.cpp
+model/cpp/Warehouse/Network/NetworkAdapter.cpp
+
 persistence/cpp/WarehouseFilePersistence.cpp
 persistence/cpp/ChargingStationLoader.cpp
 persistence/cpp/DeliveryStationLoader.cpp
 persistence/cpp/PodDockLoader.cpp
 persistence/cpp/OrderLoader.cpp
 persistence/cpp/RobotLoader.cpp
-model/cpp/Warehouse/Controller/ControllerImpl.cpp
-model/cpp/Warehouse/Scheduler/SchedulerImpl.cpp
-model/cpp/Warehouse/Network/Network.cpp
-model/cpp/Warehouse/Network/NetworkMessage.cpp
-model/cpp/Warehouse/Network/NetworkAdapter.cpp
+
 ## QOBJECT FILES ##
 ${QT_QOBJECT_FILES}
 )

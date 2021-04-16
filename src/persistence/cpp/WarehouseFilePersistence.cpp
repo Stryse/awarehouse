@@ -1,6 +1,7 @@
 #include "WarehouseFilePersistence.h"
 #include "ChargingStationLoader.h"
 #include "DeliveryStationLoader.h"
+#include "Pod.h"
 #include "PodDockLoader.h"
 #include "Point.h"
 #include "RobotLoader.h"
@@ -92,11 +93,11 @@ State *WarehouseFilePersistence::loadFromJsonObject(QJsonObject json)
         }
 
         // Create Environment
-        std::shared_ptr<ObservableNavEnvironment<>> env = std::make_shared<ObservableNavEnvironment<>>(rowSize, colSize, 3);
-        std::vector<std::shared_ptr<ChargingStation<>>> chStations;
+        std::shared_ptr<ObservableNavEnvironment> env = std::make_shared<ObservableNavEnvironment>(rowSize, colSize, 3);
+        std::vector<std::shared_ptr<ChargingStation>> chStations;
         std::vector<std::shared_ptr<DeliveryStation>> deliveryStations;
-        std::vector<std::shared_ptr<PodDock<>>> podDocks;
-        std::vector<std::shared_ptr<DeliveryRobot<>>> robots;
+        std::vector<std::shared_ptr<PodDock>> podDocks;
+        std::vector<std::shared_ptr<DeliveryRobot>> robots;
 
         loadChargingStation(chStations, env, WarehouseLayoutData);
         loadDeliveryStation(deliveryStations, env, WarehouseLayoutData);
@@ -114,8 +115,8 @@ State *WarehouseFilePersistence::loadFromJsonObject(QJsonObject json)
     return nullptr;
 }
 
-void WarehouseFilePersistence::loadChargingStation(std::vector<std::shared_ptr<ChargingStation<>>> &chStations,
-                                                   std::shared_ptr<ObservableNavEnvironment<>> &env,
+void WarehouseFilePersistence::loadChargingStation(std::vector<std::shared_ptr<ChargingStation>> &chStations,
+                                                   std::shared_ptr<ObservableNavEnvironment> &env,
                                                    QJsonObject &warehouseLayoutData)
 {
     if (warehouseLayoutData.contains("ChargingStations") && warehouseLayoutData["ChargingStations"].isArray())
@@ -125,7 +126,7 @@ void WarehouseFilePersistence::loadChargingStation(std::vector<std::shared_ptr<C
 
         for (int i = 0; i < chargingStationsJson.size(); ++i)
         {
-            std::shared_ptr<ChargingStation<>> station = ChargingStationLoader::load(chargingStationsJson[i].toObject());
+            std::shared_ptr<ChargingStation> station = ChargingStationLoader::load(chargingStationsJson[i].toObject());
 
             env->getBuffer()[env->getCoordAsIndex(station->getPosition())] = station;
             chStations.push_back(station);
@@ -134,7 +135,7 @@ void WarehouseFilePersistence::loadChargingStation(std::vector<std::shared_ptr<C
 }
 
 void WarehouseFilePersistence::loadDeliveryStation(std::vector<std::shared_ptr<DeliveryStation>> &deliveryStations,
-                                                   std::shared_ptr<ObservableNavEnvironment<>> &env,
+                                                   std::shared_ptr<ObservableNavEnvironment> &env,
                                                    QJsonObject &warehouseLayoutData)
 {
     if (warehouseLayoutData.contains("DeliveryStations") && warehouseLayoutData["DeliveryStations"].isArray())
@@ -152,8 +153,8 @@ void WarehouseFilePersistence::loadDeliveryStation(std::vector<std::shared_ptr<D
     }
 }
 
-void WarehouseFilePersistence::loadPodDock(std::vector<std::shared_ptr<PodDock<>>> &podDocks,
-                                           std::shared_ptr<ObservableNavEnvironment<>> &env,
+void WarehouseFilePersistence::loadPodDock(std::vector<std::shared_ptr<PodDock>> &podDocks,
+                                           std::shared_ptr<ObservableNavEnvironment> &env,
                                            QJsonObject &warehouseLayoutData)
 {
     if (warehouseLayoutData.contains("PodDocks") && warehouseLayoutData["PodDocks"].isArray())
@@ -163,7 +164,7 @@ void WarehouseFilePersistence::loadPodDock(std::vector<std::shared_ptr<PodDock<>
 
         for (int i = 0; i < PodDocksJSon.size(); ++i)
         {
-            std::shared_ptr<PodDock<>> podDock = PodDockLoader::load(PodDocksJSon[i].toObject());
+            std::shared_ptr<PodDock> podDock = PodDockLoader::load(PodDocksJSon[i].toObject());
 
             env->getBuffer()[env->getCoordAsIndex(podDock->getPosition())] = podDock;
             podDock->addAssociatedPod(env);
@@ -174,8 +175,8 @@ void WarehouseFilePersistence::loadPodDock(std::vector<std::shared_ptr<PodDock<>
     }
 }
 
-void WarehouseFilePersistence::loadRobots(std::vector<std::shared_ptr<DeliveryRobot<>>> &robots,
-                                          std::shared_ptr<ObservableNavEnvironment<>> &env,
+void WarehouseFilePersistence::loadRobots(std::vector<std::shared_ptr<DeliveryRobot>> &robots,
+                                          std::shared_ptr<ObservableNavEnvironment> &env,
                                           QJsonObject &warehouseLayoutData)
 {
     if (warehouseLayoutData.contains("DeliveryRobots") && warehouseLayoutData["DeliveryRobots"].isArray())

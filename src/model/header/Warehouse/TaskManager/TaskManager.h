@@ -18,8 +18,7 @@ class TaskManager
 {
 public:
     using Environment = TEnvironment;
-    using Pod = ::Pod<OrderModel, Environment>;
-    using PodDock = ::PodDock<Environment>;
+    using Pod = ::Pod<OrderModel>;
     using Point = typename Environment::Point;
 
 public:

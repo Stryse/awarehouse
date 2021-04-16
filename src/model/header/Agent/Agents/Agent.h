@@ -1,14 +1,13 @@
 #ifndef AGENT__H
 #define AGENT__H
 
-#include "AMicroController.h"
-#include "Body.h"
-#include "LibConfig.h"
 #include <memory>
 #include <string>
 
 // ######################## Forward Declarations #########################
 class AMicroController;
+class Body;
+class ObservableNavEnvironment;
 // #######################################################################
 namespace agent_util
 {
@@ -23,16 +22,10 @@ namespace agent_util
  * 
  * @tparam TEnvironment Type of environment.
  *********************************************************************************/
-template <typename TEnvironment = config::navigation::DefaultEnvironment>
 class Agent
 {
 public:
     using Configuration = agent_util::Configuration;
-
-    /*********************************************************
-     * @brief Type of the environment in which the agent acts
-     *********************************************************/
-    using Environment = TEnvironment;
 
 public:
     /*********************************************************
@@ -47,70 +40,61 @@ public:
      * @param mcu A subclass of AMicroController.
      *********************************************************/
     explicit Agent(const std::string &id_category,
-                   const std::shared_ptr<Environment> &environment,
-                   const std::shared_ptr<Body<Environment>> &body,
-                   std::unique_ptr<AMicroController> &&mcu)
+                   const std::shared_ptr<ObservableNavEnvironment> &environment,
+                   const std::shared_ptr<Body> &body,
+                   std::unique_ptr<AMicroController> &&mcu);
 
-        : environment(environment),
-          body(body),
-          mcu(std::move(mcu)),
-          id(std::string(getNewId(id_category))),
-          serialNumber(getNewSerialNumber())
-    {
-    }
+    explicit Agent(const Agent &other) = delete;
+    explicit Agent(Agent &&other) = delete;
+    virtual ~Agent();
+    Agent &operator=(const Agent &other) = delete;
 
 public:
     /*********************************************************
      * @brief Signal that indicates, that time elapsed
      * and the agent might need to act.
      *********************************************************/
-    void tick(int timeStamp) { mcu->tick(timeStamp); }
+    void tick(int timeStamp);
 
     /*********************************************************
      * @brief Returns the agent's unique identifier
      *********************************************************/
-    const std::string &getId() const { return id; }
+    const std::string &getId() const;
 
     /*********************************************************
      * @brief Returns the Agent's serial number (creation number)
      *********************************************************/
-    int getSerialNumber() const { return serialNumber; }
+    int getSerialNumber() const;
 
     /*********************************************************
      * @brief Returns the agent's body
      *********************************************************/
-    const std::shared_ptr<Body<Environment>> &getBody() const { return body; }
+    const std::shared_ptr<Body> &getBody() const;
 
 private:
     /*********************************************************
      * @brief Used to acquire a serial number each time an
      * agent is constructed.
      *********************************************************/
-    static int getNewSerialNumber() { return Agent<Environment>::newSerialNumber++; }
+    static int getNewSerialNumber();
 
     /*********************************************************
      * @brief Used to acquire a new agent ID based on category
      * with appropriate serial number.
      *********************************************************/
-    static std::string getNewId(const std::string &id_category)
-    {
-        return std::string("[AGENT]{") +
-               std::string(id_category) +
-               std::string("}_") +
-               std::to_string(Agent<Environment>::newSerialNumber);
-    }
+    static std::string getNewId(const std::string &id_category);
 
 protected:
     /******************************************************
      * @brief Environment in which the agent acts.
      ******************************************************/
-    std::shared_ptr<Environment> environment;
+    std::shared_ptr<ObservableNavEnvironment> environment;
 
     /******************************************************
      * @brief The agent's physical body,
      * has position,orientation,shape etc.
      ******************************************************/
-    std::shared_ptr<Body<Environment>> body;
+    std::shared_ptr<Body> body;
 
     /******************************************************
      * @brief A mechanism controlling the agent's modules,
@@ -138,7 +122,4 @@ private:
      ******************************************************/
     static int newSerialNumber;
 };
-
-template <typename Environment>
-int Agent<Environment>::newSerialNumber = 0x0;
 #endif /* AGENT__H */

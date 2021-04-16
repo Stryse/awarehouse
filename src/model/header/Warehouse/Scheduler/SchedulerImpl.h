@@ -10,16 +10,13 @@
 template <typename TEnvironment>
 class TaskManager;
 
-template <typename TVolumeType>
 class ObservableNavEnvironment;
-
-class Tile;
 // ################################################################################ //
 
 class SchedulerImpl : public AScheduler, NetworkMessageHandler
 {
 public:
-    explicit SchedulerImpl(TaskManager<ObservableNavEnvironment<Tile>> &taskManager);
+    explicit SchedulerImpl(TaskManager<ObservableNavEnvironment> &taskManager);
     virtual ~SchedulerImpl();
 
 public:
@@ -41,7 +38,7 @@ public:
 
 private:
     NetworkAdapter networkAdapter;
-    TaskManager<ObservableNavEnvironment<Tile>> &taskManager;
+    TaskManager<ObservableNavEnvironment> &taskManager;
 };
 
 #endif /* SCHEDULER_IMPL__H */

@@ -8,8 +8,8 @@
 class ChargingStationLoader
 {
 public:
-    static std::shared_ptr<ChargingStation<>> load(const QJsonObject &chargingStationObj);
-    static QJsonObject save(const ChargingStation<> &station);
+    static std::shared_ptr<ChargingStation> load(const QJsonObject &chargingStationObj);
+    static QJsonObject save(const ChargingStation &station);
 };
 
 #endif /* CHARGING_STATION_LOADER__H */
