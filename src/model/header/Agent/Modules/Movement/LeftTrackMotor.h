@@ -2,6 +2,7 @@
 #define LEFT_TRACK_MOTOR__H
 
 #include "AMotor.h"
+#include "Body.h"
 #include "Matrix.h"
 
 /*******************************************************
@@ -19,36 +20,19 @@ public:
     using DirectionVector = typename Body::DirectionVector;
 
 public:
-    explicit LeftTrackMotor(Body &body)
-        : AMotor(body)
-    {
-    }
+    explicit LeftTrackMotor(Body &body);
+    explicit LeftTrackMotor(const LeftTrackMotor &other);
+    explicit LeftTrackMotor(LeftTrackMotor &&other);
+    virtual ~LeftTrackMotor();
+    LeftTrackMotor &operator=(const LeftTrackMotor &other);
 
 public:
-    virtual void activate(const MotorDirection &motorDirection) override
-    {
-        Pose &pose = this->body.getPose();
-        switch (motorDirection)
-        {
-        case MotorDirection::CLOCKWISE:
-            MoveForward(this->body);
-            RotateClockWise(pose);
-            break;
-
-        case MotorDirection::COUNTER_CLOCKWISE:
-            break;
-
-        default:
-            throw std::runtime_error("Unhandled enum in LeftTrackmotor::activate()");
-        }
-    }
+    virtual void activate(const MotorDirection &motorDirection) override;
 
 private:
     static Matrix<> rotation;
 
-    void MoveForward(Body &body) { body.moveBodyOutsideEnvironment(body.getPose().getOrientation()); }
-    void RotateClockWise(Pose &pose) { rotation.transform(pose.getOrientation()); }
+    void MoveForward(Body &body);
+    void RotateClockWise(Pose &pose);
 };
-
-Matrix<> LeftTrackMotor::rotation = Matrix<>::ROTATE_Z_90_CLOCKWISE();
 #endif /* LEFT_TRACK_MOTOR__H */

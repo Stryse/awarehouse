@@ -2,8 +2,8 @@
 #define RIGHT_TRACK_MOTOR__H
 
 #include "AMotor.h"
+#include "Body.h"
 #include "Matrix.h"
-#include <stdexcept>
 
 /*******************************************************
  * @brief An implementation of an Agent's right track motor.
@@ -20,10 +20,11 @@ public:
     using DirectionVector = typename Body::DirectionVector;
 
 public:
-    explicit RightTrackMotor(Body &body)
-        : AMotor(body)
-    {
-    }
+    explicit RightTrackMotor(Body &body);
+    explicit RightTrackMotor(const RightTrackMotor &other);
+    explicit RightTrackMotor(RightTrackMotor &&other);
+    virtual ~RightTrackMotor();
+    RightTrackMotor &operator=(const RightTrackMotor &other);
 
 public:
     /***********************************************************************
@@ -33,29 +34,12 @@ public:
      * CLOCWISE          -> Rotates the body CounterClockwise
      * COUNTER_CLOCKWISE -> Moves the body Backwards
      ***********************************************************************/
-    virtual void activate(const MotorDirection &motorDirection) override
-    {
-        switch (motorDirection)
-        {
-        case MotorDirection::CLOCKWISE:
-            RotateCounterClockWise(this->body.getPose());
-            break;
-
-        case MotorDirection::COUNTER_CLOCKWISE:
-            MoveBackWards(this->body);
-            break;
-
-        default:
-            throw std::runtime_error("Unhandled enum in RightTrackMotor::activate()");
-        }
-    }
+    virtual void activate(const MotorDirection &motorDirection);
 
 private:
     static Matrix<> rotation;
 
-    void MoveBackWards(Body &body) { body.moveBodyOutsideEnvironment(body.getPose().getOrientation().muledWithScalar(-1)); }
-    void RotateCounterClockWise(Pose &pose) { rotation.transform(pose.getOrientation()); }
+    void MoveBackWards(Body &body);
+    void RotateCounterClockWise(Pose &pose);
 };
-
-Matrix<> RightTrackMotor::rotation = Matrix<>::ROTATE_Z_90_COUNTERCLOCKWISE();
 #endif /* RIGHT_TRACK_MOTOR__H */

@@ -1,6 +1,8 @@
 #ifndef AMOTOR__H
 #define AMOTOR__H
 
+#include <functional>
+
 // ########################### FORWARD DECLRATIONS ######################
 class Body;
 // ######################################################################
@@ -38,7 +40,7 @@ public:
     Body &getBody() { return body; }
 
 protected:
-    Body &body;
+    std::reference_wrapper<Body> body;
 };
 
 #endif /* A_MOTOR */
