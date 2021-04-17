@@ -17,13 +17,21 @@ bool ChargingStationList::setChargingStationAt(int index, ChargingStationPresent
         return false;
 
     m_chargingStations[index] = &chargingStation;
+    emit dataChanged(index);
     return true;
 }
 
 void ChargingStationList::appendChargingStation(ChargingStationPresenter& chargingStation)
 {
     emit preItemAppended();
+
+    int last = m_chargingStations.size();
     m_chargingStations.append(&chargingStation);
+    connect(&chargingStation, &ChargingStationPresenter::mapItemChanged, this, [=]()
+    {
+        emit dataChanged(last);
+    });
+
     emit postItemAppended();
 }
 
@@ -34,7 +42,18 @@ void ChargingStationList::removeChargingStation(int index)
         return;
 
     emit preItemRemoved(index);
+
+    m_chargingStations[index]->disconnect(this);
     m_chargingStations.removeAt(index);
+    for (int i = index; i < m_chargingStations.size(); ++i)
+    {
+        m_chargingStations[i]->disconnect(this);
+        connect(m_chargingStations[i], &MapItemPresenter::mapItemChanged, this, [=]()
+        {
+            emit dataChanged(i);
+        });
+    }
+
     emit postItemRemoved();
 }
 
@@ -43,21 +62,13 @@ void ChargingStationList::removeChargingStation(int row, int column)
     if (row < 0 || column < 0)
         return;
 
-    int index = -1;
     for (int i = 0; i < m_chargingStations.size(); ++i)
         if (m_chargingStations[i]->row()    == row &&
             m_chargingStations[i]->column() == column)
         {
-            index = i;
-            break;
+            removeChargingStation(i);
+            return;
         }
-
-    if (index == -1)
-        return;
-
-    emit preItemRemoved(index);
-    m_chargingStations.removeAt(index);
-    emit postItemRemoved();
 }
 
 void ChargingStationList::clear()

@@ -17,13 +17,21 @@ bool ActorList::setActorAt(int index, ActorPresenter& actor)
         return false;
 
     m_actors[index] = &actor;
+    emit dataChanged(index);
     return true;
 }
 
 void ActorList::appendActor(ActorPresenter& actor)
 {
     emit preItemAppended();
+
+    int last = m_actors.size();
     m_actors.append(&actor);
+    connect(&actor, &ActorPresenter::mapItemChanged, this, [=]()
+    {
+        emit dataChanged(last);
+    });
+
     emit postItemAppended();
 }
 
@@ -34,7 +42,18 @@ void ActorList::removeActor(int index)
         return;
 
     emit preItemRemoved(index);
+
+    m_actors[index]->disconnect(this);
     m_actors.removeAt(index);
+    for (int i = index; i < m_actors.size(); ++i)
+    {
+        m_actors[i]->disconnect(this);
+        connect(m_actors[i], &MapItemPresenter::mapItemChanged, this, [=]()
+        {
+            emit dataChanged(i);
+        });
+    }
+
     emit postItemRemoved();
 }
 
@@ -43,21 +62,13 @@ void ActorList::removeActor(int row, int column)
     if (row < 0 || column < 0)
         return;
 
-    int index = -1;
     for (int i = 0; i < m_actors.size(); ++i)
         if (m_actors[i]->row()    == row &&
             m_actors[i]->column() == column)
         {
-            index = i;
-            break;
+            removeActor(i);
+            return;
         }
-
-    if (index == -1)
-        return;
-
-    emit preItemRemoved(index);
-    m_actors.removeAt(index);
-    emit postItemRemoved();
 }
 
 void ActorList::clear()

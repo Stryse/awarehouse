@@ -28,8 +28,8 @@ signals:
     void dataChanged(int index);
 
 public slots:
-    void appendOrder(TaskPresenter& task);
-    void removeOrder(int index);
+    void appendTask(TaskPresenter& task);
+    void removeTask(int index);
 
     void clear();
 

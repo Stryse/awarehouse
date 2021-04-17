@@ -17,13 +17,21 @@ bool PodDockList::setPodDockAt(int index, PodDockPresenter& podDock)
         return false;
 
     m_podDocks[index] = &podDock;
+    emit dataChanged(index);
     return true;
 }
 
 void PodDockList::appendPodDock(PodDockPresenter& podDock)
 {
     emit preItemAppended();
+
+    int last = m_podDocks.size();
     m_podDocks.append(&podDock);
+    connect(&podDock, &PodDockPresenter::mapItemChanged, this, [=]()
+    {
+        emit dataChanged(last);
+    });
+
     emit postItemAppended();
 }
 
@@ -34,7 +42,18 @@ void PodDockList::removePodDock(int index)
         return;
 
     emit preItemRemoved(index);
+
+    m_podDocks[index]->disconnect(this);
     m_podDocks.removeAt(index);
+    for (int i = index; i < m_podDocks.size(); ++i)
+    {
+        m_podDocks[i]->disconnect(this);
+        connect(m_podDocks[i], &MapItemPresenter::mapItemChanged, this, [=]()
+        {
+            emit dataChanged(i);
+        });
+    }
+
     emit postItemRemoved();
 }
 
@@ -43,21 +62,13 @@ void PodDockList::removePodDock(int row, int column)
     if (row < 0 || column < 0)
         return;
 
-    int index = -1;
     for (int i = 0; i < m_podDocks.size(); ++i)
         if (m_podDocks[i]->row()    == row &&
             m_podDocks[i]->column() == column)
         {
-            index = i;
-            break;
+            removePodDock(i);
+            return;
         }
-
-    if (index == -1)
-        return;
-
-    emit preItemRemoved(index);
-    m_podDocks.removeAt(index);
-    emit postItemRemoved();
 }
 
 void PodDockList::clear()

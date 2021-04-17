@@ -35,7 +35,7 @@ public slots:
     void clear();
 
 public:
-    QList<ActorPresenter*> m_actors;
+    QList<ActorPresenter*>         m_actors;
 };
 
 #endif /* ACTOR_LIST__H */
