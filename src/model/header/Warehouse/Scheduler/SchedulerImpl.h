@@ -124,7 +124,7 @@ private:
                         TaskAssignmentComparator>
         sortedAssignmentData;
 
-    static const int SOFT_TEST_BIAS = 4;
+    static const int SOFT_TEST_BIAS = 5;
 };
 
 #endif /* SCHEDULER_IMPL__H */

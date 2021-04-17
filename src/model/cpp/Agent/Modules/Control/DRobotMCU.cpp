@@ -35,8 +35,9 @@ void DRobotMCU::tick(int time)
     switch (status)
     {
     case Status::IDLE:
-        requestControl();
-        processMessages();
+        processMessages(); // Status may change
+        if (status == Status::IDLE)
+            requestControl();
         break;
 
     case Status::RUNNING:

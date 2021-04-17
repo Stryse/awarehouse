@@ -83,18 +83,29 @@ bool SchedulerImpl::softTest(const Task &task, const AgentControlData &controlDa
 TaskAssignment *SchedulerImpl::tryAssignTask(const AgentControlData &controlData)
 {
     int minCostHeuristic = INT_MAX;
-    Task *assignedTask = nullptr;
-    for (auto &task : taskManager->getUnAssignedTasks())
+
+    int assignedTaskInd = -1;
+    for (size_t i = 0; i < taskManager->getUnAssignedTasks().size(); ++i)
     {
         int costHeuristic;
 
-        bool success = softTest(*task, controlData, costHeuristic);
+        bool success = softTest(*taskManager->getUnAssignedTasks()[i], controlData, costHeuristic);
         if (success && costHeuristic < minCostHeuristic)
         {
-            assignedTask = task;
+            assignedTaskInd = i;
             minCostHeuristic = costHeuristic;
         }
     }
 
-    return (assignedTask != nullptr) ? new TaskAssignment(assignedTask, &controlData, minCostHeuristic) : nullptr;
+    if (assignedTaskInd != -1)
+    {
+        TaskAssignment *assignment = new TaskAssignment(taskManager->getUnAssignedTasks()[assignedTaskInd],
+                                                        &controlData, minCostHeuristic);
+
+        auto it = taskManager->getUnAssignedTasks().begin() + assignedTaskInd;
+        taskManager->getUnAssignedTasks().erase(it);
+        return assignment;
+    }
+    else
+        return nullptr;
 }

@@ -79,7 +79,7 @@ void TaskManager::createTask(const PodDock &podDock)
     wayPoints.push_back(podDock.getPosition());
 
     // Register Delivery Task
-    tasks.emplace_back(std::make_unique<DeliveryTask>(std::move(wayPoints), sumDistance));
+    tasks.emplace_back(std::make_unique<Task>(std::move(wayPoints), sumDistance));
     unassignedTasks.push_back(tasks.back().get());
 }
 

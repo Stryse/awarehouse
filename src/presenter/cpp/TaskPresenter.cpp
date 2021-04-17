@@ -5,14 +5,11 @@ TaskPresenter::TaskPresenter(Task* task,
                              QObject* parent)
     : QObject(parent)
     , model(task)
+    , m_assignedRobotName(QString::fromStdString(task->getAssignedAgentID()))
     , m_orders           ({})
     , m_destinationX     (task->getWayPoints().at(0).getPosX())
     , m_destinationY     (task->getWayPoints().at(0).getPosY())
 {
-    if(task->getAssignedAgent() == nullptr)
-        m_assignedRobotName = "N/A";
-    else
-        m_assignedRobotName = QString::fromStdString(task->getAssignedAgent()->getId());
 }
 
 TaskPresenter::TaskPresenter(const TaskPresenter& task)
