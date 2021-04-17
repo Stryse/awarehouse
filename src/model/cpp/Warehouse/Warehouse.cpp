@@ -7,7 +7,7 @@
 
 Warehouse::Warehouse(std::unique_ptr<IWarehousePersistence<QString>> &&persistence)
     : timeStamp(0),
-      scheduler(std::make_unique<SchedulerImpl>(taskManager)),
+      scheduler(std::make_unique<SchedulerImpl>()),
       controller(std::make_unique<ControllerImpl>()),
       network(std::make_shared<Network>()),
       state(nullptr),
@@ -35,7 +35,6 @@ bool Warehouse::loadState(const QString &srcPath)
     {
         timeStamp = 0;
         setupNetwork(*state);
-        setupTaskManager(*state);
 
         // TODO REMOVE
         controller->getNetworkAdapter().send(std::make_unique<AgentControlGrantedMessage>(0x1), 100);
@@ -63,11 +62,4 @@ void Warehouse::setupNetwork(State &state)
 
     for (auto &agent : state.getRobots())
         agent->getNetworkAdapter().connect(network);
-}
-
-void Warehouse::setupTaskManager(State &state)
-{
-    taskManager.setPodDocks(&state.getPodDocks());
-    taskManager.setDeliveryStations(&state.getDeliveryStations());
-    taskManager.createDeliveryTasks();
 }

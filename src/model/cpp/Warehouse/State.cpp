@@ -13,7 +13,8 @@ State::State(const std::shared_ptr<ObservableNavEnvironment> &environment,
       chStations(chStations),
       deliveryStations(deliveryStations),
       podDocks(podDocks),
-      robots(robots)
+      robots(robots),
+      taskManager(this->podDocks, this->deliveryStations)
 {
 }
 
@@ -29,7 +30,8 @@ State::State(std::shared_ptr<ObservableNavEnvironment> &&environment,
       chStations(std::move(chStations)),
       deliveryStations(std::move(deliveryStations)),
       podDocks(std::move(podDocks)),
-      robots(std::move(robots))
+      robots(std::move(robots)),
+      taskManager(this->podDocks, this->deliveryStations)
 {
 }
 
@@ -49,3 +51,6 @@ const std::vector<std::shared_ptr<ChargingStation>> &State::getChargingStations(
 const std::vector<std::shared_ptr<PodDock>> &State::getPodDocks() const { return podDocks; }
 const std::vector<std::shared_ptr<DeliveryStation>> &State::getDeliveryStations() const { return deliveryStations; }
 const std::vector<std::shared_ptr<DeliveryRobot>> &State::getRobots() const { return robots; }
+
+const TaskManager &State::getTaskManager() const { return taskManager; }
+TaskManager &State::getTaskManager() { return taskManager; }

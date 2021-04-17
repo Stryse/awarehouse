@@ -38,16 +38,8 @@ private:
      ***************************************************/
     void setupNetwork(State &state);
 
-    /***************************************************
-     * @brief Provides the Task manager with
-     * task sources and creates all the tasks that
-     * can be found.
-     ***************************************************/
-    void setupTaskManager(State &state);
-
 private:
     int timeStamp;
-    TaskManager<ObservableNavEnvironment> taskManager;
     std::unique_ptr<AScheduler> scheduler;
     std::unique_ptr<AController> controller;
     std::shared_ptr<Network> network;

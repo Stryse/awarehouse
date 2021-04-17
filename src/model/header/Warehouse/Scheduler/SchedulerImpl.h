@@ -7,16 +7,15 @@
 #include <queue>
 
 // ############################ FORWARD DECLARATIONS ############################## //
-template <typename TEnvironment>
-class TaskManager;
-
 class ObservableNavEnvironment;
+class TaskManager;
 // ################################################################################ //
 
 class SchedulerImpl : public AScheduler, NetworkMessageHandler
 {
 public:
-    explicit SchedulerImpl(TaskManager<ObservableNavEnvironment> &taskManager);
+    explicit SchedulerImpl();
+    explicit SchedulerImpl(TaskManager *taskManager);
     virtual ~SchedulerImpl();
 
 public:
@@ -38,7 +37,7 @@ public:
 
 private:
     NetworkAdapter networkAdapter;
-    TaskManager<ObservableNavEnvironment> &taskManager;
+    TaskManager *taskManager;
 };
 
 #endif /* SCHEDULER_IMPL__H */

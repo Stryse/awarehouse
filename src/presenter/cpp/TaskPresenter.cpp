@@ -1,15 +1,14 @@
 #include "TaskPresenter.h"
+#include "Task.h"
 
-TaskPresenter::TaskPresenter(     QString assignedRobotName,
-                             QVector<int> orders,
-                                      int destinationX,
-                                      int destinationY,
-                                 QObject* parent)
+TaskPresenter::TaskPresenter(Task* task,
+                             QObject* parent)
     : QObject(parent)
-    , m_assignedRobotName(assignedRobotName)
-    , m_orders           (orders           )
-    , m_destinationX     (destinationX     )
-    , m_destinationY     (destinationY     )
+    , model(task)
+    , m_assignedRobotName("Jani")
+    , m_orders           ({})
+    , m_destinationX     (0)
+    , m_destinationY     (0)
 {}
 
 TaskPresenter::TaskPresenter(const TaskPresenter& task)
