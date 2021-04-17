@@ -17,7 +17,7 @@
 WarehouseFilePersistence::WarehouseFilePersistence() {}
 WarehouseFilePersistence::~WarehouseFilePersistence() {}
 
-State *WarehouseFilePersistence::load(const QString &resource)
+State *WarehouseFilePersistence::load(const QString &resource, const Settings* settings)
 {
     QString jsonString;
     QFile sourceFile(resource);
@@ -29,7 +29,7 @@ State *WarehouseFilePersistence::load(const QString &resource)
 
             QJsonDocument warehouseDoc = QJsonDocument::fromJson(jsonString.toUtf8());
             QJsonObject warehouseJsonObj = warehouseDoc.object();
-            return loadFromJsonObject(warehouseJsonObj);
+            return loadFromJsonObject(warehouseJsonObj, settings);
         }
     return nullptr;
 }
@@ -75,7 +75,7 @@ bool WarehouseFilePersistence::save(const State &state, const QString &resource)
     return true;
 }
 
-State *WarehouseFilePersistence::loadFromJsonObject(QJsonObject json)
+State *WarehouseFilePersistence::loadFromJsonObject(QJsonObject json, const Settings* settings)
 {
 
     if (json.contains("WarehouseLayoutData") && json["WarehouseLayoutData"].isObject())
@@ -102,7 +102,7 @@ State *WarehouseFilePersistence::loadFromJsonObject(QJsonObject json)
         loadChargingStation(chStations, env, WarehouseLayoutData);
         loadDeliveryStation(deliveryStations, env, WarehouseLayoutData);
         loadPodDock(podDocks, env, WarehouseLayoutData);
-        loadRobots(robots, env, WarehouseLayoutData);
+        loadRobots(robots, env, WarehouseLayoutData, settings);
 
         // Construct State from read data
         return new State(std::move(env),
@@ -177,7 +177,8 @@ void WarehouseFilePersistence::loadPodDock(std::vector<std::shared_ptr<PodDock>>
 
 void WarehouseFilePersistence::loadRobots(std::vector<std::shared_ptr<DeliveryRobot>> &robots,
                                           std::shared_ptr<ObservableNavEnvironment> &env,
-                                          QJsonObject &warehouseLayoutData)
+                                          QJsonObject &warehouseLayoutData,
+                                          const Settings* settings)
 {
     if (warehouseLayoutData.contains("DeliveryRobots") && warehouseLayoutData["DeliveryRobots"].isArray())
     {
@@ -185,6 +186,6 @@ void WarehouseFilePersistence::loadRobots(std::vector<std::shared_ptr<DeliveryRo
         robots.reserve(RobotsArray.size());
 
         for (int i = 0; i < RobotsArray.size(); ++i)
-            robots.push_back(RobotLoader::load(RobotsArray[i].toObject(), env));
+            robots.push_back(RobotLoader::load(RobotsArray[i].toObject(), env, settings));
     }
 }

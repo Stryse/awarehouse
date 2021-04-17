@@ -62,7 +62,7 @@ ScrollView {
         ComboBox {
             id: wareHouseComboBox
 
-            model: ["Basic", "Secondary"]
+            model: SimPresenter.maps
 
             Layout.alignment: Qt.AlignRight
 
