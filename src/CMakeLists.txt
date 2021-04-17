@@ -162,6 +162,7 @@ model/cpp/Warehouse/Warehouse.cpp
 model/cpp/Warehouse/State.cpp
 model/cpp/Warehouse/Pod/OrderModel.cpp
 
+model/cpp/Warehouse/TaskManager/TaskManager.cpp
 model/cpp/Warehouse/Controller/ControllerImpl.cpp
 model/cpp/Warehouse/Scheduler/SchedulerImpl.cpp
 model/cpp/Warehouse/Network/Network.cpp

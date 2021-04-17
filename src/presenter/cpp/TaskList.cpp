@@ -3,9 +3,6 @@
 TaskList::TaskList(QObject* parent)
     : QObject(parent)
 {
-    m_tasks.append(new TaskPresenter("amogus", {1,2,3}, 3, 5, this));
-    m_tasks.append(new TaskPresenter("sus", {4}, 0, 7, this));
-    m_tasks.append(new TaskPresenter("lajos", {2,4}, 2, 7, this));
 }
 
 QList<TaskPresenter*>* TaskList::tasks() { return &m_tasks; }

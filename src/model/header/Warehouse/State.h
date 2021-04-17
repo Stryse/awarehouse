@@ -7,8 +7,8 @@
 #include "DeliveryStation.h"
 #include "ObservableEnvironment.h"
 #include "PodDock.h"
+#include "TaskManager.h"
 #include <memory>
-
 // ######################## FORWARD DECLARATIONS ######################### //
 // ###################################################################### //
 class State
@@ -40,6 +40,9 @@ public:
     const std::vector<std::shared_ptr<DeliveryStation>> &getDeliveryStations() const;
     const std::vector<std::shared_ptr<DeliveryRobot>> &getRobots() const;
 
+    const TaskManager &getTaskManager() const;
+    TaskManager &getTaskManager();
+
 public:
     void tick(int timeStamp);
 
@@ -52,6 +55,8 @@ private:
     std::vector<std::shared_ptr<PodDock>> podDocks;
     std::vector<std::shared_ptr<DeliveryStation>> deliveryStations;
     std::vector<std::shared_ptr<DeliveryRobot>> robots;
+
+    TaskManager taskManager;
 };
 
 #endif /* STATE__H */

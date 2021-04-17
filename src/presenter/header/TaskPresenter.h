@@ -5,6 +5,8 @@
 #include <QPoint>
 #include <QDateTime>
 
+class Task;
+
 class TaskPresenter : public QObject
 {
     Q_OBJECT
@@ -15,11 +17,9 @@ class TaskPresenter : public QObject
     Q_PROPERTY(          int destinationY      READ destinationY      NOTIFY destinationYChanged      )
 
 public:
-    explicit TaskPresenter(     QString assignedRobotName = "N/A",
-                           QVector<int> orders            = QVector<int>(),
-                                    int destinationX      = 0,
-                                    int destinationY      = 0,
-                               QObject* parent            = nullptr);
+    explicit TaskPresenter(Task* model,
+                           QObject* parent = nullptr);
+
     explicit TaskPresenter(const TaskPresenter& task);
 
     TaskPresenter& operator=(const TaskPresenter& other);
@@ -46,6 +46,8 @@ signals:
     void taskChanged();
 
 private:
+    Task* model;
+
     QString      m_assignedRobotName;
     QVector<int> m_orders;
     int          m_destinationX;
