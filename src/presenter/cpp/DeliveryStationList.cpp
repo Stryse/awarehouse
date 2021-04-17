@@ -17,13 +17,21 @@ bool DeliveryStationList::setDeliveryStationAt(int index, DeliveryStationPresent
         return false;
 
     m_deliveryStations[index] = &deliveryStation;
+    emit dataChanged(index);
     return true;
 }
 
 void DeliveryStationList::appendDeliveryStation(DeliveryStationPresenter& deliveryStation)
 {
     emit preItemAppended();
+
+    int last = m_deliveryStations.size();
     m_deliveryStations.append(&deliveryStation);
+    connect(&deliveryStation, &DeliveryStationPresenter::mapItemChanged, this, [=]()
+    {
+        emit dataChanged(last);
+    });
+
     emit postItemAppended();
 }
 
@@ -34,7 +42,18 @@ void DeliveryStationList::removeDeliveryStation(int index)
         return;
 
     emit preItemRemoved(index);
+
+    m_deliveryStations[index]->disconnect(this);
     m_deliveryStations.removeAt(index);
+    for (int i = index; i < m_deliveryStations.size(); ++i)
+    {
+        m_deliveryStations[i]->disconnect(this);
+        connect(m_deliveryStations[i], &MapItemPresenter::mapItemChanged, this, [=]()
+        {
+            emit dataChanged(i);
+        });
+    }
+
     emit postItemRemoved();
 }
 
@@ -43,21 +62,13 @@ void DeliveryStationList::removeDeliveryStation(int row, int column)
     if (row < 0 || column < 0)
         return;
 
-    int index = -1;
     for (int i = 0; i < m_deliveryStations.size(); ++i)
         if (m_deliveryStations[i]->row()    == row &&
             m_deliveryStations[i]->column() == column)
         {
-            index = i;
-            break;
+            removeDeliveryStation(i);
+            return;
         }
-
-    if (index == -1)
-        return;
-
-    emit preItemRemoved(index);
-    m_deliveryStations.removeAt(index);
-    emit postItemRemoved();
 }
 
 void DeliveryStationList::clear()

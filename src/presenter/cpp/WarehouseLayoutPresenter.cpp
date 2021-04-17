@@ -21,10 +21,7 @@ WarehouseLayoutPresenter::WarehouseLayoutPresenter(const State *state,
     for (size_t i = 0; i < actors.size(); ++i)
     {
         auto acPresenter = new ActorPresenter(actors[i].get(), this);
-        m_robots.actors()->append(acPresenter);
-        connect(acPresenter, &ActorPresenter::mapItemChanged, this, [=]() {
-            emit m_robots.dataChanged(i);
-        });
+        m_robots.appendActor(*acPresenter);
     }
 
     //Connect charging stations presenter to model
@@ -33,10 +30,7 @@ WarehouseLayoutPresenter::WarehouseLayoutPresenter(const State *state,
     for (size_t i = 0; i < chargingStations.size(); ++i)
     {
         auto csPresenter = new ChargingStationPresenter(chargingStations[i].get(), this);
-        m_chargingStations.chargingStations()->append(csPresenter);
-        connect(csPresenter, &ChargingStationPresenter::mapItemChanged, this, [=]() {
-            emit m_chargingStations.dataChanged(i);
-        });
+        m_chargingStations.appendChargingStation(*csPresenter);
     }
 
     //Connect pod docks presenter to model
@@ -45,10 +39,7 @@ WarehouseLayoutPresenter::WarehouseLayoutPresenter(const State *state,
     for (size_t i = 0; i < podDocks.size(); ++i)
     {
         auto pdPresenter = new PodDockPresenter(podDocks[i].get(), this);
-        m_podDocks.podDocks()->append(pdPresenter);
-        connect(pdPresenter, &PodDockPresenter::mapItemChanged, this, [=]() {
-            emit m_podDocks.dataChanged(i);
-        });
+        m_podDocks.appendPodDock(*pdPresenter);
     }
 
     //Connect charging stations presenter to model
@@ -56,11 +47,8 @@ WarehouseLayoutPresenter::WarehouseLayoutPresenter(const State *state,
     auto& deliveryStations = state->getDeliveryStations();
     for (size_t i = 0; i < deliveryStations.size(); ++i)
     {
-        auto dsPresenter = new DeliveryStationPresenter(deliveryStations[i].get(), this);
-        m_deliveryStations.deliveryStations()->append(dsPresenter);
-        connect(dsPresenter, &DeliveryStationPresenter::mapItemChanged, this, [=]() {
-            emit m_deliveryStations.dataChanged(i);
-        });
+        auto dsPresenter = new DeliveryStationPresenter(deliveryStations[i].get(),this);
+        m_deliveryStations.appendDeliveryStation(*dsPresenter);
     }
 
     //Connect tasks presenter to model
@@ -70,18 +58,14 @@ WarehouseLayoutPresenter::WarehouseLayoutPresenter(const State *state,
     {
          auto taskPresenter = new TaskPresenter(tasks[i].get(), this);
          m_tasks.tasks()->append(taskPresenter);
-//       m_deliveryStations.deliveryStations()->append(dsPresenter);
-//       connect(dsPresenter, &DeliveryStationPresenter::mapItemChanged, this, [=]() {
-//           emit m_deliveryStations.dataChanged(i);
-//       });
     }
 }
 
-WarehouseLayoutPresenter::WarehouseLayoutPresenter(QObject *parent)
-    : QObject(parent), m_rows(10), m_columns(10)
-//Other?
-{
-}
+WarehouseLayoutPresenter::WarehouseLayoutPresenter(QObject* parent)
+    : QObject(parent)
+    , m_rows   (10)
+    , m_columns(10)
+{}
 
 //Getter
 int WarehouseLayoutPresenter::index(int row,

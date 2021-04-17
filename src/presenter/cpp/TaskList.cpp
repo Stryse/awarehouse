@@ -18,24 +18,43 @@ bool TaskList::setTaskAt(int index, TaskPresenter& task)
         return false;
 
     m_tasks[index] = &task;
+    emit dataChanged(index);
     return true;
 }
 
-void TaskList::appendOrder(TaskPresenter& task)
+void TaskList::appendTask(TaskPresenter& task)
 {
     emit preItemAppended();
+
+    int last = m_tasks.size();
     m_tasks.append(&task);
+    connect(&task, &TaskPresenter::taskChanged, this, [=]()
+    {
+        emit dataChanged(last);
+    });
+
     emit postItemAppended();
 }
 
-void TaskList::removeOrder(int index)
+void TaskList::removeTask(int index)
 {
     if (index < 0 ||
         index >= m_tasks.size())
         return;
 
     emit preItemRemoved(index);
+
+    m_tasks[index]->disconnect(this);
     m_tasks.removeAt(index);
+    for (int i = index; i < m_tasks.size(); ++i)
+    {
+        m_tasks[i]->disconnect(this);
+        connect(m_tasks[i], &TaskPresenter::taskChanged, this, [=]()
+        {
+            emit dataChanged(i);
+        });
+    }
+
     emit postItemRemoved();
 }
 
