@@ -127,7 +127,7 @@ struct AgentControlData
 
     AgentControlData(const IDepleting &energySource,
                      const IMoveMechanism &moveMechanism,
-                     int address)
+                     int address = 0)
 
         : energySource(energySource),
           moveMechanism(moveMechanism),

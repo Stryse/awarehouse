@@ -23,7 +23,7 @@ DRobotMCU::DRobotMCU(IMoveMechanism &moveMechanism,
       podHolder(podHolder),
       energySource(energySource),
       environment(env),
-      controlData(std::make_unique<AgentControlData>(energySource, moveMechanism, networkAdapter.getAddress()))
+      controlData(std::make_unique<AgentControlData>(energySource, moveMechanism))
 {
     connect_PodMovementToAgentMovement();
 }
@@ -97,6 +97,7 @@ void DRobotMCU::receive(const AgentControlGrantedMessage &message)
 
 void DRobotMCU::requestControl()
 {
+    controlData->address = networkAdapter.getAddress();
     networkAdapter.send(std::make_unique<AgentControlRequestMessage>(
                             controlData.get(),
                             networkAdapter.getAddress()),

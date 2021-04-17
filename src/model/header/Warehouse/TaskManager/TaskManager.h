@@ -37,6 +37,13 @@ public:
      * @brief Returns all tasks in the warehouse.
      ***************************************************************/
     const std::vector<std::unique_ptr<Task>> &getTasks() const;
+    std::vector<std::unique_ptr<Task>> &getTasks();
+
+    /***************************************************************
+     * @brief Returns all unassigned tasks in the warehouse
+     ***************************************************************/
+    const std::vector<Task *> &getUnAssignedTasks() const;
+    std::vector<Task *> &getUnAssignedTasks();
 
     /***************************************************************
      * @brief Sets which Pod Docks are scanned for possible tasks.
@@ -72,7 +79,8 @@ private:
 
 private:
     std::vector<std::unique_ptr<Task>> tasks;
-    std::vector<std::unique_ptr<Task>> finishedTasks;
+    std::vector<Task *> unassignedTasks;
+    std::vector<Task *> finishedTasks;
 
     const std::vector<std::shared_ptr<PodDock>> *podDocks;
     const std::vector<std::shared_ptr<DeliveryStation>> *deliveryStations;
