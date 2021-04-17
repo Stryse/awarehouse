@@ -8,6 +8,7 @@ QVector<int> ActorListModel::m_roles = { NameRole,
                                          BatteryRole,
                                          RotationRole,
                                          MovesRole,
+                                         EnergyUsedRole,
                                          RowRole,
                                          ColumnRole,
                                          ImageRole };
@@ -45,6 +46,8 @@ QVariant ActorListModel::data(const QModelIndex& index,
             return QVariant(actor.rotation());
         case MovesRole:
             return QVariant(actor.moves());
+        case EnergyUsedRole:
+            return QVariant(actor.energyUsed());
         case RowRole:
             return QVariant(actor.row());
         case ColumnRole:
@@ -68,28 +71,31 @@ bool ActorListModel::setData(const QModelIndex& index,
     switch(role)
     {
         case NameRole:
-            actor.setName     (value.toString());
+            actor.setName      (value.toString());
             break;
         case ActionRole:
-            actor.setAction   (value.toString());
+            actor.setAction    (value.toString());
             break;
         case BatteryRole:
-            actor.setBattery  (value.toInt());
+            actor.setBattery   (value.toInt());
             break;
         case RotationRole:
-            actor.setRotation (value.toInt());
+            actor.setRotation  (value.toInt());
             break;
         case MovesRole:
-            actor.setMoves    (value.toInt());
+            actor.setMoves     (value.toInt());
+            break;
+        case EnergyUsedRole:
+            actor.setEnergyUsed(value.toInt());
             break;
         case RowRole:
-            actor.setRow      (value.toInt());
+            actor.setRow       (value.toInt());
             break;
         case ColumnRole:
-            actor.setColumn   (value.toInt());
+            actor.setColumn    (value.toInt());
             break;
         case ImageRole:
-            actor.setImagePath(value.toString());
+            actor.setImagePath (value.toString());
             break;
     }
 
@@ -113,14 +119,15 @@ QHash<int, QByteArray> ActorListModel::roleNames() const
 {
     QHash<int, QByteArray> names;
 
-    names[NameRole]     = "name";
-    names[ActionRole]   = "action";
-    names[BatteryRole]  = "battery";
-    names[RotationRole] = "rotation";
-    names[MovesRole]    = "moves";
-    names[RowRole]      = "row";
-    names[ColumnRole]   = "column";
-    names[ImageRole]    = "image";
+    names[NameRole]       = "name";
+    names[ActionRole]     = "action";
+    names[BatteryRole]    = "battery";
+    names[RotationRole]   = "rotation";
+    names[MovesRole]      = "moves";
+    names[EnergyUsedRole] = "energyUsed";
+    names[RowRole]        = "row";
+    names[ColumnRole]     = "column";
+    names[ImageRole]      = "image";
 
     return names;
 }

@@ -23,6 +23,7 @@ ActorPresenter::ActorPresenter(const DeliveryRobot* model,
     , m_battery (model->getEnergySource()->getCharge())
     , m_rotation(0)
     , m_moves(0)
+    , m_energyUsed(0)
     , model(model)
 {
     model->getMoveMechanism()->onBodyMoved.connect([=](const Body& body){
@@ -40,6 +41,7 @@ ActorPresenter::ActorPresenter(const DeliveryRobot* model,
 
     model->getEnergySource()->onChargeChanged.connect([=](int energy){
         setBattery(energy);
+        setEnergyUsed(1);
     });
 }
 
@@ -48,29 +50,32 @@ ActorPresenter::ActorPresenter(int row, int column, QObject* parent)
                        column,
                        ActorPresenter::m_static_imagePath,
                        parent)
-    , m_name    ("Anon")
-    , m_action  ("\xc2\xaf\x5c\x5f\x28\xe3\x83\x84\x29\x5f\x2f\xc2\xaf")
-    , m_battery (100)
-    , m_rotation(0)
-    , m_moves   (0)
+    , m_name      ("Anon")
+    , m_action    ("\xc2\xaf\x5c\x5f\x28\xe3\x83\x84\x29\x5f\x2f\xc2\xaf")
+    , m_battery   (100)
+    , m_rotation  (0)
+    , m_moves     (0)
+    , m_energyUsed(0)
 {}
 
 bool ActorPresenter::operator==(const ActorPresenter& other) const
 {
-    return MapItemPresenter::operator==(other)    &&
-           this->name()      == other.name()      &&
-           this->action()    == other.action()    &&
-           this->battery()   == other.battery()   &&
-           this->rotation()  == other.rotation()  &&
-           this->moves()     == other.moves();
+    return MapItemPresenter::operator==(other)     &&
+           this->name()       == other.name()      &&
+           this->action()     == other.action()    &&
+           this->battery()    == other.battery()   &&
+           this->rotation()   == other.rotation()  &&
+           this->moves()      == other.moves()     &&
+           this->energyUsed() == other.energyUsed();
 }
 
 //Getter
-QString ActorPresenter::name()     const { return m_name;     }
-QString ActorPresenter::action()   const { return m_action;   }
-int     ActorPresenter::battery()  const { return m_battery;  }
-int     ActorPresenter::rotation() const { return m_rotation; }
-int     ActorPresenter::moves()    const { return m_moves;    }
+QString ActorPresenter::name()       const { return m_name;       }
+QString ActorPresenter::action()     const { return m_action;     }
+int     ActorPresenter::battery()    const { return m_battery;    }
+int     ActorPresenter::rotation()   const { return m_rotation;   }
+int     ActorPresenter::moves()      const { return m_moves;      }
+int     ActorPresenter::energyUsed() const { return m_energyUsed; }
 
 //Setter
 void ActorPresenter::setName(const QString& name)
@@ -120,5 +125,12 @@ void ActorPresenter::setMoves(int moves)
 
     m_moves = moves;
     emit movesChanged();
+    emit mapItemChanged();
+}
+
+void ActorPresenter::setEnergyUsed(int energy)
+{
+    m_energyUsed += energy;
+    emit energyUsedChanged();
     emit mapItemChanged();
 }

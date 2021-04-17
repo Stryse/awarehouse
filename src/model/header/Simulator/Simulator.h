@@ -14,7 +14,7 @@ class Simulator : public QObject, public ISimulator<Warehouse>
     Q_OBJECT
 
 public:
-    Simulator();
+    Simulator(QObject* parent = nullptr);
     virtual ~Simulator();
 
 public slots:

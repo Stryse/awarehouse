@@ -21,7 +21,9 @@ class SimulationWindowPresenter : public QObject
     Q_PROPERTY( bool                      paused   READ paused NOTIFY   pausedChanged )
     Q_PROPERTY( QStringList               maps     READ maps   NOTIFY   mapsChanged   )
     Q_PROPERTY( QString                   filePath READ filePath CONSTANT             )
-    Q_PROPERTY( Settings*                 settings READ settings )
+    Q_PROPERTY( Settings*                 settings READ settings                      )
+    Q_PROPERTY( int                       time     READ time   NOTIFY   timeChanged   )
+
 public:
     explicit SimulationWindowPresenter(QObject* parent = nullptr);
 
@@ -40,14 +42,17 @@ public:
     QStringList               maps()   const;
     QString                   filePath() const;
     QString                   defaultMapPath() const;
-    Settings*                  settings();
+    Settings*                 settings();
+    int                       time() const;
 
 private:
     void setPaused(bool paused);
+    void setTime(int time);
 
 signals:
     void pausedChanged();
     void mapsChanged();
+    void timeChanged();
 
 public slots:
     void simulationStart();
@@ -68,6 +73,7 @@ private:
     QString m_filePath;
     QString m_defaultMapPath;
     bool m_paused;
+    int m_time;
 
     void createMapDir();
 };

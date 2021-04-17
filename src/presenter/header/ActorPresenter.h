@@ -13,12 +13,12 @@ class ActorPresenter : public MapItemPresenter
 {
     Q_OBJECT
 
-    Q_PROPERTY( QString name     READ name     WRITE setName     NOTIFY nameChanged     )
-    Q_PROPERTY( QString action   READ action   WRITE setAction   NOTIFY actionChanged   )
-    Q_PROPERTY(     int battery  READ battery  WRITE setBattery  NOTIFY batteryChanged  )
-    Q_PROPERTY(     int rotation READ rotation WRITE setRotation NOTIFY rotationChanged )
-    Q_PROPERTY(     int moves    READ moves    WRITE setMoves    NOTIFY movesChanged    )
-
+    Q_PROPERTY( QString name       READ name       WRITE setName       NOTIFY nameChanged     )
+    Q_PROPERTY( QString action     READ action     WRITE setAction     NOTIFY actionChanged   )
+    Q_PROPERTY(     int battery    READ battery    WRITE setBattery    NOTIFY batteryChanged  )
+    Q_PROPERTY(     int rotation   READ rotation   WRITE setRotation   NOTIFY rotationChanged )
+    Q_PROPERTY(     int moves      READ moves      WRITE setMoves      NOTIFY movesChanged    )
+    Q_PROPERTY(     int energyUsed READ energyUsed WRITE setEnergyUsed NOTIFY energyUsedChanged)
 public:
     explicit ActorPresenter(const DeliveryRobot* model,
                                         QObject* parent = nullptr);
@@ -27,11 +27,12 @@ public:
     bool operator==(const ActorPresenter& other) const;
 
     //Getter
-    QString name()      const;
-    QString action()    const;
-    int     battery()   const;
-    int     rotation()  const;
-    int     moves()     const;
+    QString name()       const;
+    QString action()     const;
+    int     battery()    const;
+    int     rotation()   const;
+    int     moves()      const;
+    int     energyUsed() const;
 
     //Setter
     void setName(const QString& name);
@@ -39,6 +40,7 @@ public:
     void setBattery(int level);
     void setRotation(int rotation);
     void setMoves(int moves);
+    void setEnergyUsed(int energy);
 
 signals:
     void nameChanged();
@@ -46,6 +48,7 @@ signals:
     void batteryChanged();
     void rotationChanged();
     void movesChanged();
+    void energyUsedChanged();
 
 private:
     QString m_name;
@@ -53,6 +56,7 @@ private:
     int     m_battery;
     int     m_rotation;
     int     m_moves;
+    int     m_energyUsed;
 
     //Model
     const  DeliveryRobot* model;
