@@ -21,7 +21,7 @@ class TaskManager
 {
 public:
     using Pod = ::Pod<OrderModel>;
-    using Point = Point<int, 3>;
+    using Point = ::Point<int, 3>;
 
 public:
     TaskManager(const std::vector<std::shared_ptr<PodDock>> &podDocks,
