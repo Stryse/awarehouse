@@ -123,6 +123,9 @@ presenter/header/DeliveryStationListModel.h
 presenter/cpp/WarehouseEditorPresenter.cpp
 presenter/header/WarehouseEditorPresenter.h
 
+presenter/cpp/Settings.cpp
+presenter/header/Settings.h
+
 #presenter/cpp/PodList.cpp
 #presenter/header/PodList.h
 

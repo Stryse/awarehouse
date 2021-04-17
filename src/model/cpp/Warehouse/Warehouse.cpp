@@ -28,9 +28,9 @@ void Warehouse::tick()
     ++timeStamp;
 }
 
-bool Warehouse::loadState(const QString &srcPath)
+bool Warehouse::loadState(const QString &srcPath, const Settings* settings)
 {
-    state.reset(persistence->load(srcPath));
+    state.reset(persistence->load(srcPath, settings));
     if (state)
     {
         timeStamp = 0;

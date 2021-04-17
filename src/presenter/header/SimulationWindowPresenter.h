@@ -11,6 +11,7 @@
 
 //Presenter
 #include "WarehouseLayoutPresenter.h"
+#include "Settings.h"
 
 class SimulationWindowPresenter : public QObject
 {
@@ -20,6 +21,7 @@ class SimulationWindowPresenter : public QObject
     Q_PROPERTY( bool                      paused   READ paused NOTIFY   pausedChanged )
     Q_PROPERTY( QStringList               maps     READ maps   NOTIFY   mapsChanged   )
     Q_PROPERTY( QString                   filePath READ filePath CONSTANT             )
+    Q_PROPERTY( Settings*                 settings READ settings )
 public:
     explicit SimulationWindowPresenter(QObject* parent = nullptr);
 
@@ -38,6 +40,7 @@ public:
     QStringList               maps()   const;
     QString                   filePath() const;
     QString                   defaultMapPath() const;
+    Settings*                  settings();
 
 private:
     void setPaused(bool paused);
@@ -52,7 +55,7 @@ public slots:
 
     void setTickRate(TickRate tickRate);
 
-    void loadWarehouse(const QString& filePath);
+    void loadWarehouse(const QString& filePath, const Settings* settings);
     void reloadWarehouse();
 
 private:
@@ -60,6 +63,7 @@ private:
     WarehouseLayoutPresenter* m_layout;
     QString                   m_loadedWarehousePath;
     QStringListModel          m_maps;
+    Settings                  m_settings;
 
     QString m_filePath;
     QString m_defaultMapPath;

@@ -1,7 +1,8 @@
 #include "RobotLoader.h"
 #include "Point.h"
+#include "Settings.h"
 
-std::shared_ptr<DeliveryRobot> RobotLoader::load(const QJsonObject &robotObj, std::shared_ptr<ObservableNavEnvironment> &env)
+std::shared_ptr<DeliveryRobot> RobotLoader::load(const QJsonObject &robotObj, std::shared_ptr<ObservableNavEnvironment> &env, const Settings* settings)
 {
     if (robotObj.contains("RowCoord") && robotObj["RowCoord"].isDouble() &&
         robotObj.contains("ColCoord") && robotObj["ColCoord"].isDouble() &&
@@ -12,6 +13,8 @@ std::shared_ptr<DeliveryRobot> RobotLoader::load(const QJsonObject &robotObj, st
                          0);
 
         DirectionVector<> orientation(0, robotObj["OrientationY"].toInt(), 0);
+
+        int batteryLevel = settings->batteryLevel();
 
         return std::make_shared<DeliveryRobot>(env, position, orientation);
     }

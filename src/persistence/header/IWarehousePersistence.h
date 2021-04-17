@@ -2,12 +2,13 @@
 #define I_WAREHOUSE_PERSISTENCE__H
 
 class State;
+class Settings;
 
 template <typename ResourceType>
 class IWarehousePersistence
 {
 public:
-    virtual State* load(const ResourceType &resource) = 0;
+    virtual State* load(const ResourceType &resource, const Settings* = nullptr) = 0;
     virtual bool save(const State &state, const ResourceType &resource) const = 0;
 };
 

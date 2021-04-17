@@ -3,6 +3,7 @@
 
 #include "IWarehousePersistence.h"
 #include "State.h"
+#include "Settings.h"
 #include "TaskManager.h"
 #include <memory>
 
@@ -23,7 +24,7 @@ public:
 
 public:
     void tick();
-    bool loadState(const QString &srcPath);
+    bool loadState(const QString &srcPath, const Settings* = nullptr);
     bool saveState(const QString &destPath);
 
 public:
