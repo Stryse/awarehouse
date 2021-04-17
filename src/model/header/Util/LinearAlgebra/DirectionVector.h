@@ -47,8 +47,8 @@ public:
     /*************************************************
      * @brief Factories of common vectors
      *************************************************/
-    static DirectionVector<CoordinateT, 3> UP() { return DirectionVector{0, 1, 0}; }
-    static DirectionVector<CoordinateT, 3> DOWN() { return DirectionVector{0, -1, 0}; }
+    static DirectionVector<CoordinateT, 3> UP() { return DirectionVector{0, -1, 0}; }
+    static DirectionVector<CoordinateT, 3> DOWN() { return DirectionVector{0, 1, 0}; }
     static DirectionVector<CoordinateT, 3> LEFT() { return DirectionVector{-1, 0, 0}; }
     static DirectionVector<CoordinateT, 3> RIGHT() { return DirectionVector{1, 0, 0}; }
     static DirectionVector<CoordinateT, 3> ABOVE() { return DirectionVector{0, 0, 1}; }

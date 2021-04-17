@@ -298,17 +298,17 @@
             {
                 "RowCoord": 8,
                 "ColCoord": 11,
-                "OrientationY": 1
+                "OrientationY": -1
             },
             {
                 "RowCoord": 9,
                 "ColCoord": 11,
-                "OrientationY": 1
+                "OrientationY": -1
             },
             {
                 "RowCoord": 10,
                 "ColCoord": 11,
-                "OrientationY": 1
+                "OrientationY": -1
             }
         ]
     }
