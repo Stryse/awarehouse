@@ -15,6 +15,8 @@ Item {
     property color secondaryColor
     property real  borderWidth
 
+    property string currentWarehouse: "New"
+
     readonly property ListModel tileList: ListModel {
         ListElement {
             tileType:     TileType.ACTOR
@@ -49,6 +51,159 @@ Item {
         }
     }
 
+    Popup {
+        id: loadWarehousePopup
+
+        anchors.centerIn: Overlay.overlay
+        height:           editorRoot.height * 0.7
+        width:            editorRoot.width  * 0.25
+
+        Overlay.modal: Rectangle {
+            color: Qt.rgba(0, 0, 0, 0.5)
+        }
+
+        background: Rectangle {
+            color: Material.background
+            radius: 2
+        }
+
+        verticalPadding:   10
+        horizontalPadding: 20
+
+        modal: true
+        focus: true
+        closePolicy: Popup.CloseOnEscape | Popup.CloseOnPressOutside
+
+        contentItem: Item {
+            id: popupContent
+
+            Label {
+                id: popupLabel
+
+                anchors {
+                    horizontalCenter: parent.horizontalCenter
+                    top:              parent.top
+                }
+                height: popupContent.height * 0.08
+
+                text:           qsTr("Warehouses")
+                font.pixelSize: popupContent.height * 0.09
+            }
+
+            Rectangle {
+                id: listViewBackground
+
+                anchors.fill: popupWarehouseList
+
+                color: mainRoot.secondaryColor
+                radius: 2
+            }
+
+            ListView {
+                id: popupWarehouseList
+
+                anchors {
+                    left: parent.left;       right:  parent.right
+                    top:  popupLabel.bottom; bottom: cancelPopup.top
+
+                    leftMargin:  loadWarehousePopup.horizontalPadding * 0.1
+                    rightMargin: loadWarehousePopup.horizontalPadding * 0.1
+                    topMargin:   loadWarehousePopup.verticalPadding   * 3
+                }
+                clip: true
+
+                focus:        true
+                currentIndex: -1
+
+                model: SimPresenter.warehouses
+
+                delegate: Label {
+                    id: warehouseRecord
+
+                    property string warehouseName: modelData
+
+                    width:  ListView.view.width
+
+                    leftPadding:   10
+                    rightPadding:  10
+                    topPadding:    8
+                    bottomPadding: 8
+
+                    background: Rectangle {
+                        color: warehouseRecord.ListView.isCurrentItem ? Material.primary : "transparent"
+                        radius: 2
+                    }
+
+                    text:           warehouseName
+                    font.pixelSize: popupLabel.height * 0.4
+                    color:          warehouseRecordMouseArea.containsMouse ? Material.accent : Material.foreground
+
+                    MouseArea {
+                        id: warehouseRecordMouseArea
+
+                        anchors.fill: parent
+
+                        hoverEnabled: true
+
+                        onClicked: popupWarehouseList.currentIndex = index
+
+                        onDoubleClicked: loadWarehousePopup.loadWarehouse(warehouseName)
+                    }
+                }
+            }
+
+            Button {
+                id: loadWarehouse
+
+                anchors {
+                    left:  popupWarehouseList.left
+                    bottom: parent.bottom
+                }
+
+                flat:                true
+                Material.background: Material.primary
+
+                text:                qsTr("Load")
+                font.pixelSize:      popupLabel.height * 0.4
+                font.capitalization: Font.MixedCase;
+
+                onClicked: {
+                    //TODO: Initiate load
+                    if (popupWarehouseList.currentIndex !== -1) {
+                        loadWarehousePopup.loadWarehouse(popupWarehouseList.currentItem.warehouseName)
+                    }
+                    else {
+                        console.log("Select a warehouse!")
+                    }
+                }
+            }
+
+            Button {
+                id: cancelPopup
+
+                anchors {
+                    right:  popupWarehouseList.right
+                    bottom: parent.bottom
+                }
+
+                flat:                true
+                Material.background: Material.primary
+
+                text:                qsTr("Cancel")
+                font.pixelSize:      popupLabel.height * 0.4
+                font.capitalization: Font.MixedCase;
+
+                onClicked: loadWarehousePopup.close()
+            }
+        }
+
+        function loadWarehouse(warehouseName) {
+            editorRoot.currentWarehouse = warehouseName
+            console.log(editorRoot.currentWarehouse)
+            loadWarehousePopup.close()
+        }
+    }
+
     SplitView {
         id: horizontalSplit
 
@@ -61,7 +216,7 @@ Item {
         SplitView {
             id: verticalSplit
 
-            readonly property real tabRatio: 1/4
+            readonly property real tabRatio: 2/7
 
             SplitView.preferredWidth: horizontalSplit.leftPanelMaxWidth
             SplitView.maximumWidth:   horizontalSplit.leftPanelMaxWidth
@@ -70,9 +225,6 @@ Item {
 
             WarehouseSettingsTab {
                 id: warehouseSettings
-
-//                rowCount:    EditorPresenter.layout.rows
-//                columnCount: EditorPresenter.layout.columns
 
                 SplitView.preferredHeight: parent.height * verticalSplit.tabRatio
                 SplitView.minimumHeight:   parent.height * verticalSplit.tabRatio
@@ -150,6 +302,8 @@ Item {
                     text:                qsTr("Load")
                     font.pixelSize:      buttonsLayout.buttonFontSize
                     font.capitalization: Font.MixedCase;
+
+                    onClicked: loadWarehousePopup.open();
                 }
                 //Space filler
                 Item {
@@ -177,69 +331,6 @@ Item {
             WarehouseMap {
                 id: warehouse
             }
-
-//            Item {
-//                id: warehouse
-
-//                property int wareHouseRows: warehouseSettings.rowCount
-//                property int wareHouseCols: warehouseSettings.columnCount
-
-//                readonly property real  aspectRatio: 16/9
-
-//                anchors {
-//                    left: parent.left;         right:  parent.right
-//                    top:  previewLabel.bottom; bottom: buttonsLayout.top
-
-//                    leftMargin:   parent.width  * 0.05; rightMargin: parent.width * 0.05
-//                    bottomMargin: parent.height * 0.03
-//                }
-
-//                Material.background: Material.primary
-//                Material.elevation:  6
-
-//                Grid {
-//                    id: warehouseGrid
-
-//                    property real cellSize: Math.min(warehouse.width  / warehouse.wareHouseCols - spacing,
-//                                                     warehouse.height / warehouse.wareHouseRows - spacing)
-
-//                    anchors.centerIn: parent
-
-//                    rows:    warehouse.wareHouseRows
-//                    columns: warehouse.wareHouseCols
-//                    spacing: 1
-
-//                    Repeater {
-//                        model: warehouse.wareHouseRows * warehouse.wareHouseCols
-
-//                        DropArea {
-//                            id: dropArea
-
-//                            property string tileColor: Material.accent
-//                            property string tileType: "Road"
-
-//                            width:  warehouseGrid.cellSize
-//                            height: warehouseGrid.cellSize
-
-//                            Rectangle {
-//                                id: dropRectangle
-
-//                                anchors.fill: parent
-
-//                                color: dropArea.tileColor
-
-//                                states: State {
-//                                    when: dropArea.containsDrag
-//                                    PropertyChanges {
-//                                        target: dropRectangle
-//                                        color: Qt.darker(dropArea.tileColor, 1.5)
-//                                    }
-//                                }
-//                            }
-//                        }
-//                    }
-//                }
-//            }
         }
     }
 }

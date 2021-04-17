@@ -12,31 +12,46 @@
 
 SimulationWindowPresenter::SimulationWindowPresenter(QObject* parent)
     : QObject(parent)
-    , m_layout(nullptr)
-    , m_maps(nullptr)
+    , m_warehouses          (nullptr            )
+    , m_defaultWarehousePath(":/maps/Map01.json")
+    , m_warehouseDirPath    ("../maps"          )
+    , m_layout              (nullptr            )
 {
-    m_defaultMapPath = ":/maps/Map01.json";
-    m_filePath = "../maps";
-
-    loadWarehouse(m_defaultMapPath, &m_settings);
-
     createMapDir();
 
+    loadWarehouse(m_defaultWarehousePath, &m_settings);
     m_layout = new WarehouseLayoutPresenter(m_manager.getDisplayedWarehouse()->getState().get());
 }
 
 //Getter
-WarehouseLayoutPresenter* SimulationWindowPresenter::layout() const { return m_layout;      }
-bool                      SimulationWindowPresenter::paused() const { return m_manager.getDisplayedWarehouseSimulator()->isAvailable(); }
-QStringList               SimulationWindowPresenter::maps()   const { return m_maps.stringList(); }
-QString                   SimulationWindowPresenter::filePath() const { return m_filePath; }
-QString SimulationWindowPresenter::defaultMapPath() const { return m_defaultMapPath; }
-Settings* SimulationWindowPresenter::settings() { return &m_settings; }
+QStringList               SimulationWindowPresenter::warehouses()           const { return m_warehouses.stringList();                                 }
+QString                   SimulationWindowPresenter::defaultWarehousePath() const { return m_defaultWarehousePath;                                    }
+QString                   SimulationWindowPresenter::warehouseDirPath()     const { return m_warehouseDirPath;                                        }
+WarehouseLayoutPresenter* SimulationWindowPresenter::layout()               const { return m_layout;                                                  }
+Settings*                 SimulationWindowPresenter::settings()                   { return &m_settings;                                               }
+bool                      SimulationWindowPresenter::paused()               const { return m_manager.getDisplayedWarehouseSimulator()->isAvailable(); }
 
 
 //Setter
-void SimulationWindowPresenter::setPaused(bool paused)              { m_paused    = paused;
-                                                                      emit pausedChanged(); }
+void SimulationWindowPresenter::setPaused(bool paused)
+{
+    m_paused = paused;
+    emit pausedChanged();
+}
+
+void SimulationWindowPresenter::createMapDir()
+{
+    QDir mapsDirectory(m_warehouseDirPath);
+    if(!mapsDirectory.exists())
+        mapsDirectory.mkdir(m_warehouseDirPath);
+
+    QStringList maps = mapsDirectory.entryList(QStringList() << "*.json" << "*.JSON", QDir::Files);
+    for(int i = 0; i < maps.size(); ++i )
+        maps[i].chop(5);
+
+    maps.push_front("Default");
+    m_warehouses.setStringList(maps);
+}
 
 void SimulationWindowPresenter::simulationStart()
 {
@@ -67,33 +82,17 @@ void SimulationWindowPresenter::setTickRate(TickRate tickRate)
     qDebug() << "TickRate changed to " << tickRate;
 }
 
-void SimulationWindowPresenter::loadWarehouse(const QString& filePath, const Settings* settings)
+void SimulationWindowPresenter::loadWarehouse(const  QString& warehousePath,
+                                              const Settings* settings)
 {
-    bool success = m_manager.getDisplayedWarehouse()->loadState(filePath, settings);
+    bool success = m_manager.getDisplayedWarehouse()->loadState(warehousePath, settings);
 
     if(success)
-        m_loadedWarehousePath = filePath;
+        m_currentWarehousePath = warehousePath;
 }
 
 void SimulationWindowPresenter::reloadWarehouse()
 {
-    loadWarehouse(m_loadedWarehousePath, &m_settings);
+    loadWarehouse(m_currentWarehousePath, &m_settings);
     simulationStop();
-}
-
-void SimulationWindowPresenter::createMapDir()
-{
-    QDir mapsDirectory(m_filePath);
-    qDebug() << mapsDirectory.absolutePath();
-    if(!mapsDirectory.exists())
-    {
-        mapsDirectory.mkdir(m_filePath);
-    }
-
-    QStringList maps = mapsDirectory.entryList(QStringList() << "*.json" << "*.JSON", QDir::Files);
-    for(int i = 0; i < maps.size(); ++i )
-        maps[i].chop(5);
-
-    maps.push_front("Default");
-    m_maps.setStringList(maps);
 }

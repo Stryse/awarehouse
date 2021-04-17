@@ -7,8 +7,8 @@
 //Model
 #include "State.h"
 
-WarehouseLayoutPresenter::WarehouseLayoutPresenter(const State *state,
-                                                   QObject *parent)
+WarehouseLayoutPresenter::WarehouseLayoutPresenter(const State* state,
+                                                       QObject* parent)
     : QObject(parent)
 {
     //Connect row and column to model
@@ -71,7 +71,7 @@ WarehouseLayoutPresenter::WarehouseLayoutPresenter(QObject* parent)
 int WarehouseLayoutPresenter::index(int row,
                                     int col) { return row * m_rows + col; }
 
-int WarehouseLayoutPresenter::rows() const { return m_rows; }
+int WarehouseLayoutPresenter::rows()    const { return m_rows;    }
 int WarehouseLayoutPresenter::columns() const { return m_columns; }
 
 //Setter
@@ -87,14 +87,14 @@ void WarehouseLayoutPresenter::setColumns(int columns)
 }
 
 //Entity Getter
-ActorList *WarehouseLayoutPresenter::actors() { return &m_robots; }
+ActorList           *WarehouseLayoutPresenter::actors()           { return &m_robots;           }
 ChargingStationList *WarehouseLayoutPresenter::chargingStations() { return &m_chargingStations; }
-PodDockList *WarehouseLayoutPresenter::podDocks() { return &m_podDocks; }
+PodDockList         *WarehouseLayoutPresenter::podDocks()         { return &m_podDocks;         }
 DeliveryStationList *WarehouseLayoutPresenter::deliveryStations() { return &m_deliveryStations; }
-TaskList *WarehouseLayoutPresenter::tasks() { return &m_tasks; }
+TaskList            *WarehouseLayoutPresenter::tasks()            { return &m_tasks;            }
 
-const ActorList *WarehouseLayoutPresenter::actors() const { return &m_robots; }
+const ActorList           *WarehouseLayoutPresenter::actors()           const { return &m_robots;           }
 const ChargingStationList *WarehouseLayoutPresenter::chargingStations() const { return &m_chargingStations; }
-const PodDockList *WarehouseLayoutPresenter::podDocks() const { return &m_podDocks; }
+const PodDockList         *WarehouseLayoutPresenter::podDocks()         const { return &m_podDocks;         }
 const DeliveryStationList *WarehouseLayoutPresenter::deliveryStations() const { return &m_deliveryStations; }
-const TaskList *WarehouseLayoutPresenter::tasks() const { return &m_tasks; }
+const TaskList            *WarehouseLayoutPresenter::tasks()            const { return &m_tasks;            }

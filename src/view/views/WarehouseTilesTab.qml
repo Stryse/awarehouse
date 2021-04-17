@@ -97,7 +97,6 @@ Item {
                             var dragTarget = tileDragImg.Drag.target
 
                             if (dragTarget !== null) {
-                                console.log("dragType: " + model.tileType)
                                 dragTarget.tileDropped(model.tileType)
                             }
                             else

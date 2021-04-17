@@ -17,11 +17,14 @@ class SimulationWindowPresenter : public QObject
 {
     Q_OBJECT
 
-    Q_PROPERTY( WarehouseLayoutPresenter* layout   READ layout CONSTANT               )
-    Q_PROPERTY( bool                      paused   READ paused NOTIFY   pausedChanged )
-    Q_PROPERTY( QStringList               maps     READ maps   NOTIFY   mapsChanged   )
-    Q_PROPERTY( QString                   filePath READ filePath CONSTANT             )
-    Q_PROPERTY( Settings*                 settings READ settings )
+    Q_PROPERTY(               QStringList warehouses           READ warehouses           NOTIFY   mapsChanged   )
+    Q_PROPERTY(                   QString defaultWarehousePath READ defaultWarehousePath CONSTANT               )
+    Q_PROPERTY(                   QString warehouseDirPath     READ warehouseDirPath     CONSTANT               )
+
+    Q_PROPERTY( WarehouseLayoutPresenter* layout               READ layout               CONSTANT               )
+    Q_PROPERTY(                 Settings* settings             READ settings                                    )
+    Q_PROPERTY(                      bool paused               READ paused               NOTIFY   pausedChanged )
+
 public:
     explicit SimulationWindowPresenter(QObject* parent = nullptr);
 
@@ -35,15 +38,18 @@ public:
 
 public:
     //Getter
-    WarehouseLayoutPresenter* layout() const;
-    bool                      paused() const;
-    QStringList               maps()   const;
-    QString                   filePath() const;
-    QString                   defaultMapPath() const;
-    Settings*                  settings();
+    QStringList               warehouses()           const;
+    QString                   defaultWarehousePath() const;
+    QString                   warehouseDirPath()     const;
+
+    WarehouseLayoutPresenter* layout()               const;
+    Settings*                 settings();
+    bool                      paused()               const;
 
 private:
     void setPaused(bool paused);
+
+    void createMapDir();
 
 signals:
     void pausedChanged();
@@ -55,21 +61,20 @@ public slots:
 
     void setTickRate(TickRate tickRate);
 
-    void loadWarehouse(const QString& filePath, const Settings* settings);
+    void loadWarehouse(const QString& warehousePath, const Settings* settings);
     void reloadWarehouse();
 
 private:
-    WarehouseManager          m_manager;
+    WarehouseManager m_manager;
+
+    QStringListModel m_warehouses;
+    QString          m_defaultWarehousePath;
+    QString          m_warehouseDirPath;
+
+    QString                   m_currentWarehousePath;
     WarehouseLayoutPresenter* m_layout;
-    QString                   m_loadedWarehousePath;
-    QStringListModel          m_maps;
     Settings                  m_settings;
-
-    QString m_filePath;
-    QString m_defaultMapPath;
-    bool m_paused;
-
-    void createMapDir();
+    bool                      m_paused;
 };
 
 #endif /* SIMULATION_WINDOW_PRESENTER__H */
