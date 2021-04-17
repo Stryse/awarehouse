@@ -126,12 +126,18 @@ struct AgentControlData
     using IMoveMechanism = ::IMoveMechanism;
 
     AgentControlData(const IDepleting &energySource,
-                     const IMoveMechanism &moveMechanism)
+                     const IMoveMechanism &moveMechanism,
+                     int address)
+
         : energySource(energySource),
-          moveMechanism(moveMechanism) {}
+          moveMechanism(moveMechanism),
+          address(address)
+    {
+    }
 
     const IDepleting &energySource;
     const IMoveMechanism &moveMechanism;
+    int address;
 };
 
 /*********************************************************************

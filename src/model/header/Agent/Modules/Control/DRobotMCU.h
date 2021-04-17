@@ -155,6 +155,7 @@ private:
     IDepleting &energySource;
     ObservableNavEnvironment &environment;
 
+    std::unique_ptr<AgentControlData> controlData;
     // ########### Connections ############# //
     boost::signals2::connection AgentMovement2PodMovement;
 
