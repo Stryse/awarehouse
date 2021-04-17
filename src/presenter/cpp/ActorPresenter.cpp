@@ -21,7 +21,9 @@ ActorPresenter::ActorPresenter(const DeliveryRobot* model,
     , m_name    (QString::fromStdString(model->getId()))
     , m_action  ("\xc2\xaf\x5c\x5f\x28\xe3\x83\x84\x29\x5f\x2f\xc2\xaf")
     , m_battery (model->getEnergySource()->getCharge())
-    , m_rotation(0)
+    , m_rotation(static_cast<int>(std::atan2(model->getBody()->getPose().getOrientation().getY(),
+                                             model->getBody()->getPose().getOrientation().getX())
+                                             *180/M_PI) + 90)
     , m_moves(0)
     , model(model)
 {
@@ -31,7 +33,7 @@ ActorPresenter::ActorPresenter(const DeliveryRobot* model,
         //TODO
         int rotateY  = body.getPose().getOrientation().getY();
         int rotateX  = body.getPose().getOrientation().getX();
-        int rotation = std::atan2(rotateY, rotateX)*180/M_PI;
+        int rotation = (std::atan2(rotateY, rotateX)*180/M_PI) + 90;
 
         setRow(row);
         setColumn(column);
