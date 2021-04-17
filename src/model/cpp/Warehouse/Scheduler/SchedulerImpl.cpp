@@ -37,6 +37,7 @@ void SchedulerImpl::processMessages()
 
 void SchedulerImpl::receive(const AgentControlRequestMessage &message)
 {
+    sortedAgentData.push(message.controlData);
 }
 
 const NetworkAdapter &SchedulerImpl::getNetworkAdapter() const { return networkAdapter; }

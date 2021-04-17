@@ -141,14 +141,14 @@ struct AgentControlData
 class AgentControlRequestMessage : public NetworkMessage<AgentControlRequestMessage>
 {
 public:
-    explicit AgentControlRequestMessage(AgentControlData controlData, int senderAddress)
+    explicit AgentControlRequestMessage(const AgentControlData *controlData, int senderAddress)
         : NetworkMessage<AgentControlRequestMessage>(senderAddress),
           controlData(controlData)
     {
     }
-    virtual ~AgentControlRequestMessage() = default;
 
-    AgentControlData controlData;
+    virtual ~AgentControlRequestMessage() = default;
+    const AgentControlData *controlData;
 };
 
 /*********************************************************************

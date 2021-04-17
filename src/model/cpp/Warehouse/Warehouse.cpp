@@ -37,13 +37,13 @@ bool Warehouse::loadState(const QString &srcPath)
         setupNetwork(*state);
 
         // TODO REMOVE
-        controller->getNetworkAdapter().send(std::make_unique<AgentControlGrantedMessage>(0x1), 100);
+        //controller->getNetworkAdapter().send(std::make_unique<AgentControlGrantedMessage>(0x1), 100);
         controller->getNetworkAdapter().send(std::make_unique<MoveAgentMessage>(DirectionVector<>::UP(), 0x1), 100);
 
-        controller->getNetworkAdapter().send(std::make_unique<AgentControlGrantedMessage>(0x1), 101);
+        //controller->getNetworkAdapter().send(std::make_unique<AgentControlGrantedMessage>(0x1), 101);
         controller->getNetworkAdapter().send(std::make_unique<MoveAgentMessage>(DirectionVector<>::LEFT(), 0x1), 101);
 
-        controller->getNetworkAdapter().send(std::make_unique<AgentControlGrantedMessage>(0x1), 102);
+        //controller->getNetworkAdapter().send(std::make_unique<AgentControlGrantedMessage>(0x1), 102);
         controller->getNetworkAdapter().send(std::make_unique<MoveAgentMessage>(DirectionVector<>::DOWN(), 0x1), 102);
     }
 
