@@ -28,6 +28,7 @@ build-program:
     - export QT_DIR=$PWD/qt/6.1.0/gcc_64/
     - mkdir cmake-build && cd cmake-build
     - cmake ..
+    - make clean
     - make
   artifacts:
     paths:
