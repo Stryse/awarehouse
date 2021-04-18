@@ -36,7 +36,7 @@ public:
     /**********************************************************************************
      * @brief Attempts to send a message to the adapter which has the provided address
      **********************************************************************************/
-    bool sendMessage(std::unique_ptr<AbstractNetworkMessage> &&message, int recipientAddress) const;
+    bool sendMessage(std::shared_ptr<AbstractNetworkMessage> message, int recipientAddress) const;
 
     /********************************************************
      * @brief Disconnects all adapters from the network.

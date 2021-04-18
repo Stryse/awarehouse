@@ -3,6 +3,7 @@
 
 #include "DirectionVector.h"
 #include "NetworkMessageHandler.h"
+#include <memory>
 
 // ####################### FORWARD DECLARATIONS ######################### //
 class IDepleting;
@@ -52,6 +53,15 @@ protected:
 
     NetworkMessage(const NetworkMessage &) = default;
     NetworkMessage(NetworkMessage &&) = default;
+};
+
+struct TargetedMessage
+{
+    TargetedMessage(int address, std::shared_ptr<AbstractNetworkMessage> message)
+        : address(address), message(std::move(message)) {}
+
+    int address;
+    std::shared_ptr<AbstractNetworkMessage> message;
 };
 
 /**************************************************

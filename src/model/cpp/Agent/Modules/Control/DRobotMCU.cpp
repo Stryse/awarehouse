@@ -109,7 +109,7 @@ void DRobotMCU::processMessages()
 {
     while (!networkAdapter.isMessageQueueEmpty())
     {
-        std::unique_ptr<AbstractNetworkMessage> message = networkAdapter.poll();
+        std::shared_ptr<AbstractNetworkMessage> message = networkAdapter.poll();
         message->dispatch(*this);
     }
 }

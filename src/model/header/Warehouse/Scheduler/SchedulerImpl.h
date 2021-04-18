@@ -57,8 +57,7 @@ struct TaskAssignmentComparator
  * If it thinks there is no suitable task it forward a
  * ChargePlanRequest to the controller.
  **********************************************************************/
-class SchedulerImpl : public AScheduler,
-                      NetworkMessageHandler
+class SchedulerImpl : public NetworkMessageHandler
 {
 public:
     explicit SchedulerImpl(TaskManager *taskManager = nullptr);
@@ -67,11 +66,15 @@ public:
     SchedulerImpl &operator=(const SchedulerImpl &other) = delete;
     virtual ~SchedulerImpl();
 
+    const NetworkAdapter &getNetworkAdapter() const;
+    NetworkAdapter &getNetworkAdapter();
+    void setTaskManager(TaskManager *taskManager);
+
 public:
     /****************************************************************************************
      * @brief 
      ***************************************************************************************/
-    virtual void tick(int timeStamp) override;
+    void tick(int timeStamp);
 
     /****************************************************************************************
      * @brief 
@@ -114,6 +117,9 @@ private:
     TaskAssignment *tryAssignTask(const AgentControlData &controlData);
 
 private:
+    TaskManager *taskManager;
+    NetworkAdapter networkAdapter;
+
     std::priority_queue<const AgentControlData *,
                         std::vector<const AgentControlData *>,
                         EnergyResourceComparator>

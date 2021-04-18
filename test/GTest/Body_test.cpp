@@ -78,20 +78,20 @@ TEST_F(BodyTest, SelfMovement)
     //MoveUp
     largeBody->moveBody(DirectionVector<>::UP());
     ++testPhase;
-    EXPECT_EQ(largeBody->getPose().getPosition(), Point<>(1, 2, 0)) << "[ERROR] Body's moved (UP) position was wrong |" << testPhase << std::endl;
-    EXPECT_TRUE(env->getVolume(Point<>(1, 2, 0))->getOccupant() == &(*largeBody)) << "[ERROR] Body not found in the environment at it's location |" << testPhase << std::endl;
+    EXPECT_EQ(largeBody->getPose().getPosition(), Point<>(1, 0, 0)) << "[ERROR] Body's moved (UP) position was wrong |" << testPhase << std::endl;
+    EXPECT_TRUE(env->getVolume(Point<>(1, 0, 0))->getOccupant() == &(*largeBody)) << "[ERROR] Body not found in the environment at it's location |" << testPhase << std::endl;
     EXPECT_TRUE(env->getVolume(largeBody->getPose().getPosition())->getOccupant() == &(*largeBody)) << "[ERROR] Position doesn't match actual location |" << testPhase << std::endl;
     //MoveRight
     largeBody->moveBody(DirectionVector<>::RIGHT());
     ++testPhase;
-    EXPECT_EQ(largeBody->getPose().getPosition(), Point<>(2, 2, 0)) << "[ERROR] Body's moved (RIGHT) position was wrong |" << testPhase << std::endl;
-    EXPECT_TRUE(env->getVolume(Point<>(2, 2, 0))->getOccupant() == &(*largeBody)) << "[ERROR] Body not found in the environment at it's location |" << testPhase << std::endl;
+    EXPECT_EQ(largeBody->getPose().getPosition(), Point<>(2, 0, 0)) << "[ERROR] Body's moved (RIGHT) position was wrong |" << testPhase << std::endl;
+    EXPECT_TRUE(env->getVolume(Point<>(2, 0, 0))->getOccupant() == &(*largeBody)) << "[ERROR] Body not found in the environment at it's location |" << testPhase << std::endl;
     EXPECT_TRUE(env->getVolume(largeBody->getPose().getPosition())->getOccupant() == &(*largeBody)) << "[ERROR] Position doesn't match actual location |" << testPhase << std::endl;
     //MoveLeft
     largeBody->moveBody(DirectionVector<>::LEFT());
     ++testPhase;
-    EXPECT_EQ(largeBody->getPose().getPosition(), Point<>(1, 2, 0)) << "[ERROR] Body's moved (LEFT) position was wrong |" << testPhase << std::endl;
-    EXPECT_TRUE(env->getVolume(Point<>(1, 2, 0))->getOccupant() == &(*largeBody)) << "[ERROR] Body not found in the environment at it's location |" << testPhase << std::endl;
+    EXPECT_EQ(largeBody->getPose().getPosition(), Point<>(1, 0, 0)) << "[ERROR] Body's moved (LEFT) position was wrong |" << testPhase << std::endl;
+    EXPECT_TRUE(env->getVolume(Point<>(1, 0, 0))->getOccupant() == &(*largeBody)) << "[ERROR] Body not found in the environment at it's location |" << testPhase << std::endl;
     EXPECT_TRUE(env->getVolume(largeBody->getPose().getPosition())->getOccupant() == &(*largeBody)) << "[ERROR] Position doesn't match actual location |" << testPhase << std::endl;
     //MoveDown
     largeBody->moveBody(DirectionVector<>::DOWN());
@@ -113,20 +113,20 @@ TEST_F(BodyTest, ChildCarrying)
     // Parent move up
     int testPhase = 0;
     largeBody->moveBody(DirectionVector<>::UP());
-    EXPECT_EQ(tinyBody->getPose().getPosition(), Point<>(1, 2, 2)) << "[ERROR] Child moved (UP) position was wrong |" << testPhase << std::endl;
-    EXPECT_TRUE(env->getVolume(Point<>(1, 2, 2))->getOccupant() == &(*tinyBody)) << "[ERROR] Child not found in the environment at it's location |" << testPhase << std::endl;
+    EXPECT_EQ(tinyBody->getPose().getPosition(), Point<>(1, 0, 2)) << "[ERROR] Child moved (UP) position was wrong |" << testPhase << std::endl;
+    EXPECT_TRUE(env->getVolume(Point<>(1, 0, 2))->getOccupant() == &(*tinyBody)) << "[ERROR] Child not found in the environment at it's location |" << testPhase << std::endl;
     EXPECT_TRUE(env->getVolume(tinyBody->getPose().getPosition())->getOccupant() == &(*tinyBody)) << "[ERROR] Child Position doesn't match actual location |" << testPhase << std::endl;
     // Parent move right
     ++testPhase;
     largeBody->moveBody(DirectionVector<>::RIGHT());
-    EXPECT_EQ(tinyBody->getPose().getPosition(), Point<>(2, 2, 2)) << "[ERROR] Child moved (RIGHT) position was wrong |" << testPhase << std::endl;
-    EXPECT_TRUE(env->getVolume(Point<>(2, 2, 2))->getOccupant() == &(*tinyBody)) << "[ERROR] Child not found in the environment at it's location |" << testPhase << std::endl;
+    EXPECT_EQ(tinyBody->getPose().getPosition(), Point<>(2, 0, 2)) << "[ERROR] Child moved (RIGHT) position was wrong |" << testPhase << std::endl;
+    EXPECT_TRUE(env->getVolume(Point<>(2, 0, 2))->getOccupant() == &(*tinyBody)) << "[ERROR] Child not found in the environment at it's location |" << testPhase << std::endl;
     EXPECT_TRUE(env->getVolume(tinyBody->getPose().getPosition())->getOccupant() == &(*tinyBody)) << "[ERROR] Child Position doesn't match actual location |" << testPhase << std::endl;
     // Parent move left
     ++testPhase;
     largeBody->moveBody(DirectionVector<>::LEFT());
-    EXPECT_EQ(tinyBody->getPose().getPosition(), Point<>(1, 2, 2)) << "[ERROR] Child moved (LEFT) position was wrong |" << testPhase << std::endl;
-    EXPECT_TRUE(env->getVolume(Point<>(1, 2, 2))->getOccupant() == &(*tinyBody)) << "[ERROR] Child not found in the environment at it's location |" << testPhase << std::endl;
+    EXPECT_EQ(tinyBody->getPose().getPosition(), Point<>(1, 0, 2)) << "[ERROR] Child moved (LEFT) position was wrong |" << testPhase << std::endl;
+    EXPECT_TRUE(env->getVolume(Point<>(1, 0, 2))->getOccupant() == &(*tinyBody)) << "[ERROR] Child not found in the environment at it's location |" << testPhase << std::endl;
     EXPECT_TRUE(env->getVolume(tinyBody->getPose().getPosition())->getOccupant() == &(*tinyBody)) << "[ERROR] Child Position doesn't match actual location |" << testPhase << std::endl;
     // Parent move down
     ++testPhase;

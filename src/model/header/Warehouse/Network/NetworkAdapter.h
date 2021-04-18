@@ -42,17 +42,17 @@ public:
      * @brief Attempts to send a message to another NetworkAdapter with the provided
      * address.
      **********************************************************************************/
-    bool send(std::unique_ptr<AbstractNetworkMessage> &&message, int recipientAddress);
+    bool send(std::shared_ptr<AbstractNetworkMessage> message, int recipientAddress);
 
     /***********************************************************************************
      * @brief A received message is pushed into the adapter's message queue.
      ***********************************************************************************/
-    void receive(std::unique_ptr<AbstractNetworkMessage> &&message);
+    void receive(std::shared_ptr<AbstractNetworkMessage> message);
 
     /***********************************************************************************
      * @brief Returns and removes the first Message from the message queue.
      ***********************************************************************************/
-    std::unique_ptr<AbstractNetworkMessage> poll();
+    std::shared_ptr<AbstractNetworkMessage> poll();
 
     /************************************************************************************
      * @brief Returns whether the message queue has any messages.
@@ -71,7 +71,7 @@ public:
     bool isConnected() const;
 
 private:
-    std::queue<std::unique_ptr<AbstractNetworkMessage>> messageQueue;
+    std::queue<std::shared_ptr<AbstractNetworkMessage>> messageQueue;
     std::shared_ptr<Network> network;
     int address;
 };

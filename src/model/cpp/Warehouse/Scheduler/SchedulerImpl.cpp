@@ -7,7 +7,7 @@
 #include <limits>
 
 SchedulerImpl::SchedulerImpl(TaskManager *taskManager)
-    : AScheduler(taskManager)
+    : taskManager(taskManager)
 {
 }
 
@@ -22,6 +22,10 @@ void SchedulerImpl::tick(int timeStamp)
     doTaskAssignment();
     forwardAssignments();
 }
+
+const NetworkAdapter &SchedulerImpl::getNetworkAdapter() const { return networkAdapter; }
+NetworkAdapter &SchedulerImpl::getNetworkAdapter() { return networkAdapter; }
+void SchedulerImpl::setTaskManager(TaskManager *taskManager) { this->taskManager = taskManager; }
 
 void SchedulerImpl::doTaskAssignment()
 {
@@ -60,7 +64,7 @@ void SchedulerImpl::processMessages()
 {
     while (!networkAdapter.isMessageQueueEmpty())
     {
-        std::unique_ptr<AbstractNetworkMessage> message = networkAdapter.poll();
+        std::shared_ptr<AbstractNetworkMessage> message = networkAdapter.poll();
         message->dispatch(*this);
     }
 }
