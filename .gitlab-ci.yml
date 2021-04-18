@@ -27,7 +27,7 @@ build-program:
     - export QML2_IMPORT_PATH=$PWD/qt/6.1.0/gcc_64/qml/
     - export QT_DIR=$PWD/qt/6.1.0/gcc_64/
     - mkdir cmake-build && cd cmake-build
-    - cmake ..
+    - cmake .. --clean-first
     - make clean
     - make
   artifacts:
