@@ -7,8 +7,8 @@
 
 Warehouse::Warehouse(std::unique_ptr<IWarehousePersistence<QString>> &&persistence)
     : timeStamp(0),
-      scheduler(std::make_unique<SchedulerImpl>()),
       controller(std::make_unique<ControllerImpl>()),
+      scheduler(std::make_unique<SchedulerImpl>()),
       network(std::make_shared<Network>()),
       state(nullptr),
       persistence(std::move(persistence))
@@ -36,6 +36,7 @@ bool Warehouse::loadState(const QString &srcPath)
         timeStamp = 0;
         setupNetwork(*state);
         scheduler->setTaskManager(&state->getTaskManager());
+        scheduler->setController(controller.get());
         tick();
 
         // TODO REMOVE

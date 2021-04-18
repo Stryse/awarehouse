@@ -8,6 +8,8 @@
 
 // ###################### FORWARD DECLARATIONS ####################### //
 class AbstractNetworkMessage;
+class SchedulerImpl;
+class TaskAssignment;
 // ################################################################### //
 
 class ControllerImpl
@@ -18,7 +20,10 @@ public:
 
 public:
     void tick(int timeStamp);
+    bool PlanTask(TaskAssignment *assignment);
+    bool PlanCharge(const AgentControlData &assignment);
 
+    // ############################ Getter ####################################
     const NetworkAdapter &getNetworkAdapter() const;
     NetworkAdapter &getNetworkAdapter();
 

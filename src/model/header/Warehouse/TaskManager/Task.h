@@ -19,6 +19,9 @@ public:
 
     friend inline bool operator>(const Task &lhs, const Task &rhs) { return lhs.sumDistance > rhs.sumDistance; }
 
+    //Setter
+    void setAssignedAgentID(const std::string &assignedAgentID) { this->assignedAgentID = assignedAgentID; }
+
     //Getter
     const std::vector<Point<>> &getWayPoints() const { return wayPoints; }
     int getSumDistance() const { return sumDistance; }

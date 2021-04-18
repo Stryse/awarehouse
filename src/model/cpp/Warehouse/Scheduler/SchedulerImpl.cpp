@@ -1,13 +1,15 @@
 #include "SchedulerImpl.h"
 #include "AMotor.h"
+#include "ControllerImpl.h"
 #include "IMoveMechanism.h"
 #include "Task.h"
 #include "TaskManager.h"
 #include <iostream>
 #include <limits>
+#include <stdexcept>
 
-SchedulerImpl::SchedulerImpl(TaskManager *taskManager)
-    : taskManager(taskManager)
+SchedulerImpl::SchedulerImpl(TaskManager *taskManager, ControllerImpl *controller)
+    : taskManager(taskManager), controller(controller)
 {
 }
 
@@ -26,6 +28,7 @@ void SchedulerImpl::tick(int timeStamp)
 const NetworkAdapter &SchedulerImpl::getNetworkAdapter() const { return networkAdapter; }
 NetworkAdapter &SchedulerImpl::getNetworkAdapter() { return networkAdapter; }
 void SchedulerImpl::setTaskManager(TaskManager *taskManager) { this->taskManager = taskManager; }
+void SchedulerImpl::setController(ControllerImpl *controller) { this->controller = controller; }
 
 void SchedulerImpl::doTaskAssignment()
 {
@@ -45,12 +48,16 @@ void SchedulerImpl::doTaskAssignment()
     while (!sortedAgentData.empty())
     {
         const AgentControlData *controlData = sortedAgentData.top();
-        std::unique_ptr<TaskAssignment> assignment(tryAssignTask(*controlData));
+        TaskAssignment *assignment = tryAssignTask(*controlData);
 
         if (assignment != nullptr)
-            sortedAssignmentData.push(std::move(assignment));
+            sortedAssignmentData.push(assignment);
         else
         {
+            if (controller->PlanCharge(*controlData) == false)
+            {
+                // Send ControlRefusedMessage to agent
+            }
         }
         sortedAgentData.pop();
     }
@@ -58,6 +65,26 @@ void SchedulerImpl::doTaskAssignment()
 
 void SchedulerImpl::forwardAssignments()
 {
+    while (!sortedAssignmentData.empty())
+    {
+        std::unique_ptr<TaskAssignment> assignment(sortedAssignmentData.top());
+        if (controller->PlanTask(assignment.get()) == true)
+        {
+            assignment->task->setAssignedAgentID(assignment->controlData->ID);
+        }
+        else
+        {
+            // Register unassigned on failure
+            taskManager->getUnAssignedTasks().push_back(assignment->task);
+
+            if (controller->PlanCharge(*assignment->controlData) == false)
+            {
+                // Error on both Task and Charge Failure
+                throw std::runtime_error("Assignment and charge plan failure");
+            }
+        }
+        sortedAssignmentData.pop();
+    }
 }
 
 void SchedulerImpl::processMessages()
@@ -79,7 +106,7 @@ bool SchedulerImpl::softTest(const Task &task, const AgentControlData &controlDa
     int agentToTask = TaskManager::Point::manhattanNorm(controlData.moveMechanism.getBody()->getPose().getPosition(),
                                                         task.getWayPoints()[0]);
 
-    out_costHeuristic = agentToTask + task.getSumDistance() + (task.getWayPoints().size() * SOFT_TEST_BIAS);
+    out_costHeuristic = agentToTask + task.getSumDistance() + (task.getWayPoints().size() * SOFT_TEST_BIAS) + SOFT_TEST_MIN_LEFT;
 
     return controlData.energySource.getCharge() >= out_costHeuristic;
 }

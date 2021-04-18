@@ -8,21 +8,20 @@
 #include "NetworkMessageHandler.h"
 #include <queue>
 
-#include <iostream> // TODO REMOVE
-
 // ############################ FORWARD DECLARATIONS ############################## //
 class ObservableNavEnvironment;
 class TaskManager;
+class ControllerImpl;
 class Task;
 // ################################################################################ //
 struct TaskAssignment
 {
-    TaskAssignment(const Task *task, const AgentControlData *controlData, int costHeuristic)
+    TaskAssignment(Task *task, const AgentControlData *controlData, int costHeuristic)
         : task(task), controlData(controlData), costHeuristic(costHeuristic)
     {
     }
 
-    const Task *task;
+    Task *task;
     const AgentControlData *controlData;
     int costHeuristic;
 };
@@ -40,7 +39,7 @@ struct EnergyResourceComparator
 
 struct TaskAssignmentComparator
 {
-    bool operator()(const std::unique_ptr<TaskAssignment> &lhs, const std::unique_ptr<TaskAssignment> &rhs)
+    bool operator()(const TaskAssignment *lhs, const TaskAssignment *rhs)
     {
         int lhsNormalizedCost = (static_cast<double>(lhs->controlData->energySource.getCharge()) / lhs->costHeuristic) * 1000;
         int rhsNormalizedCost = (static_cast<double>(rhs->controlData->energySource.getCharge()) / rhs->costHeuristic) * 1000;
@@ -60,7 +59,7 @@ struct TaskAssignmentComparator
 class SchedulerImpl : public NetworkMessageHandler
 {
 public:
-    explicit SchedulerImpl(TaskManager *taskManager = nullptr);
+    explicit SchedulerImpl(TaskManager *taskManager = nullptr, ControllerImpl *controller = nullptr);
     explicit SchedulerImpl(const SchedulerImpl &other) = delete;
     explicit SchedulerImpl(SchedulerImpl &&other) = delete;
     SchedulerImpl &operator=(const SchedulerImpl &other) = delete;
@@ -69,6 +68,7 @@ public:
     const NetworkAdapter &getNetworkAdapter() const;
     NetworkAdapter &getNetworkAdapter();
     void setTaskManager(TaskManager *taskManager);
+    void setController(ControllerImpl *controller);
 
 public:
     /****************************************************************************************
@@ -118,6 +118,8 @@ private:
 
 private:
     TaskManager *taskManager;
+    ControllerImpl *controller;
+
     NetworkAdapter networkAdapter;
 
     std::priority_queue<const AgentControlData *,
@@ -125,12 +127,13 @@ private:
                         EnergyResourceComparator>
         sortedAgentData;
 
-    std::priority_queue<std::unique_ptr<TaskAssignment>,
-                        std::vector<std::unique_ptr<TaskAssignment>>,
+    std::priority_queue<TaskAssignment *,
+                        std::vector<TaskAssignment *>,
                         TaskAssignmentComparator>
         sortedAssignmentData;
 
     static const int SOFT_TEST_BIAS = 5;
+    static const int SOFT_TEST_MIN_LEFT = 10;
 };
 
 #endif /* SCHEDULER_IMPL__H */

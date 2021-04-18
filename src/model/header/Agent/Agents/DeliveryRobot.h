@@ -29,7 +29,8 @@ public:
     // TODO: MIXIN TMP -vel megoldani hogy szép legyen
     explicit DeliveryRobot(const std::shared_ptr<ObservableNavEnvironment> &env,
                            const Point &position,
-                           const DirectionVector &orientation);
+                           const DirectionVector &orientation,
+                           int maxEnergy = 100);
 
     explicit DeliveryRobot(const DeliveryRobot &other) = delete;
     explicit DeliveryRobot(DeliveryRobot &&other) = delete;

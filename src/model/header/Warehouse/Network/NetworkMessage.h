@@ -137,16 +137,19 @@ struct AgentControlData
 
     AgentControlData(const IDepleting &energySource,
                      const IMoveMechanism &moveMechanism,
+                     const std::string &ID = "UNKNOWN",
                      int address = 0)
 
         : energySource(energySource),
           moveMechanism(moveMechanism),
+          ID(ID),
           address(address)
     {
     }
 
     const IDepleting &energySource;
     const IMoveMechanism &moveMechanism;
+    const std::string ID;
     int address;
 };
 

@@ -23,7 +23,7 @@ DRobotMCU::DRobotMCU(IMoveMechanism &moveMechanism,
       podHolder(podHolder),
       energySource(energySource),
       environment(env),
-      controlData(std::make_unique<AgentControlData>(energySource, moveMechanism))
+      controlData(std::make_unique<AgentControlData>(energySource, moveMechanism, ControlID))
 {
     connect_PodMovementToAgentMovement();
 }

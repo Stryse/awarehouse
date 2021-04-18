@@ -40,8 +40,8 @@ private:
 
 private:
     int timeStamp;
-    std::unique_ptr<SchedulerImpl> scheduler;
     std::unique_ptr<ControllerImpl> controller;
+    std::unique_ptr<SchedulerImpl> scheduler;
     std::shared_ptr<Network> network;
     std::unique_ptr<State> state;
 
