@@ -9,9 +9,10 @@
 
 DeliveryRobot::DeliveryRobot(const std::shared_ptr<ObservableNavEnvironment> &env,
                              const DeliveryRobot::Point &position,
-                             const DeliveryRobot::DirectionVector &orientation)
+                             const DeliveryRobot::DirectionVector &orientation,
+                             int maxEnergy)
 
-    : EnergyModule(std::make_unique<Battery>(100)),
+    : EnergyModule(std::make_unique<Battery>(maxEnergy, (maxEnergy / 5))),
 
       MovementModule(getNewRobotMovement(getNewRobotBody(position, orientation, env),
                                          *EnergyModule::getEnergySource())),

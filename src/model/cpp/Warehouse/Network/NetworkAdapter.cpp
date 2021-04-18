@@ -11,7 +11,7 @@ NetworkAdapter::~NetworkAdapter()
     disconnect();
 }
 
-bool NetworkAdapter::send(std::unique_ptr<AbstractNetworkMessage> &&message, int recipientAddress)
+bool NetworkAdapter::send(std::shared_ptr<AbstractNetworkMessage> message, int recipientAddress)
 {
     if (network)
         return network->sendMessage(std::move(message), recipientAddress);
@@ -19,14 +19,14 @@ bool NetworkAdapter::send(std::unique_ptr<AbstractNetworkMessage> &&message, int
     return false;
 }
 
-void NetworkAdapter::receive(std::unique_ptr<AbstractNetworkMessage> &&message)
+void NetworkAdapter::receive(std::shared_ptr<AbstractNetworkMessage> message)
 {
     messageQueue.push(std::move(message));
 }
 
-std::unique_ptr<AbstractNetworkMessage> NetworkAdapter::poll()
+std::shared_ptr<AbstractNetworkMessage> NetworkAdapter::poll()
 {
-    std::unique_ptr<AbstractNetworkMessage> message = std::move(messageQueue.front());
+    std::shared_ptr<AbstractNetworkMessage> message = std::move(messageQueue.front());
     messageQueue.pop();
     return std::move(message);
 }

@@ -8,10 +8,11 @@ TaskManager::TaskManager(const std::vector<std::shared_ptr<PodDock>> &podDocks,
     createDeliveryTasks();
 }
 
-const std::vector<std::unique_ptr<Task>> &TaskManager::getTasks() const
-{
-    return tasks;
-}
+const std::vector<std::unique_ptr<Task>> &TaskManager::getTasks() const { return tasks; }
+std::vector<std::unique_ptr<Task>> &TaskManager::getTasks() { return tasks; }
+
+const std::vector<Task *> &TaskManager::getUnAssignedTasks() const { return unassignedTasks; }
+std::vector<Task *> &TaskManager::getUnAssignedTasks() { return unassignedTasks; }
 
 void TaskManager::setPodDocks(const std::vector<std::shared_ptr<PodDock>> *podDocks)
 {
@@ -78,7 +79,8 @@ void TaskManager::createTask(const PodDock &podDock)
     wayPoints.push_back(podDock.getPosition());
 
     // Register Delivery Task
-    tasks.emplace_back(std::make_unique<DeliveryTask>(std::move(wayPoints), sumDistance));
+    tasks.emplace_back(std::make_unique<Task>(std::move(wayPoints), sumDistance));
+    unassignedTasks.push_back(tasks.back().get());
 }
 
 int TaskManager::OptimizeWayPoints(std::vector<Point> &wayPoints)

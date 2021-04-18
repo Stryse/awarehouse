@@ -1,17 +1,28 @@
 #ifndef A_SCHEDULER__H
 #define A_SCHEDULER__H
 
+#include "NetworkAdapter.h"
+
 // ########################## FORWARD DECLARATIONS ##########################
-class NetworkAdapter;
+class TaskManager;
 // ##########################################################################
 
 class AScheduler
 {
 public:
+    AScheduler(TaskManager *taskManager = nullptr)
+        : taskManager(taskManager) {}
+
+public:
     virtual void tick(int timeStamp) = 0;
-    virtual void doTaskAssignment() = 0;
-    virtual const NetworkAdapter &getNetworkAdapter() const = 0;
-    virtual NetworkAdapter &getNetworkAdapter() = 0;
+
+    const NetworkAdapter &getNetworkAdapter() const { return networkAdapter; }
+    NetworkAdapter &getNetworkAdapter() { return networkAdapter; }
+    void setTaskManager(TaskManager *taskManager) { this->taskManager = taskManager; }
+
+protected:
+    TaskManager *taskManager;
+    NetworkAdapter networkAdapter;
 };
 
 #endif /* A_SHCEDULER__H */

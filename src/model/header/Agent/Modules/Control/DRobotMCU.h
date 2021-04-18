@@ -8,6 +8,7 @@
 #include "boost/signals2.hpp"
 #include <queue>
 #include <stdexcept>
+#include <string>
 // ############################# FORWARD DECLARATIONS ##############################
 class AgentAction;
 class IDepleting;
@@ -155,6 +156,9 @@ private:
     IDepleting &energySource;
     ObservableNavEnvironment &environment;
 
+    // ############# CONTROL ############### //
+    std::string ControlID = "DeliveryRobot";
+    std::unique_ptr<AgentControlData> controlData;
     // ########### Connections ############# //
     boost::signals2::connection AgentMovement2PodMovement;
 

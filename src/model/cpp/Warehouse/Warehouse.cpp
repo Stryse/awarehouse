@@ -7,8 +7,8 @@
 
 Warehouse::Warehouse(std::unique_ptr<IWarehousePersistence<QString>> &&persistence)
     : timeStamp(0),
-      scheduler(std::make_unique<SchedulerImpl>()),
       controller(std::make_unique<ControllerImpl>()),
+      scheduler(std::make_unique<SchedulerImpl>()),
       network(std::make_shared<Network>()),
       state(nullptr),
       persistence(std::move(persistence))
@@ -35,16 +35,19 @@ bool Warehouse::loadState(const QString &srcPath, const Settings* settings)
     {
         timeStamp = 0;
         setupNetwork(*state);
+        scheduler->setTaskManager(&state->getTaskManager());
+        scheduler->setController(controller.get());
+        tick();
 
         // TODO REMOVE
-        controller->getNetworkAdapter().send(std::make_unique<AgentControlGrantedMessage>(0x1), 100);
-        controller->getNetworkAdapter().send(std::make_unique<MoveAgentMessage>(DirectionVector<>::UP(), 0x1), 100);
+        //controller->getNetworkAdapter().send(std::make_unique<AgentControlGrantedMessage>(0x1), 100);
+        //controller->getNetworkAdapter().send(std::make_unique<MoveAgentMessage>(DirectionVector<>::UP(), 0x1), 100);
 
-        controller->getNetworkAdapter().send(std::make_unique<AgentControlGrantedMessage>(0x1), 101);
-        controller->getNetworkAdapter().send(std::make_unique<MoveAgentMessage>(DirectionVector<>::LEFT(), 0x1), 101);
+        //controller->getNetworkAdapter().send(std::make_unique<AgentControlGrantedMessage>(0x1), 101);
+        //controller->getNetworkAdapter().send(std::make_unique<MoveAgentMessage>(DirectionVector<>::LEFT(), 0x1), 101);
 
-        controller->getNetworkAdapter().send(std::make_unique<AgentControlGrantedMessage>(0x1), 102);
-        controller->getNetworkAdapter().send(std::make_unique<MoveAgentMessage>(DirectionVector<>::DOWN(), 0x1), 102);
+        //controller->getNetworkAdapter().send(std::make_unique<AgentControlGrantedMessage>(0x1), 102);
+        //controller->getNetworkAdapter().send(std::make_unique<MoveAgentMessage>(DirectionVector<>::DOWN(), 0x1), 102);
     }
 
     return state != nullptr;

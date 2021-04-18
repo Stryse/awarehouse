@@ -1,8 +1,8 @@
 #ifndef TASK__H
 #define TASK__H
 
-#include "Point.h"
 #include "Agent.h"
+#include "Point.h"
 #include <vector>
 
 class Task
@@ -10,49 +10,26 @@ class Task
 public:
     // ########################## CONSTRUCTORS ########################### //
     explicit Task(const std::vector<Point<>> &wayPoints, int sumDistance)
-        : wayPoints(wayPoints), sumDistance(sumDistance), assignedAgent(nullptr) {}
+        : wayPoints(wayPoints), sumDistance(sumDistance), assignedAgentID("N/A") {}
 
-    explicit Task(std::vector<Point<>> &&wayPoints, int sumDistance)
-        : wayPoints(std::move(wayPoints)), sumDistance(sumDistance), assignedAgent(nullptr) {}
-
-    Task(const Task &other)
-        : wayPoints(other.wayPoints), sumDistance(other.sumDistance) {}
-
-    Task(const Task &&other)
-        : wayPoints(std::move(other.wayPoints)), sumDistance(other.sumDistance) {}
-
+    explicit Task(const Task &other) = delete;
+    explicit Task(Task &&other) = delete;
+    Task &operator=(const Task &other) = delete;
     virtual ~Task() {}
 
     friend inline bool operator>(const Task &lhs, const Task &rhs) { return lhs.sumDistance > rhs.sumDistance; }
 
+    //Setter
+    void setAssignedAgentID(const std::string &assignedAgentID) { this->assignedAgentID = assignedAgentID; }
+
     //Getter
-    const std::vector<Point<>>& getWayPoints() const { return wayPoints; }
+    const std::vector<Point<>> &getWayPoints() const { return wayPoints; }
     int getSumDistance() const { return sumDistance; }
-    const Agent* getAssignedAgent() const { return assignedAgent; }
+    const std::string &getAssignedAgentID() const { return assignedAgentID; }
 
 protected:
     std::vector<Point<>> wayPoints;
     int sumDistance;
-    Agent* assignedAgent;
+    std::string assignedAgentID;
 };
-
-class DeliveryTask : public Task
-{
-public:
-    // ########################## CONSTRUCTORS ########################### //
-    explicit DeliveryTask(const std::vector<Point<>> &wayPoints, int sumDistance)
-        : Task(wayPoints, sumDistance) {}
-
-    explicit DeliveryTask(std::vector<Point<>> &&wayPoints, int sumDistance)
-        : Task(std::move(wayPoints), sumDistance) {}
-
-    DeliveryTask(const DeliveryTask &other)
-        : Task(other.wayPoints, sumDistance) {}
-
-    DeliveryTask(const DeliveryTask &&other)
-        : Task(std::move(other.wayPoints), sumDistance) {}
-
-    virtual ~DeliveryTask() {}
-};
-
 #endif

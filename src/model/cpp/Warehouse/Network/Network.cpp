@@ -48,7 +48,7 @@ void Network::disconnect(NetworkAdapter &networkAdapter)
     }
 }
 
-bool Network::sendMessage(std::unique_ptr<AbstractNetworkMessage> &&message, int recipientAddress) const
+bool Network::sendMessage(std::shared_ptr<AbstractNetworkMessage> message, int recipientAddress) const
 {
     auto recipient = address2adapter.find(recipientAddress);
     if (recipient != address2adapter.end())

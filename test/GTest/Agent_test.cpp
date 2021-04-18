@@ -74,7 +74,7 @@ TEST_F(AgentTest, Movement)
 
     // Up Move
     AgentTest::moveHelper(robot->getMoveMechanism()->move(DirectionVector<>::UP()));
-    checkPos = robot->getBody()->getPose().getPosition() == Point<>(1, 2, 0);
+    checkPos = robot->getBody()->getPose().getPosition() == Point<>(1, 0, 0);
     checkOr = robot->getBody()->getPose().getOrientation() == DirectionVector<>::UP();
     EXPECT_TRUE(checkPos);
     EXPECT_TRUE(checkOr);
@@ -82,7 +82,7 @@ TEST_F(AgentTest, Movement)
 
     // Left Move
     AgentTest::moveHelper(robot->getMoveMechanism()->move(DirectionVector<>::LEFT()));
-    checkPos = robot->getBody()->getPose().getPosition() == Point<>(0, 2, 0);
+    checkPos = robot->getBody()->getPose().getPosition() == Point<>(0, 0, 0);
     checkOr = robot->getBody()->getPose().getOrientation() == DirectionVector<>::LEFT();
     EXPECT_TRUE(checkPos);
     EXPECT_TRUE(checkOr);
@@ -90,7 +90,7 @@ TEST_F(AgentTest, Movement)
 
     // Right Move
     AgentTest::moveHelper(robot->getMoveMechanism()->move(DirectionVector<>::RIGHT()));
-    checkPos = robot->getBody()->getPose().getPosition() == Point<>(1, 2, 0);
+    checkPos = robot->getBody()->getPose().getPosition() == Point<>(1, 0, 0);
     checkOr = robot->getBody()->getPose().getOrientation() == DirectionVector<>::RIGHT();
     EXPECT_TRUE(checkPos);
     EXPECT_TRUE(checkOr);
@@ -133,10 +133,9 @@ TEST_F(AgentTest, Networked_Movement)
     EXPECT_TRUE(robot->getNetworkAdapter().isConnected());
 
     // Send AgentControlGranted message
-    adapter.send(std::make_unique<AgentControlGrantedMessage>(adapter.getAddress()), 100);
-    robot->tick(0);
+    adapter.send(std::make_shared<AgentControlGrantedMessage>(adapter.getAddress()), 100);
+    adapter.send(std::make_shared<MoveAgentMessage>(DirectionVector<>::LEFT(), adapter.getAddress()), 100);
     // Send Movement message
-    adapter.send(std::make_unique<MoveAgentMessage>(DirectionVector<>::LEFT(), adapter.getAddress()), 100);
 
     // Turn tick
     robot->tick(0);
@@ -188,7 +187,7 @@ TEST_F(AgentTest, Networked_PodManagement)
     EXPECT_EQ(robot->getEnergySource()->getCharge(), 99);
 
     // Movement With Pod
-    adapter.send(std::make_unique<MoveAgentMessage>(DirectionVector<>::UP(), adapter.getAddress()), 100);
+    adapter.send(std::make_shared<MoveAgentMessage>(DirectionVector<>::UP(), adapter.getAddress()), 100);
     bool checkPos = robot->getBody()->getPose().getPosition() == Point<>(1, 1, 0);
     bool checkOr = robot->getBody()->getPose().getOrientation() == DirectionVector<>::UP();
     EXPECT_TRUE(checkPos);
@@ -196,16 +195,16 @@ TEST_F(AgentTest, Networked_PodManagement)
     robot->tick(1);
 
     // Check Agent moved and Pod moved with agent
-    checkPos = robot->getBody()->getPose().getPosition() == Point<>(1, 2, 0);
+    checkPos = robot->getBody()->getPose().getPosition() == Point<>(1, 0, 0);
     checkOr = robot->getBody()->getPose().getOrientation() == DirectionVector<>::UP();
     EXPECT_TRUE(checkPos);
     EXPECT_TRUE(checkOr);
     EXPECT_EQ(robot->getEnergySource()->getCharge(), 98);
-    checkPos = robot->getPodHolder().getChildPod()->getBody()->getPose().getPosition() == Point<>(1, 2, 1);
+    checkPos = robot->getPodHolder().getChildPod()->getBody()->getPose().getPosition() == Point<>(1, 0, 1);
     EXPECT_TRUE(checkPos);
 
     // Move back with Pod
-    adapter.send(std::make_unique<MoveAgentMessage>(DirectionVector<>::DOWN(), adapter.getAddress()), 100);
+    adapter.send(std::make_shared<MoveAgentMessage>(DirectionVector<>::DOWN(), adapter.getAddress()), 100);
     robot->tick(2);
     robot->tick(3);
     robot->tick(4);
@@ -218,7 +217,7 @@ TEST_F(AgentTest, Networked_PodManagement)
     EXPECT_TRUE(checkPos);
 
     // Put down pod
-    adapter.send(std::make_unique<PutDownPodMessage>(adapter.getAddress()), 100);
+    adapter.send(std::make_shared<PutDownPodMessage>(adapter.getAddress()), 100);
     EXPECT_NE(robot->getPodHolder().getChildPod(), nullptr);
     EXPECT_EQ(podDock->getPodHolder().getChildPod(), nullptr);
     EXPECT_EQ(robot->getBody()->getChildren().size(), 1);
@@ -231,11 +230,11 @@ TEST_F(AgentTest, Networked_PodManagement)
     EXPECT_EQ(robot->getEnergySource()->getCharge(), 94);
 
     // Move up again
-    adapter.send(std::make_unique<MoveAgentMessage>(DirectionVector<>::UP(), adapter.getAddress()), 100);
+    adapter.send(std::make_shared<MoveAgentMessage>(DirectionVector<>::UP(), adapter.getAddress()), 100);
     robot->tick(6);
     robot->tick(7);
     robot->tick(8);
-    checkPos = robot->getBody()->getPose().getPosition() == Point<>(1, 2, 0);
+    checkPos = robot->getBody()->getPose().getPosition() == Point<>(1, 0, 0);
     checkOr = robot->getBody()->getPose().getOrientation() == DirectionVector<>::UP();
     EXPECT_TRUE(checkPos);
     EXPECT_TRUE(checkOr);

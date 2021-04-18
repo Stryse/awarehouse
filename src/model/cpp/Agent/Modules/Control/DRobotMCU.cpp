@@ -22,7 +22,8 @@ DRobotMCU::DRobotMCU(IMoveMechanism &moveMechanism,
       rackMotor(rackMotor),
       podHolder(podHolder),
       energySource(energySource),
-      environment(env)
+      environment(env),
+      controlData(std::make_unique<AgentControlData>(energySource, moveMechanism, ControlID))
 {
     connect_PodMovementToAgentMovement();
 }
@@ -34,8 +35,9 @@ void DRobotMCU::tick(int time)
     switch (status)
     {
     case Status::IDLE:
-        requestControl();
-        processMessages();
+        processMessages(); // Status may change
+        if (status == Status::IDLE)
+            requestControl();
         break;
 
     case Status::RUNNING:
@@ -96,9 +98,9 @@ void DRobotMCU::receive(const AgentControlGrantedMessage &message)
 
 void DRobotMCU::requestControl()
 {
+    controlData->address = networkAdapter.getAddress();
     networkAdapter.send(std::make_unique<AgentControlRequestMessage>(
-                            AgentControlData(energySource,
-                                             moveMechanism),
+                            controlData.get(),
                             networkAdapter.getAddress()),
                         0x1);
 }
@@ -107,7 +109,7 @@ void DRobotMCU::processMessages()
 {
     while (!networkAdapter.isMessageQueueEmpty())
     {
-        std::unique_ptr<AbstractNetworkMessage> message = networkAdapter.poll();
+        std::shared_ptr<AbstractNetworkMessage> message = networkAdapter.poll();
         message->dispatch(*this);
     }
 }

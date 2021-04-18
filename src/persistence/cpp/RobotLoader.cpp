@@ -15,8 +15,7 @@ std::shared_ptr<DeliveryRobot> RobotLoader::load(const QJsonObject &robotObj, st
         DirectionVector<> orientation(0, robotObj["OrientationY"].toInt(), 0);
 
         int batteryLevel = settings->batteryLevel();
-
-        return std::make_shared<DeliveryRobot>(env, position, orientation);
+        return std::make_shared<DeliveryRobot>(env, position, orientation, 100);
     }
     return nullptr;
 }

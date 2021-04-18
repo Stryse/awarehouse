@@ -9,8 +9,8 @@
 
 // ################# FORWARD DECLARATIONS #######################
 class QString;
-class AScheduler;
-class AController;
+class SchedulerImpl;
+class ControllerImpl;
 class Network;
 class Warehouse;
 class QString;
@@ -41,8 +41,8 @@ private:
 
 private:
     int timeStamp;
-    std::unique_ptr<AScheduler> scheduler;
-    std::unique_ptr<AController> controller;
+    std::unique_ptr<ControllerImpl> controller;
+    std::unique_ptr<SchedulerImpl> scheduler;
     std::shared_ptr<Network> network;
     std::unique_ptr<State> state;
 

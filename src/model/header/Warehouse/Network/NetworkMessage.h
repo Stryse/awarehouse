@@ -3,6 +3,7 @@
 
 #include "DirectionVector.h"
 #include "NetworkMessageHandler.h"
+#include <memory>
 
 // ####################### FORWARD DECLARATIONS ######################### //
 class IDepleting;
@@ -52,6 +53,15 @@ protected:
 
     NetworkMessage(const NetworkMessage &) = default;
     NetworkMessage(NetworkMessage &&) = default;
+};
+
+struct TargetedMessage
+{
+    TargetedMessage(int address, std::shared_ptr<AbstractNetworkMessage> message)
+        : address(address), message(std::move(message)) {}
+
+    int address;
+    std::shared_ptr<AbstractNetworkMessage> message;
 };
 
 /**************************************************
@@ -126,12 +136,21 @@ struct AgentControlData
     using IMoveMechanism = ::IMoveMechanism;
 
     AgentControlData(const IDepleting &energySource,
-                     const IMoveMechanism &moveMechanism)
+                     const IMoveMechanism &moveMechanism,
+                     const std::string &ID = "UNKNOWN",
+                     int address = 0)
+
         : energySource(energySource),
-          moveMechanism(moveMechanism) {}
+          moveMechanism(moveMechanism),
+          ID(ID),
+          address(address)
+    {
+    }
 
     const IDepleting &energySource;
     const IMoveMechanism &moveMechanism;
+    const std::string ID;
+    int address;
 };
 
 /*********************************************************************
@@ -141,14 +160,14 @@ struct AgentControlData
 class AgentControlRequestMessage : public NetworkMessage<AgentControlRequestMessage>
 {
 public:
-    explicit AgentControlRequestMessage(AgentControlData controlData, int senderAddress)
+    explicit AgentControlRequestMessage(const AgentControlData *controlData, int senderAddress)
         : NetworkMessage<AgentControlRequestMessage>(senderAddress),
           controlData(controlData)
     {
     }
-    virtual ~AgentControlRequestMessage() = default;
 
-    AgentControlData controlData;
+    virtual ~AgentControlRequestMessage() = default;
+    const AgentControlData *controlData;
 };
 
 /*********************************************************************

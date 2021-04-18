@@ -132,21 +132,21 @@ TEST_F(NotifyTest, AgentMovement_With_PodMovement)
     robot->getNetworkAdapter().connect(network);
 
     // Send AgentControlGranted message
-    adapter.send(std::make_unique<AgentControlGrantedMessage>(adapter.getAddress()), 100);
+    adapter.send(std::make_shared<AgentControlGrantedMessage>(adapter.getAddress()), 100);
     robot->tick(0);
     // Send Pickup Message
-    adapter.send(std::make_unique<PickupPodMessage>(adapter.getAddress()), 100);
+    adapter.send(std::make_shared<PickupPodMessage>(adapter.getAddress()), 100);
 
     // Robot Action perform (Pickup pod)
     robot->tick(0);
 
     // Movement With Pod
-    adapter.send(std::make_unique<MoveAgentMessage>(DirectionVector<>::UP(), adapter.getAddress()), 100);
+    adapter.send(std::make_shared<MoveAgentMessage>(DirectionVector<>::UP(), adapter.getAddress()), 100);
     robot->tick(1);
     EXPECT_EQ(podMoved, 1);
 
     // Move back with Pod
-    adapter.send(std::make_unique<MoveAgentMessage>(DirectionVector<>::DOWN(), adapter.getAddress()), 100);
+    adapter.send(std::make_shared<MoveAgentMessage>(DirectionVector<>::DOWN(), adapter.getAddress()), 100);
     robot->tick(2);
     EXPECT_EQ(podMoved, 2);
     robot->tick(3);
@@ -155,11 +155,11 @@ TEST_F(NotifyTest, AgentMovement_With_PodMovement)
     EXPECT_EQ(podMoved, 4);
 
     // Put down pod
-    adapter.send(std::make_unique<PutDownPodMessage>(adapter.getAddress()), 100);
+    adapter.send(std::make_shared<PutDownPodMessage>(adapter.getAddress()), 100);
     robot->tick(5);
 
     // Move up without Pod
-    adapter.send(std::make_unique<MoveAgentMessage>(DirectionVector<>::UP(), adapter.getAddress()), 100);
+    adapter.send(std::make_shared<MoveAgentMessage>(DirectionVector<>::UP(), adapter.getAddress()), 100);
     robot->tick(6);
     EXPECT_EQ(podMoved, 4);
     robot->tick(7);
