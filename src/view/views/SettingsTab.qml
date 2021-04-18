@@ -62,13 +62,12 @@ ScrollView {
         ComboBox {
             id: wareHouseComboBox
 
-            model: SimPresenter.warehouses
-
             Layout.alignment: Qt.AlignRight
 
-            Material.background: Material.primary
+            model: SimPresenter.persistence.warehouses
 
             flat: true
+            Material.background: Material.primary
         }
 
         Button {

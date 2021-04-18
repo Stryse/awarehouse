@@ -11,19 +11,18 @@
 
 //Presenter
 #include "WarehouseLayoutPresenter.h"
+#include "PersistencePresenter.h"
 #include "Settings.h"
 
 class SimulationWindowPresenter : public QObject
 {
     Q_OBJECT
 
-    Q_PROPERTY(               QStringList warehouses           READ warehouses           NOTIFY   mapsChanged   )
-    Q_PROPERTY(                   QString defaultWarehousePath READ defaultWarehousePath CONSTANT               )
-    Q_PROPERTY(                   QString warehouseDirPath     READ warehouseDirPath     CONSTANT               )
-
     Q_PROPERTY( WarehouseLayoutPresenter* layout               READ layout               CONSTANT               )
     Q_PROPERTY(                 Settings* settings             READ settings                                    )
     Q_PROPERTY(                      bool paused               READ paused               NOTIFY   pausedChanged )
+
+    Q_PROPERTY(     PersistencePresenter* persistence          READ persistence          CONSTANT               )
 
 public:
     explicit SimulationWindowPresenter(QObject* parent = nullptr);
@@ -38,13 +37,11 @@ public:
 
 public:
     //Getter
-    QStringList               warehouses()           const;
-    QString                   defaultWarehousePath() const;
-    QString                   warehouseDirPath()     const;
-
-    WarehouseLayoutPresenter* layout()               const;
+    WarehouseLayoutPresenter* layout()      const;
     Settings*                 settings();
-    bool                      paused()               const;
+    bool                      paused()      const;
+
+    PersistencePresenter*     persistence() const;
 
 private:
     void setPaused(bool paused);
@@ -67,14 +64,12 @@ public slots:
 private:
     WarehouseManager m_manager;
 
-    QStringListModel m_warehouses;
-    QString          m_defaultWarehousePath;
-    QString          m_warehouseDirPath;
-
     QString                   m_currentWarehousePath;
     WarehouseLayoutPresenter* m_layout;
     Settings                  m_settings;
     bool                      m_paused;
+
+    PersistencePresenter*     m_persistence;
 };
 
 #endif /* SIMULATION_WINDOW_PRESENTER__H */

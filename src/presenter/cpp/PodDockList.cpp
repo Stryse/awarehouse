@@ -21,6 +21,18 @@ bool PodDockList::setPodDockAt(int index, PodDockPresenter& podDock)
     return true;
 }
 
+void PodDockList::loadJsonArray(const QJsonArray& podDocksJSon)
+{
+    clear();
+
+    for (int i = 0; i < podDocksJSon.size(); ++i)
+    {
+        PodDockPresenter* podDock = PodDockPresenter::loadJsonObject(podDocksJSon[i].toObject(), this);
+        if (podDock != nullptr)
+            appendPodDock(*podDock);
+    }
+}
+
 void PodDockList::appendPodDock(PodDockPresenter& podDock)
 {
     emit preItemAppended();

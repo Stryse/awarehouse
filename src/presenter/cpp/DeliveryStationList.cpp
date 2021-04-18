@@ -21,6 +21,18 @@ bool DeliveryStationList::setDeliveryStationAt(int index, DeliveryStationPresent
     return true;
 }
 
+void DeliveryStationList::loadJsonArray(const QJsonArray& deliveryStationsJson)
+{
+    clear();
+
+    for (int i = 0; i < deliveryStationsJson.size(); ++i)
+    {
+        DeliveryStationPresenter* deliveryStation = DeliveryStationPresenter::loadJsonObject(deliveryStationsJson[i].toObject(), this);
+        if (deliveryStation != nullptr)
+            appendDeliveryStation(*deliveryStation);
+    }
+}
+
 void DeliveryStationList::appendDeliveryStation(DeliveryStationPresenter& deliveryStation)
 {
     emit preItemAppended();

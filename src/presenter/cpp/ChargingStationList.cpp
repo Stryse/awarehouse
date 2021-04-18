@@ -21,6 +21,18 @@ bool ChargingStationList::setChargingStationAt(int index, ChargingStationPresent
     return true;
 }
 
+void ChargingStationList::loadJsonArray(const QJsonArray& chargingStationsJson)
+{
+    clear();
+
+    for (int i = 0; i < chargingStationsJson.size(); ++i)
+    {
+        ChargingStationPresenter* chargingStation = ChargingStationPresenter::loadJsonObject(chargingStationsJson[i].toObject(), this);
+        if (chargingStation != nullptr)
+            appendChargingStation(*chargingStation);
+    }
+}
+
 void ChargingStationList::appendChargingStation(ChargingStationPresenter& chargingStation)
 {
     emit preItemAppended();
@@ -33,6 +45,8 @@ void ChargingStationList::appendChargingStation(ChargingStationPresenter& chargi
     });
 
     emit postItemAppended();
+
+    //TODO dataChanged()?
 }
 
 void ChargingStationList::removeChargingStation(int index)

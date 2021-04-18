@@ -1,6 +1,8 @@
 #ifndef ACTOR_PRESENTER_H
 #define ACTOR_PRESENTER_H
 
+#include <QJsonObject>
+
 //Presenter
 #include "MapItemPresenter.h"
 
@@ -25,6 +27,9 @@ public:
     explicit ActorPresenter(int row, int column, QObject* parent = nullptr);
 
     bool operator==(const ActorPresenter& other) const;
+
+    static ActorPresenter* loadJsonObject(const QJsonObject& actorObj,
+                                                    QObject* parent = nullptr);
 
     //Getter
     QString name()      const;

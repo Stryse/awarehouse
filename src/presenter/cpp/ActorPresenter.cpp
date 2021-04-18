@@ -67,6 +67,26 @@ bool ActorPresenter::operator==(const ActorPresenter& other) const
            this->moves()     == other.moves();
 }
 
+ActorPresenter* ActorPresenter::loadJsonObject(const QJsonObject& actorObj,
+                                                         QObject* parent)
+{
+    if (actorObj.contains("RowCoord")     && actorObj["RowCoord"].isDouble() &&
+        actorObj.contains("ColCoord")     && actorObj["ColCoord"].isDouble() &&
+        actorObj.contains("OrientationY") && actorObj["OrientationY"].isDouble())
+    {
+        int row      = actorObj["ColCoord"].toInt();
+        int column   = actorObj["RowCoord"].toInt();
+        int rotation = (std::atan2(actorObj["OrientationY"].toInt(), 0)*180/M_PI) + 90;
+
+        ActorPresenter* actor = new ActorPresenter(column, row, parent);
+        actor->setRotation(rotation);
+
+        return actor;
+    }
+
+    return nullptr;
+}
+
 //Getter
 QString ActorPresenter::name()     const { return m_name;     }
 QString ActorPresenter::action()   const { return m_action;   }

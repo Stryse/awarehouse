@@ -26,3 +26,18 @@ bool PodDockPresenter::operator==(const PodDockPresenter& other) const
 {
     return MapItemPresenter::operator==(other);
 }
+
+PodDockPresenter* PodDockPresenter::loadJsonObject(const QJsonObject& podDockObj,
+                                                             QObject* parent)
+{
+    if (podDockObj.contains("RowCoord") && podDockObj["RowCoord"].isDouble() &&
+        podDockObj.contains("ColCoord") && podDockObj["ColCoord"].isDouble())
+    {
+        int row    = podDockObj["ColCoord"].toInt();
+        int column = podDockObj["RowCoord"].toInt();
+
+        return new PodDockPresenter(column, row, parent);
+    }
+
+    return nullptr;
+}

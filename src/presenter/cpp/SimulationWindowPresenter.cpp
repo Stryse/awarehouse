@@ -1,9 +1,6 @@
 #include "SimulationWindowPresenter.h"
 
 #include <QDebug>
-#include <QFile>
-#include <QJsonDocument>
-#include <QJsonObject>
 #include <QDir>
 #include <QDebug>
 
@@ -12,45 +9,24 @@
 
 SimulationWindowPresenter::SimulationWindowPresenter(QObject* parent)
     : QObject(parent)
-    , m_warehouses          (nullptr            )
-    , m_defaultWarehousePath(":/maps/Map01.json")
-    , m_warehouseDirPath    ("../maps"          )
-    , m_layout              (nullptr            )
+    , m_layout(nullptr)
+    , m_persistence(new PersistencePresenter(this))
 {
-    createMapDir();
-
-    loadWarehouse(m_defaultWarehousePath, &m_settings);
-    m_layout = new WarehouseLayoutPresenter(m_manager.getDisplayedWarehouse()->getState().get());
+    loadWarehouse(m_persistence->defaultWarehousePath(), &m_settings);
+    m_layout = new WarehouseLayoutPresenter(m_manager.getDisplayedWarehouse()->getState().get(), this);
 }
 
 //Getter
-QStringList               SimulationWindowPresenter::warehouses()           const { return m_warehouses.stringList();                                 }
-QString                   SimulationWindowPresenter::defaultWarehousePath() const { return m_defaultWarehousePath;                                    }
-QString                   SimulationWindowPresenter::warehouseDirPath()     const { return m_warehouseDirPath;                                        }
-WarehouseLayoutPresenter* SimulationWindowPresenter::layout()               const { return m_layout;                                                  }
-Settings*                 SimulationWindowPresenter::settings()                   { return &m_settings;                                               }
-bool                      SimulationWindowPresenter::paused()               const { return m_manager.getDisplayedWarehouseSimulator()->isAvailable(); }
-
+WarehouseLayoutPresenter* SimulationWindowPresenter::layout()      const { return m_layout;                                                  }
+Settings*                 SimulationWindowPresenter::settings()          { return &m_settings;                                               }
+bool                      SimulationWindowPresenter::paused()      const { return m_manager.getDisplayedWarehouseSimulator()->isAvailable(); }
+PersistencePresenter*     SimulationWindowPresenter::persistence() const { return m_persistence;                                             }
 
 //Setter
 void SimulationWindowPresenter::setPaused(bool paused)
 {
     m_paused = paused;
     emit pausedChanged();
-}
-
-void SimulationWindowPresenter::createMapDir()
-{
-    QDir mapsDirectory(m_warehouseDirPath);
-    if(!mapsDirectory.exists())
-        mapsDirectory.mkdir(m_warehouseDirPath);
-
-    QStringList maps = mapsDirectory.entryList(QStringList() << "*.json" << "*.JSON", QDir::Files);
-    for(int i = 0; i < maps.size(); ++i )
-        maps[i].chop(5);
-
-    maps.push_front("Default");
-    m_warehouses.setStringList(maps);
 }
 
 void SimulationWindowPresenter::simulationStart()

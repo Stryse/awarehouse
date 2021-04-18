@@ -3,6 +3,7 @@
 
 #include <QObject>
 #include <QList>
+#include <QJsonArray>
 
 //Presenter
 #include "ActorPresenter.h"
@@ -17,6 +18,8 @@ public:
     QList<ActorPresenter*>* actors();
 
     bool setActorAt(int index, ActorPresenter& actor);
+
+    void loadJsonArray(const QJsonArray& actorsJson);
 
 signals:
     void preItemAppended();

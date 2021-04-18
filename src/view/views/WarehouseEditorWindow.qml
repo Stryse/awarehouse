@@ -16,6 +16,7 @@ Item {
     property real  borderWidth
 
     property string currentWarehouse: "New"
+    readonly property bool isDeafultWarehouse: currentWarehouse == "New" || currentWarehouse == "Default"
 
     readonly property ListModel tileList: ListModel {
         ListElement {
@@ -75,47 +76,46 @@ Item {
         closePolicy: Popup.CloseOnEscape | Popup.CloseOnPressOutside
 
         contentItem: Item {
-            id: popupContent
+            id: loadPopupContent
 
             Label {
-                id: popupLabel
+                id: loadPopupLabel
 
                 anchors {
                     horizontalCenter: parent.horizontalCenter
                     top:              parent.top
                 }
-                height: popupContent.height * 0.08
 
                 text:           qsTr("Warehouses")
-                font.pixelSize: popupContent.height * 0.09
+                font.pixelSize: loadPopupContent.height * 0.1
             }
 
             Rectangle {
                 id: listViewBackground
 
-                anchors.fill: popupWarehouseList
+                anchors.fill: warehouseList
 
                 color: mainRoot.secondaryColor
                 radius: 2
             }
 
             ListView {
-                id: popupWarehouseList
+                id: warehouseList
 
                 anchors {
                     left: parent.left;       right:  parent.right
-                    top:  popupLabel.bottom; bottom: cancelPopup.top
+                    top:  loadPopupLabel.bottom; bottom: cancelLoadPopup.top
 
                     leftMargin:  loadWarehousePopup.horizontalPadding * 0.1
                     rightMargin: loadWarehousePopup.horizontalPadding * 0.1
-                    topMargin:   loadWarehousePopup.verticalPadding   * 3
+                    topMargin:   loadWarehousePopup.verticalPadding
                 }
                 clip: true
 
                 focus:        true
                 currentIndex: -1
 
-                model: SimPresenter.warehouses
+                model: EditorPresenter.persistence.warehouses
 
                 delegate: Label {
                     id: warehouseRecord
@@ -135,7 +135,7 @@ Item {
                     }
 
                     text:           warehouseName
-                    font.pixelSize: popupLabel.height * 0.4
+                    font.pixelSize: loadPopupLabel.height * 0.25
                     color:          warehouseRecordMouseArea.containsMouse ? Material.accent : Material.foreground
 
                     MouseArea {
@@ -145,9 +145,13 @@ Item {
 
                         hoverEnabled: true
 
-                        onClicked: popupWarehouseList.currentIndex = index
+                        onClicked: warehouseList.currentIndex = index
 
-                        onDoubleClicked: loadWarehousePopup.loadWarehouse(warehouseName)
+                        onDoubleClicked: {
+                            loadWarehousePopup.loadWarehouse(warehouseName)
+                            warehouseList.currentIndex = -1
+                            loadWarehousePopup.close()
+                        }
                     }
                 }
             }
@@ -156,7 +160,7 @@ Item {
                 id: loadWarehouse
 
                 anchors {
-                    left:  popupWarehouseList.left
+                    left:   warehouseList.left
                     bottom: parent.bottom
                 }
 
@@ -164,13 +168,15 @@ Item {
                 Material.background: Material.primary
 
                 text:                qsTr("Load")
-                font.pixelSize:      popupLabel.height * 0.4
+                font.pixelSize:      loadPopupLabel.height * 0.25
                 font.capitalization: Font.MixedCase;
 
                 onClicked: {
                     //TODO: Initiate load
-                    if (popupWarehouseList.currentIndex !== -1) {
-                        loadWarehousePopup.loadWarehouse(popupWarehouseList.currentItem.warehouseName)
+                    if (warehouseList.currentIndex !== -1) {
+                        loadWarehousePopup.loadWarehouse(warehouseList.currentItem.warehouseName)
+                        warehouseList.currentIndex = -1
+                        loadWarehousePopup.close()
                     }
                     else {
                         console.log("Select a warehouse!")
@@ -179,10 +185,10 @@ Item {
             }
 
             Button {
-                id: cancelPopup
+                id: cancelLoadPopup
 
                 anchors {
-                    right:  popupWarehouseList.right
+                    right:  warehouseList.right
                     bottom: parent.bottom
                 }
 
@@ -190,7 +196,7 @@ Item {
                 Material.background: Material.primary
 
                 text:                qsTr("Cancel")
-                font.pixelSize:      popupLabel.height * 0.4
+                font.pixelSize:      loadPopupLabel.height * 0.25
                 font.capitalization: Font.MixedCase;
 
                 onClicked: loadWarehousePopup.close()
@@ -198,9 +204,277 @@ Item {
         }
 
         function loadWarehouse(warehouseName) {
+            EditorPresenter.loadWarehouse(warehouseName);
+
             editorRoot.currentWarehouse = warehouseName
+
+            if (editorRoot.isDeafultWarehouse)
+                savePopupStack.replace(saveAsComponent)
+            else
+                savePopupStack.replace(overwriteComponent)
+
             console.log(editorRoot.currentWarehouse)
-            loadWarehousePopup.close()
+        }
+    }
+
+    Popup {
+        id: saveWarehousePopup
+
+        property bool isSaveAs: true
+
+        anchors.centerIn: Overlay.overlay
+        height:           editorRoot.height * 0.3
+        width:            editorRoot.width  * 0.4
+
+        Overlay.modal: Rectangle {
+            color: Qt.rgba(0, 0, 0, 0.5)
+        }
+
+        background: Rectangle {
+            color: Material.background
+            radius: 2
+        }
+
+        verticalPadding:   10
+        horizontalPadding: 20
+
+        modal: true
+        focus: true
+        closePolicy: Popup.CloseOnEscape | Popup.CloseOnPressOutside
+
+        contentItem: Item {
+            id: savePopupContent
+
+            Label {
+                id: savePopupLabel
+
+                anchors {
+                    left: parent.left
+                    top:  parent.top
+                }
+
+                text:           qsTr("Save Warehouse")
+                font.pixelSize: savePopupContent.height * 0.2
+            }
+
+            StackView {
+                id: savePopupStack
+
+                anchors {
+                    left: parent.left;           right:  parent.right
+                    top:  savePopupLabel.bottom; bottom: parent.bottom
+                }
+
+                initialItem: saveAsComponent
+            }
+
+            Component {
+                id: overwriteComponent
+
+                Item {
+                    id: overwriteItem
+
+                    Label {
+                        id: overwriteLabel
+
+                        text: "Do you wish to overwrite " + editorRoot.currentWarehouse + " warehouse?"
+
+                        font.pixelSize: savePopupLabel.height * 0.34
+                    }
+
+                    Button {
+                        id: yesButton
+
+                        anchors {
+                            left:   parent.left
+                            bottom: parent.bottom
+
+                            topMargin: overwriteLabel.height * 0.1
+                        }
+
+                        flat:                true
+                        Material.background: Material.primary
+
+                        text:                qsTr("Yes")
+                        font.pixelSize:      savePopupLabel.height * 0.28
+                        font.capitalization: Font.MixedCase;
+
+                        onClicked: {
+                            saveWarehousePopup.saveWarehouse(editorRoot.currentWarehouse)
+                            saveWarehousePopup.close()
+                        }
+                    }
+
+                    Button {
+                        id: noButton
+
+                        anchors {
+                            left:   yesButton.right
+                            bottom: yesButton.bottom
+
+                            leftMargin: width * 0.08
+                        }
+
+                        flat:                true
+                        Material.background: Material.primary
+
+                        text:                qsTr("No")
+                        font.pixelSize:      savePopupLabel.height * 0.28
+                        font.capitalization: Font.MixedCase;
+
+                        onClicked: {
+                            saveWarehousePopup.isSaveAs = true
+                            savePopupStack.replace(saveAsComponent)
+                        }
+                    }
+
+                    Button {
+                        id: cancelOverwritePopup
+
+                        anchors {
+                            right:  parent.right
+                            bottom: parent.bottom
+                        }
+
+                        flat:                true
+                        Material.background: Material.primary
+
+                        text:                qsTr("Cancel")
+                        font.pixelSize:      savePopupLabel.height * 0.28
+                        font.capitalization: Font.MixedCase;
+
+                        onClicked: saveWarehousePopup.close()
+                    }
+                }
+            }
+
+            Component {
+                id: saveAsComponent
+
+                Item {
+                    id: saveAsItem
+
+                    Label {
+                        id: saveAsLabel
+
+                        text: "Please enter a new warehouse name below"
+
+                        font.pixelSize: savePopupLabel.height * 0.34
+                    }
+
+                    TextField {
+                        id: warehouseNameField
+
+                        anchors {
+                            top: saveAsLabel.bottom
+
+                            topMargin: (parent.height - (saveAsLabel.height + height + saveAsButton.height))/2 - defaultWarehouseNameLabel.height
+                        }
+                        width: saveAsLabel.width * 0.5
+
+                        focus: true
+
+                        placeholderText: "Warehouse name"
+                        hoverEnabled: true
+
+                        font.pixelSize: savePopupLabel.height * 0.28
+
+                        onTextChanged: {
+                            defaultWarehouseNameLabel.visible = false
+                            zeroWarehouseNameLabel.visible    = false
+                        }
+                    }
+
+                    Label {
+                        id: defaultWarehouseNameLabel
+
+                        anchors.top: warehouseNameField.bottom
+
+                        visible: false
+
+                        color: "#EF9A9A"
+                        text: "Warehouse name can't be \"New\" or \"Default\""
+
+                        font.pixelSize: savePopupLabel.height * 0.22
+                    }
+                    Label {
+                        id: zeroWarehouseNameLabel
+
+                        anchors.top: warehouseNameField.bottom
+
+                        visible: false
+
+                        color: "#EF9A9A"
+                        text: "Warehouse name can't be empty"
+
+                        font.pixelSize: savePopupLabel.height * 0.22
+                    }
+
+                    Button {
+                        id: saveAsButton
+
+                        anchors {
+                            left:   parent.left
+                            bottom: parent.bottom
+
+                            leftMargin: width * 0.08
+                        }
+
+                        flat:                true
+                        Material.background: Material.primary
+
+                        text:                qsTr("Save")
+                        font.pixelSize:      savePopupLabel.height * 0.28
+                        font.capitalization: Font.MixedCase;
+
+                        onClicked: {
+                            if (warehouseNameField.text      == "Default" || warehouseNameField.text == "New")
+                                defaultWarehouseNameLabel.visible = true
+                            else if (warehouseNameField.text == "")
+                                zeroWarehouseNameLabel.visible    = true
+                            else {
+                                saveWarehousePopup.saveWarehouse(warehouseNameField.text)
+                                editorRoot.currentWarehouse = warehouseNameField.text
+                                saveWarehousePopup.close()
+                            }
+                        }
+                    }
+
+                    Button {
+                        id: cancelSaveAsPopup
+
+                        anchors {
+                            right:  parent.right
+                            bottom: parent.bottom
+                        }
+
+                        flat:                true
+                        Material.background: Material.primary
+
+                        text:                qsTr("Cancel")
+                        font.pixelSize:      savePopupLabel.height * 0.28
+                        font.capitalization: Font.MixedCase;
+
+                        onClicked: {
+                            saveWarehousePopup.close()
+                        }
+                    }
+                }
+            }
+        }
+
+        onClosed: {
+            if (!editorRoot.isDeafultWarehouse && saveWarehousePopup.isSaveAs) {
+                savePopupStack.replace(overwriteComponent)
+                saveWarehousePopup.isSaveAs = false
+            }
+            else if (editorRoot.isDeafultWarehouse || saveWarehousePopup.isSaveAs)
+                savePopupStack.replace(saveAsComponent)
+        }
+
+        function saveWarehouse(warehouseName) {
+            //TODO
+            console.log("Saved " + warehouseName + " warehouse!")
         }
     }
 
@@ -290,6 +564,8 @@ Item {
                     text:                qsTr("Save")
                     font.pixelSize:      buttonsLayout.buttonFontSize
                     font.capitalization: Font.MixedCase;
+
+                    onClicked: saveWarehousePopup.open();
                 }
                 Button {
                     id: loadButton

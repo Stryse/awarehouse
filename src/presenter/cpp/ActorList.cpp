@@ -21,6 +21,18 @@ bool ActorList::setActorAt(int index, ActorPresenter& actor)
     return true;
 }
 
+void ActorList::loadJsonArray(const QJsonArray& actorsJson)
+{
+    clear();
+
+    for (int i = 0; i < actorsJson.size(); ++i)
+    {
+        ActorPresenter* actor = ActorPresenter::loadJsonObject(actorsJson[i].toObject(), this);
+        if (actor != nullptr)
+            appendActor(*actor);
+    }
+}
+
 void ActorList::appendActor(ActorPresenter& actor)
 {
     emit preItemAppended();

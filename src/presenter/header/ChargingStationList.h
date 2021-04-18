@@ -3,6 +3,7 @@
 
 #include <QObject>
 #include <QList>
+#include <QJsonArray>
 
 //Presenter
 #include "ChargingStationPresenter.h"
@@ -16,7 +17,9 @@ public:
 
     QList<ChargingStationPresenter*>* chargingStations();
 
-    bool setChargingStationAt(int index, ChargingStationPresenter& chargingStation);
+    bool setChargingStationAt(int index, ChargingStationPresenter& chargingStationsJson);
+
+    void loadJsonArray(const QJsonArray& chargingStations);
 
 signals:
     void preItemAppended();

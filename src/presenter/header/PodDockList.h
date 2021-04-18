@@ -3,6 +3,7 @@
 
 #include <QObject>
 #include <QList>
+#include <QJsonArray>
 
 //Presenter
 #include "PodDockPresenter.h"
@@ -17,6 +18,8 @@ public:
     QList<PodDockPresenter*>* podDocks();
 
     bool setPodDockAt(int index, PodDockPresenter& podDock);
+
+    void loadJsonArray(const QJsonArray& podDocksJSon);
 
 signals:
     void preItemAppended();
