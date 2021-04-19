@@ -5,6 +5,7 @@
 #include "PathFinder.h"
 #include "SchedulerImpl.h"
 #include "Task.h"
+#include <iostream>
 
 ControllerImpl::ControllerImpl(PathFinder *pathFinder)
     : pathFinder(pathFinder),
@@ -18,40 +19,10 @@ ControllerImpl::ControllerImpl(PathFinder *pathFinder)
       MPutdownOrder(std::make_shared<PutDownOrderMessage>(0x2))
 {
     controlMessages.reserve(500);
-
-    // controlMessages.emplace(std::make_pair(0, TargetedMessage(100, MControlGranted)));
-
-    // //To Task
-    // controlMessages.emplace(std::make_pair(0, TargetedMessage(100, MMoveAgentUp)));
-    // controlMessages.emplace(std::make_pair(1, TargetedMessage(100, MMoveAgentUp)));
-
-    // //Pod Pickup
-    // controlMessages.emplace(std::make_pair(2, TargetedMessage(100, MPickupPod)));
-
-    // //To Task waypoint 0
-    // controlMessages.emplace(std::make_pair(3, TargetedMessage(100, MMoveAgentRight)));
-    // controlMessages.emplace(std::make_pair(5, TargetedMessage(100, MMoveAgentRight)));
-    // controlMessages.emplace(std::make_pair(6, TargetedMessage(100, MMoveAgentRight)));
-    // controlMessages.emplace(std::make_pair(7, TargetedMessage(100, MMoveAgentRight)));
-    // controlMessages.emplace(std::make_pair(8, TargetedMessage(100, MMoveAgentRight)));
-    // controlMessages.emplace(std::make_pair(9, TargetedMessage(100, MMoveAgentRight)));
-    // controlMessages.emplace(std::make_pair(10, TargetedMessage(100, MMoveAgentRight)));
-    // controlMessages.emplace(std::make_pair(11, TargetedMessage(100, MMoveAgentUp)));
-    // controlMessages.emplace(std::make_pair(12, TargetedMessage(100, MPutdownOrder)));
-    // controlMessages.emplace(std::make_pair(12, TargetedMessage(100, MMoveAgentLeft)));
-    // controlMessages.emplace(std::make_pair(14, TargetedMessage(100, MMoveAgentLeft)));
-    // controlMessages.emplace(std::make_pair(15, TargetedMessage(100, MMoveAgentLeft)));
-    // controlMessages.emplace(std::make_pair(16, TargetedMessage(100, MMoveAgentLeft)));
-    // controlMessages.emplace(std::make_pair(17, TargetedMessage(100, MMoveAgentLeft)));
-    // controlMessages.emplace(std::make_pair(18, TargetedMessage(100, MMoveAgentLeft)));
-    // controlMessages.emplace(std::make_pair(19, TargetedMessage(100, MMoveAgentLeft)));
-    // controlMessages.emplace(std::make_pair(20, TargetedMessage(100, MMoveAgentDown)));
-    // controlMessages.emplace(std::make_pair(21, TargetedMessage(100, MPutdownPod)));
-    // controlMessages.emplace(std::make_pair(22, TargetedMessage(100, MMoveAgentDown)));
-    // controlMessages.emplace(std::make_pair(23, TargetedMessage(100, MMoveAgentDown)));
-    // controlMessages.emplace(std::make_pair(0, TargetedMessage(101, MControlGranted)));
-    // controlMessages.emplace(std::make_pair(0, TargetedMessage(101, MMoveAgentLeft)));
-    // controlMessages.emplace(std::make_pair(2, TargetedMessage(101, MMoveAgentLeft)));
+    directionToMessage.emplace(std::make_pair(DirectionVector<>::UP(), MMoveAgentUp));
+    directionToMessage.emplace(std::make_pair(DirectionVector<>::DOWN(), MMoveAgentDown));
+    directionToMessage.emplace(std::make_pair(DirectionVector<>::LEFT(), MMoveAgentLeft));
+    directionToMessage.emplace(std::make_pair(DirectionVector<>::RIGHT(), MMoveAgentRight));
 }
 
 ControllerImpl::~ControllerImpl()
@@ -73,31 +44,38 @@ void ControllerImpl::broadcastMessages(int timeStamp)
     controlMessages.erase(messages.first, messages.second);
 }
 
+void ControllerImpl::translatePath(const std::vector<std::shared_ptr<Node>> &path, int address)
+{
+    for (const std::shared_ptr<Node> &node : path)
+        controlMessages.emplace(std::make_pair(node->gCost - node->byTime,TargetedMessage(address,directionToMessage.find(node->arriveOrientation)->second)));
+}
+
 void ControllerImpl::setPathFinder(PathFinder *pathFinder) { this->pathFinder = pathFinder; }
 
 bool ControllerImpl::PlanTask(TaskAssignment *assignment)
 {
-    if(assignment->controlData->address == 100)
+    if (assignment->controlData->address == 100)
     {
+        controlMessages.emplace(std::make_pair(0, TargetedMessage(100, MControlGranted)));
         std::vector<std::shared_ptr<Node>> pathToTask = pathFinder->findPath(assignment->controlData->moveMechanism.getBody()->getPose().getPosition(),
                                                                              Point<>(7, 8, 0),
                                                                              assignment->controlData->moveMechanism.getBody()->getPose().getOrientation(),
                                                                              0, assignment->controlData->moveMechanism);
 
         pathFinder->claimPath(pathToTask);
+
+        
+        std::vector<std::shared_ptr<Node>> pathToTask2 = pathFinder->findPath(Point<>(7, 8, 0),
+                                                                             Point<>(0, 0, 0),
+                                                                             pathToTask[0]->arriveOrientation,
+                                                                             pathToTask[0]->gCost, assignment->controlData->moveMechanism);
+        
+        pathFinder->claimPath(pathToTask2);
+
+        translatePath(pathToTask, assignment->controlData->address);
+        translatePath(pathToTask2,assignment->controlData->address);
+        std::cout << pathToTask[0]->byEnergy + pathToTask2[0]->byEnergy << std::endl;
     }
-    //pathFinder->claimPath(pathToTask);
-    //Plan Agent To Task waypoint 0
-    //Command PickupPod
-    //Plan waypoint 0 to waypoint 1
-    //Command PutDownOrder
-    //Plan waypoint n to n+1
-    //Command PutDownOrder
-    //Plan to last waypoint
-    //PutDownPod
-    //controlMessages.emplace(std::make_pair(0, TargetedMessage(assignment->controlData->address, MControlGranted)));
-    //controlMessages.emplace(std::make_pair(0, TargetedMessage(assignment->controlData->address, MMoveAgentLeft)));
-    //controlMessages.emplace(std::make_pair(2, TargetedMessage(assignment->controlData->address, MMoveAgentLeft)));
     return true;
 }
 

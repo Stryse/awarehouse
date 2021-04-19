@@ -138,7 +138,7 @@ std::vector<std::shared_ptr<Node>> PathFinder::findPath(const Point<> &startPos,
 
     std::unordered_set<std::tuple<int, int, int>, boost::hash<std::tuple<int, int, int>>> closed;
 
-    std::shared_ptr<Node> current = std::make_shared<Node>(std::make_pair(startPos.getPosX(), startPos.getPosY()), startOr, startTime, 0, 0, 0, nullptr);
+    std::shared_ptr<Node> current = std::make_shared<Node>(std::make_pair(startPos.getPosX(), startPos.getPosY()), startOr, 0, 0, startTime, 0, nullptr);
     openLookup.insert(current.get());
     open.push(current);
 
