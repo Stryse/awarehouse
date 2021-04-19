@@ -24,8 +24,8 @@ Item {
     property int mapHeight: rows    * cellSize + (rows   -1) * cellSpacing
 
     anchors {
-        left: parent.left;         right:  parent.right
-        top:  previewLabel.bottom; bottom: buttonsLayout.top
+        left: parent.left;                   right: parent.right
+        top:  currentWarehouseLabel.bottom; bottom: buttonsLayout.top
 
         leftMargin:   parent.width  * 0.05; rightMargin: parent.width * 0.05
         bottomMargin: parent.height * 0.03

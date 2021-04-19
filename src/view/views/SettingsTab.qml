@@ -68,6 +68,11 @@ ScrollView {
 
             flat: true
             Material.background: Material.primary
+
+            onActivated: {
+                console.log("susamogus")
+                SimPresenter.loadWarehouse(currentText)
+            }
         }
 
         Button {

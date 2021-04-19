@@ -20,6 +20,8 @@ public:
     QString     defaultWarehousePath() const;
     QString     warehouseDirPath()     const;
 
+    static QString getWarehousePath(const QString& warehouseName);
+
 private:
     void readWarehouses(QString path);
 
@@ -30,9 +32,14 @@ public slots:
     void appendWarehouse(QString warehouse);
     void removeWarehouse(int index);
 
+    void reloadWarehouses();
+
+public:
+    static const QString defaultWarehouseName;
+
 private:
-    static QString   m_defaultWarehousePath;
-    static QString   m_warehouseDirPath;
+    static const QString m_defaultWarehousePath;
+    static const QString m_warehouseDirPath;
 
     QStringListModel m_warehouses;
 };

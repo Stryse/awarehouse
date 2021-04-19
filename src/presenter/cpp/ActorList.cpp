@@ -33,6 +33,15 @@ void ActorList::loadJsonArray(const QJsonArray& actorsJson)
     }
 }
 
+QJsonArray ActorList::saveJsonArray() const
+{
+    QJsonArray actorsJsonArray;
+    for (const auto& actor : m_actors)
+        actorsJsonArray.append(actor->saveJsonObject());
+
+    return actorsJsonArray;
+}
+
 void ActorList::appendActor(ActorPresenter& actor)
 {
     emit preItemAppended();
@@ -85,11 +94,6 @@ void ActorList::removeActor(int row, int column)
 
 void ActorList::clear()
 {
-    //If clear is used -> view does not update
-//    emit preItemRemoved(0);
-//    m_actors.clear();
-//    emit postItemRemoved();
-
     for (int i = m_actors.size() - 1; i >= 0; --i)
         removeActor(i);
 }

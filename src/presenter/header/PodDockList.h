@@ -19,7 +19,8 @@ public:
 
     bool setPodDockAt(int index, PodDockPresenter& podDock);
 
-    void loadJsonArray(const QJsonArray& podDocksJSon);
+    void       loadJsonArray(const QJsonArray& podDocksJSon);
+    QJsonArray saveJsonArray() const;
 
 signals:
     void preItemAppended();

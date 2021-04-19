@@ -19,7 +19,8 @@ public:
 
     bool setDeliveryStationAt(int index, DeliveryStationPresenter& deliveryStation);
 
-    void loadJsonArray(const QJsonArray& deliveryStationsJson);
+    void       loadJsonArray(const QJsonArray& deliveryStationsJson);
+    QJsonArray saveJsonArray() const;
 
 signals:
     void preItemAppended();

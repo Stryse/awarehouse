@@ -40,3 +40,13 @@ ChargingStationPresenter* ChargingStationPresenter::loadJsonObject(const QJsonOb
 
     return nullptr;
 }
+
+QJsonObject ChargingStationPresenter::saveJsonObject() const
+{
+    QJsonObject chargingStationJsonObj;
+
+    chargingStationJsonObj.insert("RowCoord", row());
+    chargingStationJsonObj.insert("ColCoord", column());
+
+    return chargingStationJsonObj;
+}

@@ -19,7 +19,8 @@ public:
 
     bool setChargingStationAt(int index, ChargingStationPresenter& chargingStationsJson);
 
-    void loadJsonArray(const QJsonArray& chargingStations);
+    void       loadJsonArray(const QJsonArray& chargingStations);
+    QJsonArray saveJsonArray() const;
 
 signals:
     void preItemAppended();

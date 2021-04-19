@@ -1,5 +1,7 @@
 #include "PodDockList.h"
 
+#include <QJsonObject>
+
 PodDockList::PodDockList(QObject* parent)
     : QObject(parent)
 {}
@@ -31,6 +33,15 @@ void PodDockList::loadJsonArray(const QJsonArray& podDocksJSon)
         if (podDock != nullptr)
             appendPodDock(*podDock);
     }
+}
+
+QJsonArray PodDockList::saveJsonArray() const
+{
+    QJsonArray podDocksJsonArray;
+    for (const auto& podDock : m_podDocks)
+        podDocksJsonArray.append(podDock->saveJsonObject());
+
+    return podDocksJsonArray;
 }
 
 void PodDockList::appendPodDock(PodDockPresenter& podDock)
@@ -85,11 +96,9 @@ void PodDockList::removePodDock(int row, int column)
 
 void PodDockList::clear()
 {
-    //If clear is used -> view does not update
-//    emit preItemRemoved(0);
-//    m_podDocks.clear();
-//    emit postItemRemoved();
+    if (m_podDocks.size() == 0)
+        return;
 
-//    for (int i = m_podDocks.size() - 1; i >= 0; --i)
-//        removePodDock(i);
+    for (int i = m_podDocks.size() - 1; i >= 0; --i)
+        removePodDock(i);
 }

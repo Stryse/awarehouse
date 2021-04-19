@@ -19,7 +19,8 @@ public:
 
     bool setActorAt(int index, ActorPresenter& actor);
 
-    void loadJsonArray(const QJsonArray& actorsJson);
+    void       loadJsonArray(const QJsonArray& actorsJson);
+    QJsonArray saveJsonArray() const;
 
 signals:
     void preItemAppended();

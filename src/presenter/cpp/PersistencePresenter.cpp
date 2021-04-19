@@ -3,8 +3,10 @@
 #include <QDir>
 #include <QStringList>
 
-QString PersistencePresenter::m_defaultWarehousePath = ":/maps/Map01.json";
-QString PersistencePresenter::m_warehouseDirPath     = "../maps";
+const QString PersistencePresenter::defaultWarehouseName   = "Default";
+
+const QString PersistencePresenter::m_defaultWarehousePath = ":/maps/Map01.json";
+const QString PersistencePresenter::m_warehouseDirPath     = "../maps";
 
 PersistencePresenter::PersistencePresenter(QObject* parent)
     : QObject(parent)
@@ -16,6 +18,14 @@ PersistencePresenter::PersistencePresenter(QObject* parent)
 QStringList PersistencePresenter::warehouses()           const { return m_warehouses.stringList(); }
 QString     PersistencePresenter::defaultWarehousePath() const { return m_defaultWarehousePath;    }
 QString     PersistencePresenter::warehouseDirPath()     const { return m_warehouseDirPath;        }
+
+QString PersistencePresenter::getWarehousePath(const QString& warehouseName)
+{
+    if (warehouseName == "Default")
+        return m_defaultWarehousePath;
+    else
+        return m_warehouseDirPath + "\\" + warehouseName + ".json";
+}
 
 void PersistencePresenter::readWarehouses(QString path)
 {
@@ -31,7 +41,7 @@ void PersistencePresenter::readWarehouses(QString path)
         warehouses[i].chop(5);
 
     //Fill warehouselist + add Default warehouse
-    warehouses.push_front("Default");
+    warehouses.push_front(defaultWarehouseName);
     m_warehouses.setStringList(warehouses);
 
     emit warehousesChanged();
@@ -54,3 +64,5 @@ void PersistencePresenter::removeWarehouse(int index)
 
     emit warehousesChanged();
 }
+
+void PersistencePresenter::reloadWarehouses() { readWarehouses(m_warehouseDirPath); }

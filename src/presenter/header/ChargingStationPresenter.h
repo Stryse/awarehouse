@@ -22,6 +22,7 @@ public:
 
     static ChargingStationPresenter* loadJsonObject(const QJsonObject& chargingStationObj,
                                                               QObject* parent = nullptr);
+    QJsonObject saveJsonObject() const;
 
 private:
     //Model

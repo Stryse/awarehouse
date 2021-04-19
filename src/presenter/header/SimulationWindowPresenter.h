@@ -25,7 +25,8 @@ class SimulationWindowPresenter : public QObject
     Q_PROPERTY(     PersistencePresenter* persistence          READ persistence          CONSTANT               )
 
 public:
-    explicit SimulationWindowPresenter(QObject* parent = nullptr);
+    explicit SimulationWindowPresenter(PersistencePresenter* persistence = nullptr,
+                                                    QObject* parent      = nullptr);
 
     enum TickRate
     {
@@ -58,13 +59,13 @@ public slots:
 
     void setTickRate(TickRate tickRate);
 
-    void loadWarehouse(const QString& warehousePath, const Settings* settings);
+    void loadWarehouse(const QString& warehousePath);
     void reloadWarehouse();
 
 private:
     WarehouseManager m_manager;
 
-    QString                   m_currentWarehousePath;
+    QString                   m_currentWarehouseName;
     WarehouseLayoutPresenter* m_layout;
     Settings                  m_settings;
     bool                      m_paused;

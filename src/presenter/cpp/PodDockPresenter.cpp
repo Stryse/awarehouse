@@ -41,3 +41,15 @@ PodDockPresenter* PodDockPresenter::loadJsonObject(const QJsonObject& podDockObj
 
     return nullptr;
 }
+
+QJsonObject PodDockPresenter::saveJsonObject() const
+{
+    QJsonObject podDockJsonObj;
+
+    podDockJsonObj.insert("RowCoord", row());
+    podDockJsonObj.insert("ColCoord", column());
+
+    //TODO: Save orders
+
+    return podDockJsonObj;
+}

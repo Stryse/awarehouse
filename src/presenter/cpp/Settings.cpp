@@ -1,6 +1,7 @@
 #include "Settings.h"
 
-Settings::Settings() : m_batteryLevel(100)
+Settings::Settings()
+    : m_batteryLevel(100)
 { }
 
 Settings::Settings(int batteryLevel)

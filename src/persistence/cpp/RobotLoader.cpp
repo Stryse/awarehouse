@@ -6,13 +6,14 @@ std::shared_ptr<DeliveryRobot> RobotLoader::load(const QJsonObject &robotObj, st
 {
     if (robotObj.contains("RowCoord") && robotObj["RowCoord"].isDouble() &&
         robotObj.contains("ColCoord") && robotObj["ColCoord"].isDouble() &&
+        robotObj.contains("OrientationX") && robotObj["OrientationX"].isDouble() &&
         robotObj.contains("OrientationY") && robotObj["OrientationY"].isDouble())
     {
         Point<> position(robotObj["ColCoord"].toInt(),
                          robotObj["RowCoord"].toInt(),
                          0);
 
-        DirectionVector<> orientation(0, robotObj["OrientationY"].toInt(), 0);
+        DirectionVector<> orientation(robotObj["OrientationX"].toInt(), robotObj["OrientationY"].toInt(), 0);
 
         int batteryLevel = settings->batteryLevel();
 

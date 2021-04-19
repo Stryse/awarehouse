@@ -130,16 +130,19 @@ Item {
                     }
                 }
                 Button {
-                    id: resetButton
+                    id: clearButton
 
                     flat:                true
                     Material.background: Material.primary
 
-                    text:                qsTr("Reset")
+                    text:                qsTr("Clear")
                     font.pixelSize:      gridLayout.settingPixelSize
                     font.capitalization: Font.MixedCase;
 
-                    onClicked: console.log("Reset layout!")
+                    onClicked: {
+                        EditorPresenter.clearWarehouse()
+                        console.log("Cleared layout!")
+                    }
                 }
             }
         }

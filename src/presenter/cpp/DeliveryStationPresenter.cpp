@@ -41,3 +41,14 @@ DeliveryStationPresenter* DeliveryStationPresenter::loadJsonObject(const QJsonOb
 
     return nullptr;
 }
+
+QJsonObject DeliveryStationPresenter::saveJsonObject(int acceptedOrderID) const
+{
+    QJsonObject deliveryStationJsonObj;
+
+    deliveryStationJsonObj.insert("RowCoord", row());
+    deliveryStationJsonObj.insert("ColCoord", column());
+    deliveryStationJsonObj.insert("AcceptedOrderID", acceptedOrderID);
+
+    return deliveryStationJsonObj;
+}

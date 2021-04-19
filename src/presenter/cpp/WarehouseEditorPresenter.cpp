@@ -8,22 +8,26 @@
 //Presenter
 #include "WarehouseLayoutPresenter.h"
 
-WarehouseEditorPresenter::TileType WarehouseEditorPresenter::m_baseTile = ROAD;
+const QString                      WarehouseEditorPresenter::newWarehouseName = "New";
+WarehouseEditorPresenter::TileType WarehouseEditorPresenter::baseTile         = ROAD;
 
-WarehouseEditorPresenter::WarehouseEditorPresenter(QObject* parent)
+WarehouseEditorPresenter::WarehouseEditorPresenter(PersistencePresenter* persistence,
+                                                                QObject* parent)
     : QObject(parent)
+    , m_currentWarehouseName(newWarehouseName)
     , m_layout(new WarehouseLayoutPresenter(this))
     , m_tileTypeTable(QVector<QVector<TileType>>())
-    , m_persistence(new PersistencePresenter(this))
-{
+    , m_persistence(persistence == nullptr ? new PersistencePresenter(this) : persistence)
+{   
     createTileTypeTable(m_layout->rows(), m_layout->columns());
 
     connect(m_layout, &WarehouseLayoutPresenter::rowsChanged,    this, [=](int rows)    { updateRowsInTable(rows);       });
     connect(m_layout, &WarehouseLayoutPresenter::columnsChanged, this, [=](int columns) { updateColumnsInTable(columns); });
 }
 
-WarehouseLayoutPresenter* WarehouseEditorPresenter::layout()  const { return m_layout;      }
-PersistencePresenter* WarehouseEditorPresenter::persistence() const { return m_persistence; }
+QString                   WarehouseEditorPresenter::currentWarehouseName() const { return m_currentWarehouseName; }
+WarehouseLayoutPresenter* WarehouseEditorPresenter::layout()               const { return m_layout;               }
+PersistencePresenter*     WarehouseEditorPresenter::persistence()          const { return m_persistence;          }
 
 void WarehouseEditorPresenter::updateRowsInTable(int newRows)
 {
@@ -31,7 +35,7 @@ void WarehouseEditorPresenter::updateRowsInTable(int newRows)
 
     if (rowDelta > 0)
         for (int i = 0; i < rowDelta; ++i)
-            m_tileTypeTable.emplace_back(QVector<TileType>(m_layout->columns(), m_baseTile));
+            m_tileTypeTable.emplace_back(QVector<TileType>(m_layout->columns(), baseTile));
     else if (rowDelta < 0)
     {
         for (int i = 0; i < rowDelta * -1; ++i)
@@ -82,7 +86,7 @@ void WarehouseEditorPresenter::updateColumnsInTable(int newColumns)
     if (columnDelta > 0)
         for (int i = 0; i < m_layout->rows(); ++i)
             for (int j = 0; j < columnDelta; ++j)
-                m_tileTypeTable[i].emplace_back(m_baseTile);
+                m_tileTypeTable[i].emplace_back(baseTile);
     else
     {
         for (int i = 0; i < m_layout->rows(); ++i)
@@ -169,19 +173,22 @@ void WarehouseEditorPresenter::removeTile(int row, int column)
         default: return;
     }
 
-    m_tileTypeTable[row][column] = m_baseTile;
+    m_tileTypeTable[row][column] = baseTile;
+}
+
+void WarehouseEditorPresenter::clearWarehouse()
+{
+    m_layout->actors()->clear();
+    m_layout->chargingStations()->clear();
+    m_layout->podDocks()->clear();
+    m_layout->deliveryStations()->clear();
 }
 
 void WarehouseEditorPresenter::loadWarehouse(const QString& warehouseName)
 {
-    QString warehousePath;
-    if (warehouseName == "Default")
-        warehousePath = m_persistence->defaultWarehousePath();
-    else
-        warehousePath = m_persistence->warehouseDirPath() + warehouseName + ".json";
-
-    QString jsonString;
+    QString warehousePath = PersistencePresenter::getWarehousePath(warehouseName);
     QFile   warehouseFile(warehousePath);
+    QString jsonString;
 
     if (warehouseFile.exists())
         if (warehouseFile.open(QIODevice::ReadOnly | QIODevice::Text))
@@ -193,13 +200,14 @@ void WarehouseEditorPresenter::loadWarehouse(const QString& warehouseName)
             QJsonObject   warehouseJsonObj = warehouseDoc.object();
 
             loadJsonObject(warehouseJsonObj);
+
+            m_currentWarehouseName = warehouseName;
+            emit currentWarehouseNameChanged(warehouseName);
         }
 }
 
 void WarehouseEditorPresenter::loadJsonObject(const QJsonObject& json)
 {
-    //TODO fill tiletypetable!!!
-
     if (json.contains("WarehouseLayoutData") && json["WarehouseLayoutData"].isObject())
     {
         QJsonObject warehouseLayoutData = json["WarehouseLayoutData"].toObject();
@@ -271,15 +279,49 @@ void WarehouseEditorPresenter::loadJsonObject(const QJsonObject& json)
     }
 }
 
+bool WarehouseEditorPresenter::saveWarehouse(const QString& warehouseName)
+{
+    if (warehouseName == PersistencePresenter::defaultWarehouseName)
+        return false;
+
+    QString warehousePath = PersistencePresenter::getWarehousePath(warehouseName);
+
+    QFile warehouseFile(warehousePath);
+    if (!warehouseFile.open(QIODevice::WriteOnly))
+        return false;
+
+    QJsonObject warehouseJsonObj = saveJsonObject();
+
+    warehouseFile.write(QJsonDocument(warehouseJsonObj).toJson());
+
+    m_persistence->reloadWarehouses();
+
+    return true;
+}
+
+QJsonObject WarehouseEditorPresenter::saveJsonObject() const
+{
+    QJsonObject warehouseLayoutData;
+
+    warehouseLayoutData.insert("RowCount", m_layout->rows());
+    warehouseLayoutData.insert("ColCount", m_layout->columns());
+
+    warehouseLayoutData.insert("ChargingStations", m_layout->chargingStations()->saveJsonArray());
+    //TODO: No order ID
+    warehouseLayoutData.insert("DeliveryStations", m_layout->deliveryStations()->saveJsonArray());
+    warehouseLayoutData.insert("PodDocks",         m_layout->podDocks()->saveJsonArray());
+    warehouseLayoutData.insert("DeliveryRobots",   m_layout->actors()->saveJsonArray());
+
+    QJsonObject warehouseJsonObj;
+    warehouseJsonObj.insert("WarehouseLayoutData", warehouseLayoutData);
+
+    return warehouseJsonObj;
+}
+
 void WarehouseEditorPresenter::createTileTypeTable(int rows, int columns)
 {
     m_tileTypeTable.clear();
 
     for (int i = 0; i < rows; ++i)
-        m_tileTypeTable.emplace_back(QVector<TileType>(columns, m_baseTile));
-}
-
-void WarehouseEditorPresenter::saveWarehouse(const QString& warehouseName)
-{
-
+        m_tileTypeTable.emplace_back(QVector<TileType>(columns, baseTile));
 }

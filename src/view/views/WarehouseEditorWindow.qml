@@ -15,7 +15,7 @@ Item {
     property color secondaryColor
     property real  borderWidth
 
-    property string currentWarehouse: "New"
+    property string currentWarehouse: EditorPresenter.currentWarehouseName
     readonly property bool isDeafultWarehouse: currentWarehouse == "New" || currentWarehouse == "Default"
 
     readonly property ListModel tileList: ListModel {
@@ -172,7 +172,6 @@ Item {
                 font.capitalization: Font.MixedCase;
 
                 onClicked: {
-                    //TODO: Initiate load
                     if (warehouseList.currentIndex !== -1) {
                         loadWarehousePopup.loadWarehouse(warehouseList.currentItem.warehouseName)
                         warehouseList.currentIndex = -1
@@ -206,8 +205,6 @@ Item {
         function loadWarehouse(warehouseName) {
             EditorPresenter.loadWarehouse(warehouseName);
 
-            editorRoot.currentWarehouse = warehouseName
-
             if (editorRoot.isDeafultWarehouse)
                 savePopupStack.replace(saveAsComponent)
             else
@@ -223,7 +220,7 @@ Item {
         property bool isSaveAs: true
 
         anchors.centerIn: Overlay.overlay
-        height:           editorRoot.height * 0.3
+        height:           editorRoot.height * 0.33
         width:            editorRoot.width  * 0.4
 
         Overlay.modal: Rectangle {
@@ -368,7 +365,7 @@ Item {
                         anchors {
                             top: saveAsLabel.bottom
 
-                            topMargin: (parent.height - (saveAsLabel.height + height + saveAsButton.height))/2 - defaultWarehouseNameLabel.height
+                            topMargin: (parent.height - (saveAsLabel.height + height + defaultWarehouseNameLabel.height + saveAsButton.height))/2
                         }
                         width: saveAsLabel.width * 0.5
 
@@ -388,26 +385,32 @@ Item {
                     Label {
                         id: defaultWarehouseNameLabel
 
-                        anchors.top: warehouseNameField.bottom
+                        anchors {
+                            left: warehouseNameField.left
+                            top:  warehouseNameField.bottom
+                        }
 
                         visible: false
 
                         color: "#EF9A9A"
                         text: "Warehouse name can't be \"New\" or \"Default\""
 
-                        font.pixelSize: savePopupLabel.height * 0.22
+                        font.pixelSize: savePopupLabel.height * 0.2
                     }
                     Label {
                         id: zeroWarehouseNameLabel
 
-                        anchors.top: warehouseNameField.bottom
+                        anchors {
+                            left: warehouseNameField.left
+                            top:  warehouseNameField.bottom
+                        }
 
                         visible: false
 
                         color: "#EF9A9A"
                         text: "Warehouse name can't be empty"
 
-                        font.pixelSize: savePopupLabel.height * 0.22
+                        font.pixelSize: savePopupLabel.height * 0.2
                     }
 
                     Button {
@@ -473,7 +476,8 @@ Item {
         }
 
         function saveWarehouse(warehouseName) {
-            //TODO
+            EditorPresenter.saveWarehouse(warehouseName);
+
             console.log("Saved " + warehouseName + " warehouse!")
         }
     }
@@ -537,6 +541,24 @@ Item {
 
                 text:           qsTr("Preview")
                 font.pixelSize: editorRoot.height * 0.04
+            }
+
+            Label {
+                id: currentWarehouseLabel
+
+                anchors {
+                    left: previewLabel.left
+                    top:  previewLabel.bottom
+
+                    topMargin: height * -0.3
+                }
+                leftPadding: previewLabel.leftPadding
+
+                text: editorRoot.currentWarehouse
+
+                font.pixelSize: editorRoot.height * 0.028
+                font.weight: Font.Light
+                font.italic: true
             }
 
             RowLayout {

@@ -22,6 +22,7 @@ public:
 
     static DeliveryStationPresenter* loadJsonObject(const QJsonObject& deliveryStationObj,
                                                               QObject* parent = nullptr);
+    QJsonObject saveJsonObject(int acceptedOrderID) const;
 
 private:
     //Model

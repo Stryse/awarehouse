@@ -30,6 +30,7 @@ public:
 
     static ActorPresenter* loadJsonObject(const QJsonObject& actorObj,
                                                     QObject* parent = nullptr);
+    QJsonObject saveJsonObject() const;
 
     //Getter
     QString name()      const;

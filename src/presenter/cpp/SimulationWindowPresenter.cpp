@@ -7,13 +7,13 @@
 //Model
 #include "Warehouse.h"
 
-SimulationWindowPresenter::SimulationWindowPresenter(QObject* parent)
+SimulationWindowPresenter::SimulationWindowPresenter(PersistencePresenter* persistence,
+                                                                  QObject* parent)
     : QObject(parent)
-    , m_layout(nullptr)
-    , m_persistence(new PersistencePresenter(this))
+    , m_layout(new WarehouseLayoutPresenter(this))
+    , m_persistence(persistence == nullptr ? new PersistencePresenter(this) : persistence)
 {
-    loadWarehouse(m_persistence->defaultWarehousePath(), &m_settings);
-    m_layout = new WarehouseLayoutPresenter(m_manager.getDisplayedWarehouse()->getState().get(), this);
+    loadWarehouse(PersistencePresenter::defaultWarehouseName);
 }
 
 //Getter
@@ -61,17 +61,19 @@ void SimulationWindowPresenter::setTickRate(TickRate tickRate)
     qDebug() << "TickRate changed to " << tickRate;
 }
 
-void SimulationWindowPresenter::loadWarehouse(const  QString& warehousePath,
-                                              const Settings* settings)
+void SimulationWindowPresenter::loadWarehouse(const QString& warehouseName)
 {
-    bool success = m_manager.getDisplayedWarehouse()->loadState(warehousePath, settings);
+    bool success = m_manager.getDisplayedWarehouse()->loadState(PersistencePresenter::getWarehousePath(warehouseName), &m_settings);
 
     if(success)
-        m_currentWarehousePath = warehousePath;
+    {
+        m_layout->loadWarehouseLayout(m_manager.getDisplayedWarehouse()->getState().get());
+        m_currentWarehouseName = warehouseName;
+    }
 }
 
 void SimulationWindowPresenter::reloadWarehouse()
 {
-    loadWarehouse(m_currentWarehousePath, &m_settings);
+    loadWarehouse(m_currentWarehouseName);
     simulationStop();
 }

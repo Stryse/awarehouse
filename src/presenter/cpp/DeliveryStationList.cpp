@@ -1,5 +1,7 @@
 #include "DeliveryStationList.h"
 
+#include <QJsonObject>
+
 DeliveryStationList::DeliveryStationList(QObject* parent)
     : QObject(parent)
 {}
@@ -31,6 +33,16 @@ void DeliveryStationList::loadJsonArray(const QJsonArray& deliveryStationsJson)
         if (deliveryStation != nullptr)
             appendDeliveryStation(*deliveryStation);
     }
+}
+
+QJsonArray DeliveryStationList::saveJsonArray() const
+{
+    QJsonArray deliveryStationsJsonArray;
+    int acceptedOrderID = 1;
+    for (const auto& deliveryStation : m_deliveryStations)
+        deliveryStationsJsonArray.append(deliveryStation->saveJsonObject(acceptedOrderID++));
+
+    return deliveryStationsJsonArray;
 }
 
 void DeliveryStationList::appendDeliveryStation(DeliveryStationPresenter& deliveryStation)
@@ -85,10 +97,8 @@ void DeliveryStationList::removeDeliveryStation(int row, int column)
 
 void DeliveryStationList::clear()
 {
-    //If clear is used -> view does not update
-//    emit preItemRemoved(0);
-//    m_deliveryStations.clear();
-//    emit postItemRemoved();
+    if (m_deliveryStations.size() == 0)
+        return;
 
     for (int i = m_deliveryStations.size() - 1; i >= 0; --i)
         removeDeliveryStation(i);
