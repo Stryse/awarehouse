@@ -11,16 +11,17 @@ SimulationWindowPresenter::SimulationWindowPresenter(PersistencePresenter* persi
                                                                   QObject* parent)
     : QObject(parent)
     , m_layout(new WarehouseLayoutPresenter(this))
+    , m_paused(true)
     , m_persistence(persistence == nullptr ? new PersistencePresenter(this) : persistence)
 {
     loadWarehouse(PersistencePresenter::defaultWarehouseName);
 }
 
 //Getter
-WarehouseLayoutPresenter* SimulationWindowPresenter::layout()      const { return m_layout;                                                  }
-Settings*                 SimulationWindowPresenter::settings()          { return &m_settings;                                               }
-bool                      SimulationWindowPresenter::paused()      const { return m_manager.getDisplayedWarehouseSimulator()->isAvailable(); }
-PersistencePresenter*     SimulationWindowPresenter::persistence() const { return m_persistence;                                             }
+WarehouseLayoutPresenter* SimulationWindowPresenter::layout()      const { return m_layout;      }
+Settings*                 SimulationWindowPresenter::settings()          { return &m_settings;   }
+bool                      SimulationWindowPresenter::paused()      const { return m_paused;      }
+PersistencePresenter*     SimulationWindowPresenter::persistence() const { return m_persistence; }
 
 //Setter
 void SimulationWindowPresenter::setPaused(bool paused)
@@ -34,12 +35,14 @@ void SimulationWindowPresenter::setPaused(bool paused)
 
 void SimulationWindowPresenter::simulationStart()
 {
+    setPaused(false);
     m_manager.simulationStart();
     qDebug() << "Simulation started...";
 }
 
 void SimulationWindowPresenter::simulationStop()
 {
+    setPaused(true);
     m_manager.simulationStop();
     qDebug() << "Simulation stopped...";
 }
@@ -61,6 +64,11 @@ void SimulationWindowPresenter::setTickRate(TickRate tickRate)
     qDebug() << "TickRate changed to " << tickRate;
 }
 
+int SimulationWindowPresenter::getCurrentWarehouseIndex() const
+{
+    return m_persistence->getWarehouseIndex(m_currentWarehouseName);
+}
+
 void SimulationWindowPresenter::loadWarehouse(const QString& warehouseName)
 {
     bool success = m_manager.getDisplayedWarehouse()->loadState(PersistencePresenter::getWarehousePath(warehouseName), &m_settings);
@@ -74,6 +82,6 @@ void SimulationWindowPresenter::loadWarehouse(const QString& warehouseName)
 
 void SimulationWindowPresenter::reloadWarehouse()
 {
-    loadWarehouse(m_currentWarehouseName);
     simulationStop();
+    loadWarehouse(m_currentWarehouseName);
 }

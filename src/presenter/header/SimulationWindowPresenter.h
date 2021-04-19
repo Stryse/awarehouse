@@ -59,6 +59,8 @@ public slots:
 
     void setTickRate(TickRate tickRate);
 
+    int getCurrentWarehouseIndex() const;
+
     void loadWarehouse(const QString& warehousePath);
     void reloadWarehouse();
 

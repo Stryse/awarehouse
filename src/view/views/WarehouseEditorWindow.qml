@@ -149,7 +149,6 @@ Item {
 
                         onDoubleClicked: {
                             loadWarehousePopup.loadWarehouse(warehouseName)
-                            warehouseList.currentIndex = -1
                             loadWarehousePopup.close()
                         }
                     }
@@ -202,6 +201,8 @@ Item {
             }
         }
 
+        onClosed: warehouseList.currentIndex = -1
+
         function loadWarehouse(warehouseName) {
             EditorPresenter.loadWarehouse(warehouseName);
 
@@ -209,8 +210,6 @@ Item {
                 savePopupStack.replace(saveAsComponent)
             else
                 savePopupStack.replace(overwriteComponent)
-
-            console.log(editorRoot.currentWarehouse)
         }
     }
 
@@ -550,13 +549,13 @@ Item {
                     left: previewLabel.left
                     top:  previewLabel.bottom
 
-                    topMargin: height * -0.3
+                    topMargin: height * -0.35
                 }
                 leftPadding: previewLabel.leftPadding
 
                 text: editorRoot.currentWarehouse
 
-                font.pixelSize: editorRoot.height * 0.028
+                font.pixelSize: editorRoot.height * 0.026
                 font.weight: Font.Light
                 font.italic: true
             }

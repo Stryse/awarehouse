@@ -27,6 +27,11 @@ QString PersistencePresenter::getWarehousePath(const QString& warehouseName)
         return m_warehouseDirPath + "\\" + warehouseName + ".json";
 }
 
+int PersistencePresenter::getWarehouseIndex(const QString& warehouseName) const
+{
+    return m_warehouses.stringList().indexOf(warehouseName);
+}
+
 void PersistencePresenter::readWarehouses(QString path)
 {
     QDir warehousesDir(path);

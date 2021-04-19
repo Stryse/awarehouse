@@ -32,6 +32,8 @@ public slots:
     void appendWarehouse(QString warehouse);
     void removeWarehouse(int index);
 
+    int getWarehouseIndex(const QString& warehouseName) const;
+
     void reloadWarehouses();
 
 public:
