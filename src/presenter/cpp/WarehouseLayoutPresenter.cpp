@@ -42,6 +42,15 @@ WarehouseLayoutPresenter::WarehouseLayoutPresenter(const State *state,
         m_podDocks.appendPodDock(*pdPresenter);
     }
 
+    //Connect pod presenter to model
+    m_pods.pods()->reserve(state->getPods().size());
+    auto& pods = state->getPods();
+    for (size_t i = 0; i < pods.size(); ++i)
+    {
+        auto podPresenter = new PodPresenter(pods[i],this);
+        m_pods.appendPod(*podPresenter);
+    }
+
     //Connect charging stations presenter to model
     m_deliveryStations.deliveryStations()->reserve(state->getDeliveryStations().size());
     auto& deliveryStations = state->getDeliveryStations();

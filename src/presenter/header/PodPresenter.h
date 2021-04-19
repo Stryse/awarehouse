@@ -6,6 +6,9 @@
 //Presenter
 #include "MapItemPresenter.h"
 
+class OrderModel;
+
+template<typename ItemType>
 class Pod;
 
 class PodPresenter : public MapItemPresenter
@@ -15,7 +18,7 @@ class PodPresenter : public MapItemPresenter
     Q_PROPERTY(int rotation READ rotation NOTIFY rotationChanged)
 
 public:
-    explicit PodPresenter(const Pod* model,
+    explicit PodPresenter(const Pod<OrderModel>* model,
                             QObject* parent = nullptr);
     //Getter
     int rotation() const;
@@ -30,7 +33,7 @@ private:
     int m_rotation;
 
     //Model
-    const  Pod* model;
+    const  Pod<OrderModel>* model;
 
     //Static
     static QString m_static_imagePath;
