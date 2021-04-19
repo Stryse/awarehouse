@@ -87,7 +87,11 @@ void ChargingStationList::removeChargingStation(int row, int column)
 
 void ChargingStationList::clear()
 {
-    emit preItemRemoved(0);
-    m_chargingStations.clear();
-    emit postItemRemoved();
+    //If clear is used -> view does not update
+//    emit preItemRemoved(0);
+//    m_chargingStations.clear();
+//    emit postItemRemoved();
+
+    for (int i = m_chargingStations.size() - 1; i >= 0; --i)
+        removeChargingStation(i);
 }

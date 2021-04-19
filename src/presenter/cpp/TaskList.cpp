@@ -60,7 +60,11 @@ void TaskList::removeTask(int index)
 
 void TaskList::clear()
 {
-    emit preItemRemoved(0);
-    m_tasks.clear();
-    emit postItemRemoved();
+    //If clear is used -> view does not update
+//    emit preItemRemoved(0);
+//    m_tasks.clear();
+//    emit postItemRemoved();
+
+    for (int i = m_tasks.size() - 1; i >= 0; --i)
+        removeTask(i);
 }

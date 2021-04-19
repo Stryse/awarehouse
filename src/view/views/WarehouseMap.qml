@@ -12,8 +12,8 @@ import DeliveryStationList 1.0
 Item {
     id: root
 
-    property int rows:    warehouseSettings.rowCount
-    property int columns: warehouseSettings.columnCount
+    property int rows:    EditorPresenter.layout.rows
+    property int columns: EditorPresenter.layout.columns
 
     property int   cellSpacing: 1
     property real  cellScale:   zoomArea.zoomScale

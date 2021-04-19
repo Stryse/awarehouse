@@ -32,14 +32,14 @@ void WarehouseEditorPresenter::updateRowsInTable(int newRows)
     if (rowDelta > 0)
         for (int i = 0; i < rowDelta; ++i)
             m_tileTypeTable.emplace_back(QVector<TileType>(m_layout->columns(), m_baseTile));
-    else
+    else if (rowDelta < 0)
     {
         for (int i = 0; i < rowDelta * -1; ++i)
             m_tileTypeTable.pop_back();
 
         //Actors
         ActorList& actors = *m_layout->actors();
-        for (int i = 0; i < actors.actors()->size(); ++i)
+        for (int i = actors.actors()->size()-1; i >= 0; --i)
         {
             ActorPresenter& actor = *actors.actors()->at(i);
             if (actor.row() >= newRows)
@@ -48,7 +48,7 @@ void WarehouseEditorPresenter::updateRowsInTable(int newRows)
 
         //ChargingStations
         ChargingStationList& chargingStations = *m_layout->chargingStations();
-        for (int i = 0; i < chargingStations.chargingStations()->size(); ++i)
+        for (int i = chargingStations.chargingStations()->size()-1; i >= 0; --i)
         {
             ChargingStationPresenter& chargingStation = *chargingStations.chargingStations()->at(i);
             if (chargingStation.row() >= newRows)
@@ -57,7 +57,7 @@ void WarehouseEditorPresenter::updateRowsInTable(int newRows)
 
         //PodDocks
         PodDockList& poDocks = *m_layout->podDocks();
-        for (int i = 0; i < poDocks.podDocks()->size(); ++i)
+        for (int i = poDocks.podDocks()->size()-1; i >= 0; --i)
         {
             PodDockPresenter& podDock = *poDocks.podDocks()->at(i);
             if (podDock.row() >= newRows)
@@ -66,7 +66,7 @@ void WarehouseEditorPresenter::updateRowsInTable(int newRows)
 
         //ChargingStations
         DeliveryStationList& deliveryStations = *m_layout->deliveryStations();
-        for (int i = 0; i < deliveryStations.deliveryStations()->size(); ++i)
+        for (int i = deliveryStations.deliveryStations()->size()-1; i >= 0; --i)
         {
             DeliveryStationPresenter& deliveryStation = *deliveryStations.deliveryStations()->at(i);
             if (deliveryStation.row() >= newRows)
@@ -91,7 +91,7 @@ void WarehouseEditorPresenter::updateColumnsInTable(int newColumns)
 
         //Actors
         ActorList& actors = *m_layout->actors();
-        for (int i = 0; i < actors.actors()->size(); ++i)
+        for (int i = actors.actors()->size()-1; i >= 0; --i)
         {
             ActorPresenter& actor = *actors.actors()->at(i);
             if (actor.column() >= newColumns)
@@ -100,7 +100,7 @@ void WarehouseEditorPresenter::updateColumnsInTable(int newColumns)
 
         //ChargingStations
         ChargingStationList& chargingStations = *m_layout->chargingStations();
-        for (int i = 0; i < chargingStations.chargingStations()->size(); ++i)
+        for (int i = chargingStations.chargingStations()->size()-1; i >= 0; --i)
         {
             ChargingStationPresenter& chargingStation = *chargingStations.chargingStations()->at(i);
             if (chargingStation.column() >= newColumns)
@@ -109,7 +109,7 @@ void WarehouseEditorPresenter::updateColumnsInTable(int newColumns)
 
         //PodDocks
         PodDockList& poDocks = *m_layout->podDocks();
-        for (int i = 0; i < poDocks.podDocks()->size(); ++i)
+        for (int i = poDocks.podDocks()->size()-1; i >= 0; --i)
         {
             PodDockPresenter& podDock = *poDocks.podDocks()->at(i);
             if (podDock.column() >= newColumns)
@@ -118,7 +118,7 @@ void WarehouseEditorPresenter::updateColumnsInTable(int newColumns)
 
         //ChargingStations
         DeliveryStationList& deliveryStations = *m_layout->deliveryStations();
-        for (int i = 0; i < deliveryStations.deliveryStations()->size(); ++i)
+        for (int i = deliveryStations.deliveryStations()->size()-1; i >= 0; --i)
         {
             DeliveryStationPresenter& deliveryStation = *deliveryStations.deliveryStations()->at(i);
             if (deliveryStation.column() >= newColumns)

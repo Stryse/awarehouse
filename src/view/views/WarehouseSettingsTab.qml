@@ -98,10 +98,11 @@ Item {
                     editable: true
 
                     Binding {
-                        target:EditorPresenter.layout
+                        target: EditorPresenter.layout
                         property: "rows"
                         value: rowsSpinBox.value
                     }
+
                 }
                 Label {
                     id: columnsLabel

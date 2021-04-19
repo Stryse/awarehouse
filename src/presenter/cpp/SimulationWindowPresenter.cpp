@@ -25,6 +25,9 @@ PersistencePresenter*     SimulationWindowPresenter::persistence() const { retur
 //Setter
 void SimulationWindowPresenter::setPaused(bool paused)
 {
+    if (m_paused == paused)
+        return;
+
     m_paused = paused;
     emit pausedChanged();
 }

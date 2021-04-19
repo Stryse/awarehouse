@@ -77,11 +77,17 @@ int WarehouseLayoutPresenter::columns() const { return m_columns; }
 //Setter
 void WarehouseLayoutPresenter::setRows(int rows)
 {
+    if (m_rows == rows)
+        return;
+
     m_rows = rows;
     emit rowsChanged(m_rows);
 }
 void WarehouseLayoutPresenter::setColumns(int columns)
 {
+    if (m_columns == columns)
+        return;
+
     m_columns = columns;
     emit columnsChanged(m_columns);
 }

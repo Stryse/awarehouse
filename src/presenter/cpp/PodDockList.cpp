@@ -85,7 +85,11 @@ void PodDockList::removePodDock(int row, int column)
 
 void PodDockList::clear()
 {
-    emit preItemRemoved(0);
-    m_podDocks.clear();
-    emit postItemRemoved();
+    //If clear is used -> view does not update
+//    emit preItemRemoved(0);
+//    m_podDocks.clear();
+//    emit postItemRemoved();
+
+//    for (int i = m_podDocks.size() - 1; i >= 0; --i)
+//        removePodDock(i);
 }

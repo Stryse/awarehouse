@@ -85,7 +85,11 @@ void ActorList::removeActor(int row, int column)
 
 void ActorList::clear()
 {
-    emit preItemRemoved(0);
-    m_actors.clear();
-    emit postItemRemoved();
+    //If clear is used -> view does not update
+//    emit preItemRemoved(0);
+//    m_actors.clear();
+//    emit postItemRemoved();
+
+    for (int i = m_actors.size() - 1; i >= 0; --i)
+        removeActor(i);
 }

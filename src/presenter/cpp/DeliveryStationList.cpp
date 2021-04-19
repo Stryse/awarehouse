@@ -85,7 +85,11 @@ void DeliveryStationList::removeDeliveryStation(int row, int column)
 
 void DeliveryStationList::clear()
 {
-    emit preItemRemoved(0);
-    m_deliveryStations.clear();
-    emit postItemRemoved();
+    //If clear is used -> view does not update
+//    emit preItemRemoved(0);
+//    m_deliveryStations.clear();
+//    emit postItemRemoved();
+
+    for (int i = m_deliveryStations.size() - 1; i >= 0; --i)
+        removeDeliveryStation(i);
 }
