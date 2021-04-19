@@ -77,11 +77,16 @@ void ControllerImpl::setPathFinder(PathFinder *pathFinder) { this->pathFinder = 
 
 bool ControllerImpl::PlanTask(TaskAssignment *assignment)
 {
-    pathFinder->findPath(assignment->controlData->moveMechanism.getBody()->getPose().getPosition(),
-                         Point<>(7, 8, 0),
-                         assignment->controlData->moveMechanism.getBody()->getPose().getOrientation(),
-                         0, assignment->controlData->moveMechanism);
+    if(assignment->controlData->address == 100)
+    {
+        std::vector<std::shared_ptr<Node>> pathToTask = pathFinder->findPath(assignment->controlData->moveMechanism.getBody()->getPose().getPosition(),
+                                                                             Point<>(7, 8, 0),
+                                                                             assignment->controlData->moveMechanism.getBody()->getPose().getOrientation(),
+                                                                             0, assignment->controlData->moveMechanism);
 
+        pathFinder->claimPath(pathToTask);
+    }
+    //pathFinder->claimPath(pathToTask);
     //Plan Agent To Task waypoint 0
     //Command PickupPod
     //Plan waypoint 0 to waypoint 1

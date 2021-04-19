@@ -5,11 +5,11 @@
 #include "Point.h"
 #include <array>
 #include <boost/functional/hash.hpp>
+#include <memory>
 #include <queue>
 #include <unordered_set>
 #include <utility>
 #include <vector>
-#include <memory>
 
 // ########################### FORWARD DECLARATIONS ######################### //
 class State;
@@ -23,8 +23,8 @@ struct Node
 {
     std::pair<int, int> coords;
     DirectionVector<> arriveOrientation; // The orientation when we arrive (need so we can calculate time and energy cost)
-    int byTime;                          //TimeStamp of arrival
-    int byEnergy;                        //Energy cost of arrival
+    int byTime;                          //Time cost of arrival
+    int byEnergy;                        //Cummulative Energy cost of arrival
 
     int gCost;
     int hCost;
@@ -78,14 +78,15 @@ public:
     /************************************************************************************************************
      * @brief Finds collision free path from start pos to endpos with starting orientation with startingtime
      ************************************************************************************************************/
-    void findPath(const Point<> &startPos, const Point<> &endPos, const DirectionVector<> &startOr,
-                  int startTime, const IMoveMechanism &moveMechanism) const;
+    std::vector<std::shared_ptr<Node>> findPath(const Point<> &startPos, const Point<> &endPos, const DirectionVector<> &startOr,
+                                                int startTime, const IMoveMechanism &moveMechanism) const;
+
 
     /*****************************************************************
      * @brief Registers a path in the reservation table,
      * so it is marked as used
      *****************************************************************/
-    void claimPath(const std::vector<Node> &path);
+    void claimPath(const std::vector<std::shared_ptr<Node>> &path);
 
     /*****************************************************************
      * @brief Returns whether Coordinate (X,Y) is safe at timestamp T
@@ -122,7 +123,7 @@ private:
     /**********************************************************************
      * @brief Registers a node in the reservationTable
      **********************************************************************/
-    void registerNode(const Node &node);
+    void registerNode(const std::shared_ptr<Node> &node);
 
     /***********************************************************************
      * @brief Compare point to pair without conversion
@@ -133,6 +134,11 @@ private:
      * @brief 
      ***********************************************************************/
     static int ManhattanHeuristic(const Node &node, const Point<> &point);
+
+    /*******************************************************************************
+     * @brief 
+     *******************************************************************************/
+    std::vector<std::shared_ptr<Node>> tracePath(const std::shared_ptr<Node>& node) const;
 
 private:
     std::unordered_set<std::pair<int, int>, boost::hash<std::pair<int, int>>> staticObstacles;

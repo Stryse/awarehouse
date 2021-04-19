@@ -90,14 +90,14 @@ std::array<std::shared_ptr<Node>, 5> PathFinder::findNeighbours(Node &node, cons
     return neighbours;
 }
 
-void PathFinder::registerNode(const Node &node)
+void PathFinder::registerNode(const std::shared_ptr<Node> &node)
 {
-    reservationTable.emplace(std::make_tuple(node.coords.first, node.coords.second, node.byTime));
+    reservationTable.emplace(std::make_tuple(node->coords.first, node->coords.second, node->gCost));
     //reservationTable.emplace(std::make_tuple(node.coords.first, node.coords.second, node.cameFrom->byTime));
-    if (node.cameFrom != nullptr)
+    if (node->cameFrom != nullptr)
     {
-        for (int travelTime = node.cameFrom->byTime; travelTime < node.byTime; ++travelTime)
-            reservationTable.emplace(std::make_tuple(node.coords.first, node.coords.second, travelTime));
+        for (int travelTime = node->cameFrom->gCost; travelTime < node->gCost; ++travelTime)
+            reservationTable.emplace(std::make_tuple(node->coords.first, node->coords.second, travelTime));
     }
 }
 
@@ -111,13 +111,26 @@ int PathFinder::ManhattanHeuristic(const Node &node, const Point<> &point)
     return std::abs(node.coords.first - point.getPosX()) + std::abs(node.coords.second - point.getPosY());
 }
 
-void PathFinder::claimPath(const std::vector<Node> &path)
+void PathFinder::claimPath(const std::vector<std::shared_ptr<Node>> &path)
 {
     for (auto &node : path) // hátúlról kell majd
         registerNode(node);
 }
 
-void PathFinder::findPath(const Point<> &startPos, const Point<> &endPos, const DirectionVector<> &startOr,
+std::vector<std::shared_ptr<Node>> PathFinder::tracePath(const std::shared_ptr<Node>& node) const
+{
+    std::vector<std::shared_ptr<Node>> path;
+
+    std::shared_ptr<Node> n = node;
+    while(n->cameFrom != nullptr)
+    {
+        path.push_back(n);
+        n = n->cameFrom;
+    }
+    return path;
+}
+
+std::vector<std::shared_ptr<Node>> PathFinder::findPath(const Point<> &startPos, const Point<> &endPos, const DirectionVector<> &startOr,
                           int startTime, const IMoveMechanism &moveMechanism) const
 {
     std::priority_queue<std::shared_ptr<Node>, std::vector<std::shared_ptr<Node>>, NodeComparator> open;
@@ -139,7 +152,7 @@ void PathFinder::findPath(const Point<> &startPos, const Point<> &endPos, const 
 
         // ##################### Found path ######################
         if (PathFinder::PointToPairEqualityAdapter(endPos, current->coords))
-            break;
+            return tracePath(current);
 
         // ################ Explore STA* Neighbours ###############
         std::array<std::shared_ptr<Node>, 5> neighbours = findNeighbours(*current, moveMechanism);
@@ -169,4 +182,5 @@ void PathFinder::findPath(const Point<> &startPos, const Point<> &endPos, const 
             }
         }
     }
+    //return {};
 }
