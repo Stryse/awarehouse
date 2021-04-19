@@ -12,6 +12,7 @@
 #include "PodDockList.h"
 #include "DeliveryStationList.h"
 #include "TaskList.h"
+#include "PodList.h"
 
 class State;
 
@@ -73,6 +74,7 @@ private:
     ActorList           m_actors;
     ChargingStationList m_chargingStations;
     PodDockList         m_podDocks;
+    PodList             m_pods;
     DeliveryStationList m_deliveryStations;
     TaskList            m_tasks;
 };

@@ -131,12 +131,14 @@ presenter/header/PersistencePresenter.h
 
 #presenter/cpp/PodList.cpp
 #presenter/header/PodList.h
+presenter/cpp/PodList.cpp
+presenter/header/PodList.h
 
-#presenter/cpp/PodListModel.cpp
-#presenter/header/PodListModel.h
+presenter/cpp/PodListModel.cpp
+presenter/header/PodListModel.h
 
-#presenter/cpp/PodPresenter.cpp
-#presenter/header/PodPresenter.h
+presenter/cpp/PodPresenter.cpp
+presenter/header/PodPresenter.h
 )
 
 add_library(OBJ_AWSOURCE_FILES STATIC

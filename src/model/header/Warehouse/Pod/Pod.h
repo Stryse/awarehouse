@@ -49,7 +49,7 @@ public:
     using ItemType = std::unique_ptr<TItemType>;
 
 public:
-    boost::signals2::signal<void(const Body &)> onBodyMoved;
+    mutable boost::signals2::signal<void(const Body &)> onBodyMoved;
 
 public:
     Pod(const Point &position,

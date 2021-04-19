@@ -5,6 +5,7 @@ State::State(const std::shared_ptr<ObservableNavEnvironment> &environment,
              const std::vector<std::shared_ptr<ChargingStation>> &chStations,
              const std::vector<std::shared_ptr<DeliveryStation>> &deliveryStations,
              const std::vector<std::shared_ptr<PodDock>> &podDocks,
+             const std::vector<Pod<OrderModel> *> &pods,
              const std::vector<std::shared_ptr<DeliveryRobot>> &robots,
              int rowCount, int colCount)
 
@@ -13,6 +14,7 @@ State::State(const std::shared_ptr<ObservableNavEnvironment> &environment,
       chStations(chStations),
       deliveryStations(deliveryStations),
       podDocks(podDocks),
+      pods(pods),
       robots(robots),
       taskManager(this->podDocks, this->deliveryStations)
 {
@@ -22,6 +24,7 @@ State::State(std::shared_ptr<ObservableNavEnvironment> &&environment,
              std::vector<std::shared_ptr<ChargingStation>> &&chStations,
              std::vector<std::shared_ptr<DeliveryStation>> &&deliveryStations,
              std::vector<std::shared_ptr<PodDock>> &&podDocks,
+             std::vector<Pod<OrderModel> *> &&pods,
              std::vector<std::shared_ptr<DeliveryRobot>> &&robots,
              int rowCount, int colCount)
 
@@ -30,6 +33,7 @@ State::State(std::shared_ptr<ObservableNavEnvironment> &&environment,
       chStations(std::move(chStations)),
       deliveryStations(std::move(deliveryStations)),
       podDocks(std::move(podDocks)),
+      pods(std::move(pods)),
       robots(std::move(robots)),
       taskManager(this->podDocks, this->deliveryStations)
 {
@@ -49,6 +53,7 @@ int State::getColCount() const { return colCount; }
 
 const std::vector<std::shared_ptr<ChargingStation>> &State::getChargingStations() const { return chStations; }
 const std::vector<std::shared_ptr<PodDock>> &State::getPodDocks() const { return podDocks; }
+const std::vector<Pod<OrderModel> *> &State::getPods() const { return pods; }
 const std::vector<std::shared_ptr<DeliveryStation>> &State::getDeliveryStations() const { return deliveryStations; }
 const std::vector<std::shared_ptr<DeliveryRobot>> &State::getRobots() const { return robots; }
 
