@@ -55,36 +55,36 @@ bool PathFinder::safeSemiStatic(const std::pair<int, int> &coord, int timestamp)
     return obstacle == semiStaticObstacles.end() || timestamp < obstacle->second;
 }
 
-std::array<Node *, 5> PathFinder::findNeighbours(Node &node, const IMoveMechanism &moveMechanism) const
+std::array<std::shared_ptr<Node>, 5> PathFinder::findNeighbours(Node &node, const IMoveMechanism &moveMechanism) const
 {
-    std::array<Node *, 5> neighbours{
+    std::array<std::shared_ptr<Node>, 5> neighbours{
 
         // Up movement with MoveMechanism Delta time and energy
-        new Node(std::make_pair(node.coords.first, node.coords.second - 1),
+        std::make_shared<Node>(std::make_pair(node.coords.first, node.coords.second - 1),
                  DirectionVector<>::UP(),
                  (moveMechanism.getTimeCost(node.arriveOrientation, DirectionVector<>::UP())),
                  (node.byEnergy + moveMechanism.getEnergyCost(node.arriveOrientation, DirectionVector<>::UP()))),
 
         // Down movement with MoveMechanism Delta time and energy
-        new Node(std::make_pair(node.coords.first, node.coords.second + 1),
+         std::make_shared<Node>(std::make_pair(node.coords.first, node.coords.second + 1),
                  DirectionVector<>::DOWN(),
                  (moveMechanism.getTimeCost(node.arriveOrientation, DirectionVector<>::DOWN())),
                  (node.byEnergy + moveMechanism.getEnergyCost(node.arriveOrientation, DirectionVector<>::DOWN()))),
 
         // Left movement with MoveMechanism Delta time and energy
-        new Node(std::make_pair(node.coords.first - 1, node.coords.second),
+         std::make_shared<Node>(std::make_pair(node.coords.first - 1, node.coords.second),
                  DirectionVector<>::LEFT(),
                  (moveMechanism.getTimeCost(node.arriveOrientation, DirectionVector<>::LEFT())),
                  (node.byEnergy + moveMechanism.getEnergyCost(node.arriveOrientation, DirectionVector<>::LEFT()))),
 
         //  Right movement with Movemechanism Delta time and energy
-        new Node(std::make_pair(node.coords.first + 1, node.coords.second),
+         std::make_shared<Node>(std::make_pair(node.coords.first + 1, node.coords.second),
                  DirectionVector<>::RIGHT(),
                  (moveMechanism.getTimeCost(node.arriveOrientation, DirectionVector<>::RIGHT())),
                  (node.byEnergy + moveMechanism.getEnergyCost(node.arriveOrientation, DirectionVector<>::RIGHT()))),
 
         // Waiting at current position
-        new Node(node.coords, node.arriveOrientation, 1, node.byEnergy)
+         std::make_shared<Node>(node.coords, node.arriveOrientation, 1, node.byEnergy)
     };
 
     return neighbours;
@@ -120,19 +120,19 @@ void PathFinder::claimPath(const std::vector<Node> &path)
 void PathFinder::findPath(const Point<> &startPos, const Point<> &endPos, const DirectionVector<> &startOr,
                           int startTime, const IMoveMechanism &moveMechanism) const
 {
-    std::priority_queue<Node *, std::vector<Node *>, NodeComparator> open;
+    std::priority_queue<std::shared_ptr<Node>, std::vector<std::shared_ptr<Node>>, NodeComparator> open;
     std::unordered_set<const Node *> openLookup;
 
     std::unordered_set<std::tuple<int, int, int>, boost::hash<std::tuple<int, int, int>>> closed;
 
-    Node *current = new Node(std::make_pair(startPos.getPosX(), startPos.getPosY()), startOr, startTime, 0, 0, 0, nullptr);
-    openLookup.insert(current);
+    std::shared_ptr<Node> current = std::make_shared<Node>(std::make_pair(startPos.getPosX(), startPos.getPosY()), startOr, startTime, 0, 0, 0, nullptr);
+    openLookup.insert(current.get());
     open.push(current);
 
     while (!open.empty())
     {
         current = open.top();
-        openLookup.erase(open.top());
+        openLookup.erase(open.top().get());
         open.pop();
 
         closed.emplace(std::make_tuple(current->coords.first, current->coords.second, current->byTime));
@@ -141,43 +141,32 @@ void PathFinder::findPath(const Point<> &startPos, const Point<> &endPos, const 
         if (PathFinder::PointToPairEqualityAdapter(endPos, current->coords))
             break;
 
-        // ################ Explore STA neighbours ###############
-        std::array<Node *, 5> neighbours = findNeighbours(*current, moveMechanism);
+        // ################ Explore STA* Neighbours ###############
+        std::array<std::shared_ptr<Node>, 5> neighbours = findNeighbours(*current, moveMechanism);
         for (auto node : neighbours)
         {
             std::tuple<int, int, int> st3(std::make_tuple(node->coords.first, node->coords.second, node->byTime));
 
             // ################### Continue if node is in closed ####################
             if (closed.find(st3) != closed.end())
-            {
-                delete node;
                 continue;
-            }
 
             // ####################### Continue if not safe #########################
             if (!safeStatic(node->coords) ||
                 !safeSemiStatic(node->coords, node->byTime) ||
                 !safeDynamic(st3)) // TODO only expand waiting when dynamic obstacles present (further heuristic)
-            {
-                delete node;
                 continue;
-            }
 
             // ####################### If not in open ###############################
-            if (openLookup.find(node) == openLookup.end())
+            if (openLookup.find(node.get()) == openLookup.end())
             {
-                if (node->cameFrom != nullptr)
-                    delete node->cameFrom;
-
                 node->cameFrom = current;
                 node->gCost = current->gCost + node->byTime;
                 node->hCost = PathFinder::ManhattanHeuristic(*node, endPos);
 
-                openLookup.insert(node);
+                openLookup.insert(node.get());
                 open.push(node);
             }
-            else
-                delete node;
         }
     }
 }

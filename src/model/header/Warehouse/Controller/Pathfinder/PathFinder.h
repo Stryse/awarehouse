@@ -9,6 +9,7 @@
 #include <unordered_set>
 #include <utility>
 #include <vector>
+#include <memory>
 
 // ########################### FORWARD DECLARATIONS ######################### //
 class State;
@@ -28,7 +29,7 @@ struct Node
     int gCost;
     int hCost;
 
-    Node *cameFrom; // Node we came from
+    std::shared_ptr<Node> cameFrom; // Node we came from
 
     explicit Node(std::pair<int, int> coords, DirectionVector<> arriveOrientation, int byTime, int byEnergy)
 
@@ -41,14 +42,14 @@ struct Node
     }
 
     explicit Node(std::pair<int, int> coords, DirectionVector<> arriveOrientation, int byTime, int byEnergy,
-                  int gCost, int hCost, Node *cameFrom = nullptr)
+                  int gCost, int hCost, std::shared_ptr<Node> cameFrom = nullptr)
         : coords(std::move(coords)),
           arriveOrientation(std::move(arriveOrientation)),
           byTime(byTime),
           byEnergy(byEnergy),
           gCost(gCost),
           hCost(hCost),
-          cameFrom(cameFrom)
+          cameFrom(std::move(cameFrom))
     {
     }
 
@@ -63,7 +64,7 @@ struct Node
  ********************************************************************/
 struct NodeComparator
 {
-    bool operator()(const Node *lhs, const Node *rhs)
+    bool operator()(const std::shared_ptr<Node> &lhs, const std::shared_ptr<Node> &rhs)
     {
         return lhs->getScore() >= rhs->getScore();
     }
@@ -116,7 +117,7 @@ private:
      * (x  ,y-1,t + timeMove)
      * (x  ,y  ,t + timeMove)
      *********************************************************************/
-    std::array<Node *, 5> findNeighbours(Node &node, const IMoveMechanism &moveMechanism) const;
+    std::array<std::shared_ptr<Node>, 5> findNeighbours(Node &node, const IMoveMechanism &moveMechanism) const;
 
     /**********************************************************************
      * @brief Registers a node in the reservationTable
