@@ -16,6 +16,7 @@
 #include "PodDockListModel.h"
 #include "DeliveryStationListModel.h"
 #include "TaskListModel.h"
+#include "PersistencePresenter.h"
 
 #include "ActorList.h"
 
@@ -29,8 +30,10 @@ int main(int argc, char *argv[])
     app.setWindowIcon(QIcon(":/app_icon.png"));
 
     // Instantiate //////
-    QScopedPointer<SimulationWindowPresenter> simPresenter(new SimulationWindowPresenter());
-    QScopedPointer<WarehouseEditorPresenter>  editorPresenter(new WarehouseEditorPresenter());
+    QScopedPointer<PersistencePresenter>      persistence(new PersistencePresenter());
+
+    QScopedPointer<SimulationWindowPresenter> simPresenter(new SimulationWindowPresenter(persistence.get()));
+    QScopedPointer<WarehouseEditorPresenter>  editorPresenter(new WarehouseEditorPresenter(persistence.get()));
     // //////////////////
 
     // Register Types ///

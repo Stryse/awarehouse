@@ -12,8 +12,8 @@ import DeliveryStationList 1.0
 Item {
     id: root
 
-    property int rows:    warehouseSettings.rowCount
-    property int columns: warehouseSettings.columnCount
+    property int rows:    EditorPresenter.layout.rows
+    property int columns: EditorPresenter.layout.columns
 
     property int   cellSpacing: 1
     property real  cellScale:   zoomArea.zoomScale
@@ -24,8 +24,8 @@ Item {
     property int mapHeight: rows    * cellSize + (rows   -1) * cellSpacing
 
     anchors {
-        left: parent.left;         right:  parent.right
-        top:  previewLabel.bottom; bottom: buttonsLayout.top
+        left: parent.left;                   right: parent.right
+        top:  currentWarehouseLabel.bottom; bottom: buttonsLayout.top
 
         leftMargin:   parent.width  * 0.05; rightMargin: parent.width * 0.05
         bottomMargin: parent.height * 0.03
@@ -45,10 +45,7 @@ Item {
             readonly property int row: index / root.columns
             readonly property int col: index % root.columns
 
-            onTileDropped: {
-                console.log(tileType)
-                EditorPresenter.setTile(row, col, tileType)
-            }
+            onTileDropped: EditorPresenter.setTile(row, col, tileType)
 
             Layout.alignment: Qt.AlignCenter
 
@@ -61,31 +58,6 @@ Item {
                 anchors.fill: parent
 
                 color: !dropArea.containsDrag ? Material.accent : Qt.darker(Material.accent, 1.5)
-
-//                MouseArea {
-//                    id: tileMouseArea
-
-//                    anchors.fill: parent
-
-//                    acceptedButtons: Qt.MiddleButton | Qt.RightButton
-
-//                    onClicked: {
-//                        if (mouse.button === Qt.RightButton) {
-//                            if (type === "Robot") {
-//                                dropArea.rotateActor()
-//                                console.log(rotationAngle)
-//                            }
-//                            else if (type === "Pod") {
-//                                console.log("Item list opened")
-//                            }
-//                        }
-//                        else if (mouse.button === Qt.MiddleButton) {
-//                            if (type !== "Empty") {
-//                                dropArea.resetTile()
-//                            }
-//                        }
-//                    }
-//                }
             }
         }
     }
@@ -212,110 +184,6 @@ Item {
             }
         }
     }
-
-//    Component {
-//        id: tileComponent
-
-////        Image {
-////            id: tileImg
-
-////            Layout.preferredHeight: root.cellSize
-////            Layout.preferredWidth:  root.cellSize
-
-////            source: imgSource //EDIT
-////        }
-//        DropArea {
-//            id: dropArea
-
-//            signal tileDropped(int tileType)
-
-//            readonly property int tileRowIdx:    rowIdx
-//            readonly property int tileColumnIdx: columnIdx
-
-//            property variant tileType:     type
-//            property int     tileRotation: rotationAngle
-//            property color   tileColor:    tileType === TileType.ROAD ? "transparent" : editorRoot.tileList.getTileColor(tileType)
-
-//            onTileDropped: {
-//                type = tileType
-//                dropArea.resetRotation()
-//                console.log(tileType)
-//                EditorPresenter.setTile(rowIdx, columnIdx, tileType)
-//            }
-
-//            Layout.alignment: Qt.AlignCenter
-
-//            Layout.preferredWidth:  root.cellSize
-//            Layout.preferredHeight: root.cellSize
-
-//            MouseArea {
-//                id: tileMouseArea
-
-//                anchors.fill: parent
-
-//                acceptedButtons: Qt.MiddleButton | Qt.RightButton
-
-//                onClicked: {
-////                    if (mouse.button === Qt.RightButton) {
-////                        if (type === "Robot") {
-////                            dropArea.rotateActor()
-////                            console.log(rotationAngle)
-////                        }
-////                        else if (type === "Pod") {
-////                            console.log("Item list opened")
-////                        }
-////                    }
-////                    else if (mouse.button === Qt.MiddleButton) {
-////                        if (type !== "Empty") {
-////                            dropArea.resetTile()
-////                        }
-////                    }
-//                }
-//            }
-
-//            Rectangle {
-//                id: tileRectangle
-
-//                anchors.fill: parent
-
-//                color: dropArea.tileColor
-
-//                states: [
-//                    State {
-//                        when: dropArea.containsDrag && dropArea.tileType !== TileType.ROAD
-//                        PropertyChanges {
-//                            target: tileRectangle
-//                            color:  Qt.darker(dropArea.tileColor, 1.5)
-//                        }
-//                    },
-//                    State {
-//                        when: dropArea.containsDrag && dropArea.tileType === TileType.ROAD
-//                        PropertyChanges {
-//                            target: tileRectangle
-//                            color:  Qt.darker(Material.accent, 1.5)
-//                        }
-//                    }
-//                ]
-//            }
-
-//            function rotateActor() {
-//                if (rotationAngle != null)
-//                    rotationAngle = (rotationAngle + 90) % 360
-//            }
-
-//            function resetRotation() {
-//                if (rotationAngle != null)
-//                    rotationAngle = 0
-//            }
-
-//            function resetTile() {
-//                if (type != null) {
-//                    type = TileType.ROAD
-//                    dropArea.resetRotation()
-//                }
-//            }
-//        }
-//    }
 
     MouseArea {
         id: zoomArea

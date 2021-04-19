@@ -1,5 +1,7 @@
 #include "PodDockList.h"
 
+#include <QJsonObject>
+
 PodDockList::PodDockList(QObject* parent)
     : QObject(parent)
 {}
@@ -19,6 +21,27 @@ bool PodDockList::setPodDockAt(int index, PodDockPresenter& podDock)
     m_podDocks[index] = &podDock;
     emit dataChanged(index);
     return true;
+}
+
+void PodDockList::loadJsonArray(const QJsonArray& podDocksJSon)
+{
+    clear();
+
+    for (int i = 0; i < podDocksJSon.size(); ++i)
+    {
+        PodDockPresenter* podDock = PodDockPresenter::loadJsonObject(podDocksJSon[i].toObject(), this);
+        if (podDock != nullptr)
+            appendPodDock(*podDock);
+    }
+}
+
+QJsonArray PodDockList::saveJsonArray() const
+{
+    QJsonArray podDocksJsonArray;
+    for (const auto& podDock : m_podDocks)
+        podDocksJsonArray.append(podDock->saveJsonObject());
+
+    return podDocksJsonArray;
 }
 
 void PodDockList::appendPodDock(PodDockPresenter& podDock)
@@ -73,7 +96,9 @@ void PodDockList::removePodDock(int row, int column)
 
 void PodDockList::clear()
 {
-    emit preItemRemoved(0);
-    m_podDocks.clear();
-    emit postItemRemoved();
+    if (m_podDocks.size() == 0)
+        return;
+
+    for (int i = m_podDocks.size() - 1; i >= 0; --i)
+        removePodDock(i);
 }

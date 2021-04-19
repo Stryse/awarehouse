@@ -60,7 +60,9 @@ void TaskList::removeTask(int index)
 
 void TaskList::clear()
 {
-    emit preItemRemoved(0);
-    m_tasks.clear();
-    emit postItemRemoved();
+    if (m_tasks.size() == 0)
+        return;
+
+    for (int i = m_tasks.size() - 1; i >= 0; --i)
+        removeTask(i);
 }

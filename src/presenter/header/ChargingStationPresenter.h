@@ -2,6 +2,7 @@
 #define CHARGING_STATION_PRESENTER__H
 
 #include <QObject>
+#include <QJsonObject>
 
 //Presenter
 #include "MapItemPresenter.h"
@@ -14,10 +15,14 @@ class ChargingStationPresenter : public MapItemPresenter
 
 public:
     explicit ChargingStationPresenter(const ChargingStation* model,
-                                                         QObject* parent = nullptr);
+                                                    QObject* parent = nullptr);
     explicit ChargingStationPresenter(int row, int column, QObject* parent = nullptr);
 
     bool operator==(const ChargingStationPresenter& other) const;
+
+    static ChargingStationPresenter* loadJsonObject(const QJsonObject& chargingStationObj,
+                                                              QObject* parent = nullptr);
+    QJsonObject saveJsonObject() const;
 
 private:
     //Model

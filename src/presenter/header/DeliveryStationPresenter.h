@@ -2,6 +2,7 @@
 #define DELIVERY_STATION_PRESENTER_H
 
 #include <QObject>
+#include <QJsonObject>
 
 //Presenter
 #include "MapItemPresenter.h"
@@ -18,6 +19,10 @@ public:
     explicit DeliveryStationPresenter(int row, int column, QObject* parent);
 
     bool operator==(const DeliveryStationPresenter& other) const;
+
+    static DeliveryStationPresenter* loadJsonObject(const QJsonObject& deliveryStationObj,
+                                                              QObject* parent = nullptr);
+    QJsonObject saveJsonObject(int acceptedOrderID) const;
 
 private:
     //Model

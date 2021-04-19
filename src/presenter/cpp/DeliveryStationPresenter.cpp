@@ -25,3 +25,30 @@ bool DeliveryStationPresenter::operator==(const DeliveryStationPresenter& other)
 {
     return MapItemPresenter::operator==(other);
 }
+
+DeliveryStationPresenter* DeliveryStationPresenter::loadJsonObject(const QJsonObject& deliveryStationObj,
+                                                                             QObject* parent)
+{
+    if (deliveryStationObj.contains("RowCoord") && deliveryStationObj["RowCoord"].isDouble() &&
+        deliveryStationObj.contains("ColCoord") && deliveryStationObj["ColCoord"].isDouble() &&
+        deliveryStationObj.contains("AcceptedOrderID") && deliveryStationObj["AcceptedOrderID"].isDouble())
+    {
+        int row    = deliveryStationObj["ColCoord"].toInt();
+        int column = deliveryStationObj["RowCoord"].toInt();
+
+        return new DeliveryStationPresenter(column, row, parent);
+    }
+
+    return nullptr;
+}
+
+QJsonObject DeliveryStationPresenter::saveJsonObject(int acceptedOrderID) const
+{
+    QJsonObject deliveryStationJsonObj;
+
+    deliveryStationJsonObj.insert("RowCoord", row());
+    deliveryStationJsonObj.insert("ColCoord", column());
+    deliveryStationJsonObj.insert("AcceptedOrderID", acceptedOrderID);
+
+    return deliveryStationJsonObj;
+}

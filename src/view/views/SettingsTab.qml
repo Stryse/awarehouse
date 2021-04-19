@@ -62,13 +62,16 @@ ScrollView {
         ComboBox {
             id: wareHouseComboBox
 
-            model: SimPresenter.maps
-
             Layout.alignment: Qt.AlignRight
 
-            Material.background: Material.primary
+            model: SimPresenter.persistence.warehouses
 
             flat: true
+            Material.background: Material.primary
+
+            onActivated: SimPresenter.loadWarehouse(currentText)
+
+            Component.onCompleted: currentIndex = SimPresenter.getCurrentWarehouseIndex();
         }
 
         Button {

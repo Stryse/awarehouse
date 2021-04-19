@@ -21,6 +21,27 @@ bool ActorList::setActorAt(int index, ActorPresenter& actor)
     return true;
 }
 
+void ActorList::loadJsonArray(const QJsonArray& actorsJson)
+{
+    clear();
+
+    for (int i = 0; i < actorsJson.size(); ++i)
+    {
+        ActorPresenter* actor = ActorPresenter::loadJsonObject(actorsJson[i].toObject(), this);
+        if (actor != nullptr)
+            appendActor(*actor);
+    }
+}
+
+QJsonArray ActorList::saveJsonArray() const
+{
+    QJsonArray actorsJsonArray;
+    for (const auto& actor : m_actors)
+        actorsJsonArray.append(actor->saveJsonObject());
+
+    return actorsJsonArray;
+}
+
 void ActorList::appendActor(ActorPresenter& actor)
 {
     emit preItemAppended();
@@ -73,7 +94,6 @@ void ActorList::removeActor(int row, int column)
 
 void ActorList::clear()
 {
-    emit preItemRemoved(0);
-    m_actors.clear();
-    emit postItemRemoved();
+    for (int i = m_actors.size() - 1; i >= 0; --i)
+        removeActor(i);
 }

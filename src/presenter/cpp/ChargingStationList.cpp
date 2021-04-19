@@ -1,5 +1,7 @@
 #include "ChargingStationList.h"
 
+#include <QJsonObject>
+
 ChargingStationList::ChargingStationList(QObject* parent)
     : QObject(parent)
 {}
@@ -21,6 +23,27 @@ bool ChargingStationList::setChargingStationAt(int index, ChargingStationPresent
     return true;
 }
 
+void ChargingStationList::loadJsonArray(const QJsonArray& chargingStationsJson)
+{
+    clear();
+
+    for (int i = 0; i < chargingStationsJson.size(); ++i)
+    {
+        ChargingStationPresenter* chargingStation = ChargingStationPresenter::loadJsonObject(chargingStationsJson[i].toObject(), this);
+        if (chargingStation != nullptr)
+            appendChargingStation(*chargingStation);
+    }
+}
+
+QJsonArray ChargingStationList::saveJsonArray() const
+{
+    QJsonArray chargingStationsJsonArray;
+    for (const auto& chargingStation : m_chargingStations)
+        chargingStationsJsonArray.append(chargingStation->saveJsonObject());
+
+    return chargingStationsJsonArray;
+}
+
 void ChargingStationList::appendChargingStation(ChargingStationPresenter& chargingStation)
 {
     emit preItemAppended();
@@ -33,6 +56,8 @@ void ChargingStationList::appendChargingStation(ChargingStationPresenter& chargi
     });
 
     emit postItemAppended();
+
+    //TODO dataChanged()?
 }
 
 void ChargingStationList::removeChargingStation(int index)
@@ -73,7 +98,9 @@ void ChargingStationList::removeChargingStation(int row, int column)
 
 void ChargingStationList::clear()
 {
-    emit preItemRemoved(0);
-    m_chargingStations.clear();
-    emit postItemRemoved();
+    if (m_chargingStations.size() == 0)
+        return;
+
+    for (int i = m_chargingStations.size() - 1; i >= 0; --i)
+        removeChargingStation(i);
 }

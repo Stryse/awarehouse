@@ -56,6 +56,11 @@ public:
     const DeliveryStationList* deliveryStations() const;
     const TaskList*            tasks()            const;
 
+    void loadWarehouseLayout(const State* state);
+
+private:
+    void clear();
+
 signals:
     void rowsChanged(int rows);
     void columnsChanged(int columns);
@@ -65,7 +70,7 @@ private:
     int m_columns;
 
     //Warehouse Layout Entities
-    ActorList           m_robots;
+    ActorList           m_actors;
     ChargingStationList m_chargingStations;
     PodDockList         m_podDocks;
     DeliveryStationList m_deliveryStations;
