@@ -26,13 +26,12 @@ build-program:
     - export QML_IMPORT_PATH=$PWD/qt/6.1.0/gcc_64/qml/
     - export QML2_IMPORT_PATH=$PWD/qt/6.1.0/gcc_64/qml/
     - export QT_DIR=$PWD/qt/6.1.0/gcc_64/
-    - mkdir cmake-build_02 && cd cmake-build_02
+    - mkdir cmake-build && cd cmake-build
     - cmake ..
-    - make clean
     - make
   artifacts:
     paths:
-      - cmake-build_02/
+      - cmake-build/
 
 google-test:
   stage: test
