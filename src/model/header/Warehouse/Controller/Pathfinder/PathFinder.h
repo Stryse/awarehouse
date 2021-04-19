@@ -35,7 +35,8 @@ struct Node
         : coords(std::move(coords)),
           arriveOrientation(std::move(arriveOrientation)),
           byTime(byTime),
-          byEnergy(byEnergy)
+          byEnergy(byEnergy),
+          cameFrom(nullptr)
     {
     }
 
@@ -83,18 +84,18 @@ public:
      * @brief Registers a path in the reservation table,
      * so it is marked as used
      *****************************************************************/
-    void claimPath(const std::vector<Node> path);
+    void claimPath(const std::vector<Node> &path);
 
     /*****************************************************************
      * @brief Returns whether Coordinate (X,Y) is safe at timestamp T
      *****************************************************************/
-    bool safeDynamic(const std::tuple<int, int, int> st3) const;
+    bool safeDynamic(const std::tuple<int, int, int> &st3) const;
 
     /*****************************************************************
      * @brief Returns whether Coordinate (X,Y) can be occupied according
      * to static obstacles
      *****************************************************************/
-    bool safeStatic(const std::pair<int, int> coord) const;
+    bool safeStatic(const std::pair<int, int> &coord) const;
 
     /********************************************************************
      * @brief Returns whether Coordinate (X,Y) can be occupied according
@@ -103,7 +104,7 @@ public:
      * Safe if there's no semi-static obstacle at position (x,y) or it will be
      * only there later.
      ********************************************************************/
-    bool safeSemiStatic(const std::pair<int, int> coord, int timestamp) const;
+    bool safeSemiStatic(const std::pair<int, int> &coord, int timestamp) const;
 
 private:
     /*********************************************************************
@@ -115,7 +116,7 @@ private:
      * (x  ,y-1,t + timeMove)
      * (x  ,y  ,t + timeMove)
      *********************************************************************/
-    std::array<Node *, 4> findNeighbours(Node &node, const IMoveMechanism &moveMechanism) const;
+    std::array<Node *, 5> findNeighbours(Node &node, const IMoveMechanism &moveMechanism) const;
 
     /**********************************************************************
      * @brief Registers a node in the reservationTable
@@ -125,7 +126,7 @@ private:
     /***********************************************************************
      * @brief Compare point to pair without conversion
      ***********************************************************************/
-    static bool PointToPairEqualityAdapter(const Point<> &point, const std::pair<int, int> pair);
+    static bool PointToPairEqualityAdapter(const Point<> &point, const std::pair<int, int> &pair);
 
     /***********************************************************************
      * @brief 
