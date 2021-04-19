@@ -15,7 +15,7 @@ SimulationWindowPresenter::SimulationWindowPresenter(QObject* parent)
     , m_layout(nullptr)
     , m_maps(nullptr)
 {
-    m_defaultMapPath = ":/maps/Map01.json";
+    m_defaultMapPath = ":/maps/Map02.json";
     m_filePath = "../maps";
 
     loadWarehouse(m_defaultMapPath, &m_settings);

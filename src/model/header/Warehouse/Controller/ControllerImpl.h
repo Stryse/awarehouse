@@ -1,7 +1,6 @@
 #ifndef CONTROLLER_IMPL__H
 #define CONTROLLER_IMPL__H
 
-#include "AController.h"
 #include "NetworkAdapter.h"
 #include <memory>
 #include <unordered_map>
@@ -10,12 +9,13 @@
 class AbstractNetworkMessage;
 class SchedulerImpl;
 class TaskAssignment;
+class PathFinder;
 // ################################################################### //
 
 class ControllerImpl
 {
 public:
-    ControllerImpl();
+    ControllerImpl(PathFinder *pathFinder = nullptr);
     virtual ~ControllerImpl();
 
 public:
@@ -23,6 +23,7 @@ public:
     bool PlanTask(TaskAssignment *assignment);
     bool PlanCharge(const AgentControlData &assignment);
 
+    void setPathFinder(PathFinder *pathfinder);
     // ############################ Getter ####################################
     const NetworkAdapter &getNetworkAdapter() const;
     NetworkAdapter &getNetworkAdapter();
@@ -31,6 +32,7 @@ private:
     void broadcastMessages(int timeStamp);
 
 private:
+    PathFinder *pathFinder;
     NetworkAdapter networkAdapter;
     std::unordered_multimap<int, TargetedMessage> controlMessages;
 

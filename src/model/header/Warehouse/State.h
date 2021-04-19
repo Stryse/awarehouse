@@ -6,6 +6,7 @@
 #include "DeliveryRobot.h"
 #include "DeliveryStation.h"
 #include "ObservableEnvironment.h"
+#include "PathFinder.h"
 #include "PodDock.h"
 #include "TaskManager.h"
 #include <memory>
@@ -30,15 +31,21 @@ public:
           std::vector<std::shared_ptr<DeliveryRobot>> &&robots,
           int rowCount, int colCount);
 
+    State(const State &other) = delete;
+    State &operator=(const State &other) = delete;
     virtual ~State();
 
 public:
     int getRowCount() const;
     int getColCount() const;
+
     const std::vector<std::shared_ptr<ChargingStation>> &getChargingStations() const;
     const std::vector<std::shared_ptr<PodDock>> &getPodDocks() const;
     const std::vector<std::shared_ptr<DeliveryStation>> &getDeliveryStations() const;
     const std::vector<std::shared_ptr<DeliveryRobot>> &getRobots() const;
+
+    const PathFinder &getPathFinder() const;
+    PathFinder &getPathFinder();
 
     const TaskManager &getTaskManager() const;
     TaskManager &getTaskManager();
@@ -56,6 +63,7 @@ private:
     std::vector<std::shared_ptr<DeliveryStation>> deliveryStations;
     std::vector<std::shared_ptr<DeliveryRobot>> robots;
 
+    PathFinder pathFinder;
     TaskManager taskManager;
 };
 

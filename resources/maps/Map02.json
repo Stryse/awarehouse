@@ -1,0 +1,141 @@
+{
+    "WarehouseLayoutData": {
+        "RowCount": 15,
+        "ColCount": 15,
+        "ChargingStations": [
+            {
+                "RowCoord": 0,
+                "ColCoord": 4
+            },
+            {
+                "RowCoord": 0,
+                "ColCoord": 6
+            },
+            {
+                "RowCoord": 0,
+                "ColCoord": 8
+            },
+            {
+                "RowCoord": 0,
+                "ColCoord": 10
+            },
+            {
+                "RowCoord": 0,
+                "ColCoord": 12
+            }
+        ],
+        "DeliveryStations": [
+            {
+                "RowCoord": 4,
+                "ColCoord": 14,
+                "AcceptedOrderID": 1
+            },
+            {
+                "RowCoord": 6,
+                "ColCoord": 14,
+                "AcceptedOrderID": 2
+            },
+            {
+                "RowCoord": 8,
+                "ColCoord": 14,
+                "AcceptedOrderID": 3
+            },
+            {
+                "RowCoord": 10,
+                "ColCoord": 14,
+                "AcceptedOrderID": 4
+            }
+        ],
+        "PodDocks": [
+            {
+                "RowCoord": 5,
+                "ColCoord": 4,
+                "Orders": [
+                    {
+                        "Category": 1
+                    }
+                ]
+            },
+            {
+                "RowCoord": 7,
+                "ColCoord": 4,
+                "Orders": [
+                    {
+                        "Category": 3
+                    }
+                ]
+            },
+            {
+                "RowCoord": 9,
+                "ColCoord": 4,
+                "Orders": [
+                    {
+                        "Category": 2
+                    }
+                ]
+            },
+            {
+                "RowCoord": 11,
+                "ColCoord": 4,
+                "Orders": [
+                    {
+                        "Category": 4
+                    }
+                ]
+            },
+            {
+                "RowCoord": 5,
+                "ColCoord": 7,
+                "Orders": [
+                    {
+                        "Category": 3
+                    }
+                ]
+            },
+            {
+                "RowCoord": 7,
+                "ColCoord": 7,
+                "Orders": [
+                    {
+                        "Category": 1
+                    }
+                ]
+            },
+            {
+                "RowCoord": 9,
+                "ColCoord": 7,
+                "Orders": [
+                    {
+                        "Category": 4
+                    }
+                ]
+            },
+            {
+                "RowCoord": 11,
+                "ColCoord": 7,
+                "Orders": [
+                    {
+                        "Category": 2
+                    }
+                ]
+            }
+        ],
+        "DeliveryRobots": [
+            {
+                "RowCoord": 13,
+                "ColCoord": 7,
+                "OrientationY": -1
+            },
+            {
+                "RowCoord": 13,
+                "ColCoord": 9,
+                "OrientationY": -1
+            },
+            {
+                "RowCoord": 13,
+                "ColCoord": 11,
+                "OrientationY": -1
+            }
+        ]
+    }
+}

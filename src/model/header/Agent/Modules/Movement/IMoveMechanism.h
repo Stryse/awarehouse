@@ -65,13 +65,13 @@ public:
      * @brief Returns the amount of energy needed to reach the
      * provided direction.
      **************************************************************************/
-    virtual int getEnergyCost(const DirectionVector &direction) const = 0;
+    virtual int getEnergyCost(const DirectionVector &startOrientation, const DirectionVector &direction) const = 0;
 
     /**************************************************************************
      * @brief Returns the amount of time needed to reach the
      * provided direction.
      **************************************************************************/
-    virtual int getTimeCost(const DirectionVector &direction) const = 0;
+    virtual int getTimeCost(const DirectionVector &startOrientation, const DirectionVector &direction) const = 0;
 
 public:
     /***************************************************************************
