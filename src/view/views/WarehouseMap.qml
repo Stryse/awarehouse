@@ -175,10 +175,8 @@ Item {
                 acceptedButtons: Qt.MiddleButton | Qt.RightButton
 
                 onClicked: {
-                    if (mouse.button === Qt.RightButton) {
+                    if (mouse.button === Qt.RightButton)
                         ordersPopup.open()
-                        console.log("Opened Pod")
-                    }
                     else if (mouse.button === Qt.MiddleButton)
                         EditorPresenter.removeTile(model.row, model.column)
                 }
@@ -187,7 +185,7 @@ Item {
             Popup {
                 id: ordersPopup
 
-                anchors.centerIn: parent//Overlay.overlay
+                anchors.centerIn: Overlay.overlay
                 height:           root.height * 0.6
                 width:            root.width  * 0.27
 

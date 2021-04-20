@@ -92,7 +92,7 @@ Item {
                         Layout.preferredWidth: height
                         Layout.fillHeight:     true
 
-                        Rectangle {
+                        Image {
                             id: img
 
                             anchors.centerIn: parent
@@ -100,7 +100,7 @@ Item {
                             height: parent.height * (3/4)
                             width:  height
 
-                            color:  Material.accent
+                            source: model.image
                         }
                     }
 
@@ -136,7 +136,20 @@ Item {
                         Layout.row:       2
                         Layout.column:    1
 
-                        text: model.action + " | " + model.rotation
+                        text: model.action + " | " + getOrientation(model.rotation)
+
+                        function getOrientation(rotation) {
+                            switch (rotation) {
+                                case 0:
+                                    return "Up"
+                                case 90:
+                                    return "Right"
+                                case 180:
+                                    return "Down"
+                                case 270:
+                                    return "Left"
+                            }
+                        }
                     }
 
                     Label {

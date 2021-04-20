@@ -43,7 +43,8 @@ ScrollView {
 
             from:  1
             to:    100
-            value: to
+            value: SimPresenter.settings.batteryLevel
+            onValueChanged: SimPresenter.settings.batteryLevel = value
 
             stepSize: 1
             snapMode: RangeSlider.SnapOnRelease

@@ -19,10 +19,10 @@ Item {
     readonly property bool isDeafultWarehouse: currentWarehouse == "New" || currentWarehouse == "Default"
 
     readonly property ListModel tileList: ListModel {
-        ListElement { tileType: TileType.ACTOR;            tileTypeName: "Actor";            tileColor:    "#80DEEA" }
-        ListElement { tileType: TileType.POD;              tileTypeName: "Pod";              tileColor:    "#FFAB91" }
-        ListElement { tileType: TileType.CHARGING_STATION; tileTypeName: "Charging Station"; tileColor:    "#CE93D8" }
-        ListElement { tileType: TileType.DELIVERY_STATION; tileTypeName: "Delivery Station"; tileColor:    "#A5D6A7" }
+        ListElement { tileType: TileType.ACTOR;            tileTypeName: "Actor";            tileImage:    "qrc:/images/robot.png" }
+        ListElement { tileType: TileType.POD;              tileTypeName: "Pod";              tileImage:    "qrc:/images/pod.png" }
+        ListElement { tileType: TileType.CHARGING_STATION; tileTypeName: "Charging Station"; tileImage:    "qrc:/images/chstation.png" }
+        ListElement { tileType: TileType.DELIVERY_STATION; tileTypeName: "Delivery Station"; tileImage:    "qrc:/placeholder_amogus.png" }
 
         function getTileColor(type) {
             for (var i = 0; i < tileList.count; ++i) {
