@@ -11,14 +11,24 @@ WarehouseLayoutPresenter::WarehouseLayoutPresenter(QObject* parent)
     : QObject(parent)
     , m_rows   (10)
     , m_columns(10)
-{}
+{
+    connect(&m_deliveryStations, &DeliveryStationList::postItemAppended, this, [=]()
+    {
+        emit categoryCountChanged(categoryCount());
+    });
+    connect(&m_deliveryStations, &DeliveryStationList::postItemRemoved, this, [=]()
+    {
+        emit categoryCountChanged(categoryCount());
+    });
+}
 
 //Getter
 int WarehouseLayoutPresenter::index(int row,
                                     int col) { return row * m_rows + col; }
 
-int WarehouseLayoutPresenter::rows()    const { return m_rows;    }
-int WarehouseLayoutPresenter::columns() const { return m_columns; }
+int WarehouseLayoutPresenter::rows()          const { return m_rows;    }
+int WarehouseLayoutPresenter::columns()       const { return m_columns; }
+int WarehouseLayoutPresenter::categoryCount() const { return m_deliveryStations.m_deliveryStations.size(); }
 
 //Setter
 void WarehouseLayoutPresenter::setRows(int rows)
@@ -39,17 +49,19 @@ void WarehouseLayoutPresenter::setColumns(int columns)
 }
 
 //Entity Getter
-ActorList           *WarehouseLayoutPresenter::actors()           { return &m_actors;           }
-ChargingStationList *WarehouseLayoutPresenter::chargingStations() { return &m_chargingStations; }
-PodDockList         *WarehouseLayoutPresenter::podDocks()         { return &m_podDocks;         }
-DeliveryStationList *WarehouseLayoutPresenter::deliveryStations() { return &m_deliveryStations; }
-TaskList            *WarehouseLayoutPresenter::tasks()            { return &m_tasks;            }
+ActorList*           WarehouseLayoutPresenter::actors()           { return &m_actors;           }
+ChargingStationList* WarehouseLayoutPresenter::chargingStations() { return &m_chargingStations; }
+PodDockList*         WarehouseLayoutPresenter::podDocks()         { return &m_podDocks;         }
+PodList*             WarehouseLayoutPresenter::pods()             { return &m_pods;             }
+DeliveryStationList* WarehouseLayoutPresenter::deliveryStations() { return &m_deliveryStations; }
+TaskList*            WarehouseLayoutPresenter::tasks()            { return &m_tasks;            }
 
-const ActorList           *WarehouseLayoutPresenter::actors()           const { return &m_actors;           }
-const ChargingStationList *WarehouseLayoutPresenter::chargingStations() const { return &m_chargingStations; }
-const PodDockList         *WarehouseLayoutPresenter::podDocks()         const { return &m_podDocks;         }
-const DeliveryStationList *WarehouseLayoutPresenter::deliveryStations() const { return &m_deliveryStations; }
-const TaskList            *WarehouseLayoutPresenter::tasks()            const { return &m_tasks;            }
+const ActorList*           WarehouseLayoutPresenter::actors()           const { return &m_actors;           }
+const ChargingStationList* WarehouseLayoutPresenter::chargingStations() const { return &m_chargingStations; }
+const PodDockList*         WarehouseLayoutPresenter::podDocks()         const { return &m_podDocks;         }
+const PodList*             WarehouseLayoutPresenter::pods()             const { return &m_pods;             }
+const DeliveryStationList* WarehouseLayoutPresenter::deliveryStations() const { return &m_deliveryStations; }
+const TaskList*            WarehouseLayoutPresenter::tasks()            const { return &m_tasks;            }
 
 void WarehouseLayoutPresenter::loadWarehouseLayout(const State* state)
 {
@@ -90,7 +102,7 @@ void WarehouseLayoutPresenter::loadWarehouseLayout(const State* state)
     auto& pods = state->getPods();
     for (size_t i = 0; i < pods.size(); ++i)
     {
-        auto podPresenter = new PodPresenter(pods[i],this);
+        auto podPresenter = new PodPresenter(pods[i], this);
         m_pods.appendPod(*podPresenter);
     }
 
@@ -109,7 +121,7 @@ void WarehouseLayoutPresenter::loadWarehouseLayout(const State* state)
     for (size_t i = 0; i < tasks.size(); ++i)
     {
          auto taskPresenter = new TaskPresenter(tasks[i].get(), this);
-         m_tasks.tasks()->append(taskPresenter);
+         m_tasks.appendTask(*taskPresenter);
     }
 }
 
@@ -118,6 +130,7 @@ void WarehouseLayoutPresenter::clear()
     m_actors.clear();
     m_chargingStations.clear();
     m_podDocks.clear();
+    m_pods.clear();
     m_deliveryStations.clear();
     m_tasks.clear();
 }

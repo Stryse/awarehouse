@@ -103,16 +103,16 @@ Item {
                                 parent = tileDelegate
                         }
 
-                        Rectangle {
+                        Image {
                             id: tileImg
 
                             width:  dragArea.width
                             height: dragArea.height
 
-                            color: model.tileColor
+                            source: model.tileImage
                         }
 
-                        Rectangle {
+                        Image {
                             id: tileDragImg
 
                             anchors.centerIn: dragArea
@@ -122,7 +122,7 @@ Item {
                             width:  warehouse.cellSize
                             height: warehouse.cellSize
 
-                            color: model.tileColor
+                            source: model.tileImage
 
                             Drag.active: dragArea.drag.active
                             Drag.hotSpot.x: width/2

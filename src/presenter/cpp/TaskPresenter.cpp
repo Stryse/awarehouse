@@ -1,30 +1,32 @@
 #include "TaskPresenter.h"
 #include "Task.h"
 
-TaskPresenter::TaskPresenter(Task* task,
+TaskPresenter::TaskPresenter(   Task* model,
                              QObject* parent)
     : QObject(parent)
-    , model(task)
-    , m_assignedRobotName(QString::fromStdString(task->getAssignedAgentID()))
+    , m_assignedRobotName(QString::fromStdString(model->getAssignedAgentID()))
     , m_orders           ({})
-    , m_destinationX     (task->getWayPoints().at(0).getPosX())
-    , m_destinationY     (task->getWayPoints().at(0).getPosY())
+    , m_podRow           (model->getWayPoints().at(0).getPosX())
+    , m_podColumn        (model->getWayPoints().at(0).getPosY())
+    , model              (model)
 {
+    //Orders???
 }
 
 TaskPresenter::TaskPresenter(const TaskPresenter& task)
     : m_assignedRobotName(task.m_assignedRobotName)
     , m_orders           (task.m_orders           )
-    , m_destinationX     (task.m_destinationX     )
-    , m_destinationY     (task.m_destinationY     )
+    , m_podRow           (task.m_podRow           )
+    , m_podColumn        (task.m_podColumn        )
 {}
 
 TaskPresenter& TaskPresenter::operator=(const TaskPresenter& other)
 {
     this->m_assignedRobotName = other.m_assignedRobotName;
     this->m_orders            = other.m_orders;
-    this->m_destinationX      = other.m_destinationX;
-    this->m_destinationY      = other.m_destinationY;
+    this->m_podRow            = other.m_podRow;
+    this->m_podColumn         = other.m_podColumn;
+
     return *this;
 }
 
@@ -32,15 +34,15 @@ bool TaskPresenter::operator==(const TaskPresenter& other) const
 {
     return this->m_assignedRobotName == other.m_assignedRobotName &&
            this->m_orders            == other.m_orders            &&
-           this->m_destinationX      == other.m_destinationX      &&
-           this->m_destinationY      == other.m_destinationY;
+           this->m_podRow            == other.m_podRow            &&
+           this->m_podColumn         == other.m_podColumn;
 }
 
 //Getter
 QString      TaskPresenter::assignedRobotName() const { return m_assignedRobotName; }
 QVector<int> TaskPresenter::orders()            const { return m_orders;            }
-int          TaskPresenter::destinationX()      const { return m_destinationX;      }
-int          TaskPresenter::destinationY()      const { return m_destinationY;      }
+int          TaskPresenter::podRow()            const { return m_podRow;            }
+int          TaskPresenter::podColumn()         const { return m_podColumn;         }
 
 //Setter
 void TaskPresenter::setAssignedRobotName(const QString& robotName)
@@ -63,22 +65,22 @@ void TaskPresenter::setOrders(const QVector<int>& orders)
     emit taskChanged();
 }
 
-void TaskPresenter::setDestinationX(int destinationX)
+void TaskPresenter::setPodRow(int podRow)
 {
-    if(m_destinationX == destinationX)
+    if(m_podRow == podRow)
         return;
 
-    m_destinationX = destinationX;
-    emit destinationXChanged();
+    m_podRow = podRow;
+    emit podRowChanged();
     emit taskChanged();
 }
 
-void TaskPresenter::setDestinationY(int destinationY)
+void TaskPresenter::setPodColumn(int podColumn)
 {
-    if(m_destinationY == destinationY)
+    if(m_podColumn == podColumn)
         return;
 
-    m_destinationY = destinationY;
-    emit destinationYChanged();
+    m_podColumn = podColumn;
+    emit podColumnChanged();
     emit taskChanged();
 }

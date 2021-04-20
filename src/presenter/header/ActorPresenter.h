@@ -67,4 +67,4 @@ private:
     static QString m_static_imagePath;
 };
 
-#endif // ACTOR_PRESENTER_H
+#endif /* ACTOR_PRESENTER_H */

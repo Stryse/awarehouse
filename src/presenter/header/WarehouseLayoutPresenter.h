@@ -10,6 +10,7 @@
 #include "ActorList.h"
 #include "ChargingStationList.h"
 #include "PodDockList.h"
+#include "PodList.h"
 #include "DeliveryStationList.h"
 #include "TaskList.h"
 #include "PodList.h"
@@ -20,11 +21,14 @@ class WarehouseLayoutPresenter : public QObject
 {
     Q_OBJECT
 
+    Q_PROPERTY(                  int categoryCount    READ categoryCount    NOTIFY categoryCountChanged               )
+
     Q_PROPERTY(                  int rows             READ rows             WRITE    setRows    NOTIFY rowsChanged    )
     Q_PROPERTY(                  int columns          READ columns          WRITE    setColumns NOTIFY columnsChanged )
     Q_PROPERTY(           ActorList* actors           READ actors           CONSTANT                                  )
     Q_PROPERTY( ChargingStationList* chargingStations READ chargingStations CONSTANT                                  )
     Q_PROPERTY(         PodDockList* podDocks         READ podDocks         CONSTANT                                  )
+    Q_PROPERTY(             PodList* pods             READ pods             CONSTANT                                  )
     Q_PROPERTY( DeliveryStationList* deliveryStations READ deliveryStations CONSTANT                                  )
     Q_PROPERTY(            TaskList* tasks            READ tasks            CONSTANT                                  )
 
@@ -40,6 +44,8 @@ public:
     int rows()    const;
     int columns() const;
 
+    int categoryCount() const;
+
     //Setter
     void setRows(int value);
     void setColumns(int colCount);
@@ -48,12 +54,14 @@ public:
     ActorList*           actors();
     ChargingStationList* chargingStations();
     PodDockList*         podDocks();
+    PodList*             pods();
     DeliveryStationList* deliveryStations();
     TaskList*            tasks();
 
     const ActorList*           actors()           const;
     const ChargingStationList* chargingStations() const;
     const PodDockList*         podDocks()         const;
+    const PodList*             pods()             const;
     const DeliveryStationList* deliveryStations() const;
     const TaskList*            tasks()            const;
 
@@ -65,6 +73,8 @@ private:
 signals:
     void rowsChanged(int rows);
     void columnsChanged(int columns);
+
+    void categoryCountChanged(int categoryCount);
 
 private:
     int m_rows;

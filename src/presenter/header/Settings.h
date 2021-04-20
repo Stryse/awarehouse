@@ -7,7 +7,7 @@ class Settings : public QObject
 {
     Q_OBJECT
 
-    Q_PROPERTY( int batterylevel READ batteryLevel WRITE setBatteryLevel NOTIFY batteryChanged)
+    Q_PROPERTY( int batteryLevel READ batteryLevel WRITE setBatteryLevel NOTIFY batteryLevelChanged)
 public:
     Settings();
     Settings(int batteryLevel);
@@ -19,7 +19,7 @@ public:
     void setBatteryLevel(int batteryLevel);
 
 signals:
-    void batteryChanged();
+    void batteryLevelChanged(int batteryLevel);
 
 private:
     int m_batteryLevel;

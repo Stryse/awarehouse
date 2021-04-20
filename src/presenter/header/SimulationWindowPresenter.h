@@ -19,7 +19,7 @@ class SimulationWindowPresenter : public QObject
     Q_OBJECT
 
     Q_PROPERTY( WarehouseLayoutPresenter* layout               READ layout               CONSTANT               )
-    Q_PROPERTY(                 Settings* settings             READ settings                                    )
+    Q_PROPERTY(                 Settings* settings             READ settings             CONSTANT               )
     Q_PROPERTY(                      bool paused               READ paused               NOTIFY   pausedChanged )
 
     Q_PROPERTY(     PersistencePresenter* persistence          READ persistence          CONSTANT               )

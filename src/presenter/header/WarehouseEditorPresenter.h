@@ -28,7 +28,7 @@ public:
         ROAD,
         ACTOR,
         CHARGING_STATION,
-        POD_DOCK,
+        POD,
         DELIVERY_STATION
     };
     Q_ENUM(TileType);
