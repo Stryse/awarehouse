@@ -28,7 +28,6 @@ public:
         ImageRole
     };
 
-
 //QAbstractItemModel interface
 public:
     int      rowCount(const QModelIndex& parent)                        const override;

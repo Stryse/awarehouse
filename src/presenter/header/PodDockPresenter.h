@@ -2,7 +2,7 @@
 #define POD_DOCK_PRESENTER_H
 
 #include <QObject>
-#include <QJsonObject>
+//#include <QJsonObject>
 
 //Presenter
 #include "MapItemPresenter.h"
@@ -22,9 +22,9 @@ public:
 
     bool operator==(const PodDockPresenter& other) const;
 
-    static PodDockPresenter* loadJsonObject(const QJsonObject& podDockObj,
-                                                      QObject* parent = nullptr);
-    QJsonObject saveJsonObject() const;
+//    static PodDockPresenter* loadJsonObject(const QJsonObject& podDockObj,
+//                                                      QObject* parent = nullptr);
+//    QJsonObject saveJsonObject() const;
 
 private:
     //Model

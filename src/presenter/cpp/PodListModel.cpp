@@ -3,6 +3,13 @@
 //Presenter
 #include "PodPresenter.h"
 
+QVector<int> PodListModel::m_roles = { RotationRole,
+                                       OrdersRole,
+                                       RowRole,
+                                       ColumnRole,
+                                       ImageRole };
+
+
 PodListModel::PodListModel(QObject* parent)
     : QAbstractListModel(parent)
     , m_pods(nullptr)
@@ -17,7 +24,7 @@ int PodListModel::rowCount(const QModelIndex& parent) const
 }
 
 QVariant PodListModel::data(const QModelIndex& index,
-                                             int role) const
+                                           int role) const
 {
     if (!index.isValid() || m_pods == nullptr)
        return QVariant();
@@ -26,12 +33,14 @@ QVariant PodListModel::data(const QModelIndex& index,
 
     switch(role)
     {
+        case RotationRole:
+            return QVariant(pod.rotation());
+        case OrdersRole:
+            return QVariant(pod.orders());
         case RowRole:
             return QVariant(pod.row());
         case ColumnRole:
             return QVariant(pod.column());
-        case RotationRole:
-            return QVariant(pod.rotation());
         case ImageRole:
             return QVariant(pod.imagePath());
     }
@@ -40,16 +49,38 @@ QVariant PodListModel::data(const QModelIndex& index,
 }
 
 bool PodListModel::setData(const QModelIndex& index,
-                             const    QVariant& value,
-                                            int role)
+                           const    QVariant& value,
+                                          int role)
 {
-    if (data(index, role) != value)
+    if (m_pods == nullptr)
+        return false;
+
+    PodPresenter& pod = *m_pods->pods()->at(index.row());
+
+    switch(role)
     {
-        // TODO IMPLEMENT
+        case RotationRole:
+            pod.setRotation (value.toInt());
+            break;
+        case OrdersRole:
+            pod.setOrders   (value.toStringList());
+            break;
+        case RowRole:
+            pod.setRow      (value.toInt());
+            break;
+        case ColumnRole:
+            pod.setColumn   (value.toInt());
+            break;
+        case ImageRole:
+            pod.setImagePath(value.toString());
+            break;
+    }
+
+    if (m_pods->setPodAt(index.row(), pod))
+    {
         emit dataChanged(index, index, QVector<int>() << role);
         return true;
     }
-
     return false;
 }
 
@@ -65,9 +96,10 @@ QHash<int, QByteArray> PodListModel::roleNames() const
 {
     QHash<int, QByteArray> names;
 
+    names[RotationRole] = "rotation";
+    names[OrdersRole]   = "orders";
     names[RowRole]      = "row";
     names[ColumnRole]   = "column";
-    names[RotationRole] = "rotation";
     names[ImageRole]    = "image";
 
     return names;
@@ -105,6 +137,11 @@ void PodListModel::setPods(PodList* pods)
         connect(m_pods, &PodList::postItemRemoved,  this, [=]()
         {
             endRemoveRows();
+        });
+
+        connect(m_pods, &PodList::dataChanged,      this, [=](int index)
+        {
+            emit dataChanged(QAbstractListModel::index(index), QAbstractListModel::index(index), m_roles);
         });
     }
 

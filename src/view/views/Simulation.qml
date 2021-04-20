@@ -25,7 +25,7 @@ Item {
             id: controlLayout
 
             anchors.centerIn: parent
-            height:           parent.height * 0.65
+            height:           simulationMap.height * 0.12
 
             MediaControlButton {
                 id: play

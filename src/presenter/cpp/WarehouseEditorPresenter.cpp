@@ -23,6 +23,26 @@ WarehouseEditorPresenter::WarehouseEditorPresenter(PersistencePresenter* persist
 
     connect(m_layout, &WarehouseLayoutPresenter::rowsChanged,    this, [=](int rows)    { updateRowsInTable(rows);       });
     connect(m_layout, &WarehouseLayoutPresenter::columnsChanged, this, [=](int columns) { updateColumnsInTable(columns); });
+
+    connect(m_layout->deliveryStations(), &DeliveryStationList::preItemRemoved, this, [=](int index)
+    {
+        //Pls look away...
+        for (auto& pod : *m_layout->pods()->pods())
+        {
+            QStringList orders = pod->orders();
+
+            orders.removeOne(QString::number(index + 1));
+            for (int i = 0; i < orders.size(); ++i)
+            {
+                int orderInt = orders[i].toInt();
+
+                if (orderInt > index + 1)
+                    orders[i] = QString::number(orderInt - 1);
+            }
+
+            pod->setOrders(orders);
+        }
+    });
 }
 
 QString                   WarehouseEditorPresenter::currentWarehouseName() const { return m_currentWarehouseName; }
@@ -60,12 +80,12 @@ void WarehouseEditorPresenter::updateRowsInTable(int newRows)
         }
 
         //PodDocks
-        PodDockList& poDocks = *m_layout->podDocks();
-        for (int i = poDocks.podDocks()->size()-1; i >= 0; --i)
+        PodList& pods = *m_layout->pods();
+        for (int i = pods.pods()->size()-1; i >= 0; --i)
         {
-            PodDockPresenter& podDock = *poDocks.podDocks()->at(i);
-            if (podDock.row() >= newRows)
-                poDocks.removePodDock(i);
+            PodPresenter& pod = *pods.pods()->at(i);
+            if (pod.row() >= newRows)
+                pods.removePod(i);
         }
 
         //ChargingStations
@@ -111,13 +131,13 @@ void WarehouseEditorPresenter::updateColumnsInTable(int newColumns)
                 chargingStations.removeChargingStation(i);
         }
 
-        //PodDocks
-        PodDockList& poDocks = *m_layout->podDocks();
-        for (int i = poDocks.podDocks()->size()-1; i >= 0; --i)
+        //Pods
+        PodList& pods = *m_layout->pods();
+        for (int i = pods.pods()->size()-1; i >= 0; --i)
         {
-            PodDockPresenter& podDock = *poDocks.podDocks()->at(i);
-            if (podDock.column() >= newColumns)
-                poDocks.removePodDock(i);
+            PodPresenter& pod = *pods.pods()->at(i);
+            if (pod.column() >= newColumns)
+                pods.removePod(i);
         }
 
         //ChargingStations
@@ -143,8 +163,8 @@ void WarehouseEditorPresenter::setTile(int row, int column, TileType type)
         case CHARGING_STATION:
             m_layout->chargingStations()->appendChargingStation(*new ChargingStationPresenter(row, column, m_layout));
             break;
-        case POD_DOCK:
-            m_layout->podDocks()->appendPodDock(*new PodDockPresenter(row, column, m_layout));
+        case POD:
+            m_layout->pods()->appendPod(*new PodPresenter(row, column, m_layout));
             break;
         case DELIVERY_STATION:
             m_layout->deliveryStations()->appendDeliveryStation(*new DeliveryStationPresenter(row, column, m_layout));
@@ -164,8 +184,8 @@ void WarehouseEditorPresenter::removeTile(int row, int column)
         case CHARGING_STATION:
             m_layout->chargingStations()->removeChargingStation(row, column);
             break;
-        case POD_DOCK:
-            m_layout->podDocks()->removePodDock(row, column);
+        case POD:
+            m_layout->pods()->removePod(row, column);
             break;
         case DELIVERY_STATION:
             m_layout->deliveryStations()->removeDeliveryStation(row, column);
@@ -180,7 +200,7 @@ void WarehouseEditorPresenter::clearWarehouse()
 {
     m_layout->actors()->clear();
     m_layout->chargingStations()->clear();
-    m_layout->podDocks()->clear();
+    m_layout->pods()->clear();
     m_layout->deliveryStations()->clear();
 }
 
@@ -201,7 +221,7 @@ void WarehouseEditorPresenter::loadWarehouse(const QString& warehouseName)
 
             loadJsonObject(warehouseJsonObj);
 
-            m_currentWarehouseName = warehouseName;
+            m_currentWarehouseName         = warehouseName;
             emit currentWarehouseNameChanged(warehouseName);
         }
 }
@@ -251,16 +271,16 @@ void WarehouseEditorPresenter::loadJsonObject(const QJsonObject& json)
             }
         }
 
-        //Pod Docks
+        //Pods - IMPORTANT: Not podDock, beacuse it doesn't have ORDERS
         if (warehouseLayoutData.contains("PodDocks") && warehouseLayoutData["PodDocks"].isArray())
         {
-            QJsonArray podDocksJson = warehouseLayoutData["PodDocks"].toArray();
-            m_layout->podDocks()->loadJsonArray(podDocksJson);
+            QJsonArray podsJson = warehouseLayoutData["PodDocks"].toArray();
+            m_layout->pods()->loadJsonArray(podsJson);
 
-            for (int i = 0; i < m_layout->podDocks()->podDocks()->size(); ++i)
+            for (int i = 0; i < m_layout->pods()->pods()->size(); ++i)
             {
-                PodDockPresenter& podDock = *m_layout->podDocks()->podDocks()->at(i);
-                m_tileTypeTable[podDock.row()][podDock.column()] = POD_DOCK;
+                PodPresenter& pod = *m_layout->pods()->pods()->at(i);
+                m_tileTypeTable[pod.row()][pod.column()] = POD;
             }
         }
 
@@ -309,7 +329,8 @@ QJsonObject WarehouseEditorPresenter::saveJsonObject() const
     warehouseLayoutData.insert("ChargingStations", m_layout->chargingStations()->saveJsonArray());
     //TODO: No order ID
     warehouseLayoutData.insert("DeliveryStations", m_layout->deliveryStations()->saveJsonArray());
-    warehouseLayoutData.insert("PodDocks",         m_layout->podDocks()->saveJsonArray());
+    //Pods - IMPORTANT: Not podDock, beacuse it doesn't have ORDERS
+    warehouseLayoutData.insert("PodDocks",         m_layout->pods()->saveJsonArray());
     warehouseLayoutData.insert("DeliveryRobots",   m_layout->actors()->saveJsonArray());
 
     QJsonObject warehouseJsonObj;

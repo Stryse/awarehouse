@@ -6,7 +6,7 @@ import QtQuick.Controls.Material
 import Editor 1.0
 import ActorList           1.0
 import ChargingStationList 1.0
-import PodDockList         1.0
+import PodList             1.0
 import DeliveryStationList 1.0
 
 Item {
@@ -133,6 +133,8 @@ Item {
         Image {
             id: podImg
 
+            property variant orders: model.orders
+
             x: model.column * (root.cellSize + root.cellSpacing)
             y: model.row    * (root.cellSize + root.cellSpacing)
 
@@ -140,6 +142,30 @@ Item {
             height: root.cellSize
 
             source: model.image
+
+            GridView {
+                id: ordersGrid
+
+                anchors.centerIn: parent
+
+                clip: true
+
+                width:  parent.width * 0.8
+                height: width
+
+                cellWidth:  width  / 3
+                cellHeight: cellWidth
+
+                model: podImg.orders
+                delegate: Label {
+                    id: orderLabel
+
+                    text: modelData
+                    font.bold: true
+
+                    font.pixelSize: ordersGrid.cellWidth * 0.8
+                }
+            }
 
             MouseArea {
                 id: actorMouseArea
@@ -282,8 +308,8 @@ Item {
                 Repeater {
                     id: podRepeater
 
-                    model: PodDockListModel {
-                        podDocks: EditorPresenter.layout.podDocks
+                    model: PodListModel {
+                        pods: EditorPresenter.layout.pods
                     }
                     delegate: podComponent
                 }

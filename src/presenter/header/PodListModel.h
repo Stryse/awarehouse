@@ -18,12 +18,12 @@ public:
 
     enum
     {
-        RowRole = Qt::UserRole,
+        RotationRole = Qt::UserRole,
+        OrdersRole,
+        RowRole,
         ColumnRole,
-        RotationRole,
         ImageRole
     };
-
 
 //QAbstractItemModel interface
 public:
@@ -46,6 +46,8 @@ public:
 
 private:
     PodList* m_pods;
+
+    static QVector<int> m_roles;
 };
 
 #endif /* POD_LIST_MODEL__H */

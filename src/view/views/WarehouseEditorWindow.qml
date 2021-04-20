@@ -25,7 +25,7 @@ Item {
             tileColor:    "#80DEEA"
         }
         ListElement {
-            tileType:     TileType.POD_DOCK
+            tileType:     TileType.POD
             tileTypeName: "Pod"
             tileColor:    "#FFAB91"
         }

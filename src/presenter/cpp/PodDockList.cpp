@@ -23,26 +23,26 @@ bool PodDockList::setPodDockAt(int index, PodDockPresenter& podDock)
     return true;
 }
 
-void PodDockList::loadJsonArray(const QJsonArray& podDocksJSon)
-{
-    clear();
+//void PodDockList::loadJsonArray(const QJsonArray& podDocksJSon)
+//{
+//    clear();
 
-    for (int i = 0; i < podDocksJSon.size(); ++i)
-    {
-        PodDockPresenter* podDock = PodDockPresenter::loadJsonObject(podDocksJSon[i].toObject(), this);
-        if (podDock != nullptr)
-            appendPodDock(*podDock);
-    }
-}
+//    for (int i = 0; i < podDocksJSon.size(); ++i)
+//    {
+//        PodDockPresenter* podDock = PodDockPresenter::loadJsonObject(podDocksJSon[i].toObject(), this);
+//        if (podDock != nullptr)
+//            appendPodDock(*podDock);
+//    }
+//}
 
-QJsonArray PodDockList::saveJsonArray() const
-{
-    QJsonArray podDocksJsonArray;
-    for (const auto& podDock : m_podDocks)
-        podDocksJsonArray.append(podDock->saveJsonObject());
+//QJsonArray PodDockList::saveJsonArray() const
+//{
+//    QJsonArray podDocksJsonArray;
+//    for (const auto& podDock : m_podDocks)
+//        podDocksJsonArray.append(podDock->saveJsonObject());
 
-    return podDocksJsonArray;
-}
+//    return podDocksJsonArray;
+//}
 
 void PodDockList::appendPodDock(PodDockPresenter& podDock)
 {

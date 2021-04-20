@@ -111,7 +111,7 @@ Item {
                         Layout.row:       1
                         Layout.column:    0
 
-                        text: "X: " + model.destinationX  + " Y: " + model.destinationY
+                        text: "Row: " + model.podRow  + " Column: " + model.podColumn
                     }
                 }
             }

@@ -6,6 +6,7 @@ import QtQuick.Controls.Material
 import ActorList           1.0
 import ChargingStationList 1.0
 import PodDockList         1.0
+import PodList             1.0
 import DeliveryStationList 1.0
 
 Item {
@@ -24,19 +25,14 @@ Item {
     property int mapWidth:  columns * cellSize + (columns-1) * cellSpacing
     property int mapHeight: rows    * cellSize + (rows   -1) * cellSpacing
 
-    anchors.centerIn: parent
-    height:           parent.height * 0.7
+    anchors.horizontalCenter: parent.horizontalCenter
+    y: parent.height * 0.1 - controlLayout.height/2
+
+    height:           parent.height * 0.8
     width:            height * aspectRatio
 
     Material.background: Material.primary
     Material.elevation:  6
-
-    ListModel {
-        id: placeholderModel
-
-        ListElement { rowIdx: 1; columnIdx: 1; imgSource: "qrc:/placeholder_amogus.png"; rotationAngle: 35}
-        ListElement { rowIdx: 2; columnIdx: 0; imgSource: "qrc:/placeholder_amogus.png"; rotationAngle: 170}
-    }
 
     Component {
         id: baseComponent
@@ -96,10 +92,10 @@ Item {
     }
 
     Component {
-        id: podComponent
+        id: podDockComponent
 
         Image {
-            id: podImg
+            id: podDockImg
 
             x: model.column * (root.cellSize + root.cellSpacing)
             y: model.row    * (root.cellSize + root.cellSpacing)
@@ -108,6 +104,50 @@ Item {
             height: root.cellSize
 
             source: model.image
+        }
+    }
+
+    Component {
+        id: podComponent
+
+        Image {
+            id: podImg
+
+            property variant orders: model.orders
+
+            x: model.column * (root.cellSize + root.cellSpacing)
+            y: model.row    * (root.cellSize + root.cellSpacing)
+
+            width:  root.cellSize
+            height: root.cellSize
+
+            source: model.image
+
+            rotation: model.rotation
+
+            GridView {
+                id: ordersGrid
+
+                anchors.centerIn: parent
+
+                clip: true
+
+                width:  parent.width * 0.8
+                height: width
+
+                cellWidth:  width  / 3
+                cellHeight: cellWidth
+
+                model: podImg.orders
+                delegate: Label {
+                    id: orderLabel
+
+                    text: modelData
+                    font.bold: true
+
+                    font.pixelSize: ordersGrid.cellWidth * 0.8
+                }
+            }
         }
     }
 
@@ -188,17 +228,17 @@ Item {
                 }
             }
             Item {
-                id: actors
+                id: podDocks
 
                 anchors.fill: base
 
                 Repeater {
-                    id: actorRepeater
+                    id: podDockRepeater
 
-                    model: ActorListModel {
-                       actors: SimPresenter.layout.actors
+                    model: PodDockListModel {
+                        podDocks: SimPresenter.layout.podDocks
                     }
-                    delegate: actorComponent
+                    delegate: podDockComponent
                 }
             }
             Item {
@@ -216,20 +256,6 @@ Item {
                 }
             }
             Item {
-                id: pods
-
-                anchors.fill: base
-
-                Repeater {
-                    id: podRepeater
-
-                    model: PodDockListModel {
-                        podDocks: SimPresenter.layout.podDocks
-                    }
-                    delegate: podComponent
-                }
-            }
-            Item {
                 id: deliveryStations
 
                 anchors.fill: base
@@ -241,6 +267,34 @@ Item {
                         deliveryStations: SimPresenter.layout.deliveryStations
                     }
                     delegate: deliveryStationComponent
+                }
+            }
+            Item {
+                id: actors
+
+                anchors.fill: base
+
+                Repeater {
+                    id: actorRepeater
+
+                    model: ActorListModel {
+                       actors: SimPresenter.layout.actors
+                    }
+                    delegate: actorComponent
+                }
+            }
+            Item {
+                id: pods
+
+                anchors.fill: base
+
+                Repeater {
+                    id: podRepeater
+
+                    model: PodListModel {
+                        pods: SimPresenter.layout.pods
+                    }
+                    delegate: podComponent
                 }
             }
         }

@@ -39,17 +39,19 @@ void WarehouseLayoutPresenter::setColumns(int columns)
 }
 
 //Entity Getter
-ActorList           *WarehouseLayoutPresenter::actors()           { return &m_actors;           }
-ChargingStationList *WarehouseLayoutPresenter::chargingStations() { return &m_chargingStations; }
-PodDockList         *WarehouseLayoutPresenter::podDocks()         { return &m_podDocks;         }
-DeliveryStationList *WarehouseLayoutPresenter::deliveryStations() { return &m_deliveryStations; }
-TaskList            *WarehouseLayoutPresenter::tasks()            { return &m_tasks;            }
+ActorList*           WarehouseLayoutPresenter::actors()           { return &m_actors;           }
+ChargingStationList* WarehouseLayoutPresenter::chargingStations() { return &m_chargingStations; }
+PodDockList*         WarehouseLayoutPresenter::podDocks()         { return &m_podDocks;         }
+PodList*             WarehouseLayoutPresenter::pods()             { return &m_pods;             }
+DeliveryStationList* WarehouseLayoutPresenter::deliveryStations() { return &m_deliveryStations; }
+TaskList*            WarehouseLayoutPresenter::tasks()            { return &m_tasks;            }
 
-const ActorList           *WarehouseLayoutPresenter::actors()           const { return &m_actors;           }
-const ChargingStationList *WarehouseLayoutPresenter::chargingStations() const { return &m_chargingStations; }
-const PodDockList         *WarehouseLayoutPresenter::podDocks()         const { return &m_podDocks;         }
-const DeliveryStationList *WarehouseLayoutPresenter::deliveryStations() const { return &m_deliveryStations; }
-const TaskList            *WarehouseLayoutPresenter::tasks()            const { return &m_tasks;            }
+const ActorList*           WarehouseLayoutPresenter::actors()           const { return &m_actors;           }
+const ChargingStationList* WarehouseLayoutPresenter::chargingStations() const { return &m_chargingStations; }
+const PodDockList*         WarehouseLayoutPresenter::podDocks()         const { return &m_podDocks;         }
+const PodList*             WarehouseLayoutPresenter::pods()             const { return &m_pods;             }
+const DeliveryStationList* WarehouseLayoutPresenter::deliveryStations() const { return &m_deliveryStations; }
+const TaskList*            WarehouseLayoutPresenter::tasks()            const { return &m_tasks;            }
 
 void WarehouseLayoutPresenter::loadWarehouseLayout(const State* state)
 {
@@ -90,7 +92,7 @@ void WarehouseLayoutPresenter::loadWarehouseLayout(const State* state)
     auto& pods = state->getPods();
     for (size_t i = 0; i < pods.size(); ++i)
     {
-        auto podPresenter = new PodPresenter(pods[i],this);
+        auto podPresenter = new PodPresenter(pods[i], this);
         m_pods.appendPod(*podPresenter);
     }
 
