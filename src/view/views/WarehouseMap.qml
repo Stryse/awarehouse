@@ -176,10 +176,187 @@ Item {
 
                 onClicked: {
                     if (mouse.button === Qt.RightButton) {
+                        ordersPopup.open()
                         console.log("Opened Pod")
                     }
                     else if (mouse.button === Qt.MiddleButton)
                         EditorPresenter.removeTile(model.row, model.column)
+                }
+            }
+
+            Popup {
+                id: ordersPopup
+
+                anchors.centerIn: parent//Overlay.overlay
+                height:           root.height * 0.6
+                width:            root.width  * 0.27
+
+                Overlay.modal: Rectangle {
+                    color: Qt.rgba(0, 0, 0, 0.5)
+                }
+
+                background: Rectangle {
+                    color: Material.background
+                    radius: 2
+                }
+
+                verticalPadding:   10
+                horizontalPadding: 20
+
+                modal: true
+                focus: true
+                closePolicy: Popup.CloseOnEscape | Popup.CloseOnPressOutside
+
+                contentItem: Item {
+                    id: ordersPopupContent
+
+                    Label {
+                        id: ordersPopupLabel
+
+                        anchors {
+                            horizontalCenter: parent.horizontalCenter
+                            top:              parent.top
+                        }
+
+                        text:           qsTr("Orders")
+                        font.pixelSize: ordersPopupContent.height * 0.1
+                    }
+
+                    ListModel {
+                        id: ordersListModel
+                    }
+
+                    ListView {
+                        id: ordersList
+
+                        anchors {
+                            left: parent.left;       right:  parent.right
+                            top:  ordersPopupLabel.bottom; bottom: cancelOrdersPopup.top
+
+                            leftMargin:  ordersPopup.horizontalPadding * 0.1
+                            rightMargin: ordersPopup.horizontalPadding * 0.1
+                            topMargin:   ordersPopup.verticalPadding
+                        }
+                        clip: true
+
+                        focus:        true
+                        currentIndex: -1
+
+                        model: ordersListModel
+                        delegate: Item {
+                            id: orderRecord
+
+                            property bool   isChecked: model.isChecked
+                            property string labelText: model.orderName
+
+                            width:  ListView.view.width
+                            height: ordersList.height * 0.15
+
+                            CheckBox {
+                                id: isOrderSelectedCheckBox
+
+                                anchors {
+                                    left: parent.left
+                                }
+
+                                leftPadding:   10
+                                topPadding:    8
+                                bottomPadding: 8
+
+                                checked:          orderRecord.isChecked
+                                onCheckedChanged: model.isChecked = checked
+                            }
+
+                            Label {
+                                id: orderListLabel
+
+                                anchors {
+                                    left: isOrderSelectedCheckBox.right; right: parent.right
+                                    verticalCenter: isOrderSelectedCheckBox.verticalCenter
+                                }
+
+                                rightPadding:  10
+                                topPadding:    8
+                                bottomPadding: 8
+
+                                background: Rectangle {
+                                    color: orderRecord.ListView.isCurrentItem ? Material.primary : "transparent"
+                                    radius: 2
+                                }
+
+                                text: labelText
+                                font.pixelSize: ordersPopupLabel.height * 0.4
+                                color:          orderRecordMouseArea.containsMouse ? Material.accent : Material.foreground
+                            }
+
+                            MouseArea {
+                                id: orderRecordMouseArea
+
+                                acceptedButtons: Qt.NoButton
+
+                                anchors.fill: parent
+
+                                hoverEnabled: true
+                            }
+                        }
+                    }
+
+                    Button {
+                        id: cancelOrdersPopup
+
+                        anchors {
+                            right:  parent.right
+                            bottom: parent.bottom
+                        }
+
+                        flat:                true
+                        Material.background: Material.primary
+
+                        text:                qsTr("Cancel")
+                        font.pixelSize:      ordersPopupLabel.height * 0.35
+                        font.capitalization: Font.MixedCase;
+
+                        onClicked: ordersPopup.close()
+                    }
+                }
+
+                onAboutToShow: {
+                    //Omegalul top kek
+
+                    var orderCategoryCount = EditorPresenter.layout.categoryCount
+                    var currentOrders      = model.orders
+
+                    var i = 1;
+                    var j = 0;
+
+                    while (i <= orderCategoryCount && j < currentOrders.length) {
+                        if (i < parseInt(currentOrders[j], 10)) {
+                            ordersListModel.append({"isChecked": false, "orderName": i})
+                            ++i
+                        }
+                        else if (i > parseInt(currentOrders[j], 10)) {
+                            ordersListModel.append({"isChecked": false, "orderName": currentOrders[j]})
+                            ++j
+                        }
+                        else if (i === parseInt(currentOrders[j], 10)) {
+                            ordersListModel.append({"isChecked": true, "orderName": i})
+                            ++i
+                            ++j
+                        }
+                    }
+                    for (; i <= orderCategoryCount; ++i)
+                        ordersListModel.append({"isChecked": false, "orderName": i})
+                }
+
+                onClosed: {
+                    var orders = []
+                    for (var i = 0; i < ordersListModel.count; ++i)
+                        if (ordersListModel.get(i).isChecked)
+                            orders.push(ordersListModel.get(i).orderName)
+
+                    model.orders = orders
+
+                    ordersListModel.clear()
                 }
             }
         }

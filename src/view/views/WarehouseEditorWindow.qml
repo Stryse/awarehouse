@@ -19,26 +19,10 @@ Item {
     readonly property bool isDeafultWarehouse: currentWarehouse == "New" || currentWarehouse == "Default"
 
     readonly property ListModel tileList: ListModel {
-        ListElement {
-            tileType:     TileType.ACTOR
-            tileTypeName: "Actor"
-            tileColor:    "#80DEEA"
-        }
-        ListElement {
-            tileType:     TileType.POD
-            tileTypeName: "Pod"
-            tileColor:    "#FFAB91"
-        }
-        ListElement {
-            tileType:     TileType.CHARGING_STATION
-            tileTypeName: "Charging Station"
-            tileColor:    "#CE93D8"
-        }
-        ListElement {
-            tileType:     TileType.DELIVERY_STATION
-            tileTypeName: "Delivery Station"
-            tileColor:    "#A5D6A7"
-        }
+        ListElement { tileType: TileType.ACTOR;            tileTypeName: "Actor";            tileColor:    "#80DEEA" }
+        ListElement { tileType: TileType.POD;              tileTypeName: "Pod";              tileColor:    "#FFAB91" }
+        ListElement { tileType: TileType.CHARGING_STATION; tileTypeName: "Charging Station"; tileColor:    "#CE93D8" }
+        ListElement { tileType: TileType.DELIVERY_STATION; tileTypeName: "Delivery Station"; tileColor:    "#A5D6A7" }
 
         function getTileColor(type) {
             for (var i = 0; i < tileList.count; ++i) {
@@ -49,6 +33,156 @@ Item {
             }
 
             return Material.accent
+        }
+    }
+
+    SplitView {
+        id: horizontalSplit
+
+        readonly property real leftPanelMaxWidth: width * 0.25
+
+        anchors.fill: parent
+
+        orientation:  Qt.Horizontal
+
+        SplitView {
+            id: verticalSplit
+
+            readonly property real tabRatio: 2/7
+
+            SplitView.preferredWidth: horizontalSplit.leftPanelMaxWidth
+            SplitView.maximumWidth:   horizontalSplit.leftPanelMaxWidth
+
+            orientation:  Qt.Vertical
+
+            WarehouseSettingsTab {
+                id: warehouseSettings
+
+                SplitView.preferredHeight: parent.height * verticalSplit.tabRatio
+                SplitView.minimumHeight:   parent.height * verticalSplit.tabRatio
+
+                titleBarHeight: editorRoot.height * 0.05
+                borderWidth:    editorRoot.width  * 0.0025
+            }
+            WarehouseTilesTab {
+                id: warehouseTiles
+
+                SplitView.fillHeight:    true
+                SplitView.minimumHeight: parent.height * verticalSplit.tabRatio
+
+                titleBarHeight: editorRoot.height * 0.05
+                borderWidth:    editorRoot.width  * 0.0025
+            }
+        }
+
+        Pane {
+            id: editorArea
+
+            SplitView.fillWidth: true
+            padding: 0
+
+            Material.background: secondaryColor
+
+            Label {
+                id: previewLabel
+
+                anchors {
+                    left: parent.left
+                    top:  parent.top
+                }
+                leftPadding: editorRoot.width  * 0.01
+                topPadding:  editorRoot.height * 0.005
+
+                text:           qsTr("Preview")
+                font.pixelSize: editorRoot.height * 0.04
+            }
+
+            Label {
+                id: currentWarehouseLabel
+
+                anchors {
+                    left: previewLabel.left
+                    top:  previewLabel.bottom
+
+                    topMargin: height * -0.35
+                }
+                leftPadding: previewLabel.leftPadding
+
+                text: editorRoot.currentWarehouse
+
+                font.pixelSize: editorRoot.height * 0.026
+                font.weight: Font.Light
+                font.italic: true
+            }
+
+            RowLayout {
+                id: buttonsLayout
+
+                readonly property real buttonFontSize: height * 0.4
+
+                anchors {
+                    left:   parent.left;  right: parent.right
+                    bottom: parent.bottom
+
+                    leftMargin:   parent.width * 0.02; rightMargin: parent.width * 0.02
+                    bottomMargin: parent.height * 0.02
+                }
+                height: parent.height * 0.06
+
+                Button {
+                    id: saveButton
+
+                    Layout.fillHeight:   true
+
+                    flat:                true
+                    Material.background: Material.primary
+
+                    text:                qsTr("Save")
+                    font.pixelSize:      buttonsLayout.buttonFontSize
+                    font.capitalization: Font.MixedCase;
+
+                    onClicked: saveWarehousePopup.open();
+                }
+                Button {
+                    id: loadButton
+
+                    Layout.fillHeight:   true
+
+                    flat:                true
+                    Material.background: Material.primary
+
+                    text:                qsTr("Load")
+                    font.pixelSize:      buttonsLayout.buttonFontSize
+                    font.capitalization: Font.MixedCase;
+
+                    onClicked: loadWarehousePopup.open();
+                }
+                //Space filler
+                Item {
+                    id: space
+
+                    Layout.fillWidth:  true
+                    Layout.fillHeight: true
+                }
+                Button {
+                    id: cancelButton
+
+                    Layout.fillHeight:   true
+
+                    flat:                true
+                    Material.background: Material.primary
+
+                    text:                qsTr("Cancel")
+                    font.pixelSize:      buttonsLayout.buttonFontSize
+                    font.capitalization: Font.MixedCase;
+
+                    onClicked: editorRoot.editorClosed()
+                }
+            }
+
+            WarehouseMap {
+                id: warehouse
+            }
         }
     }
 
@@ -478,156 +612,6 @@ Item {
             EditorPresenter.saveWarehouse(warehouseName);
 
             console.log("Saved " + warehouseName + " warehouse!")
-        }
-    }
-
-    SplitView {
-        id: horizontalSplit
-
-        readonly property real leftPanelMaxWidth: width * 0.25
-
-        anchors.fill: parent
-
-        orientation:  Qt.Horizontal
-
-        SplitView {
-            id: verticalSplit
-
-            readonly property real tabRatio: 2/7
-
-            SplitView.preferredWidth: horizontalSplit.leftPanelMaxWidth
-            SplitView.maximumWidth:   horizontalSplit.leftPanelMaxWidth
-
-            orientation:  Qt.Vertical
-
-            WarehouseSettingsTab {
-                id: warehouseSettings
-
-                SplitView.preferredHeight: parent.height * verticalSplit.tabRatio
-                SplitView.minimumHeight:   parent.height * verticalSplit.tabRatio
-
-                titleBarHeight: editorRoot.height * 0.05
-                borderWidth:    editorRoot.width  * 0.0025
-            }
-            WarehouseTilesTab {
-                id: warehouseTiles
-
-                SplitView.fillHeight:    true
-                SplitView.minimumHeight: parent.height * verticalSplit.tabRatio
-
-                titleBarHeight: editorRoot.height * 0.05
-                borderWidth:    editorRoot.width  * 0.0025
-            }
-        }
-
-        Pane {
-            id: editorArea
-
-            SplitView.fillWidth: true
-            padding: 0
-
-            Material.background: secondaryColor
-
-            Label {
-                id: previewLabel
-
-                anchors {
-                    left: parent.left
-                    top:  parent.top
-                }
-                leftPadding: editorRoot.width  * 0.01
-                topPadding:  editorRoot.height * 0.005
-
-                text:           qsTr("Preview")
-                font.pixelSize: editorRoot.height * 0.04
-            }
-
-            Label {
-                id: currentWarehouseLabel
-
-                anchors {
-                    left: previewLabel.left
-                    top:  previewLabel.bottom
-
-                    topMargin: height * -0.35
-                }
-                leftPadding: previewLabel.leftPadding
-
-                text: editorRoot.currentWarehouse
-
-                font.pixelSize: editorRoot.height * 0.026
-                font.weight: Font.Light
-                font.italic: true
-            }
-
-            RowLayout {
-                id: buttonsLayout
-
-                readonly property real buttonFontSize: height * 0.4
-
-                anchors {
-                    left:   parent.left;  right: parent.right
-                    bottom: parent.bottom
-
-                    leftMargin:   parent.width * 0.02; rightMargin: parent.width * 0.02
-                    bottomMargin: parent.height * 0.02
-                }
-                height: parent.height * 0.06
-
-                Button {
-                    id: saveButton
-
-                    Layout.fillHeight:   true
-
-                    flat:                true
-                    Material.background: Material.primary
-
-                    text:                qsTr("Save")
-                    font.pixelSize:      buttonsLayout.buttonFontSize
-                    font.capitalization: Font.MixedCase;
-
-                    onClicked: saveWarehousePopup.open();
-                }
-                Button {
-                    id: loadButton
-
-                    Layout.fillHeight:   true
-
-                    flat:                true
-                    Material.background: Material.primary
-
-                    text:                qsTr("Load")
-                    font.pixelSize:      buttonsLayout.buttonFontSize
-                    font.capitalization: Font.MixedCase;
-
-                    onClicked: loadWarehousePopup.open();
-                }
-                //Space filler
-                Item {
-                    id: space
-
-                    Layout.fillWidth:  true
-                    Layout.fillHeight: true
-                }
-                Button {
-                    id: cancelButton
-
-                    Layout.fillHeight:   true
-
-                    flat:                true
-                    Material.background: Material.primary
-
-                    text:                qsTr("Cancel")
-                    font.pixelSize:      buttonsLayout.buttonFontSize
-                    font.capitalization: Font.MixedCase;
-
-                    onClicked: editorRoot.editorClosed()
-                }
-            }
-
-            WarehouseMap {
-                id: warehouse
-            }
         }
     }
 }

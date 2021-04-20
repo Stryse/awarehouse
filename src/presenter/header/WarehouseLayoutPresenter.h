@@ -21,6 +21,8 @@ class WarehouseLayoutPresenter : public QObject
 {
     Q_OBJECT
 
+    Q_PROPERTY(                  int categoryCount    READ categoryCount    NOTIFY categoryCountChanged               )
+
     Q_PROPERTY(                  int rows             READ rows             WRITE    setRows    NOTIFY rowsChanged    )
     Q_PROPERTY(                  int columns          READ columns          WRITE    setColumns NOTIFY columnsChanged )
     Q_PROPERTY(           ActorList* actors           READ actors           CONSTANT                                  )
@@ -41,6 +43,8 @@ public:
 
     int rows()    const;
     int columns() const;
+
+    int categoryCount() const;
 
     //Setter
     void setRows(int value);
@@ -69,6 +73,8 @@ private:
 signals:
     void rowsChanged(int rows);
     void columnsChanged(int columns);
+
+    void categoryCountChanged(int categoryCount);
 
 private:
     int m_rows;
