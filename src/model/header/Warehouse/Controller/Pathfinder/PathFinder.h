@@ -28,25 +28,28 @@ struct Node
 
     int gCost;
     int hCost;
+    bool moved;
 
     std::shared_ptr<Node> cameFrom; // Node we came from
 
-    explicit Node(std::pair<int, int> coords, DirectionVector<> arriveOrientation, int byTime, int byEnergy)
+    explicit Node(std::pair<int, int> coords, DirectionVector<> arriveOrientation, int byTime, int byEnergy, bool moved)
 
         : coords(std::move(coords)),
           arriveOrientation(std::move(arriveOrientation)),
           byTime(byTime),
           byEnergy(byEnergy),
+          moved(moved),
           cameFrom(nullptr)
     {
     }
 
-    explicit Node(std::pair<int, int> coords, DirectionVector<> arriveOrientation, int byTime, int byEnergy,
+    explicit Node(std::pair<int, int> coords, DirectionVector<> arriveOrientation, int byTime, int byEnergy, bool moved,
                   int gCost, int hCost, std::shared_ptr<Node> cameFrom = nullptr)
         : coords(std::move(coords)),
           arriveOrientation(std::move(arriveOrientation)),
           byTime(byTime),
           byEnergy(byEnergy),
+          moved(moved),
           gCost(gCost),
           hCost(hCost),
           cameFrom(std::move(cameFrom))
@@ -66,7 +69,7 @@ struct NodeComparator
 {
     bool operator()(const std::shared_ptr<Node> &lhs, const std::shared_ptr<Node> &rhs)
     {
-        return lhs->getScore() >= rhs->getScore();
+        return lhs->getScore() > rhs->getScore();
     }
 };
 
@@ -88,6 +91,11 @@ public:
      *****************************************************************/
     void claimPath(const std::vector<std::shared_ptr<Node>> &path);
 
+    /******************************************************************
+     * @brief Registers a Space-Time-3 coordinate in the reservation table
+     ******************************************************************/
+    void claimST3(const std::tuple<int,int,int> &st3);
+
     /*****************************************************************
      * @brief Returns whether Coordinate (X,Y) is safe at timestamp T
      *****************************************************************/
@@ -97,7 +105,12 @@ public:
      * @brief Returns whether Coordinate (X,Y) can be occupied according
      * to static obstacles
      *****************************************************************/
-    bool safeStatic(const std::pair<int, int> &coord) const;
+    bool safeSoftStatic(const std::pair<int, int> &coord, const Point<>& destination) const;
+
+    /*******************************************************************
+     * @brief 
+     *******************************************************************/
+    bool safeHardStatic(const std::pair<int, int> &coord, const Point<>& destination) const;
 
     /********************************************************************
      * @brief Returns whether Coordinate (X,Y) can be occupied according
@@ -121,29 +134,31 @@ private:
     std::array<std::shared_ptr<Node>, 5> findNeighbours(Node &node, const IMoveMechanism &moveMechanism) const;
 
     /**********************************************************************
-     * @brief Registers a node in the reservationTable
+     * @brief Registers a node in the reservationTable.
      **********************************************************************/
     void registerNode(const std::shared_ptr<Node> &node);
 
     /***********************************************************************
-     * @brief Compare point to pair without conversion
+     * @brief Compare point to pair without conversion.
      ***********************************************************************/
     static bool PointToPairEqualityAdapter(const Point<> &point, const std::pair<int, int> &pair);
 
     /***********************************************************************
-     * @brief 
+     * @brief Admissible and Consistent heuristic.
      ***********************************************************************/
     static int ManhattanHeuristic(const Node &node, const Point<> &point);
 
     /*******************************************************************************
-     * @brief 
+     * @brief Returns a Node sequence of the path with ending node provided.
      *******************************************************************************/
     std::vector<std::shared_ptr<Node>> tracePath(const std::shared_ptr<Node>& node) const;
 
 private:
-    std::unordered_set<std::pair<int, int>, boost::hash<std::pair<int, int>>> staticObstacles;
+    std::unordered_set<std::pair<int, int>, boost::hash<std::pair<int, int>>> softStaticObstacles;
+    std::unordered_set<std::pair<int, int>, boost::hash<std::pair<int, int>>> hardStaticObstacles;
+
     std::unordered_map<std::pair<int, int>, int, boost::hash<std::pair<int, int>>> semiStaticObstacles;
-    std::unordered_set<std::tuple<int, int, int>, boost::hash<std::tuple<int, int, int>>> reservationTable;
+    std::unordered_set<std::tuple<int, int, int>, boost::hash<std::tuple<int,int,int>>> reservationTable;
 
     size_t ROWS;
     size_t COLS;

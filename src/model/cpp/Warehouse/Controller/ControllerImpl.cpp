@@ -46,36 +46,50 @@ void ControllerImpl::broadcastMessages(int timeStamp)
 
 void ControllerImpl::translatePath(const std::vector<std::shared_ptr<Node>> &path, int address)
 {
-    for (const std::shared_ptr<Node> &node : path)
-        controlMessages.emplace(std::make_pair(node->gCost - node->byTime,TargetedMessage(address,directionToMessage.find(node->arriveOrientation)->second)));
+    for (size_t i = 0; i < path.size(); ++i)
+    {
+        if (path[i]->moved == false)
+            continue;
+
+        controlMessages.emplace(std::make_pair(path[i]->gCost - path[i]->byTime,
+                                               TargetedMessage(address, directionToMessage.find(path[i]->arriveOrientation)->second)));
+    }
 }
 
 void ControllerImpl::setPathFinder(PathFinder *pathFinder) { this->pathFinder = pathFinder; }
 
 bool ControllerImpl::PlanTask(TaskAssignment *assignment)
 {
-    if (assignment->controlData->address == 100)
+    std::vector<std::vector<std::shared_ptr<Node>>> roundTrip;
+
+    // ############################################ Trip To Pod ####################################################
+    controlMessages.emplace(std::make_pair(0, TargetedMessage(assignment->controlData->address, MControlGranted)));
+    roundTrip.emplace_back(pathFinder->findPath(assignment->controlData->moveMechanism.getBody()->getPose().getPosition(),
+                                                assignment->task->getWayPoints()[0],
+                                                assignment->controlData->moveMechanism.getBody()->getPose().getOrientation(),
+                                                0, assignment->controlData->moveMechanism));
+
+    pathFinder->claimPath(roundTrip[0]);
+    translatePath(roundTrip[0], assignment->controlData->address);
+
+    // ######################################### Trip to Destinations #################################################
+    int sumEnergy = roundTrip[0][0]->byEnergy;
+    for (int i = 1; i < 3; ++i)
     {
-        controlMessages.emplace(std::make_pair(0, TargetedMessage(100, MControlGranted)));
-        std::vector<std::shared_ptr<Node>> pathToTask = pathFinder->findPath(assignment->controlData->moveMechanism.getBody()->getPose().getPosition(),
-                                                                             Point<>(7, 8, 0),
-                                                                             assignment->controlData->moveMechanism.getBody()->getPose().getOrientation(),
-                                                                             0, assignment->controlData->moveMechanism);
+        roundTrip.emplace_back(pathFinder->findPath(Point<>(roundTrip[i - 1][0]->coords.first, roundTrip[i - 1][0]->coords.second),
+                                                    assignment->task->getWayPoints()[i],
+                                                    roundTrip[i - 1][0]->arriveOrientation,
+                                                    roundTrip[i - 1][0]->gCost, assignment->controlData->moveMechanism));
 
-        pathFinder->claimPath(pathToTask);
+        sumEnergy += roundTrip[i][0]->byEnergy;
+        pathFinder->claimPath(roundTrip[i]);
+        //pathFinder->claimST3(std::make_tuple(roundTrip[i][0]->coords.first, roundTrip[i][0]->coords.second, roundTrip[i][0]->gCost+3));
 
-        
-        std::vector<std::shared_ptr<Node>> pathToTask2 = pathFinder->findPath(Point<>(7, 8, 0),
-                                                                             Point<>(0, 0, 0),
-                                                                             pathToTask[0]->arriveOrientation,
-                                                                             pathToTask[0]->gCost, assignment->controlData->moveMechanism);
-        
-        pathFinder->claimPath(pathToTask2);
-
-        translatePath(pathToTask, assignment->controlData->address);
-        translatePath(pathToTask2,assignment->controlData->address);
-        std::cout << pathToTask[0]->byEnergy + pathToTask2[0]->byEnergy << std::endl;
+        translatePath(roundTrip[i], assignment->controlData->address);
     }
+
+    // ################################################ Finish #########################################################
+    std::cout << sumEnergy << "IP " << assignment->controlData->address << std::endl;
     return true;
 }
 
