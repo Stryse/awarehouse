@@ -69,6 +69,11 @@ public:
     explicit DirectionVector(const Point<CoordinateT, N> &sourcePoint)
         : coordinates(sourcePoint.getCoordinates()) {}
 
+    /****************************************************
+     * @brief Create DirectionVector with undefined value
+     ****************************************************/
+    DirectionVector() {}
+
     /***************************************************
      * @brief Dot product of two vectors
      * @return CoordinateT: scalar

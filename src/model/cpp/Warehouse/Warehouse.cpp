@@ -28,7 +28,7 @@ void Warehouse::tick()
     ++timeStamp;
 }
 
-bool Warehouse::loadState(const QString &srcPath, const Settings* settings)
+bool Warehouse::loadState(const QString &srcPath, const Settings *settings)
 {
     state.reset(persistence->load(srcPath, settings));
     if (state)
@@ -37,6 +37,7 @@ bool Warehouse::loadState(const QString &srcPath, const Settings* settings)
         setupNetwork(*state);
         scheduler->setTaskManager(&state->getTaskManager());
         scheduler->setController(controller.get());
+        controller->setPathFinder(&state->getPathFinder());
         tick();
 
         // TODO REMOVE

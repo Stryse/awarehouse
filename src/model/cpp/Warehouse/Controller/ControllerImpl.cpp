@@ -1,9 +1,15 @@
 #include "ControllerImpl.h"
+#include "AMotor.h"
+#include "IMoveMechanism.h"
 #include "NetworkMessage.h"
+#include "PathFinder.h"
 #include "SchedulerImpl.h"
+#include "Task.h"
+#include <iostream>
 
-ControllerImpl::ControllerImpl()
-    : MControlGranted(std::make_shared<AgentControlGrantedMessage>(0x2)),
+ControllerImpl::ControllerImpl(PathFinder *pathFinder)
+    : pathFinder(pathFinder),
+      MControlGranted(std::make_shared<AgentControlGrantedMessage>(0x2)),
       MMoveAgentUp(std::make_shared<MoveAgentMessage>(DirectionVector<>::UP(), 0x2)),
       MMoveAgentDown(std::make_shared<MoveAgentMessage>(DirectionVector<>::DOWN(), 0x2)),
       MMoveAgentLeft(std::make_shared<MoveAgentMessage>(DirectionVector<>::LEFT(), 0x2)),
@@ -13,14 +19,10 @@ ControllerImpl::ControllerImpl()
       MPutdownOrder(std::make_shared<PutDownOrderMessage>(0x2))
 {
     controlMessages.reserve(500);
-
-    // controlMessages.emplace(std::make_pair(0, TargetedMessage(100, MControlGranted)));
-    // controlMessages.emplace(std::make_pair(0, TargetedMessage(100, MMoveAgentUp)));
-    // controlMessages.emplace(std::make_pair(1, TargetedMessage(100, MMoveAgentUp)));
-
-    // controlMessages.emplace(std::make_pair(0, TargetedMessage(101, MControlGranted)));
-    // controlMessages.emplace(std::make_pair(0, TargetedMessage(101, MMoveAgentLeft)));
-    // controlMessages.emplace(std::make_pair(2, TargetedMessage(101, MMoveAgentLeft)));
+    directionToMessage.emplace(std::make_pair(DirectionVector<>::UP(), MMoveAgentUp));
+    directionToMessage.emplace(std::make_pair(DirectionVector<>::DOWN(), MMoveAgentDown));
+    directionToMessage.emplace(std::make_pair(DirectionVector<>::LEFT(), MMoveAgentLeft));
+    directionToMessage.emplace(std::make_pair(DirectionVector<>::RIGHT(), MMoveAgentRight));
 }
 
 ControllerImpl::~ControllerImpl()
@@ -42,16 +44,52 @@ void ControllerImpl::broadcastMessages(int timeStamp)
     controlMessages.erase(messages.first, messages.second);
 }
 
-// //void receive(TaskPlanRequest &message)
-// {
-//     std::unique_ptr<TaskAssignment> assignment = std::move(message.getAssignment());
-// }
+void ControllerImpl::translatePath(const std::vector<std::shared_ptr<Node>> &path, int address)
+{
+    for (size_t i = 0; i < path.size(); ++i)
+    {
+        if (path[i]->moved == false)
+            continue;
+
+        controlMessages.emplace(std::make_pair(path[i]->gCost - path[i]->byTime,
+                                               TargetedMessage(address, directionToMessage.find(path[i]->arriveOrientation)->second)));
+    }
+}
+
+void ControllerImpl::setPathFinder(PathFinder *pathFinder) { this->pathFinder = pathFinder; }
 
 bool ControllerImpl::PlanTask(TaskAssignment *assignment)
 {
+    std::vector<std::vector<std::shared_ptr<Node>>> roundTrip;
+
+    // ############################################ Trip To Pod ####################################################
     controlMessages.emplace(std::make_pair(0, TargetedMessage(assignment->controlData->address, MControlGranted)));
-    controlMessages.emplace(std::make_pair(0, TargetedMessage(assignment->controlData->address, MMoveAgentLeft)));
-    controlMessages.emplace(std::make_pair(2, TargetedMessage(assignment->controlData->address, MMoveAgentLeft)));
+    roundTrip.emplace_back(pathFinder->findPathSoft(assignment->controlData->moveMechanism.getBody()->getPose().getPosition(),
+                                                    assignment->task->getWayPoints()[0],
+                                                    assignment->controlData->moveMechanism.getBody()->getPose().getOrientation(),
+                                                    0, assignment->controlData->moveMechanism));
+
+    pathFinder->claimPath(roundTrip[0]);
+    translatePath(roundTrip[0], assignment->controlData->address);
+    // ####### Pickup Pod #######
+    controlMessages.emplace(std::make_pair(roundTrip[0][0]->gCost, TargetedMessage(assignment->controlData->address, MPickupPod)));
+    // ######################################### Trip to Destinations #################################################
+    int sumEnergy = roundTrip[0][0]->byEnergy;
+    for (int i = 1; i < 3; ++i)
+    {
+        roundTrip.emplace_back(pathFinder->findPathHard(Point<>(roundTrip[i - 1][0]->coords.first, roundTrip[i - 1][0]->coords.second),
+                                                    assignment->task->getWayPoints()[i],
+                                                    roundTrip[i - 1][0]->arriveOrientation,
+                                                    roundTrip[i - 1][0]->gCost + 1, assignment->controlData->moveMechanism));
+
+        sumEnergy += roundTrip[i][0]->byEnergy;
+        pathFinder->claimPath(roundTrip[i]);
+
+        translatePath(roundTrip[i], assignment->controlData->address);
+    }
+
+    //################################################ Finish #########################################################
+    std::cout << "SumEnergy: " << sumEnergy << " Address: " << assignment->controlData->address << std::endl;
     return true;
 }
 

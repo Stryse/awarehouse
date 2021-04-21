@@ -1,4 +1,5 @@
 #include "State.h"
+#include "PathFinder.h"
 #include <iostream>
 
 State::State(const std::shared_ptr<ObservableNavEnvironment> &environment,
@@ -16,6 +17,7 @@ State::State(const std::shared_ptr<ObservableNavEnvironment> &environment,
       podDocks(podDocks),
       pods(pods),
       robots(robots),
+      pathFinder(*this),
       taskManager(this->podDocks, this->deliveryStations)
 {
 }
@@ -35,6 +37,7 @@ State::State(std::shared_ptr<ObservableNavEnvironment> &&environment,
       podDocks(std::move(podDocks)),
       pods(std::move(pods)),
       robots(std::move(robots)),
+      pathFinder(*this),
       taskManager(this->podDocks, this->deliveryStations)
 {
 }
@@ -56,6 +59,9 @@ const std::vector<std::shared_ptr<PodDock>> &State::getPodDocks() const { return
 const std::vector<Pod<OrderModel> *> &State::getPods() const { return pods; }
 const std::vector<std::shared_ptr<DeliveryStation>> &State::getDeliveryStations() const { return deliveryStations; }
 const std::vector<std::shared_ptr<DeliveryRobot>> &State::getRobots() const { return robots; }
+
+const PathFinder &State::getPathFinder() const { return pathFinder; }
+PathFinder &State::getPathFinder() { return pathFinder; }
 
 const TaskManager &State::getTaskManager() const { return taskManager; }
 TaskManager &State::getTaskManager() { return taskManager; }

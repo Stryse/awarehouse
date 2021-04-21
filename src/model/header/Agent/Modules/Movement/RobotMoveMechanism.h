@@ -104,18 +104,18 @@ public:
     /*************************************************************************************************
      * @brief Sum of energy cost of a motorAction that leads to the provided (reachable!) direction.
      *************************************************************************************************/
-    virtual int getEnergyCost(const DirectionVector &direction) const override
+    virtual int getEnergyCost(const DirectionVector &startOrientation, const DirectionVector &direction) const override
     {
-        return RobotMoveMechanism::turnCost * (-DirectionVector::dot(direction, this->body->getPose().getOrientation()) + 1) +
+        return RobotMoveMechanism::turnCost * (-DirectionVector::dot(direction, startOrientation) + 1) +
                RobotMoveMechanism::moveCost;
     }
 
     /*************************************************************************************************
      * @brief Sum of time cost of a motorAction that leads to the provided (reachable!) direction.
      *************************************************************************************************/
-    virtual int getTimeCost(const DirectionVector &direction) const override
+    virtual int getTimeCost(const DirectionVector &startOrientation, const DirectionVector &direction) const override
     {
-        return RobotMoveMechanism::turnDuration * (-DirectionVector::dot(direction, this->body->getPose().getOrientation()) + 1) +
+        return RobotMoveMechanism::turnDuration * (-DirectionVector::dot(direction, startOrientation) + 1) +
                RobotMoveMechanism::moveDuration;
     }
 
