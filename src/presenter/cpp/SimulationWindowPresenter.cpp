@@ -13,6 +13,8 @@ SimulationWindowPresenter::SimulationWindowPresenter(PersistencePresenter* persi
     , m_layout(new WarehouseLayoutPresenter(this))
     , m_paused(true)
     , m_persistence(persistence == nullptr ? new PersistencePresenter(this) : persistence)
+    , m_time(0)
+
 {
     loadWarehouse(PersistencePresenter::defaultWarehouseName);
     m_manager.getDisplayedWarehouseSimulator()->onTick.connect([=](){
