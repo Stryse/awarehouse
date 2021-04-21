@@ -11,10 +11,10 @@
         <file alias="speed_white.png">icons/speed_white.png</file>
         <file alias="app_icon.png">icons/app_icon.png</file>
         <file>maps/Map01.json</file>
-        <file>images/chstation.png</file>
-        <file>images/pod.png</file>
-        <file>images/robot.png</file>
-        <file>images/tile.png</file>
-        <file alias="placeholder_amogus.png">images/placeholder_amogus.png</file>
+        <file alias="actorImg.png">images/actorImg.png</file>
+        <file alias="chargingStationImg.png">images/chargingStationImg.png</file>
+        <file alias="deliveryStationImg.png">images/deliveryStationImg.png</file>
+        <file alias="podDockImg.png">images/podDockImg.png</file>
+        <file alias="podImg.png">images/podImg.png</file>
     </qresource>
 </RCC>

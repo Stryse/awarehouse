@@ -6,7 +6,7 @@
 #include "Pod.h"
 #include "Body.h"
 
-QString PodPresenter::m_static_imagePath = "qrc:/placeholder_amogus.png";
+QString PodPresenter::m_static_imagePath = "qrc:/podImg.png";
 
 PodPresenter::PodPresenter(const Pod<OrderModel>* model,
                                          QObject* parent)

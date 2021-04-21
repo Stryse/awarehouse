@@ -3,7 +3,7 @@
 //Model
 #include "DeliveryStation.h"
 
-QString DeliveryStationPresenter::m_static_imagePath = "qrc:/placeholder_amogus.png";
+QString DeliveryStationPresenter::m_static_imagePath = "qrc:/deliveryStationImg.png";
 
 DeliveryStationPresenter::DeliveryStationPresenter(const DeliveryStation* model,
                                                                  QObject* parent)

@@ -9,7 +9,7 @@
 #include "Body.h"
 #include "Tile.h"
 
-QString ActorPresenter::m_static_imagePath = /*"qrc:/images/robot.png"*/"qrc:/placeholder_amogus.png";
+QString ActorPresenter::m_static_imagePath = "qrc:/actorImg.png";
 
 ActorPresenter::ActorPresenter(const DeliveryRobot* model,
                                            QObject* parent)
