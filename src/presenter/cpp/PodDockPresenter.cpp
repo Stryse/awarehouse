@@ -3,7 +3,7 @@
 //Model
 #include "PodDock.h"
 
-QString PodDockPresenter::m_static_imagePath = "qrc:/images/pod.png";
+QString PodDockPresenter::m_static_imagePath = "qrc:/podDockImg.png";
 
 PodDockPresenter::PodDockPresenter(const PodDock* model,
                                          QObject* parent)
