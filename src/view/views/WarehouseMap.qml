@@ -15,10 +15,10 @@ Item {
     property int rows:    EditorPresenter.layout.rows
     property int columns: EditorPresenter.layout.columns
 
-    property int   cellSpacing: 1
-    property real  cellScale:   zoomArea.zoomScale
-    property real  cellSize:    Math.round(Math.min(height / rows    - cellSpacing,
-                                                    width  / columns - cellSpacing) * cellScale)
+    property int  cellSpacing: 1
+    property real cellScale:   zoomArea.zoomScale
+    property real cellSize:    Math.round(Math.min(height / rows    - cellSpacing,
+                                                   width  / columns - cellSpacing) * cellScale)
 
     property int mapWidth:  columns * cellSize + (columns-1) * cellSpacing
     property int mapHeight: rows    * cellSize + (rows   -1) * cellSpacing
@@ -68,15 +68,25 @@ Item {
         Image {
             id: actorImg
 
-            x: model.column * (root.cellSize + root.cellSpacing)
-            y: model.row    * (root.cellSize + root.cellSpacing)
+              x: model.column * (root.cellSize + root.cellSpacing)
+              y: model.row    * (root.cellSize + root.cellSpacing)
 
-            width:  root.cellSize
-            height: root.cellSize
+              width:  root.cellSize
+              height: root.cellSize
 
-            source: model.image
+              source: model.image
 
-            rotation: model.rotation
+              rotation: model.rotation
+
+              Behavior on rotation {
+                  id: rotationBehavior
+
+                  PropertyAnimation {
+                      properties: "rotation"
+                      easing.type: Easing.InOutQuart
+                      from: actorImg.rotation % 360 == 0 ? (actorImg.rotation == 0 && rotationBehavior.targetValue === 270 ? 360 : 0) : model.rotation
+                      to: from === 270 && rotationBehavior.targetValue === 0 ? 360 : rotationBehavior.targetValue}
+              }
 
             MouseArea {
                 id: actorMouseArea
@@ -88,7 +98,6 @@ Item {
                 onClicked: {
                     if (mouse.button === Qt.RightButton) {
                         rotateActor()
-                        console.log(model.rotation)
                     }
                     else if (mouse.button === Qt.MiddleButton)
                         EditorPresenter.removeTile(model.row, model.column)
@@ -130,8 +139,8 @@ Item {
     Component {
         id: podComponent
 
-        Image {
-            id: podImg
+        Item {
+            id: podItem
 
             property variant orders: model.orders
 
@@ -141,29 +150,45 @@ Item {
             width:  root.cellSize
             height: root.cellSize
 
-            source: model.image
+            Image {
+                id: podDockImg
 
-            GridView {
-                id: ordersGrid
+                anchors.fill: parent
+
+                source: "qrc:/podDockImg.png"
+            }
+
+            Image {
+                id: podImg
 
                 anchors.centerIn: parent
-
-                clip: true
-
-                width:  parent.width * 0.8
+                width:  parent.width * 0.85
                 height: width
 
-                cellWidth:  width  / 3
-                cellHeight: cellWidth
+                source: model.image
 
-                model: podImg.orders
-                delegate: Label {
-                    id: orderLabel
+                GridView {
+                    id: ordersGrid
 
-                    text: modelData
-                    font.bold: true
+                    anchors.centerIn: parent
 
-                    font.pixelSize: ordersGrid.cellWidth * 0.8
+                    clip: true
+
+                    width:  parent.width * 0.8
+                    height: width
+
+                    cellWidth:  width  / 3
+                    cellHeight: cellWidth
+
+                    model: podItem.orders
+                    delegate: Label {
+                        id: orderLabel
+
+                        text: modelData
+                        font.bold: true
+
+                        font.pixelSize: ordersGrid.cellWidth * 0.8
+                    }
                 }
             }
 
@@ -187,7 +212,7 @@ Item {
 
                 anchors.centerIn: Overlay.overlay
                 height:           root.height * 0.6
-                width:            root.width  * 0.27
+                width:            root.width  * 0.2
 
                 Overlay.modal: Rectangle {
                     color: Qt.rgba(0, 0, 0, 0.5)
@@ -228,7 +253,7 @@ Item {
                         id: ordersList
 
                         anchors {
-                            left: parent.left;       right:  parent.right
+                            left: parent.left;             right:  parent.right
                             top:  ordersPopupLabel.bottom; bottom: cancelOrdersPopup.top
 
                             leftMargin:  ordersPopup.horizontalPadding * 0.1
@@ -250,41 +275,45 @@ Item {
                             width:  ListView.view.width
                             height: ordersList.height * 0.15
 
-                            CheckBox {
-                                id: isOrderSelectedCheckBox
+                            Item {
+                                id: orderItem
 
                                 anchors {
-                                    left: parent.left
+                                    top: parent.top; bottom: parent.bottom
+                                    horizontalCenter: parent.horizontalCenter
+                                }
+                                width: isOrderSelectedCheckBox.implicitWidth + orderListLabel.implicitWidth
+
+                                CheckBox {
+                                    id: isOrderSelectedCheckBox
+
+                                    topPadding:    8
+                                    bottomPadding: 8
+
+                                    checked:          orderRecord.isChecked
+                                    onCheckedChanged: model.isChecked = checked
                                 }
 
-                                leftPadding:   10
-                                topPadding:    8
-                                bottomPadding: 8
+                                Label {
+                                    id: orderListLabel
 
-                                checked:          orderRecord.isChecked
-                                onCheckedChanged: model.isChecked = checked
-                            }
+                                    anchors {
+                                        left: isOrderSelectedCheckBox.right; right: parent.right
+                                        verticalCenter: isOrderSelectedCheckBox.verticalCenter
+                                    }
 
-                            Label {
-                                id: orderListLabel
+                                    topPadding:    8
+                                    bottomPadding: 8
 
-                                anchors {
-                                    left: isOrderSelectedCheckBox.right; right: parent.right
-                                    verticalCenter: isOrderSelectedCheckBox.verticalCenter
+                                    background: Rectangle {
+                                        color: orderRecord.ListView.isCurrentItem ? Material.primary : "transparent"
+                                        radius: 2
+                                    }
+
+                                    text: labelText
+                                    font.pixelSize: ordersPopupLabel.height * 0.4
+                                    color:          orderRecordMouseArea.containsMouse ? Material.accent : Material.foreground
                                 }
-
-                                rightPadding:  10
-                                topPadding:    8
-                                bottomPadding: 8
-
-                                background: Rectangle {
-                                    color: orderRecord.ListView.isCurrentItem ? Material.primary : "transparent"
-                                    radius: 2
-                                }
-
-                                text: labelText
-                                font.pixelSize: ordersPopupLabel.height * 0.4
-                                color:          orderRecordMouseArea.containsMouse ? Material.accent : Material.foreground
                             }
 
                             MouseArea {
@@ -373,6 +402,16 @@ Item {
             height: root.cellSize
 
             source: model.image
+
+            Label {
+                id: acceptedOrderID
+
+                anchors.centerIn: parent
+
+                text:           model.index + 1
+                font.bold:      true
+                font.pixelSize: root.cellSize * 0.4
+            }
 
             MouseArea {
                 id: actorMouseArea

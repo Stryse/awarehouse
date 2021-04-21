@@ -37,14 +37,6 @@ Item {
     Component {
         id: baseComponent
 
-//        Image {
-//            id: tileImg
-
-//            Layout.preferredHeight: root.cellSize
-//            Layout.preferredWidth:  root.cellSize
-
-//            source: imgSource //EDIT
-//        }
         Rectangle {
             id: baseRectangle
 
@@ -63,8 +55,11 @@ Item {
         Image {
             id: actorImg
 
-            x: model.column * (root.cellSize + root.cellSpacing)
-            y: model.row    * (root.cellSize + root.cellSpacing)
+            property double row:    model.row
+            property double column: model.column
+
+            x: column * (root.cellSize + root.cellSpacing)
+            y: row    * (root.cellSize + root.cellSpacing)
 
             width:  root.cellSize
             height: root.cellSize
@@ -72,6 +67,25 @@ Item {
             source: model.image
 
             rotation: model.rotation
+
+            Behavior on column {
+                enabled: !SimPresenter.paused
+                PropertyAnimation { properties: "column"; easing.type: Easing.InOutQuart }
+            }
+            Behavior on row {
+                enabled: !SimPresenter.paused
+                PropertyAnimation { properties: "row"; easing.type: Easing.InOutQuart }
+            }
+            Behavior on rotation {
+                id: rotationBehavior
+                enabled: !SimPresenter.paused
+                PropertyAnimation {
+                    properties: "rotation"
+                    easing.type: Easing.InOutQuart
+                    from: actorImg.rotation % 360 == 0 ? (actorImg.rotation == 0 && rotationBehavior.targetValue === 270 ? 360 : 0) : model.rotation
+                    to: from === 270 && rotationBehavior.targetValue === 0 ? 360 : rotationBehavior.targetValue}
+            }
+
         }
     }
 
@@ -110,42 +124,71 @@ Item {
     Component {
         id: podComponent
 
-        Image {
-            id: podImg
+        Item {
+            id: podItem
 
             property variant orders: model.orders
+            property double  row:    model.row
+            property double  column: model.column
 
-            x: model.column * (root.cellSize + root.cellSpacing)
-            y: model.row    * (root.cellSize + root.cellSpacing)
+            x: column * (root.cellSize + root.cellSpacing)
+            y: row    * (root.cellSize + root.cellSpacing)
 
             width:  root.cellSize
             height: root.cellSize
 
-            source: model.image
+            Behavior on column {
+                enabled: !SimPresenter.paused
+                PropertyAnimation { properties: "column"; easing.type: Easing.InOutQuart }
+            }
+            Behavior on row {
+                enabled: !SimPresenter.paused
+                PropertyAnimation { properties: "row"; easing.type: Easing.InOutQuart }
+            }
 
-            rotation: model.rotation
-
-            GridView {
-                id: ordersGrid
+            Image {
+                id: podImg
 
                 anchors.centerIn: parent
-
-                clip: true
-
-                width:  parent.width * 0.8
+                width:  parent.width * 0.85
                 height: width
 
-                cellWidth:  width  / 3
-                cellHeight: cellWidth
+                source: model.image
 
-                model: podImg.orders
-                delegate: Label {
-                    id: orderLabel
+                rotation: model.rotation
 
-                    text: modelData
-                    font.bold: true
+                Behavior on rotation {
+                    id: rotationBehavior
+                    enabled: !SimPresenter.paused
+                    PropertyAnimation {
+                        properties: "rotation"
+                        easing.type: Easing.InOutQuart
+                        from: podImg.rotation % 360 == 0 ? (podImg.rotation == 0 && rotationBehavior.targetValue === 270 ? 360 : 0) : model.rotation
+                        to: from === 270 && rotationBehavior.targetValue === 0 ? 360 : rotationBehavior.targetValue}
+                }
 
-                    font.pixelSize: ordersGrid.cellWidth * 0.8
+                GridView {
+                    id: ordersGrid
+
+                    anchors.centerIn: parent
+
+                    clip: true
+
+                    width:  parent.width * 0.8
+                    height: width
+
+                    cellWidth:  width / 3
+                    cellHeight: cellWidth
+
+                    model: podItem.orders
+                    delegate: Label {
+                        id: orderLabel
+
+                        text: modelData
+                        font.bold: true
+
+                        font.pixelSize: ordersGrid.cellWidth * 0.8
+                    }
                 }
             }
         }
@@ -164,6 +207,16 @@ Item {
             height: root.cellSize
 
             source: model.image
+
+            Label {
+                id: acceptedOrderID
+
+                anchors.centerIn: parent
+
+                text:           model.index + 1
+                font.bold:      true
+                font.pixelSize: root.cellSize * 0.4
+            }
         }
     }
 

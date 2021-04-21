@@ -101,6 +101,18 @@ Item {
                             width:  height
 
                             source: model.image
+
+                            rotation: model.rotation
+
+                            Behavior on rotation {
+                                id: rotationBehavior
+                                enabled: !SimPresenter.paused
+                                PropertyAnimation {
+                                    properties: "rotation"
+                                    easing.type: Easing.InOutQuart
+                                    from: actorImg.rotation % 360 == 0 ? (actorImg.rotation == 0 && rotationBehavior.targetValue === 270 ? 360 : 0) : model.rotation
+                                    to: from === 270 && rotationBehavior.targetValue === 0 ? 360 : rotationBehavior.targetValue}
+                            }
                         }
                     }
 
