@@ -58,6 +58,11 @@ bool Warehouse::saveState(const QString &destPath)
     return persistence->save(*state, destPath);
 }
 
+int Warehouse::getTimeStamp() const
+{
+    return timeStamp;
+}
+
 const std::unique_ptr<State> &Warehouse::getState() const
 {
     return state;

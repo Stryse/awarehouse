@@ -23,6 +23,7 @@ public:
         BatteryRole,
         RotationRole,
         MovesRole,
+        EnergyUsedRole,
         RowRole,
         ColumnRole,
         ImageRole

@@ -2,12 +2,13 @@
 #include "Warehouse.h"
 #include <stdexcept>
 
-Simulator::Simulator()
-    : isRunning(false), warehouse(nullptr), timer(this), tickRate(1000)
+Simulator::Simulator(QObject* parent)
+    : QObject(parent), isRunning(false), warehouse(nullptr), timer(this), tickRate(1000)
 {
     timer.setInterval(tickRate);
     timer.callOnTimeout([=]() {
         warehouse->tick();
+        ISimulator<Warehouse>::onTick();
     });
 }
 

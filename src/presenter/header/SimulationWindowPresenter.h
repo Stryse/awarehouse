@@ -24,6 +24,7 @@ class SimulationWindowPresenter : public QObject
 
     Q_PROPERTY(     PersistencePresenter* persistence          READ persistence          CONSTANT               )
 
+    Q_PROPERTY( int                       time     READ time   NOTIFY   timeChanged   )
 public:
     explicit SimulationWindowPresenter(PersistencePresenter* persistence = nullptr,
                                                     QObject* parent      = nullptr);
@@ -41,17 +42,20 @@ public:
     WarehouseLayoutPresenter* layout()      const;
     Settings*                 settings();
     bool                      paused()      const;
+    int                       time() const;
 
     PersistencePresenter*     persistence() const;
 
 private:
     void setPaused(bool paused);
+    void setTime(int time);
 
     void createMapDir();
 
 signals:
     void pausedChanged();
     void mapsChanged();
+    void timeChanged();
 
 public slots:
     void simulationStart();
@@ -73,6 +77,7 @@ private:
     bool                      m_paused;
 
     PersistencePresenter*     m_persistence;
+    int m_time;
 };
 
 #endif /* SIMULATION_WINDOW_PRESENTER__H */

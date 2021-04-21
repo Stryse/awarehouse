@@ -27,6 +27,8 @@ public:
     bool loadState(const QString &srcPath, const Settings* = nullptr);
     bool saveState(const QString &destPath);
 
+    int getTimeStamp() const;
+
 public:
     const std::unique_ptr<State> &getState() const;
 
