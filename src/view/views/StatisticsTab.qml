@@ -11,6 +11,10 @@ Item {
     Label {
         id: timeLabel
 
+        anchors.centerIn: parent
+
         text: "Total time spent: " + SimPresenter.time
+
+        font.pixelSize: root.height * 0.05
     }
 }
