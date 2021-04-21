@@ -139,10 +139,7 @@ Item {
                     font.pixelSize:      gridLayout.settingPixelSize
                     font.capitalization: Font.MixedCase;
 
-                    onClicked: {
-                        EditorPresenter.clearWarehouse()
-                        console.log("Cleared layout!")
-                    }
+                    onClicked: EditorPresenter.clearWarehouse()
                 }
             }
         }
