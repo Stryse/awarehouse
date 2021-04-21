@@ -75,20 +75,37 @@ bool ControllerImpl::PlanTask(TaskAssignment *assignment)
     controlMessages.emplace(std::make_pair(roundTrip[0][0]->gCost, TargetedMessage(assignment->controlData->address, MPickupPod)));
     // ######################################### Trip to Destinations #################################################
     int sumEnergy = roundTrip[0][0]->byEnergy;
-    for (int i = 1; i < 3; ++i)
+    int wayPointCount = assignment->task->getWayPoints().size();
+
+    for (int i = 1; i < wayPointCount - 1; ++i)
     {
         roundTrip.emplace_back(pathFinder->findPathHard(Point<>(roundTrip[i - 1][0]->coords.first, roundTrip[i - 1][0]->coords.second),
                                                     assignment->task->getWayPoints()[i],
                                                     roundTrip[i - 1][0]->arriveOrientation,
                                                     roundTrip[i - 1][0]->gCost + 1, assignment->controlData->moveMechanism));
 
-        sumEnergy += roundTrip[i][0]->byEnergy;
-        pathFinder->claimPath(roundTrip[i]);
 
+        sumEnergy += roundTrip[i][0]->byEnergy;
+        // ####### Putdown Order #######
+        controlMessages.emplace(std::make_pair(roundTrip[i][0]->gCost, TargetedMessage(assignment->controlData->address, MPutdownOrder)));
+
+        pathFinder->claimPath(roundTrip[i]);
         translatePath(roundTrip[i], assignment->controlData->address);
     }
 
-    //################################################ Finish #########################################################
+    //################################################ Travel back #########################################################
+    roundTrip.emplace_back(pathFinder->findPathHard(Point<>(roundTrip[wayPointCount-2][0]->coords.first, roundTrip[wayPointCount-2][0]->coords.second),
+                                                    assignment->task->getWayPoints()[wayPointCount-1],
+                                                    roundTrip[wayPointCount-2][0]->arriveOrientation,
+                                                    roundTrip[wayPointCount-2][0]->gCost + 1, assignment->controlData->moveMechanism));
+
+        sumEnergy += roundTrip[wayPointCount-1][0]->byEnergy;
+        pathFinder->claimPath(roundTrip[wayPointCount-1]);
+        translatePath(roundTrip[wayPointCount-1], assignment->controlData->address);
+
+    // ####### PutDown Pod #######
+    controlMessages.emplace(std::make_pair(roundTrip[wayPointCount-1][0]->gCost, TargetedMessage(assignment->controlData->address, MPickupPod)));
+
     std::cout << "SumEnergy: " << sumEnergy << " Address: " << assignment->controlData->address << std::endl;
     return true;
 }

@@ -50,6 +50,7 @@ public:
 
 public:
     mutable boost::signals2::signal<void(const Body &)> onBodyMoved;
+    mutable boost::signals2::signal<void()> onOrderPutDown;
 
 public:
     Pod(const Point &position,
@@ -108,10 +109,8 @@ public:
     /************************************************************************
      * @brief Returns the Pod's inventory
      ************************************************************************/
-    const std::set<ItemType, pointer_element_comparator<TItemType>> &getInventory() const
-    {
-        return inventory;
-    }
+    const std::set<ItemType, pointer_element_comparator<TItemType>> &getInventory() const { return inventory; }
+    std::set<ItemType, pointer_element_comparator<TItemType>> &getInventory() { return inventory; }
 
     /************************************************************************
      * @brief Returns the body of the pod

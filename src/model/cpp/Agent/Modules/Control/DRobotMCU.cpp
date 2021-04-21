@@ -88,6 +88,8 @@ void DRobotMCU::receive(const PutDownPodMessage &message)
 
 void DRobotMCU::receive(const PutDownOrderMessage &message)
 {
+    environment.getVolume(moveMechanism.getBody()->getPose().getPosition())->receive(podHolder.getChildPod()->getInventory(), PutDownOrderSignal());
+    podHolder.getChildPod()->onOrderPutDown();
 }
 
 void DRobotMCU::receive(const AgentControlGrantedMessage &message)

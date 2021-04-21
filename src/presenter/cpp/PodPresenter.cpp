@@ -3,60 +3,65 @@
 #include <QJsonArray>
 
 //Model
-#include "Pod.h"
 #include "Body.h"
+#include "Pod.h"
 
 QString PodPresenter::m_static_imagePath = "qrc:/podImg.png";
 
-PodPresenter::PodPresenter(const Pod<OrderModel>* model,
-                                         QObject* parent)
+PodPresenter::PodPresenter(const Pod<OrderModel> *model,
+                           QObject *parent)
     : MapItemPresenter(model->getBody()->getPose().getPosition().getPosY(),
                        model->getBody()->getPose().getPosition().getPosX(),
                        PodPresenter::m_static_imagePath,
-                       parent)
-    , m_rotation(static_cast<int>(std::atan2(model->getBody()->getPose().getOrientation().getY(),
-                                             model->getBody()->getPose().getOrientation().getX())
-                                             *180/M_PI) + 90)
-    , m_orders(QStringListModel(getOrders(model)))
-    , model(model)
+                       parent),
+      m_rotation(static_cast<int>(std::atan2(model->getBody()->getPose().getOrientation().getY(),
+                                             model->getBody()->getPose().getOrientation().getX()) *
+                                  180 / M_PI) +
+                 90),
+      m_orders(QStringListModel(getOrders(model))), model(model)
 {
-    model->onBodyMoved.connect([=](const Body& body){
-        int row      = body.getPose().getPosition().getPosY();
-        int column   = body.getPose().getPosition().getPosX();
+    model->onBodyMoved.connect([=](const Body &body) {
+        int row = body.getPose().getPosition().getPosY();
+        int column = body.getPose().getPosition().getPosX();
         //TODO
-        int rotateY  = model->getBody()->getPose().getOrientation().getY();
-        int rotateX  = model->getBody()->getPose().getOrientation().getX();
-        int rotation = (std::atan2(rotateY, rotateX)*180/M_PI) + 90;
+        int rotateY = model->getBody()->getPose().getOrientation().getY();
+        int rotateX = model->getBody()->getPose().getOrientation().getX();
+        int rotation = (std::atan2(rotateY, rotateX) * 180 / M_PI) + 90;
 
-        QStringList orders = getOrders(model);
+        //QStringList orders = getOrders(model);
 
         setRow(row);
         setColumn(column);
-        setOrders(orders);
+        //setOrders(orders);
         setRotation(rotation);
+    });
+
+    model->onOrderPutDown.connect([=]() {
+        setOrders(getOrders(model));
     });
 }
 
-PodPresenter::PodPresenter(int      row,
-                           int      column,
-                           QObject* parent)
+PodPresenter::PodPresenter(int row,
+                           int column,
+                           QObject *parent)
     : MapItemPresenter(row,
                        column,
                        PodPresenter::m_static_imagePath,
-                       parent)
-    , m_rotation(0)
-{}
+                       parent),
+      m_rotation(0)
+{
+}
 
-PodPresenter* PodPresenter::loadJsonObject(const QJsonObject& podJsonObj,
-                                                     QObject* parent)
+PodPresenter *PodPresenter::loadJsonObject(const QJsonObject &podJsonObj,
+                                           QObject *parent)
 {
     if (podJsonObj.contains("RowCoord") && podJsonObj["RowCoord"].isDouble() &&
         podJsonObj.contains("ColCoord") && podJsonObj["ColCoord"].isDouble())
     {
-        int row    = podJsonObj["ColCoord"].toInt();
+        int row = podJsonObj["ColCoord"].toInt();
         int column = podJsonObj["RowCoord"].toInt();
 
-        PodPresenter* pod = new PodPresenter(column, row, parent);
+        PodPresenter *pod = new PodPresenter(column, row, parent);
 
         if (podJsonObj.contains("Orders") && podJsonObj["Orders"].isArray())
         {
@@ -86,7 +91,7 @@ QJsonObject PodPresenter::saveJsonObject() const
     if (orders.size() > 0)
     {
         QJsonArray ordersJsonArray;
-        for (auto& order : orders)
+        for (auto &order : orders)
         {
             QJsonObject orderJsonObj;
             orderJsonObj.insert("Category", order.toInt());
@@ -98,12 +103,12 @@ QJsonObject PodPresenter::saveJsonObject() const
     return podJsonObj;
 }
 
-int         PodPresenter::rotation() const { return m_rotation;            }
-QStringList PodPresenter::orders()   const { return m_orders.stringList(); }
+int PodPresenter::rotation() const { return m_rotation; }
+QStringList PodPresenter::orders() const { return m_orders.stringList(); }
 
 void PodPresenter::setRotation(int rotation)
 {
-    if(m_rotation == rotation)
+    if (m_rotation == rotation)
         return;
 
     m_rotation = rotation;
@@ -121,15 +126,14 @@ void PodPresenter::setOrders(QStringList orders)
     emit mapItemChanged();
 }
 
-QStringList PodPresenter::getOrders(const Pod<OrderModel>* model)
+QStringList PodPresenter::getOrders(const Pod<OrderModel> *model)
 {
     QStringList orders;
 
-    const auto& inventory = model->getInventory();
+    const auto &inventory = model->getInventory();
 
-    for (auto& order : inventory)
+    for (auto &order : inventory)
         orders.append(QString::number(order->getCategory()));
 
     return orders;
 }
-

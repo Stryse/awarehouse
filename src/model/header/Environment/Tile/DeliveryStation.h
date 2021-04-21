@@ -20,7 +20,8 @@ public:
     /*************************************************************************************************************
      * @brief 
      *************************************************************************************************************/
-    virtual void receive(std::unique_ptr<OrderModel> &order, const PutDownOrderSignal &putdownOrderSignal) override;
+    virtual void receive(std::set<std::unique_ptr<OrderModel>, pointer_element_comparator<OrderModel>> &orderInventory,
+                         const PutDownOrderSignal &putdownOrderSignal) override;
 
 private:
     int acceptedOrderId;

@@ -3,6 +3,7 @@
 
 #include "AgentSignals.h"
 #include <memory>
+#include <set>
 // #################### FORWARD DECLARATIONS ######################
 template <typename TItemType>
 class IContaining;
@@ -13,6 +14,9 @@ template <typename TItemType>
 class Pod;
 
 class OrderModel;
+
+template <typename T>
+class pointer_element_comparator;
 // ################################################################
 
 /**************************************************************************
@@ -29,7 +33,7 @@ public:
     virtual void receive(IDepleting &resource, const ChargeSignal &chargeSignal) const {}
     virtual void receive(IContaining<OwnedPod> &carrier, const PickupPodSignal &pickupSignal) {}
     virtual void receive(OwnedPod &pod, const PutDownPodSignal &putdownSignal) {}
-    virtual void receive(OwnedOrder &order, const PutDownOrderSignal &putdownOrderSignal) {}
+    virtual void receive(std::set<std::unique_ptr<OrderModel>, pointer_element_comparator<OrderModel>> &orderInventory, const PutDownOrderSignal &putdownOrderSignal) {}
 
 protected:
     IAgentSignalHandler() = default;
