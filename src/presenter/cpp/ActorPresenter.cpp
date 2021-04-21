@@ -9,7 +9,7 @@
 #include "Body.h"
 #include "Tile.h"
 
-QString ActorPresenter::m_static_imagePath = /*"qrc:/images/robot.png"*/"qrc:/placeholder_amogus.png";
+QString ActorPresenter::m_static_imagePath = "qrc:/actorImg.png";
 
 ActorPresenter::ActorPresenter(const DeliveryRobot* model,
                                            QObject* parent)
@@ -65,6 +65,39 @@ bool ActorPresenter::operator==(const ActorPresenter& other) const
            this->battery()   == other.battery()   &&
            this->rotation()  == other.rotation()  &&
            this->moves()     == other.moves();
+}
+
+ActorPresenter* ActorPresenter::loadJsonObject(const QJsonObject& actorObj,
+                                                         QObject* parent)
+{
+    if (actorObj.contains("RowCoord")     && actorObj["RowCoord"].isDouble() &&
+        actorObj.contains("ColCoord")     && actorObj["ColCoord"].isDouble() &&
+        actorObj.contains("OrientationX") && actorObj["OrientationX"].isDouble() &&
+        actorObj.contains("OrientationY") && actorObj["OrientationY"].isDouble())
+    {
+        int row      = actorObj["ColCoord"].toInt();
+        int column   = actorObj["RowCoord"].toInt();
+        int rotation = (std::atan2(actorObj["OrientationY"].toInt(), actorObj["OrientationX"].toInt())*180/M_PI) + 90;
+
+        ActorPresenter* actor = new ActorPresenter(column, row, parent);
+        actor->setRotation(rotation);
+
+        return actor;
+    }
+
+    return nullptr;
+}
+
+QJsonObject ActorPresenter::saveJsonObject() const
+{
+    QJsonObject actorJsonObj;
+
+    actorJsonObj.insert("RowCoord",     row());
+    actorJsonObj.insert("ColCoord",     column());
+    actorJsonObj.insert("OrientationX", std::round(std::cos((rotation()-90)*M_PI/180)));
+    actorJsonObj.insert("OrientationY", std::round(std::sin((rotation()-90)*M_PI/180)));
+
+    return actorJsonObj;
 }
 
 //Getter

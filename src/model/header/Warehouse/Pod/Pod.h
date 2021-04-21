@@ -49,13 +49,13 @@ public:
     using ItemType = std::unique_ptr<TItemType>;
 
 public:
-    boost::signals2::signal<void(const Body &)> onBodyMoved;
+    mutable boost::signals2::signal<void(const Body &)> onBodyMoved;
 
 public:
     Pod(const Point &position,
         const std::shared_ptr<ObservableNavEnvironment> &environment,
         const PodDock &parentDock)
-        : body(std::make_unique<Body>(position, DirectionVector::UP(), environment, BodyShapeFactory<Point>::onlyOrigin())),
+        : body(std::make_unique<Body>(position, DirectionVector::UP(), environment, BodyShapeFactory<Point>::onlyOrigin())), // TODO make Two blocks high again*/
           parentDock(parentDock)
     {
     }

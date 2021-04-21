@@ -3,6 +3,7 @@
 
 #include <QObject>
 #include <QList>
+#include <QJsonArray>
 
 //Presenter
 #include "PodPresenter.h"
@@ -14,9 +15,12 @@ class PodList : public QObject
 public:
     explicit PodList(QObject* parent = nullptr);
 
-    QList<const PodPresenter*>* pods();
+    QList<PodPresenter*>* pods();
 
-    bool setPodAt(int index, const PodPresenter& pod);
+    bool setPodAt(int index, PodPresenter& pod);
+
+    void       loadJsonArray(const QJsonArray& podsJSon);
+    QJsonArray saveJsonArray() const;
 
 signals:
     void preItemAppended();
@@ -25,14 +29,17 @@ signals:
     void preItemRemoved(int index);
     void postItemRemoved();
 
+    void dataChanged(int index);
+
 public slots:
-    void appendPod(const PodPresenter& pod);
+    void appendPod(PodPresenter& pod);
     void removePod(int index);
+    void removePod(int row, int column);
 
     void clear();
 
 public:
-    QList<const PodPresenter*> m_pods;
+    QList<PodPresenter*> m_pods;
 };
 
 #endif /* POD_LIST__H*/

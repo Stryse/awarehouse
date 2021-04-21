@@ -11,19 +11,22 @@
 
 //Presenter
 #include "WarehouseLayoutPresenter.h"
+#include "PersistencePresenter.h"
 #include "Settings.h"
 
 class SimulationWindowPresenter : public QObject
 {
     Q_OBJECT
 
-    Q_PROPERTY( WarehouseLayoutPresenter* layout   READ layout CONSTANT               )
-    Q_PROPERTY( bool                      paused   READ paused NOTIFY   pausedChanged )
-    Q_PROPERTY( QStringList               maps     READ maps   NOTIFY   mapsChanged   )
-    Q_PROPERTY( QString                   filePath READ filePath CONSTANT             )
-    Q_PROPERTY( Settings*                 settings READ settings )
+    Q_PROPERTY( WarehouseLayoutPresenter* layout               READ layout               CONSTANT               )
+    Q_PROPERTY(                 Settings* settings             READ settings             CONSTANT               )
+    Q_PROPERTY(                      bool paused               READ paused               NOTIFY   pausedChanged )
+
+    Q_PROPERTY(     PersistencePresenter* persistence          READ persistence          CONSTANT               )
+
 public:
-    explicit SimulationWindowPresenter(QObject* parent = nullptr);
+    explicit SimulationWindowPresenter(PersistencePresenter* persistence = nullptr,
+                                                    QObject* parent      = nullptr);
 
     enum TickRate
     {
@@ -35,15 +38,16 @@ public:
 
 public:
     //Getter
-    WarehouseLayoutPresenter* layout() const;
-    bool                      paused() const;
-    QStringList               maps()   const;
-    QString                   filePath() const;
-    QString                   defaultMapPath() const;
-    Settings*                  settings();
+    WarehouseLayoutPresenter* layout()      const;
+    Settings*                 settings();
+    bool                      paused()      const;
+
+    PersistencePresenter*     persistence() const;
 
 private:
     void setPaused(bool paused);
+
+    void createMapDir();
 
 signals:
     void pausedChanged();
@@ -55,21 +59,20 @@ public slots:
 
     void setTickRate(TickRate tickRate);
 
-    void loadWarehouse(const QString& filePath, const Settings* settings);
+    int getCurrentWarehouseIndex() const;
+
+    void loadWarehouse(const QString& warehousePath);
     void reloadWarehouse();
 
 private:
-    WarehouseManager          m_manager;
+    WarehouseManager m_manager;
+
+    QString                   m_currentWarehouseName;
     WarehouseLayoutPresenter* m_layout;
-    QString                   m_loadedWarehousePath;
-    QStringListModel          m_maps;
     Settings                  m_settings;
+    bool                      m_paused;
 
-    QString m_filePath;
-    QString m_defaultMapPath;
-    bool m_paused;
-
-    void createMapDir();
+    PersistencePresenter*     m_persistence;
 };
 
 #endif /* SIMULATION_WINDOW_PRESENTER__H */

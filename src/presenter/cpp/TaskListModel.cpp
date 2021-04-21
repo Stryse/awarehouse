@@ -5,8 +5,8 @@
 
 QVector<int> TaskListModel::m_roles = { AssignedRobotNameRole,
                                         OrdersRole,
-                                        DestinationXRole,
-                                        DestinationYRole };
+                                        PodRowRole,
+                                        PodColumnRole };
 
 TaskListModel::TaskListModel(QObject *parent)
     : QAbstractListModel(parent)
@@ -34,10 +34,10 @@ QVariant TaskListModel::data(const QModelIndex& index,
             return QVariant(task.assignedRobotName());
         case OrdersRole:
             return QVariant::fromValue(task.orders());
-        case DestinationXRole:
-            return QVariant(task.destinationX());
-        case DestinationYRole:
-            return QVariant(task.destinationY());
+        case PodRowRole:
+            return QVariant(task.podRow());
+        case PodColumnRole:
+            return QVariant(task.podColumn());
     }
 
     return QVariant();
@@ -67,11 +67,11 @@ bool TaskListModel::setData(const QModelIndex& index,
                 task.setOrders(orders);
                 break;
             }
-        case DestinationXRole:
-            task.setDestinationX     (value.toInt());
+        case PodRowRole:
+            task.setPodRow(value.toInt());
             break;
-        case DestinationYRole:
-            task.setDestinationY     (value.toInt());
+        case PodColumnRole:
+            task.setPodColumn(value.toInt());
             break;
     }
 
@@ -98,8 +98,8 @@ QHash<int, QByteArray> TaskListModel::roleNames() const
 
     names[AssignedRobotNameRole] = "assignedRobotName";
     names[OrdersRole]            = "orders";
-    names[DestinationXRole]      = "destinationX";
-    names[DestinationYRole]      = "destinationY";
+    names[PodRowRole]            = "podRow";
+    names[PodColumnRole]         = "podColumn";
 
     return names;
 }

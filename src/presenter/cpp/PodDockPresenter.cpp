@@ -3,7 +3,7 @@
 //Model
 #include "PodDock.h"
 
-QString PodDockPresenter::m_static_imagePath = "qrc:/images/pod.png";
+QString PodDockPresenter::m_static_imagePath = "qrc:/podDockImg.png";
 
 PodDockPresenter::PodDockPresenter(const PodDock* model,
                                          QObject* parent)
@@ -26,3 +26,30 @@ bool PodDockPresenter::operator==(const PodDockPresenter& other) const
 {
     return MapItemPresenter::operator==(other);
 }
+
+//PodDockPresenter* PodDockPresenter::loadJsonObject(const QJsonObject& podDockObj,
+//                                                             QObject* parent)
+//{
+//    if (podDockObj.contains("RowCoord") && podDockObj["RowCoord"].isDouble() &&
+//        podDockObj.contains("ColCoord") && podDockObj["ColCoord"].isDouble())
+//    {
+//        int row    = podDockObj["ColCoord"].toInt();
+//        int column = podDockObj["RowCoord"].toInt();
+
+//        return new PodDockPresenter(column, row, parent);
+//    }
+
+//    return nullptr;
+//}
+
+//QJsonObject PodDockPresenter::saveJsonObject() const
+//{
+//    QJsonObject podDockJsonObj;
+
+//    podDockJsonObj.insert("RowCoord", row());
+//    podDockJsonObj.insert("ColCoord", column());
+
+//    //TODO: Save orders
+
+//    return podDockJsonObj;
+//}

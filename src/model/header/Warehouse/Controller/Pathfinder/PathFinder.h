@@ -81,9 +81,14 @@ public:
     /************************************************************************************************************
      * @brief Finds collision free path from start pos to endpos with starting orientation with startingtime
      ************************************************************************************************************/
-    std::vector<std::shared_ptr<Node>> findPath(const Point<> &startPos, const Point<> &endPos, const DirectionVector<> &startOr,
+    std::vector<std::shared_ptr<Node>> findPathSoft(const Point<> &startPos, const Point<> &endPos, const DirectionVector<> &startOr,
                                                 int startTime, const IMoveMechanism &moveMechanism) const;
 
+    /**
+     * @brief 
+     */
+    std::vector<std::shared_ptr<Node>> findPathHard(const Point<> &startPos, const Point<> &endPos, const DirectionVector<> &startOr,
+                                                int startTime, const IMoveMechanism &moveMechanism) const;
 
     /*****************************************************************
      * @brief Registers a path in the reservation table,

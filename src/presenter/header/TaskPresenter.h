@@ -13,11 +13,11 @@ class TaskPresenter : public QObject
 
     Q_PROPERTY(      QString assignedRobotName READ assignedRobotName NOTIFY assignedRobotNameChanged )
     Q_PROPERTY( QVector<int> orders            READ orders            NOTIFY ordersChanged            )
-    Q_PROPERTY(          int destinationX      READ destinationX      NOTIFY destinationXChanged      )
-    Q_PROPERTY(          int destinationY      READ destinationY      NOTIFY destinationYChanged      )
+    Q_PROPERTY(          int podRow            READ podRow            NOTIFY podRowChanged            )
+    Q_PROPERTY(          int podColumn         READ podColumn         NOTIFY podColumnChanged         )
 
 public:
-    explicit TaskPresenter(Task* model,
+    explicit TaskPresenter(   Task* model,
                            QObject* parent = nullptr);
 
     explicit TaskPresenter(const TaskPresenter& task);
@@ -28,30 +28,30 @@ public:
     //Getter
     QString      assignedRobotName() const;
     QVector<int> orders()            const;
-    int          destinationX()      const;
-    int          destinationY()      const;
+    int          podRow()            const;
+    int          podColumn()         const;
 
     //Setter
     void setAssignedRobotName(const QString& robotName);
     void setOrders(const QVector<int>& orders);
-    void setDestinationX(int destinationX);
-    void setDestinationY(int destinationY);
+    void setPodRow(int podRow);
+    void setPodColumn(int podColumn);
 
 signals:
     void assignedRobotNameChanged();
     void ordersChanged();
-    void destinationXChanged();
-    void destinationYChanged();
+    void podRowChanged();
+    void podColumnChanged();
 
     void taskChanged();
 
 private:
-    Task* model;
-
     QString      m_assignedRobotName;
     QVector<int> m_orders;
-    int          m_destinationX;
-    int          m_destinationY;
+    int          m_podRow;
+    int          m_podColumn;
+
+    Task* model; //Const?
 };
 
 #endif // TASK_PRESENTER_H

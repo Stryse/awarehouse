@@ -21,8 +21,8 @@ public:
     {
         AssignedRobotNameRole = Qt::UserRole,
         OrdersRole,
-        DestinationXRole,
-        DestinationYRole
+        PodRowRole,
+        PodColumnRole
     };
 
 //QAbstractItemModel interface

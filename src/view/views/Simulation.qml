@@ -25,27 +25,23 @@ Item {
             id: controlLayout
 
             anchors.centerIn: parent
-            height:           parent.height * 0.65
+            height:           simulationMap.height * 0.12
 
             MediaControlButton {
                 id: play
 
-                property bool paused: true
+                property bool paused: SimPresenter.paused
 
                 Layout.fillWidth:  true
                 Layout.fillHeight: true
 
                 icon.source: paused ? "qrc:/play_white.png" : "qrc:/pause_white.png"
-                //BUG: when button is at minimal size and clicked -> changed text appears
-                //text:        paused ? qsTr("Pause")                : qsTr("Play")
 
                 onClicked: {
-                    if(paused)
+                    if (paused)
                         SimPresenter.simulationStart()
                     else
                         SimPresenter.simulationStop()
-
-                    paused = !paused
                 }
             }
 
@@ -93,7 +89,6 @@ Item {
                 Layout.fillHeight: true
 
                 icon.source: "qrc:/replay_white.png"
-                //text: "Reset"
 
                 onClicked: SimPresenter.reloadWarehouse();
             }

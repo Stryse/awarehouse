@@ -64,32 +64,32 @@ bool ControllerImpl::PlanTask(TaskAssignment *assignment)
 
     // ############################################ Trip To Pod ####################################################
     controlMessages.emplace(std::make_pair(0, TargetedMessage(assignment->controlData->address, MControlGranted)));
-    roundTrip.emplace_back(pathFinder->findPath(assignment->controlData->moveMechanism.getBody()->getPose().getPosition(),
-                                                assignment->task->getWayPoints()[0],
-                                                assignment->controlData->moveMechanism.getBody()->getPose().getOrientation(),
-                                                0, assignment->controlData->moveMechanism));
+    roundTrip.emplace_back(pathFinder->findPathSoft(assignment->controlData->moveMechanism.getBody()->getPose().getPosition(),
+                                                    assignment->task->getWayPoints()[0],
+                                                    assignment->controlData->moveMechanism.getBody()->getPose().getOrientation(),
+                                                    0, assignment->controlData->moveMechanism));
 
     pathFinder->claimPath(roundTrip[0]);
     translatePath(roundTrip[0], assignment->controlData->address);
-
+    // ####### Pickup Pod #######
+    controlMessages.emplace(std::make_pair(roundTrip[0][0]->gCost, TargetedMessage(assignment->controlData->address, MPickupPod)));
     // ######################################### Trip to Destinations #################################################
     int sumEnergy = roundTrip[0][0]->byEnergy;
     for (int i = 1; i < 3; ++i)
     {
-        roundTrip.emplace_back(pathFinder->findPath(Point<>(roundTrip[i - 1][0]->coords.first, roundTrip[i - 1][0]->coords.second),
+        roundTrip.emplace_back(pathFinder->findPathHard(Point<>(roundTrip[i - 1][0]->coords.first, roundTrip[i - 1][0]->coords.second),
                                                     assignment->task->getWayPoints()[i],
                                                     roundTrip[i - 1][0]->arriveOrientation,
-                                                    roundTrip[i - 1][0]->gCost, assignment->controlData->moveMechanism));
+                                                    roundTrip[i - 1][0]->gCost + 1, assignment->controlData->moveMechanism));
 
         sumEnergy += roundTrip[i][0]->byEnergy;
         pathFinder->claimPath(roundTrip[i]);
-        //pathFinder->claimST3(std::make_tuple(roundTrip[i][0]->coords.first, roundTrip[i][0]->coords.second, roundTrip[i][0]->gCost+3));
 
         translatePath(roundTrip[i], assignment->controlData->address);
     }
 
-    // ################################################ Finish #########################################################
-    std::cout << sumEnergy << "IP " << assignment->controlData->address << std::endl;
+    //################################################ Finish #########################################################
+    std::cout << "SumEnergy: " << sumEnergy << " Address: " << assignment->controlData->address << std::endl;
     return true;
 }
 

@@ -62,29 +62,19 @@ Item {
             padding:    0
             topPadding: 5
 
+            horizontalPadding: width * 0.1
+
             clip: true
 
             ScrollBar.horizontal.policy:    ScrollBar.AlwaysOff
             ScrollBar.vertical.interactive: false
-
-            //?????????????????
-            Rectangle {
-                anchors.fill: gridLayout
-                color: "transparent"
-            }
-            //????????????????
 
             GridLayout {
                 id: gridLayout
 
                 readonly property real settingPixelSize: editorRoot.height * 0.021
 
-                anchors {
-                    top: parent.top
-                    horizontalCenter: parent.horizontalCenter
-                }
-
-                width:   parent.width * 0.8
+                width: settingsScrollView.width * 0.8
 
                 columns: 2
 
@@ -108,10 +98,11 @@ Item {
                     editable: true
 
                     Binding {
-                        target:EditorPresenter.layout
+                        target: EditorPresenter.layout
                         property: "rows"
                         value: rowsSpinBox.value
                     }
+
                 }
                 Label {
                     id: columnsLabel
@@ -133,9 +124,24 @@ Item {
                     editable: true
 
                     Binding {
-                        target:EditorPresenter.layout
+                        target: EditorPresenter.layout
                         property: "columns"
                         value: columnsSpinBox.value
+                    }
+                }
+                Button {
+                    id: clearButton
+
+                    flat:                true
+                    Material.background: Material.primary
+
+                    text:                qsTr("Clear")
+                    font.pixelSize:      gridLayout.settingPixelSize
+                    font.capitalization: Font.MixedCase;
+
+                    onClicked: {
+                        EditorPresenter.clearWarehouse()
+                        console.log("Cleared layout!")
                     }
                 }
             }

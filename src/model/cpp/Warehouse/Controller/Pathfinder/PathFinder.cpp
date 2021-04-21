@@ -134,8 +134,6 @@ void PathFinder::claimPath(const std::vector<std::shared_ptr<Node>> &path)
         //reservationTable.emplace(std::make_tuple(path[i]->coords.first, path[i]->coords.second, path[i]->gCost));
         //reservationTable.emplace(std::make_tuple(path[i]->coords.first, path[i]->coords.second, path[i]->gCost - 1));
 
-
-
         for (int travelTime = 1; travelTime <= path[i - 1]->byTime - 1; ++travelTime)
             reservationTable.emplace(std::make_tuple(path[i]->coords.first, path[i]->coords.second, path[i]->gCost + travelTime));
     }
@@ -167,7 +165,7 @@ std::vector<std::shared_ptr<Node>> PathFinder::tracePath(const std::shared_ptr<N
     return path;
 }
 
-std::vector<std::shared_ptr<Node>> PathFinder::findPath(const Point<> &startPos, const Point<> &endPos, const DirectionVector<> &startOr,
+std::vector<std::shared_ptr<Node>> PathFinder::findPathSoft(const Point<> &startPos, const Point<> &endPos, const DirectionVector<> &startOr,
                                                         int startTime, const IMoveMechanism &moveMechanism) const
 {
     std::priority_queue<std::shared_ptr<Node>, std::vector<std::shared_ptr<Node>>, NodeComparator> open;
@@ -204,6 +202,66 @@ std::vector<std::shared_ptr<Node>> PathFinder::findPath(const Point<> &startPos,
 
             // ####################### Continue if not safe #########################
             if (!safeSoftStatic(node->coords, endPos))
+                continue;
+
+            //if (!safeSemiStatic(node->coords, node->gCost))
+            //continue;
+
+            if (!safeDynamic(st3)) // TODO only expand waiting when dynamic obstacles present (further heuristic)
+                continue;
+
+            // ####################### If not in open ###############################
+            if (openLookup.find(node.get()) == openLookup.end())
+            {
+                node->cameFrom = current;
+                node->gCost = current->gCost + node->byTime;
+                node->hCost = PathFinder::ManhattanHeuristic(*node, endPos);
+
+                openLookup.insert(node.get());
+                open.push(node);
+            }
+        }
+    }
+    return {};
+}
+
+std::vector<std::shared_ptr<Node>> PathFinder::findPathHard(const Point<> &startPos, const Point<> &endPos, const DirectionVector<> &startOr,
+                                                        int startTime, const IMoveMechanism &moveMechanism) const
+{
+    std::priority_queue<std::shared_ptr<Node>, std::vector<std::shared_ptr<Node>>, NodeComparator> open;
+    std::unordered_set<const Node *> openLookup;
+
+    std::unordered_set<std::tuple<int, int, int>, boost::hash<std::tuple<int, int, int>>> closed;
+
+    std::shared_ptr<Node> current = std::make_shared<Node>(std::make_pair(startPos.getPosX(), startPos.getPosY()), startOr, 0, 0, false, startTime, 0, nullptr);
+    openLookup.insert(current.get());
+    open.push(current);
+
+    while (!open.empty())
+    {
+        current = open.top();
+        openLookup.erase(open.top().get());
+        open.pop();
+
+        closed.emplace(std::make_tuple(current->coords.first, current->coords.second, current->gCost));
+
+        // ##################### Found path ######################
+        if (PathFinder::PointToPairEqualityAdapter(endPos, current->coords))
+            return tracePath(current);
+
+        // ################ Explore STA* Neighbours ###############
+        std::array<std::shared_ptr<Node>, 5> neighbours = findNeighbours(*current, moveMechanism);
+        for (auto node : neighbours)
+        {
+            node->gCost = current->gCost + node->byTime;
+            std::tuple<int, int, int> st3(std::make_tuple(node->coords.first, node->coords.second, node->gCost));
+
+            // ################### Continue if node is in closed ####################
+            if (closed.find(st3) != closed.end())
+                continue;
+
+            // ####################### Continue if not safe #########################
+            if (!safeHardStatic(node->coords, endPos))
                 continue;
 
             //if (!safeSemiStatic(node->coords, node->gCost))

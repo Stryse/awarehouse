@@ -20,6 +20,7 @@ public:
           const std::vector<std::shared_ptr<ChargingStation>> &chStations,
           const std::vector<std::shared_ptr<DeliveryStation>> &deliveryStations,
           const std::vector<std::shared_ptr<PodDock>> &podDocks,
+          const std::vector<Pod<OrderModel> *> &pods,
           const std::vector<std::shared_ptr<DeliveryRobot>> &robots,
           int rowCount, int colCount);
 
@@ -28,6 +29,7 @@ public:
           std::vector<std::shared_ptr<ChargingStation>> &&chStations,
           std::vector<std::shared_ptr<DeliveryStation>> &&deliveryStations,
           std::vector<std::shared_ptr<PodDock>> &&podDocks,
+          std::vector<Pod<OrderModel> *> &&pods,
           std::vector<std::shared_ptr<DeliveryRobot>> &&robots,
           int rowCount, int colCount);
 
@@ -41,6 +43,7 @@ public:
 
     const std::vector<std::shared_ptr<ChargingStation>> &getChargingStations() const;
     const std::vector<std::shared_ptr<PodDock>> &getPodDocks() const;
+    const std::vector<Pod<OrderModel> *> &getPods() const;
     const std::vector<std::shared_ptr<DeliveryStation>> &getDeliveryStations() const;
     const std::vector<std::shared_ptr<DeliveryRobot>> &getRobots() const;
 
@@ -60,6 +63,7 @@ private:
     std::shared_ptr<ObservableNavEnvironment> environment;
     std::vector<std::shared_ptr<ChargingStation>> chStations;
     std::vector<std::shared_ptr<PodDock>> podDocks;
+    std::vector<Pod<OrderModel> *> pods; // Pod-ot az ownere deleteli
     std::vector<std::shared_ptr<DeliveryStation>> deliveryStations;
     std::vector<std::shared_ptr<DeliveryRobot>> robots;
 

@@ -17,7 +17,7 @@
 WarehouseFilePersistence::WarehouseFilePersistence() {}
 WarehouseFilePersistence::~WarehouseFilePersistence() {}
 
-State *WarehouseFilePersistence::load(const QString &resource, const Settings* settings)
+State *WarehouseFilePersistence::load(const QString &resource, const Settings *settings)
 {
     QString jsonString;
     QFile sourceFile(resource);
@@ -75,7 +75,7 @@ bool WarehouseFilePersistence::save(const State &state, const QString &resource)
     return true;
 }
 
-State *WarehouseFilePersistence::loadFromJsonObject(QJsonObject json, const Settings* settings)
+State *WarehouseFilePersistence::loadFromJsonObject(QJsonObject json, const Settings *settings)
 {
 
     if (json.contains("WarehouseLayoutData") && json["WarehouseLayoutData"].isObject())
@@ -97,11 +97,12 @@ State *WarehouseFilePersistence::loadFromJsonObject(QJsonObject json, const Sett
         std::vector<std::shared_ptr<ChargingStation>> chStations;
         std::vector<std::shared_ptr<DeliveryStation>> deliveryStations;
         std::vector<std::shared_ptr<PodDock>> podDocks;
+        std::vector<Pod<OrderModel> *> pods;
         std::vector<std::shared_ptr<DeliveryRobot>> robots;
 
         loadChargingStation(chStations, env, WarehouseLayoutData);
         loadDeliveryStation(deliveryStations, env, WarehouseLayoutData);
-        loadPodDock(podDocks, env, WarehouseLayoutData);
+        loadPodDock(podDocks, pods, env, WarehouseLayoutData);
         loadRobots(robots, env, WarehouseLayoutData, settings);
 
         // Construct State from read data
@@ -109,6 +110,7 @@ State *WarehouseFilePersistence::loadFromJsonObject(QJsonObject json, const Sett
                          std::move(chStations),
                          std::move(deliveryStations),
                          std::move(podDocks),
+                         std::move(pods),
                          std::move(robots),
                          rowSize, colSize);
     }
@@ -154,6 +156,7 @@ void WarehouseFilePersistence::loadDeliveryStation(std::vector<std::shared_ptr<D
 }
 
 void WarehouseFilePersistence::loadPodDock(std::vector<std::shared_ptr<PodDock>> &podDocks,
+                                           std::vector<Pod<OrderModel> *> &pods,
                                            std::shared_ptr<ObservableNavEnvironment> &env,
                                            QJsonObject &warehouseLayoutData)
 {
@@ -168,6 +171,7 @@ void WarehouseFilePersistence::loadPodDock(std::vector<std::shared_ptr<PodDock>>
 
             env->getBuffer()[env->getCoordAsIndex(podDock->getPosition())] = podDock;
             podDock->addAssociatedPod(env);
+            pods.push_back(podDock->getPodHolder().getChildPod().get());
             PodDockLoader::loadOrders(PodDocksJSon[i].toObject(), *podDock->getPodHolder().getChildPod());
 
             podDocks.push_back(podDock);
@@ -178,7 +182,7 @@ void WarehouseFilePersistence::loadPodDock(std::vector<std::shared_ptr<PodDock>>
 void WarehouseFilePersistence::loadRobots(std::vector<std::shared_ptr<DeliveryRobot>> &robots,
                                           std::shared_ptr<ObservableNavEnvironment> &env,
                                           QJsonObject &warehouseLayoutData,
-                                          const Settings* settings)
+                                          const Settings *settings)
 {
     if (warehouseLayoutData.contains("DeliveryRobots") && warehouseLayoutData["DeliveryRobots"].isArray())
     {

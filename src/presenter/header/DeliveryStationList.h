@@ -3,6 +3,7 @@
 
 #include <QObject>
 #include <QList>
+#include <QJsonArray>
 
 //Presenter
 #include "DeliveryStationPresenter.h"
@@ -17,6 +18,9 @@ public:
     QList<DeliveryStationPresenter*>* deliveryStations();
 
     bool setDeliveryStationAt(int index, DeliveryStationPresenter& deliveryStation);
+
+    void       loadJsonArray(const QJsonArray& deliveryStationsJson);
+    QJsonArray saveJsonArray() const;
 
 signals:
     void preItemAppended();

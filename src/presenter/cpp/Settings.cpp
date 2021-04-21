@@ -1,6 +1,7 @@
 #include "Settings.h"
 
-Settings::Settings() : m_batteryLevel(100)
+Settings::Settings()
+    : m_batteryLevel(100)
 { }
 
 Settings::Settings(int batteryLevel)
@@ -13,7 +14,7 @@ void Settings::setBatteryLevel(int batteryLevel)
         return;
 
     m_batteryLevel = batteryLevel;
-    emit batteryChanged();
+    emit batteryLevelChanged(batteryLevel);
 }
 
 int Settings::batteryLevel() const { return m_batteryLevel; }
