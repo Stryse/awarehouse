@@ -19,21 +19,10 @@ Item {
     readonly property bool isDeafultWarehouse: currentWarehouse == "New" || currentWarehouse == "Default"
 
     readonly property ListModel tileList: ListModel {
-        ListElement { tileType: TileType.ACTOR;            tileTypeName: "Actor";            tileImage:    "qrc:/actorImg.png" }
-        ListElement { tileType: TileType.POD;              tileTypeName: "Pod";              tileImage:    "qrc:/podImg.png" }
-        ListElement { tileType: TileType.CHARGING_STATION; tileTypeName: "Charging Station"; tileImage:    "qrc:/chargingStationImg.png" }
-        ListElement { tileType: TileType.DELIVERY_STATION; tileTypeName: "Delivery Station"; tileImage:    "qrc:/deliveryStationImg.png" }
-
-        function getTileColor(type) {
-            for (var i = 0; i < tileList.count; ++i) {
-                var tile = tileList.get(i)
-
-                if (tile.tileType === type)
-                    return tile.tileColor
-            }
-
-            return Material.accent
-        }
+        ListElement { tileType: TileType.ACTOR;            tileTypeName: "Actor";            tileImage: "qrc:/actorImg.png" }
+        ListElement { tileType: TileType.POD;              tileTypeName: "Pod";              tileImage: "qrc:/podImg.png" }
+        ListElement { tileType: TileType.CHARGING_STATION; tileTypeName: "Charging Station"; tileImage: "qrc:/chargingStationImg.png" }
+        ListElement { tileType: TileType.DELIVERY_STATION; tileTypeName: "Delivery Station"; tileImage: "qrc:/deliveryStationImg.png" }
     }
 
     SplitView {
