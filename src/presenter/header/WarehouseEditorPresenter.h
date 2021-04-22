@@ -60,6 +60,8 @@ public slots:
     void loadWarehouse(const QString& warehouseName);
     bool saveWarehouse(const QString& warehouseName);
 
+    bool isDefaultWarehouse() const;
+
 public:
     static const QString  newWarehouseName;
     static       TileType baseTile;

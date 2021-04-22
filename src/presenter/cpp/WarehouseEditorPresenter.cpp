@@ -316,8 +316,17 @@ bool WarehouseEditorPresenter::saveWarehouse(const QString& warehouseName)
 
     m_persistence->reloadWarehouses();
 
+    if (m_currentWarehouseName != warehouseName)
+    {
+        m_currentWarehouseName = warehouseName;
+        emit currentWarehouseNameChanged(warehouseName);
+    }
+
     return true;
 }
+
+bool WarehouseEditorPresenter::isDefaultWarehouse() const { return m_currentWarehouseName == PersistencePresenter::defaultWarehouseName ||
+                                                                   m_currentWarehouseName == newWarehouseName; }
 
 QJsonObject WarehouseEditorPresenter::saveJsonObject() const
 {

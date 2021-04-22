@@ -16,7 +16,6 @@ Item {
     property real  borderWidth
 
     property string currentWarehouse: EditorPresenter.currentWarehouseName
-    readonly property bool isDeafultWarehouse: currentWarehouse == "New" || currentWarehouse == "Default"
 
     readonly property ListModel tileList: ListModel {
         ListElement { tileType: TileType.ACTOR;            tileTypeName: "Actor";            tileImage: "qrc:/actorImg.png"           }
@@ -329,7 +328,7 @@ Item {
         function loadWarehouse(warehouseName) {
             EditorPresenter.loadWarehouse(warehouseName);
 
-            if (editorRoot.isDeafultWarehouse)
+            if (EditorPresenter.isDefaultWarehouse())
                 savePopupStack.replace(saveAsComponent)
             else
                 savePopupStack.replace(overwriteComponent)
@@ -559,7 +558,6 @@ Item {
                                 zeroWarehouseNameLabel.visible    = true
                             else {
                                 saveWarehousePopup.saveWarehouse(warehouseNameField.text)
-                                editorRoot.currentWarehouse = warehouseNameField.text
                                 saveWarehousePopup.close()
                             }
                         }
@@ -589,11 +587,11 @@ Item {
         }
 
         onClosed: {
-            if (!editorRoot.isDeafultWarehouse && saveWarehousePopup.isSaveAs) {
+            if (!EditorPresenter.isDefaultWarehouse() && saveWarehousePopup.isSaveAs) {
                 savePopupStack.replace(overwriteComponent)
                 saveWarehousePopup.isSaveAs = false
             }
-            else if (editorRoot.isDeafultWarehouse || saveWarehousePopup.isSaveAs)
+            else if (EditorPresenter.isDefaultWarehouse() || saveWarehousePopup.isSaveAs)
                 savePopupStack.replace(saveAsComponent)
         }
 
