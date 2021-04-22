@@ -139,6 +139,10 @@ Item {
                         from:  0
                         to:    100
                         value: model.battery
+
+                        Behavior on value {
+                            PropertyAnimation { properties: "value"; easing.type: Easing.InOutQuart }
+                        }
                     }
 
                     Label {
