@@ -48,7 +48,11 @@ PathFinder::PathFinder(const State &state)
 
 bool PathFinder::safeDynamic(const std::tuple<int, int, int> &st3) const
 {
-    return reservationTable.find(st3) == reservationTable.end();
+    //Moment before arrival must
+    std::tuple<int,int,int> beforeMoment = std::make_tuple(std::get<0>(st3), std::get<1>(st3), std::get<2>(st3) - 1);
+
+    return reservationTable.find(st3)          == reservationTable.end() &&
+           reservationTable.find(beforeMoment) == reservationTable.end();
 }
 
 bool PathFinder::safeSoftStatic(const std::pair<int, int> &coord, const Point<>& destination) const
@@ -119,6 +123,7 @@ int PathFinder::ManhattanHeuristic(const Node &node, const Point<> &point)
 
 void PathFinder::claimPath(const std::vector<std::shared_ptr<Node>> &path)
 {
+    // TODO: remove runtime error
     for (int i = path.size() - 2; i > 0; --i)
     {
 
@@ -144,6 +149,8 @@ void PathFinder::claimPath(const std::vector<std::shared_ptr<Node>> &path)
 
 void PathFinder::claimST3(const std::tuple<int, int, int> &st3)
 {
+    // Todo remove runtime error
+
     if(reservationTable.find(st3) != reservationTable.end())
         throw std::runtime_error("Non unique ST3 claim"); 
 
@@ -152,6 +159,7 @@ void PathFinder::claimST3(const std::tuple<int, int, int> &st3)
 
 std::vector<std::shared_ptr<Node>> PathFinder::tracePath(const std::shared_ptr<Node> &node) const
 {
+    // TODO: clear debug messages
     std::vector<std::shared_ptr<Node>> path;
 
     std::shared_ptr<Node> n = node;

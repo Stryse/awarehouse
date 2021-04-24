@@ -35,6 +35,11 @@ void ControllerImpl::tick(int timeStamp)
     broadcastMessages(timeStamp);
 }
 
+void ControllerImpl::reset()
+{
+    controlMessages.clear();
+}
+
 void ControllerImpl::broadcastMessages(int timeStamp)
 {
     auto messages = controlMessages.equal_range(timeStamp);

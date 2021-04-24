@@ -22,11 +22,14 @@ public:
 
 public:
     void tick(int timeStamp);
+    void reset();
     bool PlanTask(TaskAssignment *assignment);
     bool PlanCharge(const AgentControlData &assignment);
     void translatePath(const std::vector<std::shared_ptr<Node>>& path, int address);
 
+    // ############################ Setter ####################################
     void setPathFinder(PathFinder *pathfinder);
+
     // ############################ Getter ####################################
     const NetworkAdapter &getNetworkAdapter() const;
     NetworkAdapter &getNetworkAdapter();

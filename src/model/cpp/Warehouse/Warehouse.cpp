@@ -34,21 +34,16 @@ bool Warehouse::loadState(const QString &srcPath, const Settings *settings)
     if (state)
     {
         timeStamp = 0;
+
         setupNetwork(*state);
+
+        scheduler->reset();        
+        controller->reset();
+
         scheduler->setTaskManager(&state->getTaskManager());
-        scheduler->setController(controller.get());
+        scheduler->setController(controller.get()); // TODO: move to constructor
         controller->setPathFinder(&state->getPathFinder());
         tick();
-
-        // TODO REMOVE
-        //controller->getNetworkAdapter().send(std::make_unique<AgentControlGrantedMessage>(0x1), 100);
-        //controller->getNetworkAdapter().send(std::make_unique<MoveAgentMessage>(DirectionVector<>::UP(), 0x1), 100);
-
-        //controller->getNetworkAdapter().send(std::make_unique<AgentControlGrantedMessage>(0x1), 101);
-        //controller->getNetworkAdapter().send(std::make_unique<MoveAgentMessage>(DirectionVector<>::LEFT(), 0x1), 101);
-
-        //controller->getNetworkAdapter().send(std::make_unique<AgentControlGrantedMessage>(0x1), 102);
-        //controller->getNetworkAdapter().send(std::make_unique<MoveAgentMessage>(DirectionVector<>::DOWN(), 0x1), 102);
     }
 
     return state != nullptr;

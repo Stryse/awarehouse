@@ -84,9 +84,9 @@ public:
     std::vector<std::shared_ptr<Node>> findPathSoft(const Point<> &startPos, const Point<> &endPos, const DirectionVector<> &startOr,
                                                 int startTime, const IMoveMechanism &moveMechanism) const;
 
-    /**
+    /************************************************************************************************************
      * @brief 
-     */
+     ************************************************************************************************************/
     std::vector<std::shared_ptr<Node>> findPathHard(const Point<> &startPos, const Point<> &endPos, const DirectionVector<> &startOr,
                                                 int startTime, const IMoveMechanism &moveMechanism) const;
 
@@ -134,7 +134,7 @@ private:
      * (x  ,y+1,t + timeMove)
      * (x-1,y  ,t + timeMove)
      * (x  ,y-1,t + timeMove)
-     * (x  ,y  ,t + timeMove)
+     * (x  ,y  ,t + 1)
      *********************************************************************/
     std::array<std::shared_ptr<Node>, 5> findNeighbours(Node &node, const IMoveMechanism &moveMechanism) const;
 

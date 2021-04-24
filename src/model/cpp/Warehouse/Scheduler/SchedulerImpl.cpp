@@ -25,6 +25,19 @@ void SchedulerImpl::tick(int timeStamp)
     forwardAssignments();
 }
 
+void SchedulerImpl::reset()
+{
+    // Reset Sorted Agent Data
+    std::priority_queue<const AgentControlData *,
+                        std::vector<const AgentControlData *>,
+                        EnergyResourceComparator>().swap(sortedAgentData);
+
+    // Reset Sorted Assignment Data
+    std::priority_queue<TaskAssignment *,
+                        std::vector<TaskAssignment *>,
+                        TaskAssignmentComparator>().swap(sortedAssignmentData);
+}
+
 const NetworkAdapter &SchedulerImpl::getNetworkAdapter() const { return networkAdapter; }
 NetworkAdapter &SchedulerImpl::getNetworkAdapter() { return networkAdapter; }
 void SchedulerImpl::setTaskManager(TaskManager *taskManager) { this->taskManager = taskManager; }
