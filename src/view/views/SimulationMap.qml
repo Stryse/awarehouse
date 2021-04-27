@@ -83,9 +83,49 @@ Item {
                     properties: "rotation"
                     easing.type: Easing.InOutQuart
                     from: actorImg.rotation % 360 == 0 ? (actorImg.rotation == 0 && rotationBehavior.targetValue === 270 ? 360 : 0) : model.rotation
-                    to: from === 270 && rotationBehavior.targetValue === 0 ? 360 : rotationBehavior.targetValue}
+                    to:   from === 270 && rotationBehavior.targetValue === 0 ? 360 : rotationBehavior.targetValue}
             }
 
+            ProgressBar {
+                id: battery
+
+                y: cellSize * 0.35
+                anchors {
+                    left:   parent.left;
+
+                    leftMargin:   cellSize * 0.05
+                }
+                width:  parent.width  * 0.07
+                height: parent.height * 0.4
+
+                background: Rectangle {
+                    implicitWidth:  6
+                    implicitHeight: 200
+                    color: Material.background
+                    radius: 1
+                }
+
+                contentItem: Item {
+                    implicitWidth:  4
+                    implicitHeight: 200
+
+                    Rectangle {
+                        anchors.bottom: parent.bottom
+                        width:  parent.width
+                        height: battery.visualPosition * parent.height
+                        radius: 1
+                        color: "#9ad69c"
+                    }
+                }
+
+                from:  0
+                to:    100
+                value: model.battery
+
+                Behavior on value {
+                    PropertyAnimation { properties: "value"; easing.type: Easing.InOutQuart }
+                }
+            }
         }
     }
 
