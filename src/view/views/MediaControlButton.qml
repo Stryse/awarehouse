@@ -6,6 +6,8 @@ import QtQuick.Controls.Material
 Button {
     id: root
 
+    focusPolicy: Qt.NoFocus
+
     flat: true
     Material.foreground: hovered ? Material.accent : "white"
 

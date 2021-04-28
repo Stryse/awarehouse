@@ -124,7 +124,7 @@ Item {
 
                             source: model.tileImage
 
-                            Drag.active: dragArea.drag.active
+                            Drag.active:    dragArea.drag.active
                             Drag.hotSpot.x: width/2
                             Drag.hotSpot.y: width/2
 

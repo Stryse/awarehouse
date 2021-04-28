@@ -4,6 +4,7 @@
 #include <QJsonArray>
 #include <QJsonDocument>
 #include <QJsonValue>
+#include <QDebug>
 
 //Presenter
 #include "WarehouseLayoutPresenter.h"
@@ -171,6 +172,7 @@ void WarehouseEditorPresenter::setTile(int row, int column, TileType type)
             break;
         default: break;
     }
+
     m_tileTypeTable[row][column] = type;
 }
 
@@ -194,6 +196,273 @@ void WarehouseEditorPresenter::removeTile(int row, int column)
     }
 
     m_tileTypeTable[row][column] = baseTile;
+}
+
+bool WarehouseEditorPresenter::isInBounds(int row, int column) const
+{
+    return row    >= 0 && row    < m_layout->rows() &&
+           column >= 0 && column < m_layout->columns();
+}
+
+bool WarehouseEditorPresenter::canMoveToTile(int row, int column) const
+{
+    return isInBounds(row, column) && m_tileTypeTable[row][column] == baseTile;
+}
+
+bool WarehouseEditorPresenter::moveTile(WarehouseEditorPresenter::TileType type, int index, int row, int column)
+{
+    if (!canMoveToTile(row, column))
+        return false;
+
+    switch (type)
+    {
+        case ACTOR:
+        {
+            ActorPresenter* actor = m_layout->actors()->actors()->at(index);
+
+            m_tileTypeTable[actor->row()][actor->column()] = baseTile;
+            actor->setRow(row);
+            actor->setColumn(column);
+            break;
+        }
+        case CHARGING_STATION:
+        {
+            ChargingStationPresenter* chargingStation = m_layout->chargingStations()->chargingStations()->at(index);
+
+            m_tileTypeTable[chargingStation->row()][chargingStation->column()] = baseTile;
+            chargingStation->setRow(row);
+            chargingStation->setColumn(column);
+            break;
+        }
+        case POD:
+        {
+            PodPresenter* pod = m_layout->pods()->pods()->at(index);
+
+            m_tileTypeTable[pod->row()][pod->column()] = baseTile;
+            pod->setRow(row);
+            pod->setColumn(column);
+            break;
+        }
+        case DELIVERY_STATION:
+        {
+            DeliveryStationPresenter* deliveryStation = m_layout->deliveryStations()->deliveryStations()->at(index);
+
+            m_tileTypeTable[deliveryStation->row()][deliveryStation->column()] = baseTile;
+            deliveryStation->setRow(row);
+            deliveryStation->setColumn(column);
+            break;
+        }
+        default: return false;
+    }
+
+    m_tileTypeTable[row][column] = type;
+
+    return true;
+}
+
+bool WarehouseEditorPresenter::moveMultipleTile(TileType type, QList<int> indices, int deltaRow, int deltaColumn)
+{
+    switch (type) {
+        case ACTOR:
+        {
+            for (int i = 0; i < indices.size(); ++i)
+            {
+                ActorPresenter* actor = m_layout->actors()->actors()->at(indices[i]);
+
+                int newRow    = actor->row()    + deltaRow;
+                int newColumn = actor->column() + deltaColumn;
+
+                // Indices out of bound
+                if (!isInBounds(newRow, newColumn))
+                    return false;
+
+                // If tile at the new position is in selected list => OK
+                if (m_tileTypeTable[newRow][newColumn] == ACTOR)
+                {
+                    int j = 0;
+                    for (; j < indices.size(); ++j)
+                    {
+                        if (i == j) continue;
+
+                        ActorPresenter* otherActor = m_layout->actors()->actors()->at(indices[j]);
+                        if (otherActor->row() == newRow && otherActor->column() == newColumn)
+                            break;
+                    }
+                    // Reached end of selected list and tile at new position is ACTOR => NOT OK
+                    if (j == indices.size())
+                        return false;
+                }
+                // Tile at new position is not empty
+                else if (m_tileTypeTable[newRow][newColumn] != baseTile)
+                    return false;
+            }
+            // Move tiles
+            for (int i = 0; i < indices.size(); ++i)
+            {
+                ActorPresenter* actor = m_layout->actors()->actors()->at(indices[i]);
+
+                m_tileTypeTable[actor->row()][actor->column()] = baseTile;
+                actor->setRow(actor->row() + deltaRow);
+                actor->setColumn(actor->column() + deltaColumn);
+            }
+            for (int i = 0; i < indices.size(); ++i)
+            {
+                ActorPresenter* actor = m_layout->actors()->actors()->at(indices[i]);
+                m_tileTypeTable[actor->row()][actor->column()] = ACTOR;
+            }
+            break;
+        }
+        case CHARGING_STATION:
+        {
+            for (int i = 0; i < indices.size(); ++i)
+            {
+                ChargingStationPresenter* chargingStation = m_layout->chargingStations()->chargingStations()->at(indices[i]);
+
+                int newRow    = chargingStation->row()    + deltaRow;
+                int newColumn = chargingStation->column() + deltaColumn;
+
+                // Indices out of bound
+                if (!isInBounds(newRow, newColumn))
+                    return false;
+
+                // If tile at the new position is in selected list => OK
+                if (m_tileTypeTable[newRow][newColumn] == CHARGING_STATION)
+                {
+                    int j = 0;
+                    for (; j < indices.size(); ++j)
+                    {
+                        if (i == j) continue;
+
+                        ChargingStationPresenter* otherChargingStation = m_layout->chargingStations()->chargingStations()->at(indices[j]);
+                        if (otherChargingStation->row() == newRow && otherChargingStation->column() == newColumn)
+                            break;
+                    }
+                    // Reached end of selected list and tile at new position is CHARGING_STATION => NOT OK
+                    if (j == indices.size())
+                        return false;
+                }
+                // Tile at new position is not empty
+                else if (m_tileTypeTable[newRow][newColumn] != baseTile)
+                    return false;
+            }
+            // Move tiles
+            for (int i = 0; i < indices.size(); ++i)
+            {
+                ChargingStationPresenter* chargingStation = m_layout->chargingStations()->chargingStations()->at(indices[i]);
+
+                m_tileTypeTable[chargingStation->row()][chargingStation->column()] = baseTile;
+                chargingStation->setRow(chargingStation->row() + deltaRow);
+                chargingStation->setColumn(chargingStation->column() + deltaColumn);
+            }
+            for (int i = 0; i < indices.size(); ++i)
+            {
+                ChargingStationPresenter* chargingStation = m_layout->chargingStations()->chargingStations()->at(indices[i]);
+                m_tileTypeTable[chargingStation->row()][chargingStation->column()] = CHARGING_STATION;
+            }
+            break;
+        }
+        case POD:
+        {
+            for (int i = 0; i < indices.size(); ++i)
+            {
+                PodPresenter* pod = m_layout->pods()->pods()->at(indices[i]);
+
+                int newRow    = pod->row()    + deltaRow;
+                int newColumn = pod->column() + deltaColumn;
+
+                // Indices out of bound
+                if (!isInBounds(newRow, newColumn))
+                    return false;
+
+                // If tile at the new position is in selected list => OK
+                if (m_tileTypeTable[newRow][newColumn] == POD)
+                {
+                    int j = 0;
+                    for (; j < indices.size(); ++j)
+                    {
+                        if (i == j) continue;
+
+                        PodPresenter* otherPod = m_layout->pods()->pods()->at(indices[j]);
+                        if (otherPod->row() == newRow && otherPod->column() == newColumn)
+                            break;
+                    }
+                    // Reached end of selected list and tile at new position is POD => NOT OK
+                    if (j == indices.size())
+                        return false;
+                }
+                // Tile at new position is not empty
+                else if (m_tileTypeTable[newRow][newColumn] != baseTile)
+                    return false;
+            }
+            // Move tiles
+            for (int i = 0; i < indices.size(); ++i)
+            {
+                PodPresenter* pod = m_layout->pods()->pods()->at(indices[i]);
+
+                m_tileTypeTable[pod->row()][pod->column()] = baseTile;
+                pod->setRow(pod->row() + deltaRow);
+                pod->setColumn(pod->column() + deltaColumn);
+            }
+            for (int i = 0; i < indices.size(); ++i)
+            {
+                PodPresenter* pod = m_layout->pods()->pods()->at(indices[i]);
+                m_tileTypeTable[pod->row()][pod->column()] = POD;
+            }
+            break;
+        }
+        case DELIVERY_STATION:
+        {
+            for (int i = 0; i < indices.size(); ++i)
+            {
+                DeliveryStationPresenter* deliveryStation = m_layout->deliveryStations()->deliveryStations()->at(indices[i]);
+
+                int newRow    = deliveryStation->row()    + deltaRow;
+                int newColumn = deliveryStation->column() + deltaColumn;
+
+                // Indices out of bound
+                if (!isInBounds(newRow, newColumn))
+                    return false;
+
+                // If tile at the new position is in selected list => OK
+                if (m_tileTypeTable[newRow][newColumn] == DELIVERY_STATION)
+                {
+                    int j = 0;
+                    for (; j < indices.size(); ++j)
+                    {
+                        if (i == j) continue;
+
+                        DeliveryStationPresenter* otherDeliveryStation = m_layout->deliveryStations()->deliveryStations()->at(indices[j]);
+                        if (otherDeliveryStation->row() == newRow && otherDeliveryStation->column() == newColumn)
+                            break;
+                    }
+                    // Reached end of selected list and tile at new position is DELIVERY_STATION => NOT OK
+                    if (j == indices.size())
+                        return false;
+                }
+                // Tile at new position is not empty
+                else if (m_tileTypeTable[newRow][newColumn] != baseTile)
+                    return false;
+            }
+            // Move tiles
+            for (int i = 0; i < indices.size(); ++i)
+            {
+                DeliveryStationPresenter* deliveryStation = m_layout->deliveryStations()->deliveryStations()->at(indices[i]);
+
+                m_tileTypeTable[deliveryStation->row()][deliveryStation->column()] = baseTile;
+                deliveryStation->setRow(deliveryStation->row() + deltaRow);
+                deliveryStation->setColumn(deliveryStation->column() + deltaColumn);
+            }
+            for (int i = 0; i < indices.size(); ++i)
+            {
+                DeliveryStationPresenter* deliveryStation = m_layout->deliveryStations()->deliveryStations()->at(indices[i]);
+                m_tileTypeTable[deliveryStation->row()][deliveryStation->column()] = DELIVERY_STATION;
+            }
+            break;
+        }
+        default: return false;
+    }
+
+    return true;
 }
 
 void WarehouseEditorPresenter::clearWarehouse()

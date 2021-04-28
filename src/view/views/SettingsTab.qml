@@ -78,6 +78,8 @@ ScrollView {
         Button {
             id: wareHouseEditorOpen
 
+            focusPolicy: Qt.NoFocus
+
             Layout.alignment:  Qt.AlignRight
             Layout.columnSpan: 2
 

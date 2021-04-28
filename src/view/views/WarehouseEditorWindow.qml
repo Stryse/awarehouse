@@ -9,6 +9,11 @@ Item {
     id: editorRoot
 
     signal editorClosed()
+    signal shiftPressed()
+    signal shiftReleased()
+
+    onShiftPressed:  warehouse.shiftPressed()
+    onShiftReleased: warehouse.shiftReleased()
 
     readonly property string windowTitle: qsTr("aWarehouse Editor")
 
@@ -120,6 +125,8 @@ Item {
                 Button {
                     id: saveButton
 
+                    focusPolicy: Qt.NoFocus
+
                     Layout.fillHeight:   true
 
                     flat:                true
@@ -133,6 +140,8 @@ Item {
                 }
                 Button {
                     id: loadButton
+
+                    focusPolicy: Qt.NoFocus
 
                     Layout.fillHeight:   true
 
@@ -154,6 +163,8 @@ Item {
                 }
                 Button {
                     id: cancelButton
+
+                    focusPolicy: Qt.NoFocus
 
                     Layout.fillHeight:   true
 
@@ -280,6 +291,8 @@ Item {
             Button {
                 id: loadWarehouse
 
+                focusPolicy: Qt.NoFocus
+
                 anchors {
                     left:   warehouseList.left
                     bottom: parent.bottom
@@ -306,6 +319,8 @@ Item {
 
             Button {
                 id: cancelLoadPopup
+
+                focusPolicy: Qt.NoFocus
 
                 anchors {
                     right:  warehouseList.right
@@ -403,6 +418,8 @@ Item {
                     Button {
                         id: yesButton
 
+                        focusPolicy: Qt.NoFocus
+
                         anchors {
                             left:   parent.left
                             bottom: parent.bottom
@@ -426,6 +443,8 @@ Item {
                     Button {
                         id: noButton
 
+                        focusPolicy: Qt.NoFocus
+
                         anchors {
                             left:   yesButton.right
                             bottom: yesButton.bottom
@@ -448,6 +467,8 @@ Item {
 
                     Button {
                         id: cancelOverwritePopup
+
+                        focusPolicy: Qt.NoFocus
 
                         anchors {
                             right:  parent.right
@@ -537,6 +558,8 @@ Item {
                     Button {
                         id: saveAsButton
 
+                        focusPolicy: Qt.NoFocus
+
                         anchors {
                             left:   parent.left
                             bottom: parent.bottom
@@ -565,6 +588,8 @@ Item {
 
                     Button {
                         id: cancelSaveAsPopup
+
+                        focusPolicy: Qt.NoFocus
 
                         anchors {
                             right:  parent.right

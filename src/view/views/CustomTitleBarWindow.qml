@@ -56,6 +56,8 @@ ApplicationWindow {
             ToolButton {
                 id: minimizeButton
 
+                focusPolicy: Qt.NoFocus
+
                 Layout.preferredWidth:  icon.width + 2*parent.buttonPadding
                 Layout.preferredHeight: parent.height
 
@@ -68,6 +70,8 @@ ApplicationWindow {
             //Fullscreen
             ToolButton {
                 id: fullScreenButton
+
+                focusPolicy: Qt.NoFocus
 
                 property bool isFullScreen: false
 
@@ -88,6 +92,8 @@ ApplicationWindow {
             //Close
             ToolButton {
                 id: closeButton
+
+                focusPolicy: Qt.NoFocus
 
                 Layout.preferredWidth:  icon.width + 2*parent.buttonPadding
                 Layout.preferredHeight: parent.height

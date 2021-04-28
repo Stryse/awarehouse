@@ -89,6 +89,8 @@ Item {
                 SpinBox {
                     id: rowsSpinBox
 
+                    focusPolicy: Qt.NoFocus
+
                     Layout.alignment: Qt.AlignRight
 
                     from:  3
@@ -115,6 +117,8 @@ Item {
                 SpinBox {
                     id: columnsSpinBox
 
+                    focusPolicy: Qt.NoFocus
+
                     Layout.alignment: Qt.AlignRight
 
                     from:  3
@@ -132,6 +136,8 @@ Item {
                 Button {
                     id: clearButton
 
+                    focusPolicy: Qt.NoFocus
+
                     flat:                true
                     Material.background: Material.primary
 
@@ -139,7 +145,10 @@ Item {
                     font.pixelSize:      gridLayout.settingPixelSize
                     font.capitalization: Font.MixedCase;
 
-                    onClicked: EditorPresenter.clearWarehouse()
+                    onClicked: {
+                        warehouse.selectedPodList.length = 0
+                        EditorPresenter.clearWarehouse()
+                    }
                 }
             }
         }

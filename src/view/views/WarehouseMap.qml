@@ -12,6 +12,9 @@ import DeliveryStationList 1.0
 Item {
     id: root
 
+    signal shiftPressed()
+    signal shiftReleased()
+
     property int rows:    EditorPresenter.layout.rows
     property int columns: EditorPresenter.layout.columns
 
@@ -41,11 +44,31 @@ Item {
             id: dropArea
 
             signal tileDropped(int tileType)
+            signal tileMoved(int tileType, int index)
 
-            readonly property int row: index / root.columns
-            readonly property int col: index % root.columns
+            readonly property int row:    index / root.columns
+            readonly property int column: index % root.columns
 
-            onTileDropped: EditorPresenter.setTile(row, col, tileType)
+            onTileDropped: EditorPresenter.setTile(row, column, tileType)
+            onTileMoved: {
+                var mainTile = podRepeater.itemAt(index)
+
+                if (mainTile === null)
+                    return
+
+                if (tileType === TileType.POD && selectedPodList.length > 0) {
+                    var canMove = true
+
+                    var deltaRow    = row    - mainTile.row
+                    var deltaColumn = column - mainTile.column
+
+                    EditorPresenter.moveMultipleTile(TileType.POD, selectedPodList, deltaRow, deltaColumn);
+
+                    clearSelectedPodList()
+                }
+                else
+                    EditorPresenter.moveTile(tileType, index, row, column)
+            }
 
             Layout.alignment: Qt.AlignCenter
 
@@ -68,32 +91,50 @@ Item {
         Image {
             id: actorImg
 
-              x: model.column * (root.cellSize + root.cellSpacing)
-              y: model.row    * (root.cellSize + root.cellSpacing)
+            x: model.column * (root.cellSize + root.cellSpacing)
+            y: model.row    * (root.cellSize + root.cellSpacing)
 
-              width:  root.cellSize
-              height: root.cellSize
+            width:  root.cellSize
+            height: root.cellSize
 
-              source: model.image
+            source: model.image
 
-              rotation: model.rotation
+            rotation: model.rotation
 
-              Behavior on rotation {
-                  id: rotationBehavior
+            Behavior on rotation {
+                id: rotationBehavior
 
-                  PropertyAnimation {
-                      properties: "rotation"
-                      easing.type: Easing.InOutQuart
-                      from: actorImg.rotation % 360 == 0 ? (actorImg.rotation == 0 && rotationBehavior.targetValue === 270 ? 360 : 0) : model.rotation
-                      to: from === 270 && rotationBehavior.targetValue === 0 ? 360 : rotationBehavior.targetValue}
-              }
+                PropertyAnimation {
+                    properties: "rotation"
+                    easing.type: Easing.InOutQuart
+                    from: actorImg.rotation % 360 == 0 ? (actorImg.rotation == 0 && rotationBehavior.targetValue === 270 ? 360 : 0) : model.rotation
+                    to: from === 270 && rotationBehavior.targetValue === 0 ? 360 : rotationBehavior.targetValue}
+            }
+
+            Drag.active:    actorMouseArea.drag.active
+            Drag.hotSpot.x: width/2
+            Drag.hotSpot.y: width/2
+
+            states:
+                State {
+                    when: !actorMouseArea.drag.active
+                    PropertyChanges { target: actorImg; x: model.column * (root.cellSize + root.cellSpacing); y: model.row * (root.cellSize + root.cellSpacing) }
+                }
 
             MouseArea {
                 id: actorMouseArea
 
                 anchors.fill: parent
 
-                acceptedButtons: Qt.MiddleButton | Qt.RightButton
+                acceptedButtons: Qt.MiddleButton | Qt.RightButton | Qt.LeftButton
+
+                drag.target: actorImg
+                onReleased: {
+                    var dragTarget = actorImg.Drag.target
+
+                    if (dragTarget !== null)
+                        dragTarget.tileMoved(TileType.ACTOR, model.index)
+                }
 
                 onClicked: {
                     if (mouse.button === Qt.RightButton) {
@@ -124,14 +165,82 @@ Item {
 
             source: model.image
 
+            Drag.active:    chargingStationMouseArea.drag.active
+            Drag.hotSpot.x: width/2
+            Drag.hotSpot.y: width/2
+
+            states:
+                State {
+                    when: !chargingStationMouseArea.drag.active
+                    PropertyChanges { target: chargingStationImg; x: model.column * (root.cellSize + root.cellSpacing); y: model.row * (root.cellSize + root.cellSpacing) }
+                }
+
             MouseArea {
                 id: chargingStationMouseArea
 
                 anchors.fill: parent
 
-                acceptedButtons: Qt.MiddleButton
+                acceptedButtons: Qt.MiddleButton | Qt.LeftButton
 
-                onClicked: EditorPresenter.removeTile(model.row, model.column)
+                drag.target: chargingStationImg
+                onReleased: {
+                    var dragTarget = chargingStationImg.Drag.target
+
+                    if (dragTarget !== null)
+                        dragTarget.tileMoved(TileType.CHARGING_STATION, model.index)
+                }
+
+                onClicked: {
+                    if (mouse.button === Qt.MiddleButton)
+                        EditorPresenter.removeTile(model.row, model.column)
+                }
+            }
+        }
+    }
+
+    property bool canSelectPod
+    property var  selectedPodList: []
+
+    function clearSelectedPodList() {
+        for (var i = 0; i < selectedPodList.length; ++i) {
+            var pod = podRepeater.itemAt(selectedPodList[i])
+            if (pod !== null) {
+                pod.resetDrag()
+                pod.selectVisible = false
+                pod.originX = pod.x
+                pod.originY = pod.y
+            }
+        }
+
+        selectedPodList.length = 0
+    }
+    function updateSelectedPodX(deltaX, mainIndex) {
+        for (var i = 0; i < selectedPodList.length; ++i) {
+            if (selectedPodList[i] === mainIndex)
+                continue;
+
+            var pod = podRepeater.itemAt(selectedPodList[i])
+            if (pod !== null)
+                pod.dragX = deltaX;
+        }
+    }
+    function updateSelectedPodY(deltaY, mainIndex) {
+        for (var i = 0; i < selectedPodList.length; ++i) {
+            if (selectedPodList[i] === mainIndex)
+                continue;
+
+            var pod = podRepeater.itemAt(selectedPodList[i])
+            if (pod !== null)
+                pod.dragY = deltaY;
+        }
+    }
+    function resetSelectedPodPos() {
+        for (var i = 0; i < selectedPodList.length; ++i) {
+            var pod = podRepeater.itemAt(selectedPodList[i])
+            if (pod !== null) {
+                pod.resetDrag()
+                pod.originX = pod.x
+                pod.originY = pod.y
             }
         }
     }
@@ -144,11 +253,27 @@ Item {
 
             property variant orders: model.orders
 
-            x: model.column * (root.cellSize + root.cellSpacing)
-            y: model.row    * (root.cellSize + root.cellSpacing)
+            property int row:    model.row
+            property int column: model.column
+
+            property bool selectVisible: false
+
+            //Bug: Breakes if cursor is out of window
+            property double dragX: 0
+            property double dragY: 0
+
+            function resetDrag() {
+                dragX = 0
+                dragY = 0
+            }
+
+            x: model.column * (root.cellSize + root.cellSpacing) + dragX
+            y: model.row    * (root.cellSize + root.cellSpacing) + dragY
 
             width:  root.cellSize
             height: root.cellSize
+
+            Rectangle { anchors.fill:parent; color: podItem.selectVisible ? "#EF9A9A" : "transparent" }
 
             Image {
                 id: podDockImg
@@ -192,18 +317,96 @@ Item {
                 }
             }
 
+            Drag.active:    podMouseArea.drag.active
+            Drag.hotSpot.x: width/2
+            Drag.hotSpot.y: width/2
+
+            states:
+                State {
+                    when: !podItem.Drag.active
+                    PropertyChanges {
+                        target: podItem;
+                        x: model.column * (root.cellSize + root.cellSpacing) + dragX;
+                        y: model.row    * (root.cellSize + root.cellSpacing) + dragY;
+                    }
+                }
+
+            property int originX: x
+            property int originY: y
+
+            onXChanged: {
+                if (podItem.Drag.active) {
+                    if (selectedPodList.indexOf(model.index) < 0)
+                        root.clearSelectedPodList()
+
+                    var deltaX = x - originX;
+                    root.updateSelectedPodX(deltaX, model.index)
+                }
+            }
+
+            onYChanged: {
+                if (podItem.Drag.active) {
+                    if (selectedPodList.indexOf(model.index) < 0)
+                        root.clearSelectedPodList()
+
+                    var deltaY = y - originY;
+                    root.updateSelectedPodY(deltaY, model.index)
+                }
+            }
+
             MouseArea {
-                id: actorMouseArea
+                id: podMouseArea
 
                 anchors.fill: parent
 
-                acceptedButtons: Qt.MiddleButton | Qt.RightButton
+                acceptedButtons: Qt.MiddleButton | Qt.RightButton | Qt.LeftButton
+
+                drag.target: podItem
+                onReleased: {
+                    var dragTarget = podItem.Drag.target
+
+                    if (dragTarget !== null)
+                        dragTarget.tileMoved(TileType.POD, model.index)
+
+                    root.resetSelectedPodPos()
+                }
+                onPressed: {
+                    var listIndex = root.selectedPodList.indexOf(model.index)
+
+                    if (mouse.button === Qt.LeftButton) {
+                        if (mouse.modifiers & Qt.ShiftModifier) {
+                            // Add to selected list
+                            if (listIndex > -1) {
+                                root.selectedPodList.splice(listIndex, 1)
+                                podItem.selectVisible = false
+                            }
+                            // Remove from selected list
+                            else {
+                                root.selectedPodList.push(model.index)
+                                root.selectedPodList.sort()
+                                podItem.selectVisible = true
+                            }
+                        }
+                    }
+                }
 
                 onClicked: {
+                    var listIndex = root.selectedPodList.indexOf(model.index)
+
+                    // Order Popup
                     if (mouse.button === Qt.RightButton)
                         ordersPopup.open()
-                    else if (mouse.button === Qt.MiddleButton)
+                    // Remove Pod
+                    else if (mouse.button === Qt.MiddleButton) {
+                        if (listIndex > -1) {
+                            for (var i = listIndex+1; i < root.selectedPodList.length; ++i)
+                                --root.selectedPodList[i]
+                            root.selectedPodList.splice(listIndex, 1)
+                            console.log("Removed " + model.index + " from selection")
+                        }
+
                         EditorPresenter.removeTile(model.row, model.column)
+                    }
                 }
             }
 
@@ -227,7 +430,7 @@ Item {
                 horizontalPadding: 20
 
                 modal: true
-                focus: true
+
                 closePolicy: Popup.CloseOnEscape | Popup.CloseOnPressOutside
 
                 contentItem: Item {
@@ -262,7 +465,6 @@ Item {
                         }
                         clip: true
 
-                        focus:        true
                         currentIndex: -1
 
                         model: ordersListModel
@@ -331,6 +533,8 @@ Item {
                     Button {
                         id: cancelOrdersPopup
 
+                        focusPolicy: Qt.NoFocus
+
                         anchors {
                             right:  parent.right
                             bottom: parent.bottom
@@ -348,8 +552,6 @@ Item {
                 }
 
                 onAboutToShow: {
-                    //Omegalul top kek
-
                     var orderCategoryCount = EditorPresenter.layout.categoryCount
                     var currentOrders      = model.orders
 
@@ -413,14 +615,35 @@ Item {
                 font.pixelSize: root.cellSize * 0.4
             }
 
+            Drag.active:    deliveryStationMouseArea.drag.active
+            Drag.hotSpot.x: width/2
+            Drag.hotSpot.y: width/2
+
+            states:
+                State {
+                    when: !deliveryStationMouseArea.drag.active
+                    PropertyChanges { target: deliveryStationImg; x: model.column * (root.cellSize + root.cellSpacing); y: model.row * (root.cellSize + root.cellSpacing) }
+                }
+
             MouseArea {
-                id: actorMouseArea
+                id: deliveryStationMouseArea
 
                 anchors.fill: parent
 
-                acceptedButtons: Qt.MiddleButton
+                acceptedButtons: Qt.MiddleButton | Qt.LeftButton
 
-                onClicked: EditorPresenter.removeTile(model.row, model.column)
+                drag.target: deliveryStationImg
+                onReleased: {
+                    var dragTarget = deliveryStationImg.Drag.target
+
+                    if (dragTarget !== null)
+                        dragTarget.tileMoved(TileType.DELIVERY_STATION, model.index)
+                }
+
+                onClicked: {
+                    if (mouse.button === Qt.MiddleButton)
+                        EditorPresenter.removeTile(model.row, model.column)
+                }
             }
         }
     }
@@ -450,7 +673,7 @@ Item {
 
         anchors.fill: parent
 
-        clip: true
+        clip:  true
 
         contentWidth:  map.width
         contentHeight: map.height
@@ -487,20 +710,6 @@ Item {
                 }
             }
             Item {
-                id: actors
-
-                anchors.fill: base
-
-                Repeater {
-                    id: actorRepeater
-
-                    model: ActorListModel {
-                       actors: EditorPresenter.layout.actors
-                    }
-                    delegate: actorComponent
-                }
-            }
-            Item {
                 id: chargingStations
 
                 anchors.fill: base
@@ -515,20 +724,6 @@ Item {
                 }
             }
             Item {
-                id: pods
-
-                anchors.fill: base
-
-                Repeater {
-                    id: podRepeater
-
-                    model: PodListModel {
-                        pods: EditorPresenter.layout.pods
-                    }
-                    delegate: podComponent
-                }
-            }
-            Item {
                 id: deliveryStations
 
                 anchors.fill: base
@@ -540,6 +735,34 @@ Item {
                         deliveryStations: EditorPresenter.layout.deliveryStations
                     }
                     delegate: deliveryStationComponent
+                }
+            }
+            Item {
+                id: actors
+
+                anchors.fill: base
+
+                Repeater {
+                    id: actorRepeater
+
+                    model: ActorListModel {
+                       actors: EditorPresenter.layout.actors
+                    }
+                    delegate: actorComponent
+                }
+            }
+            Item {
+                id: pods
+
+                anchors.fill: base
+
+                Repeater {
+                    id: podRepeater
+
+                    model: PodListModel {
+                        pods: EditorPresenter.layout.pods
+                    }
+                    delegate: podComponent
                 }
             }
         }
