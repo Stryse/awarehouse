@@ -27,6 +27,8 @@ CustomTitleBarWindow {
         anchors.fill: parent
 
         initialItem: simulationComponent
+
+        focus: true
     }
 
     Component {
@@ -44,6 +46,21 @@ CustomTitleBarWindow {
         id: editorComponent
 
         WarehouseEditorWindow {
+            id: editor
+
+            Keys.onPressed: {
+                if (event.key === Qt.Key_Shift) {
+                    shiftPressed()
+                    event.accepted = true
+                }
+            }
+            Keys.onReleased: {
+                if (event.key === Qt.Key_Shift) {
+                    shiftReleased()
+                    event.accepted = true
+                }
+            }
+
             borderWidth:    mainRoot.borderWidth
             secondaryColor: mainRoot.secondaryColor
 

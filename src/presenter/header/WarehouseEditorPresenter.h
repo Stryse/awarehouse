@@ -55,6 +55,12 @@ public slots:
     void setTile(int row, int column, TileType type);
     void removeTile(int row, int column);
 
+    bool isInBounds(int row, int column) const;
+    bool canMoveToTile(int row, int column) const;
+    bool moveTile(TileType type, int index, int row, int column);
+
+    bool moveMultipleTile(TileType type, QList<int> indices, int deltaRow, int deltaColumn);
+
     void clearWarehouse();
 
     void loadWarehouse(const QString& warehouseName);
