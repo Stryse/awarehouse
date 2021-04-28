@@ -25,20 +25,15 @@ ControllerImpl::ControllerImpl(PathFinder *pathFinder)
     directionToMessage.emplace(std::make_pair(DirectionVector<>::RIGHT(), MMoveAgentRight));
 }
 
-ControllerImpl::~ControllerImpl()
-{
-    networkAdapter.disconnect();
-}
+ControllerImpl::~ControllerImpl() { networkAdapter.disconnect(); }
 
-void ControllerImpl::tick(int timeStamp)
-{
-    broadcastMessages(timeStamp);
-}
+void ControllerImpl::tick(int timeStamp) { broadcastMessages(timeStamp); }
 
-void ControllerImpl::reset()
-{
-    controlMessages.clear();
-}
+void ControllerImpl::reset() { controlMessages.clear(); }
+
+const NetworkAdapter &ControllerImpl::getNetworkAdapter() const { return networkAdapter; }
+
+NetworkAdapter &ControllerImpl::getNetworkAdapter() { return networkAdapter; }
 
 void ControllerImpl::broadcastMessages(int timeStamp)
 {
@@ -85,10 +80,9 @@ bool ControllerImpl::PlanTask(TaskAssignment *assignment)
     for (int i = 1; i < wayPointCount - 1; ++i)
     {
         roundTrip.emplace_back(pathFinder->findPathHard(Point<>(roundTrip[i - 1][0]->coords.first, roundTrip[i - 1][0]->coords.second),
-                                                    assignment->task->getWayPoints()[i],
-                                                    roundTrip[i - 1][0]->arriveOrientation,
-                                                    roundTrip[i - 1][0]->gCost + 1, assignment->controlData->moveMechanism));
-
+                                                        assignment->task->getWayPoints()[i],
+                                                        roundTrip[i - 1][0]->arriveOrientation,
+                                                        roundTrip[i - 1][0]->gCost + 1, assignment->controlData->moveMechanism));
 
         sumEnergy += roundTrip[i][0]->byEnergy;
         // ####### Putdown Order #######
@@ -99,33 +93,20 @@ bool ControllerImpl::PlanTask(TaskAssignment *assignment)
     }
 
     //################################################ Travel back #########################################################
-    roundTrip.emplace_back(pathFinder->findPathHard(Point<>(roundTrip[wayPointCount-2][0]->coords.first, roundTrip[wayPointCount-2][0]->coords.second),
-                                                    assignment->task->getWayPoints()[wayPointCount-1],
-                                                    roundTrip[wayPointCount-2][0]->arriveOrientation,
-                                                    roundTrip[wayPointCount-2][0]->gCost + 1, assignment->controlData->moveMechanism));
+    roundTrip.emplace_back(pathFinder->findPathHard(Point<>(roundTrip[wayPointCount - 2][0]->coords.first, roundTrip[wayPointCount - 2][0]->coords.second),
+                                                    assignment->task->getWayPoints()[wayPointCount - 1],
+                                                    roundTrip[wayPointCount - 2][0]->arriveOrientation,
+                                                    roundTrip[wayPointCount - 2][0]->gCost + 1, assignment->controlData->moveMechanism));
 
-        sumEnergy += roundTrip[wayPointCount-1][0]->byEnergy;
-        pathFinder->claimPath(roundTrip[wayPointCount-1]);
-        translatePath(roundTrip[wayPointCount-1], assignment->controlData->address);
+    sumEnergy += roundTrip[wayPointCount - 1][0]->byEnergy;
+    pathFinder->claimPath(roundTrip[wayPointCount - 1]);
+    translatePath(roundTrip[wayPointCount - 1], assignment->controlData->address);
 
     // ####### PutDown Pod #######
-    controlMessages.emplace(std::make_pair(roundTrip[wayPointCount-1][0]->gCost, TargetedMessage(assignment->controlData->address, MPickupPod)));
-
+    controlMessages.emplace(std::make_pair(roundTrip[wayPointCount - 1][0]->gCost, TargetedMessage(assignment->controlData->address, MPickupPod)));
     std::cout << "SumEnergy: " << sumEnergy << " Address: " << assignment->controlData->address << std::endl;
+
     return true;
 }
 
-bool ControllerImpl::PlanCharge(const AgentControlData &controlData)
-{
-    return true;
-}
-
-const NetworkAdapter &ControllerImpl::getNetworkAdapter() const
-{
-    return networkAdapter;
-}
-
-NetworkAdapter &ControllerImpl::getNetworkAdapter()
-{
-    return networkAdapter;
-}
+bool ControllerImpl::PlanCharge(const AgentControlData &controlData) { return true; }

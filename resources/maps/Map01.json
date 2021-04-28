@@ -1,318 +1,44 @@
 {
     "WarehouseLayoutData": {
-        "RowCount": 12,
-        "ColCount": 12,
         "ChargingStations": [
             {
-                "RowCoord": 1,
-                "ColCoord": 0
+                "ColCoord": 1,
+                "RowCoord": 0
+            }
+        ],
+        "ColCount": 5,
+        "DeliveryRobots": [
+            {
+                "ColCoord": 1,
+                "OrientationX": 0,
+                "OrientationY": -1,
+                "RowCoord": 2
             },
             {
-                "RowCoord": 3,
-                "ColCoord": 0
-            },
-            {
-                "RowCoord": 5,
-                "ColCoord": 0
-            },
-            {
-                "RowCoord": 7,
-                "ColCoord": 0
+                "ColCoord": 1,
+                "OrientationX": 0,
+                "OrientationY": -1,
+                "RowCoord": 3
             }
         ],
         "DeliveryStations": [
             {
-                "RowCoord": 11,
-                "ColCoord": 2,
-                "AcceptedOrderID": 1
-            },
-            {
-                "RowCoord": 11,
+                "AcceptedOrderID": 1,
                 "ColCoord": 4,
-                "AcceptedOrderID": 2
-            },
-            {
-                "RowCoord": 11,
-                "ColCoord": 6,
-                "AcceptedOrderID": 3
-            },
-            {
-                "RowCoord": 11,
-                "ColCoord": 8,
-                "AcceptedOrderID": 4
+                "RowCoord": 4
             }
         ],
         "PodDocks": [
             {
-                "RowCoord": 1,
-                "ColCoord": 2
-            },
-            {
-                "RowCoord": 1,
-                "ColCoord": 3
-            },
-            {
-                "RowCoord": 2,
-                "ColCoord": 2
-            },
-            {
-                "RowCoord": 2,
-                "ColCoord": 3,
-                "Orders": [
-                    {
-                        "Category": 1
-                    },
-                    {
-                        "Category": 3
-                    },
-                    {
-                        "Category": 4
-                    }
-                ]
-            },
-            {
-                "RowCoord": 3,
-                "ColCoord": 2,
+                "ColCoord": 4,
                 "Orders": [
                     {
                         "Category": 1
                     }
-                ]
-            },
-            {
-                "RowCoord": 3,
-                "ColCoord": 3
-            },
-            {
-                "RowCoord": 4,
-                "ColCoord": 2
-            },
-            {
-                "RowCoord": 4,
-                "ColCoord": 3,
-                "Orders": [
-                    {
-                        "Category": 1
-                    }
-                ]
-            },
-            {
-                "RowCoord": 5,
-                "ColCoord": 2,
-                "Orders": [
-                    {
-                        "Category": 2
-                    }
-                ]
-            },
-            {
-                "RowCoord": 5,
-                "ColCoord": 3
-            },
-            {
-                "RowCoord": 6,
-                "ColCoord": 2,
-                "Orders": [
-                    {
-                        "Category": 2
-                    }
-                ]
-            },
-            {
-                "RowCoord": 6,
-                "ColCoord": 3
-            },
-            {
-                "RowCoord": 7,
-                "ColCoord": 2
-            },
-            {
-                "RowCoord": 7,
-                "ColCoord": 3
-            },
-            {
-                "RowCoord": 1,
-                "ColCoord": 5
-            },
-            {
-                "RowCoord": 1,
-                "ColCoord": 6
-            },
-            {
-                "RowCoord": 2,
-                "ColCoord": 5,
-                "Orders": [
-                    {
-                        "Category": 2
-                    },
-                    {
-                        "Category": 4
-                    }
-                ]
-            },
-            {
-                "RowCoord": 2,
-                "ColCoord": 6
-            },
-            {
-                "RowCoord": 3,
-                "ColCoord": 5,
-                "Orders": [
-                    {
-                        "Category": 4
-                    }
-                ]
-            },
-            {
-                "RowCoord": 3,
-                "ColCoord": 6
-            },
-            {
-                "RowCoord": 4,
-                "ColCoord": 5
-            },
-            {
-                "RowCoord": 4,
-                "ColCoord": 6
-            },
-            {
-                "RowCoord": 5,
-                "ColCoord": 5
-            },
-            {
-                "RowCoord": 5,
-                "ColCoord": 6
-            },
-            {
-                "RowCoord": 6,
-                "ColCoord": 5
-            },
-            {
-                "RowCoord": 6,
-                "ColCoord": 6
-            },
-            {
-                "RowCoord": 7,
-                "ColCoord": 5
-            },
-            {
-                "RowCoord": 7,
-                "ColCoord": 6
-            },
-            {
-                "RowCoord": 1,
-                "ColCoord": 8,
-                "Orders": [
-                    {
-                        "Category": 1
-                    }
-                ]
-            },
-            {
-                "RowCoord": 1,
-                "ColCoord": 9,
-                "Orders": [
-                    {
-                        "Category": 3
-                    }
-                ]
-            },
-            {
-                "RowCoord": 2,
-                "ColCoord": 8
-            },
-            {
-                "RowCoord": 2,
-                "ColCoord": 9,
-                "Orders": [
-                    {
-                        "Category": 3
-                    }
-                ]
-            },
-            {
-                "RowCoord": 3,
-                "ColCoord": 8
-            },
-            {
-                "RowCoord": 3,
-                "ColCoord": 9,
-                "Orders": [
-                    {
-                        "Category": 1
-                    }
-                ]
-            },
-            {
-                "RowCoord": 4,
-                "ColCoord": 8,
-                "Orders": [
-                    {
-                        "Category": 4
-                    }
-                ]
-            },
-            {
-                "RowCoord": 4,
-                "ColCoord": 9,
-                "Orders": [
-                    {
-                        "Category": 3
-                    }
-                ]
-            },
-            {
-                "RowCoord": 5,
-                "ColCoord": 8,
-                "Orders": [
-                    {
-                        "Category": 1
-                    },
-                    {
-                        "Category": 4
-                    }
-                ]
-            },
-            {
-                "RowCoord": 5,
-                "ColCoord": 9
-            },
-            {
-                "RowCoord": 6,
-                "ColCoord": 8
-            },
-            {
-                "RowCoord": 6,
-                "ColCoord": 9
-            },
-            {
-                "RowCoord": 7,
-                "ColCoord": 8
-            },
-            {
-                "RowCoord": 7,
-                "ColCoord": 9
+                ],
+                "RowCoord": 0
             }
         ],
-        "DeliveryRobots": [
-            {
-                "RowCoord": 8,
-                "ColCoord": 11,
-                "OrientationX": -1,
-                "OrientationY": 0
-            },
-            {
-                "RowCoord": 9,
-                "ColCoord": 11,
-                "OrientationX": -1,
-                "OrientationY": 0
-            },
-            {
-                "RowCoord": 10,
-                "ColCoord": 11,
-                "OrientationX": -1,
-                "OrientationY": 0
-            }
-        ]
+        "RowCount": 5
     }
 }
