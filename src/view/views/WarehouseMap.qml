@@ -354,8 +354,6 @@ Item {
             property double originX
             property double originY
 
-            onOriginXChanged: console.log("originX: " + originX)
-
             Component.onCompleted: {
                 originX = model.column * (root.cellSize + root.cellSpacing) + dragX
                 originY = model.row    * (root.cellSize + root.cellSpacing) + dragY
