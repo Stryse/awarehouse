@@ -51,20 +51,28 @@ Item {
 
             onTileDropped: EditorPresenter.setTile(row, column, tileType)
             onTileMoved: {
-                var mainTile = podRepeater.itemAt(index)
+                if (tileType === TileType.POD) {
+                    var mainTile = podRepeater.itemAt(index)
 
-                if (mainTile === null)
-                    return
+                    if (mainTile === null)
+                        return
 
-                if (tileType === TileType.POD && selectedPodList.length > 0) {
-                    var canMove = true
+                    if (selectedPodList.length > 0) {
+                        var canMove = true
 
-                    var deltaRow    = row    - mainTile.row
-                    var deltaColumn = column - mainTile.column
+                        var deltaRow    = row    - mainTile.row
+                        var deltaColumn = column - mainTile.column
 
-                    EditorPresenter.moveMultipleTile(TileType.POD, selectedPodList, deltaRow, deltaColumn);
+                        EditorPresenter.moveMultipleTile(TileType.POD, selectedPodList, deltaRow, deltaColumn);
 
-                    clearSelectedPodList()
+                        clearSelectedPodList()
+                    }
+                    else {
+                        EditorPresenter.moveTile(tileType, index, row, column)
+
+                        mainTile.originX = mainTile.column * (root.cellSize + root.cellSpacing) + mainTile.dragX
+                        mainTile.originY = mainTile.row    * (root.cellSize + root.cellSpacing) + mainTile.dragY
+                    }
                 }
                 else
                     EditorPresenter.moveTile(tileType, index, row, column)
@@ -198,40 +206,26 @@ Item {
         }
     }
 
-    property bool canSelectPod
-    property var  selectedPodList: []
+    property var selectedPodList: []
 
-    function clearSelectedPodList() {
-        for (var i = 0; i < selectedPodList.length; ++i) {
-            var pod = podRepeater.itemAt(selectedPodList[i])
-            if (pod !== null) {
-                pod.resetDrag()
-                pod.selectVisible = false
-                pod.originX = pod.x
-                pod.originY = pod.y
-            }
-        }
-
-        selectedPodList.length = 0
-    }
     function updateSelectedPodX(deltaX, mainIndex) {
         for (var i = 0; i < selectedPodList.length; ++i) {
             if (selectedPodList[i] === mainIndex)
-                continue;
+                continue
 
             var pod = podRepeater.itemAt(selectedPodList[i])
             if (pod !== null)
-                pod.dragX = deltaX;
+                pod.dragX = deltaX
         }
     }
     function updateSelectedPodY(deltaY, mainIndex) {
         for (var i = 0; i < selectedPodList.length; ++i) {
             if (selectedPodList[i] === mainIndex)
-                continue;
+                continue
 
             var pod = podRepeater.itemAt(selectedPodList[i])
             if (pod !== null)
-                pod.dragY = deltaY;
+                pod.dragY = deltaY
         }
     }
     function resetSelectedPodPos() {
@@ -239,10 +233,26 @@ Item {
             var pod = podRepeater.itemAt(selectedPodList[i])
             if (pod !== null) {
                 pod.resetDrag()
-                pod.originX = pod.x
-                pod.originY = pod.y
             }
         }
+    }
+    function unhighlightSelectPods() {
+        for (var i = 0; i < selectedPodList.length; ++i) {
+            var pod = podRepeater.itemAt(selectedPodList[i])
+            if (pod !== null)
+                pod.selectVisible = false
+        }
+    }
+    function clearSelectedPodList() {
+        resetSelectedPodPos()
+        for (var i = 0; i < selectedPodList.length; ++i) {
+            var pod = podRepeater.itemAt(selectedPodList[i])
+            if (pod !== null) {
+                pod.originX = pod.column * (root.cellSize + root.cellSpacing) + pod.dragX
+                pod.originY = pod.row    * (root.cellSize + root.cellSpacing) + pod.dragY
+            }
+        }
+        selectedPodList.length = 0
     }
 
     Component {
@@ -266,6 +276,9 @@ Item {
                 dragX = 0
                 dragY = 0
             }
+            function setOrders(orders) {
+                model.orders = orders
+            }
 
             x: model.column * (root.cellSize + root.cellSpacing) + dragX
             y: model.row    * (root.cellSize + root.cellSpacing) + dragY
@@ -273,7 +286,7 @@ Item {
             width:  root.cellSize
             height: root.cellSize
 
-            Rectangle { anchors.fill:parent; color: podItem.selectVisible ? "#EF9A9A" : "transparent" }
+            Rectangle { anchors.fill: parent; color: podItem.selectVisible ? "#EF9A9A" : "transparent" }
 
             Image {
                 id: podDockImg
@@ -302,7 +315,7 @@ Item {
                     width:  parent.width * 0.8
                     height: width
 
-                    cellWidth:  width  / 3
+                    cellWidth:  width / 3
                     cellHeight: cellWidth
 
                     model: podItem.orders
@@ -321,33 +334,50 @@ Item {
             Drag.hotSpot.x: width/2
             Drag.hotSpot.y: width/2
 
+            Drag.onActiveChanged: {
+                if (podItem.Drag.active)
+                    root.unhighlightSelectPods()
+                else
+                    root.clearSelectedPodList()
+            }
+
             states:
                 State {
                     when: !podItem.Drag.active
                     PropertyChanges {
-                        target: podItem;
-                        x: model.column * (root.cellSize + root.cellSpacing) + dragX;
-                        y: model.row    * (root.cellSize + root.cellSpacing) + dragY;
+                        target:  podItem
+                        x:       model.column * (root.cellSize + root.cellSpacing) + dragX
+                        y:       model.row    * (root.cellSize + root.cellSpacing) + dragY
                     }
                 }
 
-            property int originX: x
-            property int originY: y
+            property double originX
+            property double originY
+
+            onOriginXChanged: console.log("originX: " + originX)
+
+            Component.onCompleted: {
+                originX = model.column * (root.cellSize + root.cellSpacing) + dragX
+                originY = model.row    * (root.cellSize + root.cellSpacing) + dragY
+            }
 
             onXChanged: {
                 if (podItem.Drag.active) {
-                    if (selectedPodList.indexOf(model.index) < 0)
+                    if (selectedPodList.indexOf(model.index) < 0) {
                         root.clearSelectedPodList()
+                        return
+                    }
 
                     var deltaX = x - originX;
                     root.updateSelectedPodX(deltaX, model.index)
                 }
             }
-
             onYChanged: {
                 if (podItem.Drag.active) {
-                    if (selectedPodList.indexOf(model.index) < 0)
+                    if (selectedPodList.indexOf(model.index) < 0) {
                         root.clearSelectedPodList()
+                        return
+                    }
 
                     var deltaY = y - originY;
                     root.updateSelectedPodY(deltaY, model.index)
@@ -375,12 +405,12 @@ Item {
 
                     if (mouse.button === Qt.LeftButton) {
                         if (mouse.modifiers & Qt.ShiftModifier) {
-                            // Add to selected list
+                            // Remove from selected list
                             if (listIndex > -1) {
                                 root.selectedPodList.splice(listIndex, 1)
                                 podItem.selectVisible = false
                             }
-                            // Remove from selected list
+                            // Add to selected list
                             else {
                                 root.selectedPodList.push(model.index)
                                 root.selectedPodList.sort()
@@ -553,7 +583,7 @@ Item {
 
                 onAboutToShow: {
                     var orderCategoryCount = EditorPresenter.layout.categoryCount
-                    var currentOrders      = model.orders
+                    var currentOrders      = root.selectedPodList.length === 0 ? model.orders : []
 
                     var i = 1;
                     var j = 0;
@@ -583,7 +613,17 @@ Item {
                         if (ordersListModel.get(i).isChecked)
                             orders.push(ordersListModel.get(i).orderName)
 
-                    model.orders = orders
+                    if (root.selectedPodList.length === 0)
+                        model.orders = orders
+                    else {
+                        for (var j = 0; j < root.selectedPodList.length; ++j) {
+                            var pod = podRepeater.itemAt(root.selectedPodList[j])
+                            if (pod !== null) {
+                                console.log(pod.row + " " + pod.column)
+                                pod.setOrders(orders)
+                            }
+                        }
+                    }
 
                     ordersListModel.clear()
                 }
