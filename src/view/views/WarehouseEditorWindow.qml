@@ -99,13 +99,29 @@ Item {
 
                     topMargin: height * -0.35
                 }
-                leftPadding: previewLabel.leftPadding
+                leftPadding:   previewLabel.leftPadding
 
                 text: editorRoot.currentWarehouse
 
                 font.pixelSize: editorRoot.height * 0.026
+                font.weight:    Font.Light
+                font.italic:    true
+            }
+
+            Label {
+                id: helpLabel
+
+                anchors {
+                    right: parent.right
+                    top:   parent.top
+                }
+                rightPadding: editorRoot.width  * 0.01
+                topPadding:   editorRoot.height * 0.005
+
+                text: "MMB: Remove Tile\nRMB:  Rotate Actor/Open Orders\nSHIFT+LMB: Pod Multi Select"
+
+                font.pixelSize: editorRoot.height * 0.015
                 font.weight: Font.Light
-                font.italic: true
             }
 
             RowLayout {
