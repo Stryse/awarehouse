@@ -10,13 +10,8 @@ Button {
 
     flat: true
     Material.foreground: hovered ? Material.accent : "white"
+    Material.background: Material.primary
 
-    icon.height: 36
-    icon.width:  36
-
-    /*
-    //Text -> Fix BUG first !!!
-    display: AbstractButton.TextUnderIcon
-    font.capitalization: Font.MixedCase
-    */
+//    icon.height: 36
+//    icon.width:  36
 }

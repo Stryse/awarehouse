@@ -29,7 +29,7 @@ Item {
 
         TabButton { text: root.isFullSize  ?  qsTr("Outliner")   : qsTr("Out") ; font.capitalization: Font.MixedCase; font.pixelSize: tabBar.textSize; focusPolicy: Qt.NoFocus }
         TabButton { text: root.isFullSize  ?  qsTr("Statistics") : qsTr("Stat"); font.capitalization: Font.MixedCase; font.pixelSize: tabBar.textSize; focusPolicy: Qt.NoFocus }
-        TabButton { text: root.isFullSize  ?  qsTr("Orders")     : qsTr("Ord") ; font.capitalization: Font.MixedCase; font.pixelSize: tabBar.textSize; focusPolicy: Qt.NoFocus }
+        //TabButton { text: root.isFullSize  ?  qsTr("Orders")     : qsTr("Ord") ; font.capitalization: Font.MixedCase; font.pixelSize: tabBar.textSize; focusPolicy: Qt.NoFocus }
         TabButton { text: root.isFullSize  ?  qsTr("Settings")   : qsTr("Set") ; font.capitalization: Font.MixedCase; font.pixelSize: tabBar.textSize; focusPolicy: Qt.NoFocus }
     }
 
@@ -58,7 +58,7 @@ Item {
             //Tab content
             OutlinerTab   { id: outliner   }
             StatisticsTab { id: statistics }
-            OrdersTab     { id: orders     }
+            //OrdersTab     { id: orders     }
             SettingsTab   { id: settings   }
         }
     }

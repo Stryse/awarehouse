@@ -17,19 +17,19 @@ Item {
     readonly property int rows:    SimPresenter.layout.rows
     readonly property int columns: SimPresenter.layout.columns
 
-    property int   cellSpacing: 1
-    property real  cellScale:   zoomArea.zoomScale
-    property real  cellSize:    Math.round(Math.min(height / rows    - cellSpacing,
-                                                    width  / columns - cellSpacing) * cellScale)
+    property int  cellSpacing: 1
+    property real cellScale:   zoomArea.zoomScale
+    property real cellSize:    Math.round(Math.min(height / rows    - cellSpacing,
+                                                   width  / columns - cellSpacing) * cellScale)
 
     property int mapWidth:  columns * cellSize + (columns-1) * cellSpacing
     property int mapHeight: rows    * cellSize + (rows   -1) * cellSpacing
 
     anchors.horizontalCenter: parent.horizontalCenter
-    y: parent.height * 0.1 - controlLayout.height/2
+    y: parent.height * 0.14 - controlLayout.height/2
 
-    height:           parent.height * 0.8
-    width:            height * aspectRatio
+    height: parent.height * 0.7
+    width:  height * aspectRatio
 
     Material.background: Material.primary
     Material.elevation:  6
@@ -91,9 +91,9 @@ Item {
 
                 y: cellSize * 0.35
                 anchors {
-                    left:   parent.left;
+                    left: parent.left;
 
-                    leftMargin:   cellSize * 0.05
+                    leftMargin: cellSize * 0.05
                 }
                 width:  parent.width  * 0.07
                 height: parent.height * 0.4

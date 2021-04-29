@@ -27,33 +27,35 @@ Item {
             borderWidth: simulationRoot.borderWidth
         }
 
-        SplitView {
-            id: verticalSplit
+        Pane {
+            id: simulationArea
 
-            SplitView.fillWidth: true
+            SplitView.fillHeight:    true
 
-            orientation:  Qt.Vertical
+            padding: 0
 
-            Pane {
-                id: simulationArea
+            Material.background: secondaryColor
 
-                SplitView.fillHeight:    true
-
-                padding: 0
-
-                Material.background: secondaryColor
-
-                Simulation { id: simulation }
-            }
-
-            BottomPanel {
-                id: bottomPanel
-
-                maxHeight:   parent.height * 0.325
-                borderWidth: simulationRoot.borderWidth
-            }
-
+            Simulation { id: simulation }
         }
+
+//        SplitView {
+//            id: verticalSplit
+
+//            SplitView.fillWidth: true
+
+//            orientation:  Qt.Vertical
+
+
+
+//            BottomPanel {
+//                id: bottomPanel
+
+//                maxHeight:   parent.height * 0.325
+//                borderWidth: simulationRoot.borderWidth
+//            }
+
+//        }
 
     }
 }
