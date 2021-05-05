@@ -34,6 +34,8 @@ public:
     virtual void receive(IContaining<OwnedPod> &carrier, const PickupPodSignal &pickupSignal) {}
     virtual void receive(OwnedPod &pod, const PutDownPodSignal &putdownSignal) {}
     virtual void receive(std::set<std::unique_ptr<OrderModel>, pointer_element_comparator<OrderModel>> &orderInventory, const PutDownOrderSignal &putdownOrderSignal) {}
+    virtual void receive(const ClaimChStationSignal&) {}
+    virtual void receive(const UnClaimChStationSignal&) {}
 
 protected:
     IAgentSignalHandler() = default;

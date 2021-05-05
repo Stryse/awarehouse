@@ -4,6 +4,7 @@
 #include "IDepleting.h"
 #include "Tile.h"
 #include <algorithm>
+#include <stdexcept>
 
 /************************************************************
  * @brief A Tile which can charge Depleting energy resources.
@@ -17,7 +18,7 @@ public:
 
 public:
     ChargingStation(const Point &pos, int chargeRate)
-        : Tile(pos), chargeRate(chargeRate) {}
+        : Tile(pos), chargeRate(chargeRate), claimed(false) {}
 
     virtual ~ChargingStation() {}
 
@@ -32,9 +33,26 @@ public:
         resource.charge(maxCharge);
     }
 
+    virtual void receive(const ClaimChStationSignal&) override
+    { 
+        if(claimed)
+            throw std::runtime_error("Charging station is already claimed");
+
+        claimed = true;
+    }
+
+    virtual void receive(const UnClaimChStationSignal&) override
+    {
+        if(!claimed)
+            throw std::runtime_error("Charging station is not claimed");
+
+        claimed = false;
+    }
+
     // ######################################### Getter|Setter ##########################################
     int getChargeRate() const { return chargeRate; }
     void setChargeRate(int chargeRate) { this->chargeRate = chargeRate; }
+    bool getClaimed() const { return claimed; }
     // ############################################################################################### //
 
 private:
@@ -43,6 +61,7 @@ private:
      * in one chargeSignal.
      ****************************************************************************************************/
     int chargeRate;
+    bool claimed;
 };
 
 #endif /* CHARGING_STATION__H */

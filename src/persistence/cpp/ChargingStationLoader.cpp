@@ -1,5 +1,6 @@
 #include "ChargingStationLoader.h"
 #include "Point.h"
+#include <climits>
 
 std::shared_ptr<ChargingStation> ChargingStationLoader::load(const QJsonObject &chargingStationObj)
 {
@@ -10,7 +11,7 @@ std::shared_ptr<ChargingStation> ChargingStationLoader::load(const QJsonObject &
                          chargingStationObj["RowCoord"].toInt(),
                          0);
 
-        return std::make_shared<ChargingStation>(position, 1); // TODO PARAMETERIZE
+        return std::make_shared<ChargingStation>(position, INT_MAX);
     }
     return nullptr;
 }

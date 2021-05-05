@@ -98,6 +98,12 @@ void DRobotMCU::receive(const AgentControlGrantedMessage &message)
     tick(0); // Begin Performing Actions immediately
 }
 
+void DRobotMCU::receive(const AgentControlGiveUpMessage &message)
+{
+    status = Status::IDLE;
+    tick(0); // Begin Performing Actions immediately
+}
+
 void DRobotMCU::requestControl()
 {
     controlData->address = networkAdapter.getAddress();
@@ -142,6 +148,9 @@ void DRobotMCU::doFullCharge()
     else
     {
         status = Status::IDLE;
+        environment.getVolume(moveMechanism.getBody()->getPose().getPosition())
+            ->receive(UnClaimChStationSignal());
+            
         tick(0); // Request control immediately
     }
 }
