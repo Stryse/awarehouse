@@ -55,6 +55,8 @@ int State::getRowCount() const { return rowCount; }
 int State::getColCount() const { return colCount; }
 
 const std::vector<std::shared_ptr<ChargingStation>> &State::getChargingStations() const { return chStations; }
+std::vector<std::shared_ptr<ChargingStation>> &State::getChargingStations() { return chStations; }
+
 const std::vector<std::shared_ptr<PodDock>> &State::getPodDocks() const { return podDocks; }
 const std::vector<Pod<OrderModel> *> &State::getPods() const { return pods; }
 const std::vector<std::shared_ptr<DeliveryStation>> &State::getDeliveryStations() const { return deliveryStations; }

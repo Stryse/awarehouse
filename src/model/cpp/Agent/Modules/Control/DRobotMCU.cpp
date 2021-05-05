@@ -148,6 +148,9 @@ void DRobotMCU::doFullCharge()
     else
     {
         status = Status::IDLE;
+        environment.getVolume(moveMechanism.getBody()->getPose().getPosition())
+            ->receive(UnClaimChStationSignal());
+            
         tick(0); // Request control immediately
     }
 }

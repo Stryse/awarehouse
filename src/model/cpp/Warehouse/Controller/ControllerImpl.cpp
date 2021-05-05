@@ -2,16 +2,19 @@
 #include "AMotor.h"
 #include "IMoveMechanism.h"
 #include "NetworkMessage.h"
+#include "ChargingStation.h"
 #include "PathFinder.h"
 #include "SchedulerImpl.h"
 #include "Task.h"
 #include <iostream>
 #include <limits>
 
-ControllerImpl::ControllerImpl(PathFinder *pathFinder)
-    : pathFinder(pathFinder),
+ControllerImpl::ControllerImpl(std::vector<std::shared_ptr<ChargingStation>>* chargingStations,PathFinder *pathFinder)
+    : chargingStations(chargingStations),
+      pathFinder(pathFinder),
       MControlGranted(std::make_shared<AgentControlGrantedMessage>(0x2)),
       MControlGiveUp(std::make_shared<AgentControlGiveUpMessage>(0x2)),
+      MChargeAgent(std::make_shared<ChargeAgentMessage>(0x2)),
       MMoveAgentUp(std::make_shared<MoveAgentMessage>(DirectionVector<>::UP(), 0x2)),
       MMoveAgentDown(std::make_shared<MoveAgentMessage>(DirectionVector<>::DOWN(), 0x2)),
       MMoveAgentLeft(std::make_shared<MoveAgentMessage>(DirectionVector<>::LEFT(), 0x2)),
@@ -98,6 +101,8 @@ void ControllerImpl::registerRoundTrip(const std::vector<std::vector<std::shared
 
 void ControllerImpl::setPathFinder(PathFinder *pathFinder) { this->pathFinder = pathFinder; }
 
+void ControllerImpl::setChargingStations(std::vector<std::shared_ptr<ChargingStation>>* chargingStations) { this->chargingStations = chargingStations; }
+
 bool ControllerImpl::PlanTask(TaskAssignment *assignment, int startTime)
 {
     std::vector<std::vector<std::shared_ptr<Node>>> roundTrip;
@@ -146,4 +151,53 @@ bool ControllerImpl::PlanTask(TaskAssignment *assignment, int startTime)
     return true;
 }
 
-bool ControllerImpl::PlanCharge(const AgentControlData &controlData) { return true; }
+bool ControllerImpl::PlanCharge(const AgentControlData &controlData, int startTime) 
+{
+    int minDistance = INT_MAX;
+    int minIdx = -1;
+    for(size_t i = 1; i < chargingStations->size(); ++i)
+    {
+        int distance = Point<>::manhattanNorm((*chargingStations)[i]->getPosition(), controlData.moveMechanism.getBody()->getPose().getPosition());
+        if(!(*chargingStations)[i]->getClaimed() && (*chargingStations)[i]->isVolumeFree() && minIdx == -1)
+        {
+            minDistance = distance;
+            minIdx = i;
+        }
+
+        if(!(*chargingStations)[i]->getClaimed() && (*chargingStations)[i]->isVolumeFree() && minIdx != -1 && distance < minDistance)
+        {
+            minDistance = distance;
+            minIdx = i;
+        }
+    }
+
+    if(minIdx == -1)
+        return false;
+
+    // Claim ChargingStation
+    (*chargingStations)[minIdx]->receive(ClaimChStationSignal());
+
+    // Plan Path
+    std::vector<std::shared_ptr<Node>> pathToChStation = pathFinder->findPathSoft(controlData.moveMechanism.getBody()->getPose().getPosition(),
+                                                                                  (*chargingStations)[minIdx]->getPosition(),
+                                                                                  controlData.moveMechanism.getBody()->getPose().getOrientation(),
+                                                                                  startTime,
+                                                                                  controlData.moveMechanism);
+    
+
+
+    std::pair<int,int> transformedPosition(controlData.moveMechanism.getBody()->getPose().getPosition().getPosX(),
+                                            controlData.moveMechanism.getBody()->getPose().getPosition().getPosY());
+
+
+    // ALTER SEMI STATIC
+    pathFinder->alterEndOfInfiniteSemiStatic(transformedPosition, pathToChStation[pathToChStation.size()-2]->gCost);
+
+    controlMessages.emplace(std::make_pair(startTime, TargetedMessage(controlData.address, MControlGranted))); // Turn control on
+    controlMessages.emplace(std::make_pair(pathToChStation[0]->gCost, TargetedMessage(controlData.address, MChargeAgent)));
+
+    pathFinder->claimPath(pathToChStation);
+    translatePath(pathToChStation,controlData.address);
+
+    return true;
+}

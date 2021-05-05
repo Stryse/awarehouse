@@ -21,7 +21,7 @@ SchedulerImpl::~SchedulerImpl()
 void SchedulerImpl::tick(int timeStamp)
 {
     processMessages();
-    doTaskAssignment();
+    doTaskAssignment(timeStamp);
     forwardAssignments(timeStamp);
 }
 
@@ -43,7 +43,7 @@ NetworkAdapter &SchedulerImpl::getNetworkAdapter() { return networkAdapter; }
 void SchedulerImpl::setTaskManager(TaskManager *taskManager) { this->taskManager = taskManager; }
 void SchedulerImpl::setController(ControllerImpl *controller) { this->controller = controller; }
 
-void SchedulerImpl::doTaskAssignment()
+void SchedulerImpl::doTaskAssignment(int timeStamp)
 {
     // Clear all incoming requests if there are no tasks
     if (taskManager->getUnAssignedTasks().empty())
@@ -66,12 +66,8 @@ void SchedulerImpl::doTaskAssignment()
         if (assignment != nullptr)
             sortedAssignmentData.push(assignment);
         else
-        {
-            if (controller->PlanCharge(*controlData) == false)
-            {
-                // Send ControlRefusedMessage to agent
-            }
-        }
+            controller->PlanCharge(*controlData, timeStamp);
+
         sortedAgentData.pop();
     }
 }
@@ -89,12 +85,7 @@ void SchedulerImpl::forwardAssignments(int timeStamp)
         {
             // Register unassigned on failure
             taskManager->getUnAssignedTasks().push_back(assignment->task);
-
-            if (controller->PlanCharge(*assignment->controlData) == false)
-            {
-                // Error on both Task and Charge Failure
-                throw std::runtime_error("Assignment and charge plan failure");
-            }
+            controller->PlanCharge(*assignment->controlData, timeStamp);
         }
         sortedAssignmentData.pop();
     }

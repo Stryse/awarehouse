@@ -42,6 +42,8 @@ public:
     int getColCount() const;
 
     const std::vector<std::shared_ptr<ChargingStation>> &getChargingStations() const;
+    std::vector<std::shared_ptr<ChargingStation>> &getChargingStations();
+    
     const std::vector<std::shared_ptr<PodDock>> &getPodDocks() const;
     const std::vector<Pod<OrderModel> *> &getPods() const;
     const std::vector<std::shared_ptr<DeliveryStation>> &getDeliveryStations() const;

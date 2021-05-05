@@ -41,8 +41,9 @@ bool Warehouse::loadState(const QString &srcPath, const Settings *settings)
         controller->reset();
 
         scheduler->setTaskManager(&state->getTaskManager());
-        scheduler->setController(controller.get()); // TODO: move to constructor
+        scheduler->setController(controller.get());
         controller->setPathFinder(&state->getPathFinder());
+        controller->setChargingStations(&state->getChargingStations());
         tick();
     }
 

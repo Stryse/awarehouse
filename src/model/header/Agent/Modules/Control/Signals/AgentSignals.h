@@ -43,4 +43,20 @@ struct PutDownOrderSignal : public AgentSignal
 {
 };
 
+/*******************************************************
+ * @brief Sent when an agent claims a charging station
+ * so it can charge itself with it.
+ *******************************************************/
+struct ClaimChStationSignal : public AgentSignal
+{
+};
+
+/********************************************************
+ * @brief Sent when an agent no longer claims a charging
+ * station indicating it is free for claim
+ ********************************************************/
+struct UnClaimChStationSignal : public AgentSignal
+{
+};
+
 #endif
