@@ -22,7 +22,7 @@ void SchedulerImpl::tick(int timeStamp)
 {
     processMessages();
     doTaskAssignment();
-    forwardAssignments();
+    forwardAssignments(timeStamp);
 }
 
 void SchedulerImpl::reset()
@@ -76,12 +76,12 @@ void SchedulerImpl::doTaskAssignment()
     }
 }
 
-void SchedulerImpl::forwardAssignments()
+void SchedulerImpl::forwardAssignments(int timeStamp)
 {
     while (!sortedAssignmentData.empty())
     {
         std::unique_ptr<TaskAssignment> assignment(sortedAssignmentData.top());
-        if (controller->PlanTask(assignment.get()) == true)
+        if (controller->PlanTask(assignment.get(), timeStamp) == true)
         {
             assignment->task->setAssignedAgentID(assignment->controlData->ID);
         }

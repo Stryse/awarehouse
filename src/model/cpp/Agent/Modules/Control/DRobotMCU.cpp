@@ -98,6 +98,12 @@ void DRobotMCU::receive(const AgentControlGrantedMessage &message)
     tick(0); // Begin Performing Actions immediately
 }
 
+void DRobotMCU::receive(const AgentControlGiveUpMessage &message)
+{
+    status = Status::IDLE;
+    tick(0); // Begin Performing Actions immediately
+}
+
 void DRobotMCU::requestControl()
 {
     controlData->address = networkAdapter.getAddress();

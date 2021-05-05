@@ -23,9 +23,11 @@ public:
 public:
     void tick(int timeStamp);
     void reset();
-    bool PlanTask(TaskAssignment *assignment);
+    bool PlanTask(TaskAssignment *assignment, int timeStamp);
     bool PlanCharge(const AgentControlData &assignment);
-    void translatePath(const std::vector<std::shared_ptr<Node>>& path, int address);
+    void translatePath(const std::vector<std::shared_ptr<Node>> &path, int address);
+    void registerRoundTrip(const std::vector<std::vector<std::shared_ptr<Node>>> &roundTrip, TaskAssignment *assignment, 
+                           int startTime, int waypointCount);
 
     // ############################ Setter ####################################
     void setPathFinder(PathFinder *pathfinder);
@@ -44,6 +46,7 @@ private:
 private:
     // ################## Messages #############################
     std::shared_ptr<AgentControlGrantedMessage> MControlGranted;
+    std::shared_ptr<AgentControlGiveUpMessage> MControlGiveUp;
     std::shared_ptr<MoveAgentMessage> MMoveAgentUp;
     std::shared_ptr<MoveAgentMessage> MMoveAgentDown;
     std::shared_ptr<MoveAgentMessage> MMoveAgentLeft;
@@ -53,6 +56,8 @@ private:
     std::shared_ptr<PutDownOrderMessage> MPutdownOrder;
     // #########################################################
     std::map<DirectionVector<>,std::shared_ptr<MoveAgentMessage>> directionToMessage;
+
+    static const int MIN_ENERGY_LEFT = 20;
 };
 
 #endif /* CONTROLLER_IMPL__H */

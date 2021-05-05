@@ -117,6 +117,11 @@ public:
      *************************************************************************************/
     void claimST3Interval(const std::pair<int,int> &point, int beginTime, int endTime);
 
+    /**************************************************************************************
+     * @brief 
+     **************************************************************************************/
+    void emplaceSemiStatic(const std::pair<int,int> &point, int startTime, int endTime, const IMoveMechanism* moveMechanism);
+
     /*************************************************************************************
      * @brief Alter the leave time of a semi-static obstacle from infinity to newEndTime.
      *************************************************************************************/
@@ -184,7 +189,7 @@ private:
     std::unordered_set<std::pair<int, int>, boost::hash<std::pair<int, int>>> softStaticObstacles;
     std::unordered_set<std::pair<int, int>, boost::hash<std::pair<int, int>>> hardStaticObstacles;
 
-    std::unordered_multimap<std::pair<int, int>, std::tuple<int,int,IMoveMechanism*>, boost::hash<std::pair<int, int>>> semiStaticObstacles;
+    std::unordered_multimap<std::pair<int, int>, std::tuple<int,int,const IMoveMechanism*>, boost::hash<std::pair<int, int>>> semiStaticObstacles;
     std::unordered_set<std::tuple<int, int, int>, boost::hash<std::tuple<int,int,int>>> reservationTable;
 
     size_t ROWS;

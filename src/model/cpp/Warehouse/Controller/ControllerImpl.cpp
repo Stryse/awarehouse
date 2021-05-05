@@ -6,10 +6,12 @@
 #include "SchedulerImpl.h"
 #include "Task.h"
 #include <iostream>
+#include <limits>
 
 ControllerImpl::ControllerImpl(PathFinder *pathFinder)
     : pathFinder(pathFinder),
       MControlGranted(std::make_shared<AgentControlGrantedMessage>(0x2)),
+      MControlGiveUp(std::make_shared<AgentControlGiveUpMessage>(0x2)),
       MMoveAgentUp(std::make_shared<MoveAgentMessage>(DirectionVector<>::UP(), 0x2)),
       MMoveAgentDown(std::make_shared<MoveAgentMessage>(DirectionVector<>::DOWN(), 0x2)),
       MMoveAgentLeft(std::make_shared<MoveAgentMessage>(DirectionVector<>::LEFT(), 0x2)),
@@ -56,27 +58,65 @@ void ControllerImpl::translatePath(const std::vector<std::shared_ptr<Node>> &pat
     }
 }
 
+void ControllerImpl::registerRoundTrip(const std::vector<std::vector<std::shared_ptr<Node>>> &roundTrip, 
+                                       TaskAssignment *assignment, 
+                                       int startTime, 
+                                       int waypointCount)
+{
+    // ALTER SEMI STATIC
+    pathFinder->alterEndOfInfiniteSemiStatic(roundTrip[0].back()->coords, roundTrip[0][roundTrip[0].size()-2]->gCost);
+
+    controlMessages.emplace(std::make_pair(startTime, TargetedMessage(assignment->controlData->address, MControlGranted))); // Turn control on
+    controlMessages.emplace(std::make_pair(roundTrip[0][0]->gCost, TargetedMessage(assignment->controlData->address, MPickupPod))); // Pickup Pod when arrive
+    controlMessages.emplace(std::make_pair(roundTrip[waypointCount - 1][0]->gCost, TargetedMessage(assignment->controlData->address, MPutdownPod))); // Put down pod at finish
+
+    // To Pod
+    pathFinder->claimPath(roundTrip[0]); // Claim path ST3-s
+    pathFinder->claimST3Interval(roundTrip[0][0]->coords,roundTrip[0][0]->gCost, roundTrip[1][roundTrip[1].size()-2]->gCost); // Claim path inbetween timeframe
+    translatePath(roundTrip[0], assignment->controlData->address); // Enqueue commands
+    //
+
+    // To stations
+    for(int i = 1; i < waypointCount - 1; ++i)
+    {
+        pathFinder->claimPath(roundTrip[i]); // Claim path ST3-s
+        pathFinder->claimST3Interval(roundTrip[i][0]->coords,roundTrip[i][0]->gCost, roundTrip[i+1][roundTrip[i+1].size()-2]->gCost); // Claim path inbetween timeframe
+        translatePath(roundTrip[i], assignment->controlData->address); // Enqueue commands
+        controlMessages.emplace(std::make_pair(roundTrip[i][0]->gCost, TargetedMessage(assignment->controlData->address, MPutdownOrder)));
+    }
+
+    // Back to Pod
+    pathFinder->claimPath(roundTrip.back()); // Claim path ST3-s
+    translatePath(roundTrip.back(), assignment->controlData->address);
+    //
+
+    // EMPLACE_SEMI_STATIC
+    pathFinder->emplaceSemiStatic(roundTrip.back()[0]->coords,roundTrip.back()[0]->gCost, INT_MAX, &(assignment->controlData->moveMechanism));
+
+    controlMessages.emplace(std::make_pair(roundTrip.back()[0]->gCost, TargetedMessage(assignment->controlData->address, MControlGiveUp))); // Turn control off
+}
+
 void ControllerImpl::setPathFinder(PathFinder *pathFinder) { this->pathFinder = pathFinder; }
 
-bool ControllerImpl::PlanTask(TaskAssignment *assignment)
+bool ControllerImpl::PlanTask(TaskAssignment *assignment, int startTime)
 {
     std::vector<std::vector<std::shared_ptr<Node>>> roundTrip;
+    int maxEnergySum = assignment->controlData->energySource.getCharge() - MIN_ENERGY_LEFT;
+    int energySum = 0;
 
     // ############################################ Trip To Pod ####################################################
-    controlMessages.emplace(std::make_pair(0, TargetedMessage(assignment->controlData->address, MControlGranted)));
     roundTrip.emplace_back(pathFinder->findPathSoft(assignment->controlData->moveMechanism.getBody()->getPose().getPosition(),
                                                     assignment->task->getWayPoints()[0],
                                                     assignment->controlData->moveMechanism.getBody()->getPose().getOrientation(),
-                                                    0, assignment->controlData->moveMechanism));
+                                                    startTime, assignment->controlData->moveMechanism));
 
-    pathFinder->claimPath(roundTrip[0]);
-    translatePath(roundTrip[0], assignment->controlData->address);
-    // ####### Pickup Pod #######
-    controlMessages.emplace(std::make_pair(roundTrip[0][0]->gCost, TargetedMessage(assignment->controlData->address, MPickupPod)));
+    energySum += roundTrip[0][0]->byEnergy;
+    ++energySum; // Pod pickup energy
+    if(energySum >= maxEnergySum) // Cannot plen if energy need exceed limit
+        return false;
+    
     // ######################################### Trip to Destinations #################################################
-    int sumEnergy = roundTrip[0][0]->byEnergy;
     int wayPointCount = assignment->task->getWayPoints().size();
-
     for (int i = 1; i < wayPointCount - 1; ++i)
     {
         roundTrip.emplace_back(pathFinder->findPathHard(Point<>(roundTrip[i - 1][0]->coords.first, roundTrip[i - 1][0]->coords.second),
@@ -84,27 +124,24 @@ bool ControllerImpl::PlanTask(TaskAssignment *assignment)
                                                         roundTrip[i - 1][0]->arriveOrientation,
                                                         roundTrip[i - 1][0]->gCost + 1, assignment->controlData->moveMechanism));
 
-        sumEnergy += roundTrip[i][0]->byEnergy;
-        // ####### Putdown Order #######
-        controlMessages.emplace(std::make_pair(roundTrip[i][0]->gCost, TargetedMessage(assignment->controlData->address, MPutdownOrder)));
-
-        pathFinder->claimPath(roundTrip[i]);
-        translatePath(roundTrip[i], assignment->controlData->address);
+        energySum += roundTrip[i][0]->byEnergy;
+        if(energySum >= maxEnergySum)
+            return false;
     }
-
     //################################################ Travel back #########################################################
     roundTrip.emplace_back(pathFinder->findPathHard(Point<>(roundTrip[wayPointCount - 2][0]->coords.first, roundTrip[wayPointCount - 2][0]->coords.second),
                                                     assignment->task->getWayPoints()[wayPointCount - 1],
                                                     roundTrip[wayPointCount - 2][0]->arriveOrientation,
                                                     roundTrip[wayPointCount - 2][0]->gCost + 1, assignment->controlData->moveMechanism));
 
-    sumEnergy += roundTrip[wayPointCount - 1][0]->byEnergy;
-    pathFinder->claimPath(roundTrip[wayPointCount - 1]);
-    translatePath(roundTrip[wayPointCount - 1], assignment->controlData->address);
+    energySum += roundTrip[wayPointCount - 1][0]->byEnergy;
+    ++energySum;
+    if(energySum >= maxEnergySum)
+            return false;
 
-    // ####### PutDown Pod #######
-    controlMessages.emplace(std::make_pair(roundTrip[wayPointCount - 1][0]->gCost, TargetedMessage(assignment->controlData->address, MPickupPod)));
-    std::cout << "SumEnergy: " << sumEnergy << " Address: " << assignment->controlData->address << std::endl;
+
+    registerRoundTrip(roundTrip,assignment,startTime,wayPointCount);
+    std::cout << "SumEnergy: " << energySum << " Address: " << assignment->controlData->address << std::endl;
 
     return true;
 }

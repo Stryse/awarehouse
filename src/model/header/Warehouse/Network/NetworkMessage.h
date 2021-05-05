@@ -182,4 +182,13 @@ public:
 
     virtual ~AgentControlGrantedMessage() = default;
 };
+
+class AgentControlGiveUpMessage : public NetworkMessage<AgentControlGiveUpMessage>
+{
+public:
+    explicit AgentControlGiveUpMessage(int senderAddress)
+        : NetworkMessage<AgentControlGiveUpMessage>(senderAddress) {}
+
+    virtual ~AgentControlGiveUpMessage() = default;
+};
 #endif /* NETWORK_MESSAGE__H */

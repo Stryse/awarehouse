@@ -36,8 +36,8 @@ PathFinder::PathFinder(const State &state)
         hardStaticObstacles.emplace(std::make_pair(DeliveryStation->getPosition().getPosX(),
                                                    DeliveryStation->getPosition().getPosY()));
 
-        softStaticObstacles.emplace(std::make_pair(DeliveryStation->getPosition().getPosX(),
-                                                   DeliveryStation->getPosition().getPosY()));
+        //softStaticObstacles.emplace(std::make_pair(DeliveryStation->getPosition().getPosX(),
+                                                   //DeliveryStation->getPosition().getPosY()));
     }
     //############################## Setup Semi-static Obstacles ##############################
     /******************************************************************************************
@@ -90,7 +90,7 @@ bool PathFinder::safeSemiStatic(const std::pair<int, int> &coord, int timestamp,
     for(auto it = obstacles.first; it != obstacles.second; ++it)
     {
         bool sameAgent = moveMechanism == std::get<2>(it->second);
-        bool safe = (timestamp + 1 < std::get<0>(it->second)) || (timestamp - 1 > std::get<1>(it->second));
+        bool safe = (timestamp + 2 <= std::get<0>(it->second)) || (timestamp - 2 >= std::get<1>(it->second));
 
         if(sameAgent)
             continue;
@@ -148,19 +148,10 @@ int PathFinder::ManhattanHeuristic(const Node &node, const Point<> &point)
 void PathFinder::claimPath(const std::vector<std::shared_ptr<Node>> &path)
 {
     // TODO: remove runtime error
-    for (int i = path.size() - 2; i > 0; --i)
+    for (int i = path.size() - 1; i > 0; --i)
     {
-
-        std::tuple<int, int, int> st3 = std::make_tuple(path[i]->coords.first, path[i]->coords.second, path[i]->gCost);
-        std::tuple<int, int, int> st32 = std::make_tuple(path[i]->coords.first, path[i]->coords.second, path[i]->gCost - 1);
-
-        if (reservationTable.find(st3) != reservationTable.end())
-            throw std::runtime_error("Non unique ST3 claim");
-
-        reservationTable.insert(st3);
-        reservationTable.insert(st32);
-        //reservationTable.emplace(std::make_tuple(path[i]->coords.first, path[i]->coords.second, path[i]->gCost));
-        //reservationTable.emplace(std::make_tuple(path[i]->coords.first, path[i]->coords.second, path[i]->gCost - 1));
+        reservationTable.emplace(std::make_tuple(path[i]->coords.first, path[i]->coords.second, path[i]->gCost));
+        reservationTable.emplace(std::make_tuple(path[i]->coords.first, path[i]->coords.second, path[i]->gCost - 1));
 
         for (int travelTime = 1; travelTime <= path[i - 1]->byTime - 1; ++travelTime)
             reservationTable.emplace(std::make_tuple(path[i]->coords.first, path[i]->coords.second, path[i]->gCost + travelTime));
@@ -172,11 +163,6 @@ void PathFinder::claimPath(const std::vector<std::shared_ptr<Node>> &path)
 
 void PathFinder::claimST3(const std::tuple<int, int, int> &st3)
 {
-    // Todo remove runtime error
-
-    if (reservationTable.find(st3) != reservationTable.end())
-        throw std::runtime_error("Non unique ST3 claim");
-
     reservationTable.insert(st3);
 }
 
@@ -184,6 +170,11 @@ void PathFinder::claimST3Interval(const std::pair<int,int> &point, int beginTime
 {
     for(int time = beginTime; time <= endTime; ++time)
         reservationTable.emplace(std::make_tuple(point.first,point.second, time));
+}
+
+void PathFinder::emplaceSemiStatic(const std::pair<int,int> &point, int startTime, int endTime, const IMoveMechanism* moveMechanism)
+{
+    semiStaticObstacles.emplace(std::make_pair(point,std::make_tuple(startTime,endTime,moveMechanism)));
 }
 
 void PathFinder::alterEndOfInfiniteSemiStatic(const std::pair<int,int> &point, int newEndTime)
@@ -202,9 +193,7 @@ void PathFinder::alterEndOfInfiniteSemiStatic(const std::pair<int,int> &point, i
 
 std::vector<std::shared_ptr<Node>> PathFinder::tracePath(const std::shared_ptr<Node> &node) const
 {
-    // TODO: clear debug messages
     std::vector<std::shared_ptr<Node>> path;
-
     std::shared_ptr<Node> n = node;
     while (n != nullptr)
     {
@@ -275,7 +264,7 @@ std::vector<std::shared_ptr<Node>> PathFinder::findPathSoft(const Point<> &start
             }
         }
     }
-    return {};
+    throw std::runtime_error("No Path");
 }
 
 std::vector<std::shared_ptr<Node>> PathFinder::findPathHard(const Point<> &startPos, const Point<> &endPos, const DirectionVector<> &startOr,
@@ -334,5 +323,5 @@ std::vector<std::shared_ptr<Node>> PathFinder::findPathHard(const Point<> &start
             }
         }
     }
-    return {};
+    throw std::runtime_error("No path");
 }

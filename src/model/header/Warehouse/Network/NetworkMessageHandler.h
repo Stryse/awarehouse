@@ -10,6 +10,7 @@ class PutDownPodMessage;
 class PutDownOrderMessage;
 class AgentControlGrantedMessage;
 class AgentControlRequestMessage;
+class AgentControlGiveUpMessage;
 
 class ObservableNavEnvironment;
 // ########################################################################
@@ -25,6 +26,7 @@ public:
     virtual void receive(const PutDownOrderMessage &message) {}
     virtual void receive(const AgentControlRequestMessage &message) {}
     virtual void receive(const AgentControlGrantedMessage &message) {}
+    virtual void receive(const AgentControlGiveUpMessage &message) {}
 
 protected:
     NetworkMessageHandler() = default;
