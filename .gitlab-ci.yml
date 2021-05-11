@@ -33,6 +33,15 @@ build-program:
     paths:
       - cmake-build/
 
+doxygen:
+  stage: build
+  script:
+    - doxygen docs/doxygen.conf
+    - mv docs/html/ public
+  artifacts:
+    paths:
+     - public
+
 google-test:
   stage: test
   script:
