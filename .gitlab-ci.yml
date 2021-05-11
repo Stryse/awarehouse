@@ -8,6 +8,7 @@ before_script:
   - apt-get update -yqq
   - apt-get install -yqq snapd
   - apt-get install -yqq cmake
+  - apt-get install -yqq doxygen
 
 build-program:
   stage: build
@@ -32,6 +33,14 @@ build-program:
   artifacts:
     paths:
       - cmake-build/
+
+doxygen:
+  stage: build
+  script:
+    - doxygen doxygen.conf
+  artifacts:
+    paths:
+     - documentation/html/
 
 google-test:
   stage: test
