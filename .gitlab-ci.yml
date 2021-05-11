@@ -38,10 +38,9 @@ doxygen:
   stage: build
   script:
     - doxygen doxygen.conf
-    - mv docs/html/ public
   artifacts:
     paths:
-     - public
+     - ./docs/html
 
 google-test:
   stage: test
