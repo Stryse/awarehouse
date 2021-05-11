@@ -37,7 +37,7 @@ build-program:
 doxygen:
   stage: build
   script:
-    - doxygen docs/doxygen.conf
+    - doxygen doxygen.conf
     - mv docs/html/ public
   artifacts:
     paths:
