@@ -8,6 +8,7 @@ before_script:
   - apt-get update -yqq
   - apt-get install -yqq snapd
   - apt-get install -yqq cmake
+  - apt-get install -yqq doxygen
 
 build-program:
   stage: build
