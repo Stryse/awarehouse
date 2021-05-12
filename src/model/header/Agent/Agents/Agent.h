@@ -71,6 +71,11 @@ public:
      *********************************************************/
     const std::shared_ptr<Body> &getBody() const;
 
+    /*********************************************************
+     * @brief Returns the Micro Controller Unit of the Agent
+     *********************************************************/
+    const std::unique_ptr<AMicroController>& getMCU() const;
+
 private:
     /*********************************************************
      * @brief Used to acquire a serial number each time an
@@ -117,6 +122,8 @@ private:
      ******************************************************/
     const int serialNumber;
 
+    
+public:
     /******************************************************
      * @brief Incremented each time an agent is constructed.
      ******************************************************/

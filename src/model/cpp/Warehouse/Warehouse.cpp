@@ -34,6 +34,7 @@ bool Warehouse::loadState(const QString &srcPath, const Settings *settings)
     if (state)
     {
         timeStamp = 0;
+        Agent::newSerialNumber = 0;
 
         setupNetwork(*state);
 

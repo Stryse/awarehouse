@@ -67,13 +67,13 @@ void SimulationWindowPresenter::setTickRate(TickRate tickRate)
     switch (tickRate)
     {
         case NORMAL:
-            m_manager.setTickRate(700);
+            m_manager.setTickRate(300);
             break;
         case HALF_SPEED:
-            m_manager.setTickRate(1500);
+            m_manager.setTickRate(500);
             break;
         case TWICE:
-            m_manager.setTickRate(300);
+            m_manager.setTickRate(150);
             break;
     }
     qDebug() << "TickRate changed to " << tickRate;

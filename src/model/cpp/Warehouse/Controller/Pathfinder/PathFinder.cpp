@@ -159,7 +159,6 @@ int PathFinder::ManhattanHeuristic(const Node &node, const Point<> &point)
 
 void PathFinder::claimPath(const std::vector<std::shared_ptr<Node>> &path)
 {
-    // TODO: remove runtime error
     for (int i = path.size() - 1; i > 0; --i)
     {
         reservationTable.emplace(std::make_tuple(path[i]->coords.first, path[i]->coords.second, path[i]->gCost));

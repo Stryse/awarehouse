@@ -35,6 +35,5 @@ QJsonObject PodDockLoader::save(const PodDock &podDock)
     podDockObject.insert("RowCoord", podDock.getPosition().getPosY());
     podDockObject.insert("ColCoord", podDock.getPosition().getPosX());
 
-    // TODO: Save orders
     return podDockObject;
 }

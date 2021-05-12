@@ -21,7 +21,7 @@ DeliveryRobot::DeliveryRobot(const std::shared_ptr<ObservableNavEnvironment> &en
                       *EnergyModule::getEnergySource(),
                       PodHolderModule::getPodHolder()),
 
-      Agent("DELIVERY_ROBOT",
+      Agent("Delivery Robot",
             env,
             MovementModule::getMoveMechanism()->getBody(),
             getNewRobotMCU(*MovementModule::getMoveMechanism(),

@@ -6,6 +6,9 @@
 //Presenter
 #include "MapItemPresenter.h"
 
+//Model
+#include "AMicroController.h"
+
 class DeliveryRobot;
 class PodDock;
 class ObservableNavEnvironment;
@@ -47,6 +50,7 @@ public:
     void setRotation(int rotation);
     void setMoves(int moves);
     void setEnergyUsed(int energy);
+    void mapStatus(const Status& status);
 
 signals:
     void nameChanged();

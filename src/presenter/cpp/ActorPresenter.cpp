@@ -19,7 +19,6 @@ ActorPresenter::ActorPresenter(const DeliveryRobot* model,
                        ActorPresenter::m_static_imagePath,
                        parent)
     , m_name    (QString::fromStdString(model->getId()))
-    , m_action  ("\xc2\xaf\x5c\x5f\x28\xe3\x83\x84\x29\x5f\x2f\xc2\xaf")
     , m_battery (model->getEnergySource()->getCharge())
     , m_rotation(static_cast<int>(std::atan2(model->getBody()->getPose().getOrientation().getY(),
                                              model->getBody()->getPose().getOrientation().getX())
@@ -28,10 +27,11 @@ ActorPresenter::ActorPresenter(const DeliveryRobot* model,
     , m_energyUsed(0)
     , model(model)
 {
+    mapStatus(model->getMCU()->getStatus());
     model->getMoveMechanism()->onBodyMoved.connect([=](const Body& body){
         int row      = body.getPose().getPosition().getPosY();
         int column   = body.getPose().getPosition().getPosX();
-        //TODO
+        
         int rotateY  = body.getPose().getOrientation().getY();
         int rotateX  = body.getPose().getOrientation().getX();
         int rotation = (std::atan2(rotateY, rotateX)*180/M_PI) + 90;
@@ -44,6 +44,10 @@ ActorPresenter::ActorPresenter(const DeliveryRobot* model,
     model->getEnergySource()->onChargeChanged.connect([=](int energy){
         setBattery(energy);
         setEnergyUsed(1);
+    });
+
+    model->getMCU()->onStatusChanged.connect([=](const Status& status){
+        mapStatus(status);
     });
 }
 
@@ -168,4 +172,26 @@ void ActorPresenter::setEnergyUsed(int energy)
     m_energyUsed += energy;
     emit energyUsedChanged();
     emit mapItemChanged();
+}
+
+void ActorPresenter::mapStatus(const Status& status)
+{
+    switch (status)
+    {
+    case Status::IDLE:
+        setAction("\xc2\xaf\x5c\x5f\x28\xe3\x83\x84\x29\x5f\x2f\xc2\xaf");
+        break;
+
+    case Status::RUNNING:
+        setAction("RUNNING");
+        break;
+
+    case Status::CHARGING:
+        setAction("CHARGING");
+        break;
+
+    case Status::ERROR:
+        setAction("ERROR");
+        break;    
+    }
 }

@@ -23,7 +23,7 @@ PodPresenter::PodPresenter(const Pod<OrderModel>* model,
     model->onBodyMoved.connect([=](const Body& body) {
         int row      = body.getPose().getPosition().getPosY();
         int column   = body.getPose().getPosition().getPosX();
-        //TODO
+        
         int rotateY  = body.getPose().getOrientation().getY();
         int rotateX  = body.getPose().getOrientation().getX();
         int rotation = (std::atan2(rotateY, rotateX)*180/M_PI) + 90;

@@ -9,7 +9,7 @@ Battery::Battery(int maxCharge, int maxChargeRate, int timesUsed)
     if (maxCharge < 0)
         this->maxCharge = 0;
 
-    condition = 1; // TODO FIX WITH FACTORY
+    condition = 1;
     this->maxCharge *= condition;
 }
 

@@ -30,14 +30,16 @@ int Agent::getSerialNumber() const { return serialNumber; }
 
 const std::shared_ptr<Body> &Agent::getBody() const { return body; }
 
+const std::unique_ptr<AMicroController>& Agent::getMCU() const { return mcu; }
+
 int Agent::getNewSerialNumber() { return Agent::newSerialNumber++; }
 
 std::string Agent::getNewId(const std::string &id_category)
 {
-    return std::string("[AGENT]{") +
-           std::string(id_category) +
-           std::string("}_") +
-           std::to_string(Agent::newSerialNumber);
+    return std::string(id_category) +
+           std::string(" [") +
+           std::to_string(Agent::newSerialNumber) +
+           std::string("]");
 }
 
 int Agent::newSerialNumber = 0x0;

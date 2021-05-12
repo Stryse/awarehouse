@@ -605,7 +605,7 @@ QJsonObject WarehouseEditorPresenter::saveJsonObject() const
     warehouseLayoutData.insert("ColCount", m_layout->columns());
 
     warehouseLayoutData.insert("ChargingStations", m_layout->chargingStations()->saveJsonArray());
-    //TODO: No order ID
+  
     warehouseLayoutData.insert("DeliveryStations", m_layout->deliveryStations()->saveJsonArray());
     //Pods - IMPORTANT: Not podDock, beacuse it doesn't have ORDERS
     warehouseLayoutData.insert("PodDocks",         m_layout->pods()->saveJsonArray());

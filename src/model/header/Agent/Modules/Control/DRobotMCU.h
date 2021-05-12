@@ -32,16 +32,6 @@ class ObservableNavEnvironment;
 class DRobotMCU : public AMicroController,
                   public NetworkMessageHandler
 {
-    /*******************************************************
-     * @brief Delivery Robot makes decisions based on status
-     *******************************************************/
-    enum class Status
-    {
-        IDLE,
-        RUNNING,
-        CHARGING,
-        ERROR
-    };
 
 public:
     DRobotMCU(IMoveMechanism &moveMechanism,
@@ -64,6 +54,11 @@ public:
      * does its actions from the action queue which take one time unit altogether.
      *****************************************************************************/
     virtual void tick(int time) override;
+
+    /******************************************************************************
+     * @brief Returns the current status of the DeliveryRobot
+     ******************************************************************************/
+    virtual const Status& getStatus() const override;
 
 public:
     // ########################## NetworkMessageHandler Implementation ################################ //
@@ -109,12 +104,14 @@ public:
     virtual void receive(const PutDownOrderMessage &message) override;
 
     /*******************************************************************
-     * @brief 
+     * @brief Called when the Agent received a AgentControlGrantedMessage
+     * on the connected network. The Agent status is set to RUNNING
      *******************************************************************/
     virtual void receive(const AgentControlGrantedMessage &message) override;
 
     /*******************************************************************
-     * @brief 
+     * @brief Called when the Agent received a AgentControlGrantedMessage
+     * on the connected network. The Agent status is set to IDLE
      *******************************************************************/
     virtual void receive(const AgentControlGiveUpMessage &message) override;
 

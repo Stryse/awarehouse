@@ -56,6 +56,11 @@ void DRobotMCU::tick(int time)
     }
 }
 
+const Status& DRobotMCU::getStatus() const
+{
+    return status;
+}
+
 void DRobotMCU::receive(const MoveAgentMessage &message)
 {
     if (moveMechanism.canMove(message.getMoveDirection()))
@@ -73,6 +78,7 @@ void DRobotMCU::receive(const ChargeAgentMessage &message)
 {
     std::queue<AgentAction *>().swap(actionQueue);
     status = Status::CHARGING;
+    onStatusChanged(status);
     tick(0); // Begin Charging immediately;
 }
 
@@ -95,12 +101,14 @@ void DRobotMCU::receive(const PutDownOrderMessage &message)
 void DRobotMCU::receive(const AgentControlGrantedMessage &message)
 {
     status = Status::RUNNING;
+    onStatusChanged(status);
     tick(0); // Begin Performing Actions immediately
 }
 
 void DRobotMCU::receive(const AgentControlGiveUpMessage &message)
 {
     status = Status::IDLE;
+    onStatusChanged(status);
     tick(0); // Begin Performing Actions immediately
 }
 
@@ -148,6 +156,7 @@ void DRobotMCU::doFullCharge()
     else
     {
         status = Status::IDLE;
+        onStatusChanged(status);
         environment.getVolume(moveMechanism.getBody()->getPose().getPosition())
             ->receive(UnClaimChStationSignal());
             

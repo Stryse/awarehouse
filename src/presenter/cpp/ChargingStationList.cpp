@@ -57,7 +57,6 @@ void ChargingStationList::appendChargingStation(ChargingStationPresenter& chargi
 
     emit postItemAppended();
 
-    //TODO dataChanged()?
 }
 
 void ChargingStationList::removeChargingStation(int index)
