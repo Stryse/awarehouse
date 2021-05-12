@@ -146,8 +146,6 @@ Item {
                     clip: true
 
                     model: ActorListModel {
-                        id: actorStatsModel
-
                         actors: SimPresenter.layout.actors
                     }
 

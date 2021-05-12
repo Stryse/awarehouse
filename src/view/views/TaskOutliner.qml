@@ -77,7 +77,7 @@ Item {
 
                     width:  taskListView.width
 
-                    text: "Row: " + model.podRow  + " Column: " + model.podColumn
+                    text: "Row: " + model.podRow  + "   Column: " + model.podColumn
                     font.pixelSize: root.height * 0.055
                 }
             }
