@@ -72,47 +72,13 @@ Item {
                     tasks: SimPresenter.layout.tasks
                 }
 
-                delegate: GridLayout {
+                delegate: Label {
                     id: taskDelegate
 
                     width:  taskListView.width
-                    height: root.height * 0.15
 
-                    columns:       2
-                    columnSpacing: 0
-                    rowSpacing:    0
-
-                    Label {
-                        id: assignedActorLabel
-
-                        Layout.alignment: Qt.AlignLeft | Qt.AlignBottom
-                        Layout.row:       0
-                        Layout.column:    0
-
-                        text:           model.assignedRobotName
-                        font.pixelSize: taskDelegate.height * 0.3
-                    }
-
-//                    Label {
-//                        id: ordersLabel
-
-//                        Layout.alignment: Qt.AlignRight | Qt.AlignBottom
-//                        Layout.row:       0
-//                        Layout.column:    1
-
-//                        text: model.orders[0]
-//                    }
-
-
-                    Label {
-                        id: positionLabel
-
-                        Layout.alignment: Qt.AlignLeft | Qt.AlignTop
-                        Layout.row:       1
-                        Layout.column:    0
-
-                        text: "Row: " + model.podRow  + " Column: " + model.podColumn
-                    }
+                    text: "Row: " + model.podRow  + " Column: " + model.podColumn
+                    font.pixelSize: root.height * 0.055
                 }
             }
         }

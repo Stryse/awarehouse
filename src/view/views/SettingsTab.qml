@@ -41,15 +41,25 @@ ScrollView {
 
             Layout.alignment: Qt.AlignRight
 
-            from:  1
-            to:    100
+            from:  80
+            to:    200
             value: SimPresenter.settings.batteryLevel
             onValueChanged: SimPresenter.settings.batteryLevel = value
 
             stepSize: 1
             snapMode: RangeSlider.SnapOnRelease
-        }
 
+            Label {
+                anchors {
+                    right:  parent.right
+                    bottom: parent.bottom
+
+                    rightMargin: 10
+                }
+
+                text: batterySlider.value
+            }
+        }
 
         Label {
             id: wareHouseLabel

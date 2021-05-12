@@ -4,7 +4,28 @@ ActorList::ActorList(QObject* parent)
     : QObject(parent)
 {}
 
-QList<ActorPresenter*>* ActorList::actors() { return &m_actors; }
+QList<ActorPresenter*>* ActorList::actors() { return &m_actors;       }
+int                     ActorList::count()  { return m_actors.size(); }
+
+int ActorList::sumMoves()
+{
+    int sum = 0;
+
+    for (const auto& actor : m_actors)
+        sum += actor->moves();
+
+    return sum;
+}
+
+int ActorList::sumEnergy()
+{
+    int sum = 0;
+
+    for (const auto& actor : m_actors)
+        sum += actor->energyUsed();
+
+    return sum;
+}
 
 bool ActorList::setActorAt(int index, ActorPresenter& actor)
 {
@@ -48,11 +69,20 @@ void ActorList::appendActor(ActorPresenter& actor)
 
     int last = m_actors.size();
     m_actors.append(&actor);
-    connect(&actor, &ActorPresenter::mapItemChanged, this, [=]()
+    connect(&actor, &ActorPresenter::mapItemChanged,    this, [=]()
     {
         emit dataChanged(last);
     });
+    connect(&actor, &ActorPresenter::movesChanged,      this, [=]()
+    {
+        emit sumMovesChanged();
+    });
+    connect(&actor, &ActorPresenter::energyUsedChanged, this, [=]()
+    {
+        emit sumEnergyChanged();
+    });
 
+    emit countChanged(m_actors.size());
     emit postItemAppended();
 }
 
@@ -75,6 +105,7 @@ void ActorList::removeActor(int index)
         });
     }
 
+    emit countChanged(m_actors.size());
     emit postItemRemoved();
 }
 

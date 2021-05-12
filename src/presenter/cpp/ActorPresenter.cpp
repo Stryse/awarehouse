@@ -36,14 +36,20 @@ ActorPresenter::ActorPresenter(const DeliveryRobot* model,
         int rotateX  = body.getPose().getOrientation().getX();
         int rotation = (std::atan2(rotateY, rotateX)*180/M_PI) + 90;
 
+        if (row != m_row || column != m_column)
+            setMoves(m_moves+1);
+
         setRow(row);
         setColumn(column);
         setRotation(rotation);
     });
 
+    model->getEnergySource()->onDepleted.connect([=](int energy){
+      setEnergyUsed(m_energyUsed+energy);
+    });
+
     model->getEnergySource()->onChargeChanged.connect([=](int energy){
         setBattery(energy);
-        setEnergyUsed(1);
     });
 
     model->getMCU()->onStatusChanged.connect([=](const Status& status){
@@ -66,20 +72,20 @@ ActorPresenter::ActorPresenter(int row, int column, QObject* parent)
 
 bool ActorPresenter::operator==(const ActorPresenter& other) const
 {
-    return MapItemPresenter::operator==(other)     &&
-           this->name()       == other.name()      &&
-           this->action()     == other.action()    &&
-           this->battery()    == other.battery()   &&
-           this->rotation()   == other.rotation()  &&
-           this->moves()      == other.moves()     &&
+    return MapItemPresenter::operator==(other)    &&
+           this->name()       == other.name()     &&
+           this->action()     == other.action()   &&
+           this->battery()    == other.battery()  &&
+           this->rotation()   == other.rotation() &&
+           this->moves()      == other.moves()    &&
            this->energyUsed() == other.energyUsed();
 }
 
 ActorPresenter* ActorPresenter::loadJsonObject(const QJsonObject& actorObj,
                                                          QObject* parent)
 {
-    if (actorObj.contains("RowCoord")     && actorObj["RowCoord"].isDouble() &&
-        actorObj.contains("ColCoord")     && actorObj["ColCoord"].isDouble() &&
+    if (actorObj.contains("RowCoord")     && actorObj["RowCoord"].isDouble()     &&
+        actorObj.contains("ColCoord")     && actorObj["ColCoord"].isDouble()     &&
         actorObj.contains("OrientationX") && actorObj["OrientationX"].isDouble() &&
         actorObj.contains("OrientationY") && actorObj["OrientationY"].isDouble())
     {
@@ -167,9 +173,12 @@ void ActorPresenter::setMoves(int moves)
     emit mapItemChanged();
 }
 
-void ActorPresenter::setEnergyUsed(int energy)
+void ActorPresenter::setEnergyUsed(int energyUsed)
 {
-    m_energyUsed += energy;
+    if (m_energyUsed == energyUsed)
+        return;
+
+    m_energyUsed = energyUsed;
     emit energyUsedChanged();
     emit mapItemChanged();
 }

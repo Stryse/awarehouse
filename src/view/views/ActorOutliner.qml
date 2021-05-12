@@ -138,7 +138,7 @@ Item {
 
                         from:  0
                         to:    100
-                        value: model.battery
+                        value: model.battery / SimPresenter.settings.batteryLevel * 100
 
                         Behavior on value {
                             PropertyAnimation { properties: "value"; easing.type: Easing.InOutQuart }
@@ -175,7 +175,7 @@ Item {
                         Layout.row:       2
                         Layout.column:    2
 
-                        text: model.battery
+                        text: Math.round(model.battery / SimPresenter.settings.batteryLevel * 100)
                     }
                 }
             }

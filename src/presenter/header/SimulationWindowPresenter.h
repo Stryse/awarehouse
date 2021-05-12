@@ -42,7 +42,7 @@ public:
     WarehouseLayoutPresenter* layout()      const;
     Settings*                 settings();
     bool                      paused()      const;
-    int                       time() const;
+    int                       time()        const;
 
     PersistencePresenter*     persistence() const;
 
@@ -67,6 +67,8 @@ public slots:
 
     void loadWarehouse(const QString& warehousePath);
     void reloadWarehouse();
+
+    void exportStatistics() const;
 
 private:
     WarehouseManager m_manager;

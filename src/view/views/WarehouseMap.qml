@@ -151,6 +151,10 @@ Item {
                     else if (mouse.button === Qt.MiddleButton)
                         EditorPresenter.removeTile(model.row, model.column)
                 }
+                onPressed: {
+                    unhighlightSelectPods()
+                    clearSelectedPodList()
+                }
 
                 function rotateActor() {
                     model.rotation = (model.rotation + 90) % 360
@@ -201,6 +205,10 @@ Item {
                 onClicked: {
                     if (mouse.button === Qt.MiddleButton)
                         EditorPresenter.removeTile(model.row, model.column)
+                }
+                onPressed: {
+                    unhighlightSelectPods()
+                    clearSelectedPodList()
                 }
             }
         }
@@ -681,6 +689,10 @@ Item {
                 onClicked: {
                     if (mouse.button === Qt.MiddleButton)
                         EditorPresenter.removeTile(model.row, model.column)
+                }
+                onPressed: {
+                    unhighlightSelectPods()
+                    clearSelectedPodList()
                 }
             }
         }

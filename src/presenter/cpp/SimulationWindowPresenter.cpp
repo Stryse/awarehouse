@@ -1,5 +1,9 @@
 #include "SimulationWindowPresenter.h"
 
+#include <QFile>
+#include <QDir>
+#include <QDateTime>
+#include <QTextStream>
 #include <QDebug>
 #include <QDir>
 #include <QDebug>
@@ -17,6 +21,7 @@ SimulationWindowPresenter::SimulationWindowPresenter(PersistencePresenter* persi
 
 {
     loadWarehouse(PersistencePresenter::defaultWarehouseName);
+
     m_manager.getDisplayedWarehouseSimulator()->onTick.connect([=](){
         setTime(m_manager.getDisplayedWarehouse()->getTimeStamp());
     });
@@ -27,7 +32,7 @@ WarehouseLayoutPresenter* SimulationWindowPresenter::layout()      const { retur
 Settings*                 SimulationWindowPresenter::settings()          { return &m_settings;   }
 bool                      SimulationWindowPresenter::paused()      const { return m_paused;      }
 PersistencePresenter*     SimulationWindowPresenter::persistence() const { return m_persistence; }
-int SimulationWindowPresenter::time()                           const { return m_time; }
+int                       SimulationWindowPresenter::time()        const { return m_time;        }
 
 //Setter
 void SimulationWindowPresenter::setPaused(bool paused)
@@ -92,6 +97,9 @@ void SimulationWindowPresenter::loadWarehouse(const QString& warehouseName)
     {
         m_layout->loadWarehouseLayout(m_manager.getDisplayedWarehouse()->getState().get());
         m_currentWarehouseName = warehouseName;
+        setTime(0);
+        emit m_layout->actors()->sumEnergyChanged();
+        emit m_layout->actors()->sumMovesChanged();
     }
 }
 
@@ -99,4 +107,32 @@ void SimulationWindowPresenter::reloadWarehouse()
 {
     simulationStop();
     loadWarehouse(m_currentWarehouseName);
+}
+
+void SimulationWindowPresenter::exportStatistics() const
+{
+    QString currTime = QDateTime::currentDateTime().toString("yyyy-MM-dd_HH-mm");
+
+    QDir statisticsDir("../stats");
+
+    if (!statisticsDir.exists())
+        statisticsDir.mkdir("../stats");
+
+    QFile statisticsFile("../stats/statistics_" + currTime + ".txt");
+
+    if (statisticsFile.open(QIODevice::WriteOnly))
+    {
+        QTextStream statStream(&statisticsFile);
+
+        statStream << "Total Time Spent: "    << m_time                                                                                        << "\n" <<
+                      "Total Energy Used: "   << m_layout->actors()->sumEnergy()                                                               << "\n" <<
+                      "Total Move Count: "    << m_layout->actors()->sumEnergy()                                                               << "\n" <<
+                      "Average Energy Used: " << std::round(m_layout->actors()->sumEnergy() / (double)m_layout->actors()->count() * 100) / 100 << "\n" <<
+                      "Average Move Count: "  << std::round(m_layout->actors()->sumMoves()  / (double)m_layout->actors()->count() * 100) / 100 << "\n\n";
+
+        for (const auto& actor : *m_layout->actors()->actors())
+            statStream << "Energy Used: " << actor->energyUsed() << " | Move Count: " << actor->moves() << "\n";
+
+        statisticsFile.close();
+    }
 }

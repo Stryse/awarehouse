@@ -8,6 +8,7 @@ class Settings : public QObject
     Q_OBJECT
 
     Q_PROPERTY( int batteryLevel READ batteryLevel WRITE setBatteryLevel NOTIFY batteryLevelChanged)
+
 public:
     Settings();
     Settings(int batteryLevel);

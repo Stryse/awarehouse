@@ -37,7 +37,7 @@ signals:
 
     void mapItemChanged();
 
-private:
+protected:
     int     m_row;
     int     m_column;
     QString m_imagePath;
