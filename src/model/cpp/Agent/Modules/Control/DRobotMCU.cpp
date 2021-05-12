@@ -160,7 +160,7 @@ void DRobotMCU::connect_PodMovementToAgentMovement()
     rackMotor.onPodPickedUp.connect([&](const Body &body) {
         // Setup Connection
         AgentMovement2PodMovement = moveMechanism.onBodyMoved.connect([&](const Body &body) {
-            podHolder.getChildPod()->onBodyMoved(*podHolder.getChildPod()->getBody());
+            podHolder.getChildPod()->onBodyMoved(*moveMechanism.getBody());
         });
     });
 

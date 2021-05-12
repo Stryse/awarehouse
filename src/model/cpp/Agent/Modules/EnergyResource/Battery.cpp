@@ -42,6 +42,7 @@ void Battery::deplete(int energy)
     {
         currentCharge -= energy;
         IDepleting::onChargeChanged(currentCharge);
+        IDepleting::onDepleted(energy);
     }
 
     condition = degrade(++timesUsed);
