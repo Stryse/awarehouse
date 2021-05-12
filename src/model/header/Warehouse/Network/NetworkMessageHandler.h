@@ -14,7 +14,9 @@ class AgentControlGiveUpMessage;
 
 class ObservableNavEnvironment;
 // ########################################################################
-
+/*****************************************************************************
+ * @brief An entity which can handle received AbstractNetworkMessage subtypes.
+ *****************************************************************************/
 class NetworkMessageHandler
 {
 public:

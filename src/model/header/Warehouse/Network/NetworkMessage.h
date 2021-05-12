@@ -55,6 +55,12 @@ protected:
     NetworkMessage(NetworkMessage &&) = default;
 };
 
+/******************************************************************
+ * @brief An abstract network message wrapper which can
+ * hold an AbstractNetworkMessage subclass and a target address.
+ * Used for storing messages which are to be sent to different
+ * targets.
+ *******************************************************************/
 struct TargetedMessage
 {
     TargetedMessage(int address, std::shared_ptr<AbstractNetworkMessage> message)
@@ -183,6 +189,10 @@ public:
     virtual ~AgentControlGrantedMessage() = default;
 };
 
+/**********************************************************************
+ * @brief Message from an agent controlling entity signalling it
+ * has given up control of the Agent
+ **********************************************************************/
 class AgentControlGiveUpMessage : public NetworkMessage<AgentControlGiveUpMessage>
 {
 public:

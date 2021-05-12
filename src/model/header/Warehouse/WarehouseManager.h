@@ -9,7 +9,11 @@
 // ############################# FORWARD DECLARATIONS ################################
 class Warehouse;
 // ###################################################################################
-
+/*************************************************************************************
+ * @brief An entity which contains warehouses and simulators and is reponsible for
+ * assigning simulators to warehouses and forwarding simulation related calls to the
+ * appropriate simulator objects.
+ *************************************************************************************/
 class WarehouseManager
 {
 public:

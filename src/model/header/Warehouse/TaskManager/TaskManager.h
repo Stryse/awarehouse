@@ -17,6 +17,12 @@
 class TaskManager;
 // ################################################################## //
 
+/**********************************************************************
+ * @brief An entity which manages tasks in the Warehouse.
+ * It scans all pods for orders and queries the corresponding delivery stations.
+ * After scanning it constructs Task objects which can be queried by the
+ * scheduler.
+ **********************************************************************/
 class TaskManager
 {
 public:

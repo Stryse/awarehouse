@@ -4,6 +4,12 @@
 #include "IDepleting.h"
 #include <memory>
 
+/*******************************************************
+ * @brief A module which contains an energy resource.
+ * An agent can derive from this class so it can use
+ * and forward an energy resource.
+ * All subclasses of IDepleting interface can be injected.
+ *******************************************************/
 class EnergyModule
 {
 

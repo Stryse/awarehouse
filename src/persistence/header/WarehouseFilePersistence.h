@@ -9,6 +9,9 @@
 #include <memory>
 #include <vector>
 
+/****************************************************************
+ * @brief Loads and saves a warehouse state from a File.
+ ****************************************************************/
 class WarehouseFilePersistence : public IWarehousePersistence<QString>
 {
 public:

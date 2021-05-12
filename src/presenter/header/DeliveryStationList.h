@@ -8,6 +8,9 @@
 //Presenter
 #include "DeliveryStationPresenter.h"
 
+/******************************************************************
+ * @brief Decorator of a QList which broadcast manipulation events.
+ ******************************************************************/
 class DeliveryStationList : public QObject
 {
     Q_OBJECT

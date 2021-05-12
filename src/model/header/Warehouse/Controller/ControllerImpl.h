@@ -18,16 +18,57 @@ class ChargingStation;
 class ControllerImpl
 {
 public:
+
+    /**************************************************************************************************************************
+     * @brief Construct a new Controller Impl object
+     * 
+     * @param chargingStations Charging stations are needed to be known by the controller because it is responsible
+     * for claiming these for agents and controller needs to plan the charging action sequences.
+     * 
+     * @param pathFinder Pathfinder is needed to be known by the controller because paths are needed to be translated
+     * as action sequences and sent to the agents so they can perform them.
+     **************************************************************************************************************************/
     ControllerImpl(std::vector<std::shared_ptr<ChargingStation>>* chargingStations = nullptr ,PathFinder *pathFinder = nullptr);
     virtual ~ControllerImpl();
 
 public:
+
+    /***************************************************************************************
+     * @brief Signal that indicates that time elapsed and the Controller might need to act.
+     * Called each tick of the simulation.
+     ***************************************************************************************/
     void tick(int timeStamp);
+
+    /**************************************************************
+     * @brief Deletes all control messages from the message queue.
+     **************************************************************/
     void reset();
+
+    /*******************************************************************************
+     * @brief Plans a delivery task for an agent startint at the provided timestamp.
+     * @throws No Path error if planning is unsuccessful.
+     *******************************************************************************/
     bool PlanTask(TaskAssignment *assignment, int timeStamp);
+
+    /*******************************************************************************
+     * @brief Plans a charge task for an agent starting at the provided timestamp.
+     * Charge plans should not be unsuccessful since agents need to reach charging
+     * stations before depletion.
+     *******************************************************************************/
     bool PlanCharge(const AgentControlData &assignment, int timeStamp);
+
+    /*******************************************************************************
+     * @brief Translates a path provided by the planner to control messages which
+     * the agents interpret and translate them into action sequences.
+     *******************************************************************************/
     void translatePath(const std::vector<std::shared_ptr<Node>> &path, int address);
-    void registerRoundTrip(const std::vector<std::vector<std::shared_ptr<Node>>> &roundTrip, TaskAssignment *assignment, 
+
+    /********************************************************************************
+     * @brief Registers a sequence of paths and actions in the reservation table
+     * so the planner can plan collision free paths.
+     *********************************************************************************/
+    void registerRoundTrip(const std::vector<std::vector<std::shared_ptr<Node>>> &roundTrip, 
+                           TaskAssignment *assignment, 
                            int startTime, int waypointCount);
 
     // ############################ Setter ####################################

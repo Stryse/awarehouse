@@ -44,6 +44,9 @@ public:
     virtual void receive(IContaining<OwnedPod> &carrier,
                          const PickupPodSignal &pickupSignal) override;
 
+    /**********************************************************************************
+     * @brief Takes the pod from the carrier and puts it inside the PodDock's pod holder.
+     **********************************************************************************/
     virtual void receive(OwnedPod &pod, const PutDownPodSignal &putdownSignal) override;
 
     // ############################## Functionality ##################################

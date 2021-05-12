@@ -9,6 +9,14 @@ class NetworkAdapter;
 class AbstractNetworkMessage;
 // ############################################################
 
+/**************************************************************
+ * @brief Entities with network adapter can connect to a network
+ * and can send AbstractNetworkMessage subclass objects to each
+ * other through this network.
+ * They receive a address (a number (int)) which identifies a
+ * connected network adapter and messages can be sent by knowing
+ * only the target addresses.
+ **************************************************************/
 class Network
 {
 public:

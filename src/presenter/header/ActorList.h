@@ -8,6 +8,9 @@
 //Presenter
 #include "ActorPresenter.h"
 
+/******************************************************************
+ * @brief Decorator of a QList which broadcast manipulation events.
+ ******************************************************************/
 class ActorList : public QObject
 {
     Q_OBJECT

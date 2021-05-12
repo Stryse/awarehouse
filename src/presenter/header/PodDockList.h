@@ -8,6 +8,10 @@
 //Presenter
 #include "PodDockPresenter.h"
 
+/******************************************************************
+ * @brief Decorator of a QList which broadcast manipulation events.
+ ******************************************************************/
+
 class PodDockList : public QObject
 {
     Q_OBJECT

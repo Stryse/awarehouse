@@ -5,6 +5,11 @@
 #include "Point.h"
 #include <vector>
 
+/***************************************************************************
+ * @brief Data of a delivery task.
+ * Contains the points which are needed to be visited and
+ * the overall distance travelled in manhattan distance.
+ ***************************************************************************/
 class Task
 {
 public:

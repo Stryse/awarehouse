@@ -9,6 +9,10 @@
 class Warehouse;
 // ######################################################################
 
+/**************************************************************
+ * @brief An implementation of the ISimulator interface
+ * for our Warehouse type.
+ **************************************************************/
 class Simulator : public QObject, public ISimulator<Warehouse>
 {
     Q_OBJECT

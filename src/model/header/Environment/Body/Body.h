@@ -15,8 +15,9 @@
 
 /*************************************************************************************************************
  * @brief A connected set of Volume Occupant placed in an Environment which must be derived from
- * INavigationalEnvironment. The Environment must have a member type defined as
- * @code VolumeType @endcode which must derive from @code INavigationVolume @endcode
+ * INavigationalEnvironment. Body's can have child bodies which behave together with the parent body.
+ * If a body occupies or leaves an environment all child bodies do the same.
+ * However if a parent body is deleted child bodies detach automatically.
  *************************************************************************************************************/
 class Body : public IVolumeOccupant<Tile>
 {
@@ -96,7 +97,6 @@ public:
     /******************************************************************************
      * @brief Rotates the body's orientation
      * 
-     * TODO: Rotate shaped bodies properly
      ******************************************************************************/
     void rotate(const DirectionVector &targetOrientation);
 
@@ -185,8 +185,6 @@ private:
      * @brief Parts of the body and it's children
      * which are collided with the last operation.
      ***********************/
-
-    // std::vector<Tile *> collidedBuffer; TODO IMPLEMENT
 
     /***********************
      * @brief Reference to the 3D environment in which the body resides.

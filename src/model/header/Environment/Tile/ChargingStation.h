@@ -33,6 +33,10 @@ public:
         resource.charge(maxCharge);
     }
 
+    /**************************************************************************
+     * @brief Marks the charging station as claimed upon receiving this signal.
+     * A charging station must be occupied by the corresponding claimer agent.
+     **************************************************************************/
     virtual void receive(const ClaimChStationSignal&) override
     { 
         if(claimed)
@@ -41,6 +45,10 @@ public:
         claimed = true;
     }
 
+    /***************************************************************************
+     * @brief Marks the charging stations as NON-claimed so other agents are
+     * able to claim it as theirs.
+     ***************************************************************************/
     virtual void receive(const UnClaimChStationSignal&) override
     {
         if(!claimed)

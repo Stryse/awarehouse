@@ -35,7 +35,19 @@ public:
         : body(body) {}
 
 public:
+
+    /********************************************************
+     * @brief Motor activation can manipulate the associated
+     * body or it can interact with the environment.
+     * 
+     * Riding in different MotorDirections result in different
+     * behaviour.
+     ********************************************************/
     virtual void activate(const MotorDirection &motorDirection) = 0;
+
+    /***************************************************
+     * @brief Returns the motor's corresponding body.
+     ***************************************************/
     const Body &getBody() const { return body; }
     Body &getBody() { return body; }
 

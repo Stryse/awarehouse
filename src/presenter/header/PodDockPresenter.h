@@ -22,10 +22,6 @@ public:
 
     bool operator==(const PodDockPresenter& other) const;
 
-//    static PodDockPresenter* loadJsonObject(const QJsonObject& podDockObj,
-//                                                      QObject* parent = nullptr);
-//    QJsonObject saveJsonObject() const;
-
 private:
     //Model
     const  PodDock* model;

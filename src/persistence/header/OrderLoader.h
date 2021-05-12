@@ -7,6 +7,9 @@
 #include <QJsonObject>
 #include <memory>
 
+/****************************************************************
+ * @brief Loads and saves an order from a Json Object.
+ ****************************************************************/
 class OrderLoader
 {
 public:

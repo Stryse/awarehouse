@@ -6,7 +6,8 @@
 #include <vector>
 
 /**********************************************************
- * @bried This class can construct predefined body shapes
+ * @bried This class can construct predefined body shapes,
+ * so common body shapes are accessed easily.
  **********************************************************/
 template <typename TPoint = Point<>>
 class BodyShapeFactory

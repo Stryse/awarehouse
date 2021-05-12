@@ -7,6 +7,9 @@
 //Presenter
 #include "ActorList.h"
 
+/**********************************************
+ * @brief AbstractListModel containing Actors.
+ **********************************************/
 class ActorListModel : public QAbstractListModel
 {
     Q_OBJECT

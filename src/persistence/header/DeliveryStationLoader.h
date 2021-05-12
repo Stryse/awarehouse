@@ -5,6 +5,9 @@
 #include <QJsonObject>
 #include <memory>
 
+/****************************************************************
+ * @brief Loads and saves a Delivery station from a Json Object.
+ ****************************************************************/
 class DeliveryStationLoader
 {
 public:

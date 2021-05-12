@@ -4,6 +4,9 @@
 class State;
 class Settings;
 
+/**********************************************************************
+ * @brief Loads and saves a warehouse state from a provided resource.
+ **********************************************************************/
 template <typename ResourceType>
 class IWarehousePersistence
 {

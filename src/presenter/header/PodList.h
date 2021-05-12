@@ -8,6 +8,9 @@
 //Presenter
 #include "PodPresenter.h"
 
+/******************************************************************
+ * @brief Decorator of a QList which broadcast manipulation events.
+ ******************************************************************/
 class PodList : public QObject
 {
     Q_OBJECT

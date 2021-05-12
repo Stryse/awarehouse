@@ -3,6 +3,13 @@
 
 #include "PodHolder.h"
 
+/*******************************************************
+ * @brief A module which contains a pod holder.
+ * An agent can derive from this class so it can use
+ * and forward a pod holder. A pod holder can store
+ * a pod in its inventory and it can transfer it to another
+ * pod holding entity.
+ *******************************************************/
 class PodHolderModule
 {
 public:

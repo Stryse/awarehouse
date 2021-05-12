@@ -4,6 +4,13 @@
 #include "IMoveMechanism.h"
 #include <memory>
 
+/*******************************************************
+ * @brief A module which contains a move mechanism.
+ * An agent can derive from this class so it can use
+ * and forward a move mechanism.
+ * A move mechanism enables an agent to move by itself
+ * independently.
+ *******************************************************/
 class MovementModule
 {
 public:

@@ -7,6 +7,9 @@
 #include <QJsonObject>
 #include <memory>
 
+/****************************************************************
+ * @brief Loads and saves a Pod Dock from a Json Object.
+ ****************************************************************/
 class PodDockLoader
 {
 public:

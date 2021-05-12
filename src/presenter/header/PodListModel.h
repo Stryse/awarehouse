@@ -7,6 +7,9 @@
 //Presenter
 #include "PodList.h"
 
+/**********************************************
+ * @brief AbstractListModel containing Pods.
+ **********************************************/
 class PodListModel : public QAbstractListModel
 {
     Q_OBJECT

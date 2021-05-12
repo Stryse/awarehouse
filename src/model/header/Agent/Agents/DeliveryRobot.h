@@ -26,7 +26,6 @@ public:
     using DirectionVector = typename Body::DirectionVector;
 
 public:
-    // TODO: MIXIN TMP -vel megoldani hogy szép legyen
     explicit DeliveryRobot(const std::shared_ptr<ObservableNavEnvironment> &env,
                            const Point &position,
                            const DirectionVector &orientation,

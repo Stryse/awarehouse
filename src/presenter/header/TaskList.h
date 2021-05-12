@@ -7,6 +7,9 @@
 //Presenter
 #include "TaskPresenter.h"
 
+/******************************************************************
+ * @brief Decorator of a QList which broadcast manipulation events.
+ ******************************************************************/
 class TaskList : public QObject
 {
     Q_OBJECT

@@ -9,6 +9,9 @@
 
 class Settings;
 
+/****************************************************************
+ * @brief Loads and saves a Robot from a Json Object.
+ ****************************************************************/
 class RobotLoader
 {
 public:

@@ -43,7 +43,7 @@ private:
     static const QString m_defaultWarehousePath;
     static const QString m_warehouseDirPath;
 
-    QStringListModel m_warehouses; //Why StringListModel???
+    QStringListModel m_warehouses;
 };
 
 #endif /* PERSISTENCE_PRESENTER__H */

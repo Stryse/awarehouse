@@ -9,7 +9,7 @@ namespace idepleting_util
     /*****************************************************
      * @brief Thrown when a resource is tried to be used
      * when it is already depleted enough.
-     *
+
      *****************************************************/
     class EnergyDepletedException : public std::runtime_error
     {
@@ -33,6 +33,10 @@ public:
      * @brief Notifies currentCharge value changes
      ***********************************************************/
     mutable boost::signals2::signal<void(int)> onChargeChanged;
+
+    /***********************************************************
+     * @brief Notifies depletion.
+     ***********************************************************/
     mutable boost::signals2::signal<void(int)> onDepleted;
 
 public:

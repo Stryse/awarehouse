@@ -3,6 +3,11 @@
 
 #include <string>
 
+/******************************************************
+ * @brief An Order in the warehouse.
+ * Each order has a category which indicates to which
+ * delivery station it must be transported to.
+ *****************************************************/
 class OrderModel
 {
 public:

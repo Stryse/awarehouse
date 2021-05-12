@@ -1,9 +1,7 @@
 #ifndef OBSERVABLE_NAV_ENVIRONMENT__H
 #define OBSERVABLE_NAV_ENVIRONMENT__H
 
-#include "IInfoProvider.h"
 #include "INavigationalEnvironment.h"
-#include "IObservableEnvironment.h"
 #include "Point.h"
 #include <memory>
 #include <vector>
@@ -44,12 +42,16 @@ public:
     ObservableNavEnvironment(const ObservableNavEnvironment &other);
     virtual ~ObservableNavEnvironment();
 
-    //#############################  IObservableEnvironment implementation ######################################
-    // TODO: Implement
-
     //################################ INavigationalEnvironment implementation ##################################
+    /************************************************************************************************************
+     * @brief Returns the volume unit at provided point
+     ************************************************************************************************************/
     virtual const std::shared_ptr<Tile> &getVolume(const Point &point) const override;
     virtual std::shared_ptr<Tile> &getVolume(const Point &point) override;
+
+    /************************************************************************************************************
+     * @brief Returns whether point is inside the environment.
+     ************************************************************************************************************/
     virtual bool isInBounds(const Point &point) const override;
 
     //############################################## Own Getter ####################################################
@@ -61,6 +63,9 @@ public:
     size_t getYLength() const;
     size_t getZLength() const;
 
+    /***************************************************************
+     * @brief Returns a 3D coordinate as a flattened 1D coordinate
+     ***************************************************************/
     size_t getCoordAsIndex(size_t x, size_t y, size_t z) const;
     size_t getCoordAsIndex(const Point &point) const;
 };

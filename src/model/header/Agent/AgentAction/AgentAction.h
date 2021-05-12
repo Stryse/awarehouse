@@ -41,11 +41,30 @@ protected:
 public:
     void operator()();
 
+    /******************************************************
+     * @brief Returns the stage of the agent action.
+     * If an action is invoked it progresses with one unit.
+     * If duration is reached action is executed.
+     ******************************************************/
     int getProgress() const;
+
+    /***********************************************************
+     * @brief Returns how many times does the AgentAction
+     * needs to be invoked (progressed) in order to be executed.
+     ************************************************************/
     int getDuration() const;
 
 protected:
+
+    /***********************************************************
+     * @brief Returns whether an action can be invoked at this
+     * moment.
+     ***********************************************************/
     virtual bool canExecute() const = 0;
+
+    /******************************************
+     * @brief The corresponding action sequence
+     ******************************************/
     virtual void action() = 0;
 
 private:

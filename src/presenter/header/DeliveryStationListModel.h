@@ -7,6 +7,9 @@
 //Presenter
 #include "DeliveryStationList.h"
 
+/*********************************************************
+ * @brief AbstractListModel containing Delivery Stations.
+ ********************************************************/
 class DeliveryStationListModel : public QAbstractListModel
 {
     Q_OBJECT

@@ -18,7 +18,7 @@ public:
 
 public:
     /*************************************************************************************************************
-     * @brief 
+     * @brief The station takes the corresponding order from the carrier upon receiving this signal.
      *************************************************************************************************************/
     virtual void receive(std::set<std::unique_ptr<OrderModel>, pointer_element_comparator<OrderModel>> &orderInventory,
                          const PutDownOrderSignal &putdownOrderSignal) override;

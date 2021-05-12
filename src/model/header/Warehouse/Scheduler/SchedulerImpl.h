@@ -1,7 +1,6 @@
 #ifndef SCHEDULER_IMPL__H
 #define SCHEDULER_IMPL__H
 
-#include "AScheduler.h"
 #include "IDepleting.h"
 #include "NetworkAdapter.h"
 #include "NetworkMessage.h"
@@ -14,6 +13,12 @@ class TaskManager;
 class ControllerImpl;
 class Task;
 // ################################################################################ //
+/*************************************************************************************
+ * @brief A ONE-TO-ONE assignment of a task and an agent control data with
+ * an estimated cost of completing a task.
+ * Successful task assignments are transferred to the controller so it plans the
+ * steps of the task completion.
+ *************************************************************************************/
 struct TaskAssignment
 {
     TaskAssignment(Task *task, const AgentControlData *controlData, int costHeuristic)
@@ -27,7 +32,9 @@ struct TaskAssignment
 };
 
 /**********************************************************************************
- * @brief Returns whether the left agent control data has less current energy
+ * @brief Returns whether the left agent control data has less current energy.
+ * Agents are assigned to task according to their energy level.
+ * The most depleted agent is tried first.
  **********************************************************************************/
 struct EnergyResourceComparator
 {
@@ -37,6 +44,10 @@ struct EnergyResourceComparator
     }
 };
 
+/*****************************************************************************************
+ * @brief Returns whether the left Task assignment has lower relative cost.
+ * The lowest energy/estimated_cost ratio assignment is forwarded to the controller first.
+ *****************************************************************************************/
 struct TaskAssignmentComparator
 {
     bool operator()(const TaskAssignment *lhs, const TaskAssignment *rhs)
@@ -72,22 +83,25 @@ public:
 
 public:
     /****************************************************************************************
-     * @brief 
+     * @brief A signal that indicates that time elapsed so the scheduler might need to act.
+     * The scheduler queries all control request messages from its message queue and
+     * organizes received agent control datas. Then an assignment is tried for each data
+     * and then all successful assignments are forwarded to the controller for action planning.
      ***************************************************************************************/
     void tick(int timeStamp);
 
     /****************************************************************************************
-     * @brief 
+     * @brief Clears all currently held data.
      ****************************************************************************************/
     void reset();
 
     /****************************************************************************************
-     * @brief 
+     * @brief Tries a task assignment process for all received agent control data.
      ***************************************************************************************/
     void doTaskAssignment(int timeStamp);
 
     /****************************************************************************************
-     * @brief 
+     * @brief Forward all assignments from the scheduler to the controller for action planning.
      ****************************************************************************************/
     void forwardAssignments(int timeStamp);
 

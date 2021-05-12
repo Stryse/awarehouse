@@ -18,6 +18,12 @@ class IMoveMechanism;
 
 /****************************************************************************
  * @brief A Node in the space-time searchspace.
+ * A node registers a 2D coordinate in space along with:
+ * - time of arrival
+ * - duration of arrival
+ * - sum of energy required to reach the node
+ * - a pointer to the node where we came from
+ * - whether reaching the node required moving in space
  ****************************************************************************/
 struct Node
 {
@@ -85,6 +91,11 @@ struct NodeComparator
 class PathFinder
 {
 public:
+    /*************************************************************
+     * @brief Construct a new Path Finder object.
+     * The path finder queries the provided state and sets up
+     * all the obstacle categories' entries.
+     *************************************************************/
     explicit PathFinder(const State &state);
 
     /************************************************************************************************************
@@ -118,7 +129,8 @@ public:
     void claimST3Interval(const std::pair<int,int> &point, int beginTime, int endTime);
 
     /**************************************************************************************
-     * @brief 
+     * @brief Claim a point for a period of time but marking as semi-static obstacle.
+     * (obstacle which needs to be avoided in a time interval)
      **************************************************************************************/
     void emplaceSemiStatic(const std::pair<int,int> &point, int startTime, int endTime, const IMoveMechanism* moveMechanism);
 

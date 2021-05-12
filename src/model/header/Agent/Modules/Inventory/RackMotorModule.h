@@ -9,6 +9,13 @@ class PodHolder;
 class Body;
 // ################################################################
 
+/*******************************************************
+ * @brief A module which contains a rack motor.
+ * An agent can derive from this class so it can use
+ * and forward a rack motor.
+ * A rack motor is able to pick up and put down a pod
+ * from and into the body's environment.
+ *******************************************************/
 class RackMotorModule
 {
 public:
