@@ -130,7 +130,7 @@ public:
     /*****************************************************************
      * @brief Returns whether Coordinate (X,Y) is safe at timestamp T.
      *****************************************************************/
-    bool safeDynamic(const std::tuple<int, int, int> &st3) const;
+    bool safeDynamic(const std::tuple<int,int,int>& st3, const Node* node, const Node* cameFrom) const;
 
     /*****************************************************************
      * @brief Returns whether Coordinate (X,Y) can be occupied according

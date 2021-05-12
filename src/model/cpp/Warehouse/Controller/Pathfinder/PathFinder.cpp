@@ -53,13 +53,25 @@ PathFinder::PathFinder(const State &state)
     }
 }
 
-bool PathFinder::safeDynamic(const std::tuple<int, int, int> &st3) const
+bool PathFinder::safeDynamic(const std::tuple<int,int,int>& st3, const Node* node, const Node* cameFrom) const
 {
     // Moment before arrival must be safe so the side of the robots won't collide!
     std::tuple<int, int, int> beforeMoment = std::make_tuple(std::get<0>(st3), std::get<1>(st3), std::get<2>(st3) - 1);
 
-    return reservationTable.find(st3) == reservationTable.end() &&
-           reservationTable.find(beforeMoment) == reservationTable.end();
+    // Arrival check
+    if (reservationTable.find(st3) != reservationTable.end() ||
+        reservationTable.find(beforeMoment) != reservationTable.end())
+        return false;
+
+    // Travel check
+    for(int i = cameFrom->gCost + 1; i < cameFrom->gCost + node->byTime; ++i)
+    {
+        std::tuple<int,int,int> travelSt3 = std::make_tuple(cameFrom->coords.first, cameFrom->coords.second, i);
+        if(reservationTable.find(travelSt3) != reservationTable.end())
+            return false;
+    }
+
+    return true;
 }
 
 bool PathFinder::safeSoftStatic(const std::pair<int, int> &coord, const Point<> &destination) const
@@ -250,7 +262,7 @@ std::vector<std::shared_ptr<Node>> PathFinder::findPathSoft(const Point<> &start
             if (!safeSemiStatic(node->coords, node->gCost, &moveMechanism))
                 continue;
 
-            if (!safeDynamic(st3))
+            if (!safeDynamic(st3, node.get(), current.get()))
                 continue;
 
             // ####################### If not in open ###############################
@@ -309,7 +321,7 @@ std::vector<std::shared_ptr<Node>> PathFinder::findPathHard(const Point<> &start
             if (!safeSemiStatic(node->coords, node->gCost, &moveMechanism))
                 continue;
 
-            if (!safeDynamic(st3))
+            if (!safeDynamic(st3, node.get(), current.get()))
                 continue;
 
             // ####################### If not in open ###############################

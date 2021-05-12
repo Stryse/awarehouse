@@ -77,15 +77,22 @@ void SchedulerImpl::forwardAssignments(int timeStamp)
     while (!sortedAssignmentData.empty())
     {
         std::unique_ptr<TaskAssignment> assignment(sortedAssignmentData.top());
-        if (controller->PlanTask(assignment.get(), timeStamp) == true)
+        try
         {
-            assignment->task->setAssignedAgentID(assignment->controlData->ID);
-        }
-        else
+            if (controller->PlanTask(assignment.get(), timeStamp) == true)
+            {
+                assignment->task->setAssignedAgentID(assignment->controlData->ID);
+            }
+            else
+            {
+                // Register unassigned on failure
+                taskManager->getUnAssignedTasks().push_back(assignment->task);
+                controller->PlanCharge(*assignment->controlData, timeStamp);
+            }
+        } 
+        catch(const std::runtime_error& excpt)
         {
-            // Register unassigned on failure
             taskManager->getUnAssignedTasks().push_back(assignment->task);
-            controller->PlanCharge(*assignment->controlData, timeStamp);
         }
         sortedAssignmentData.pop();
     }
